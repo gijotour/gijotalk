@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Phrase, Country } from '../types';
 import { playPhrase, unlockAudioPlayback, hasRecordedAudio } from '../utils/speech';
 import { track } from '../utils/analytics';
-import { Volume2, Mic, Maximize2, Bookmark, Info } from 'lucide-react';
+import { Volume2, Mic, Maximize2, Bookmark, Info, Trash2, Sparkles } from 'lucide-react';
 
 interface PhraseCardProps {
   phrase: Phrase;
@@ -13,6 +13,8 @@ interface PhraseCardProps {
   onToggleBookmark: (phraseId: string) => void;
   onOpenBillboard: (phrase: Phrase) => void;
   onOpenMicPractice: (phrase: Phrase) => void;
+  /** AI 가 만든 문장일 때만 넘어옵니다. 기본 문장은 지울 수 없습니다. */
+  onDelete?: (phraseId: string) => void;
 }
 
 export const PhraseCard: React.FC<PhraseCardProps> = ({
@@ -24,8 +26,10 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
   onToggleBookmark,
   onOpenBillboard,
   onOpenMicPractice,
+  onDelete,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   // 🔴 로 표시한 강한 욕설은 의도적으로 녹음을 만들지 않았습니다.
   // 공공장소에서 실수로 크게 트는 사고를 막기 위해 재생 버튼도 숨깁니다.
@@ -63,6 +67,12 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
               🚨 긴급 회화
             </span>
           )}
+          {onDelete && (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-violet-50 text-violet-700 rounded-xl text-xs font-bold border border-violet-200">
+              <Sparkles className="w-3 h-3" />
+              AI 생성
+            </span>
+          )}
         </div>
 
         {/* Action icons: Bookmark & Billboard Fullscreen */}
@@ -91,8 +101,43 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
           >
             <Bookmark className="w-4 h-4 fill-current" />
           </button>
+
+          {/* AI 가 만든 문장만 지울 수 있습니다. */}
+          {onDelete && (
+            <button
+              onClick={() => setConfirmDelete(true)}
+              aria-label="이 AI 문장 삭제"
+              title="이 AI 문장 삭제"
+              className="p-2 rounded-xl text-ink-mute hover:text-rose-600 hover:bg-rose-50 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
+
+      {/* 삭제 확인 — 실수로 지우면 복구할 방법이 없습니다. */}
+      {confirmDelete && onDelete && (
+        <div className="mb-3 bg-rose-50 border border-rose-200 rounded-xl p-3 flex items-center justify-between gap-3">
+          <p className="text-xs font-bold text-rose-800 min-w-0">
+            이 문장을 삭제할까요? 되돌릴 수 없습니다.
+          </p>
+          <div className="flex gap-1.5 shrink-0">
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="px-2.5 py-1.5 bg-white border border-slate-200 text-ink-soft text-xs font-bold rounded-xl"
+            >
+              취소
+            </button>
+            <button
+              onClick={() => onDelete(phrase.id)}
+              className="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl"
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 본문 — 위계는 현장에서 쓰는 순서를 따릅니다.
           ① 원문(현지인에게 보여줌) ② 발음(내가 소리 내어 읽음) ③ 뜻 ④ 팁

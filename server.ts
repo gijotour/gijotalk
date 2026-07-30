@@ -7,8 +7,19 @@ async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
-  // 본문 크기 제한 — 프롬프트만 받으므로 넉넉해도 16KB면 충분합니다.
-  app.use(express.json({ limit: '16kb' }));
+  // 본문 크기 제한.
+  //
+  // 대부분의 요청은 짧은 프롬프트뿐이라 16kb 로 조입니다. OCR 만 사진(base64)을
+  // 받으므로 예외입니다. 전역 파서를 먼저 통과시키면 그 시점에 이미 413 으로
+  // 잘려서 라우트 레벨 파서까지 오지도 못하므로, 여기서 경로를 갈라줘야 합니다.
+  const OCR_PATH = "/api/gemini/ocr";
+  const jsonSmall = express.json({ limit: "16kb" });
+  const jsonForImages = express.json({ limit: "8mb" });
+
+  app.use((req, res, next) => {
+    if (req.path === OCR_PATH) return next();
+    return jsonSmall(req, res, next);
+  });
 
   /* ---------------------------------------------------------------- */
   /* 접근 코드                                                          */
@@ -134,6 +145,96 @@ You MUST provide a structured JSON response containing:
       console.error("Gemini translate error:", error);
       return res.status(500).json({
         error: "AI 번역 생성에 실패했습니다. 잠시 후 다시 시도해 주세요."
+      });
+    }
+  });
+
+
+  /* ---------------------------------------------------------------- */
+  /* 사진 번역 (OCR)                                                    */
+  /* ---------------------------------------------------------------- */
+  //
+  // 메뉴판·표지판·약봉투를 찍으면 읽어서 한국어로 옮깁니다.
+  // 여행자가 "찾는 문장이 없다"고 느끼는 순간의 상당수가 사실은
+  // "눈앞의 글자를 못 읽겠다" 이기 때문에, 회화집이 못 메우는 구멍을 메웁니다.
+  // requireAccessCode·rateLimit 은 헤더/IP 만 보므로 파싱 전에 둡니다.
+  // 미인증 요청이 8MB 본문 파싱을 유발하지 않게 하기 위함입니다.
+  app.post(OCR_PATH, requireAccessCode, rateLimit, jsonForImages, async (req, res) => {
+    try {
+      const { imageBase64, mimeType, countryName, language } = req.body ?? {};
+
+      if (typeof imageBase64 !== "string" || !imageBase64) {
+        return res.status(400).json({ error: "이미지가 필요합니다." });
+      }
+      // base64 는 원본의 약 4/3 크기입니다. 6MB ≈ 원본 4.5MB 정도.
+      if (imageBase64.length > 6_000_000) {
+        return res.status(413).json({ error: "사진 용량이 너무 큽니다. 다시 찍어 주세요." });
+      }
+      if (typeof mimeType !== "string" || !/^image\/(jpeg|png|webp|heic|heif)$/.test(mimeType)) {
+        return res.status(400).json({ error: "지원하지 않는 이미지 형식입니다." });
+      }
+
+      const systemInstruction = `You are a translation assistant for Korean travelers in ${countryName ?? "the Philippines"}.
+The user photographed a sign, menu, label, or document written in ${language ?? "English or Tagalog"}.
+
+Return JSON with:
+- summary: One short Korean sentence describing what this image is (e.g. "식당 메뉴판입니다", "약 복용 안내입니다").
+- lines: Array of the readable text blocks. Each item has:
+    · original: the text exactly as printed
+    · translation: natural Korean translation
+    · note: optional short Korean note ONLY when a traveler would be misled without it
+            (prices, allergens, warnings, dosage, opening hours). Otherwise omit.
+- caution: Optional single Korean sentence if the image contains something the traveler
+           must not miss (allergy ingredient, prohibition, fee, deadline). Otherwise omit.
+
+Rules:
+- Transcribe only text that is actually legible. Never invent text.
+- If nothing is readable, return an empty lines array and say so in summary.
+- Keep each translation short enough to read on a phone at a glance.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.6-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { inlineData: { mimeType, data: imageBase64 } },
+              { text: "Read this image and translate it for a Korean traveler." },
+            ],
+          },
+        ],
+        config: {
+          systemInstruction,
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              summary: { type: Type.STRING },
+              lines: {
+                type: Type.ARRAY,
+                items: {
+                  type: Type.OBJECT,
+                  properties: {
+                    original: { type: Type.STRING },
+                    translation: { type: Type.STRING },
+                    note: { type: Type.STRING },
+                  },
+                  required: ["original", "translation"],
+                },
+              },
+              caution: { type: Type.STRING },
+            },
+            required: ["summary", "lines"],
+          },
+        },
+      });
+
+      const parsed = JSON.parse(response.text || "{}");
+      return res.json({ success: true, result: parsed });
+    } catch (error: any) {
+      console.error("Gemini OCR error:", error);
+      return res.status(500).json({
+        error: "사진을 읽지 못했습니다. 더 밝은 곳에서 다시 찍어 주세요."
       });
     }
   });

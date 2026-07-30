@@ -8,6 +8,7 @@
 //     ai_question    AI에 물어본 상황    → 자주 나오면 기본 문장으로 승격
 //     phrase_play    문장별 재생 횟수    → 실전에서 쓰이는 문장 vs 채워넣은 문장
 //     billboard_open 전광판 실행         → 앱의 핵심 컨셉이 실제로 쓰였는지
+//     photo_translate 사진 번역 사용     → 회화집이 못 메우는 상황의 빈도
 //     session        실행 + 오프라인 여부 → 현지에서 실제로 열었는지 (진짜 성공 지표)
 //
 // ── 프라이버시
@@ -31,6 +32,7 @@ export type EventName =
   | 'ai_question'
   | 'phrase_play'
   | 'billboard_open'
+  | 'photo_translate'
   | 'session';
 
 export interface GijoEvent {

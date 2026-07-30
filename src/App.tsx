@@ -21,6 +21,7 @@ import { CategoryChips } from './components/CategoryChips';
 import { PhraseCard } from './components/PhraseCard';
 import { BillboardModal } from './components/BillboardModal';
 import { AITranslateModal } from './components/AITranslateModal';
+import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
 // Drive 백업은 firebase 전체(약 300KB)를 끌고 옵니다.
 // 모달을 열기 전에는 필요 없으므로 지연 로딩해 첫 진입을 가볍게 합니다.
@@ -30,7 +31,7 @@ const DriveModal = lazy(() =>
 import { ListeningModal } from './components/ListeningModal';
 import { BottomNav, TabType } from './components/BottomNav';
 
-import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Headphones } from 'lucide-react';
+import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Headphones, Camera } from 'lucide-react';
 
 export default function App() {
   // Country & Filter States
@@ -52,6 +53,7 @@ export default function App() {
   const [micPracticePhrase, setMicPracticePhrase] = useState<Phrase | null>(null);
   const [showDriveModal, setShowDriveModal] = useState<boolean>(false);
   const [showListeningModal, setShowListeningModal] = useState<boolean>(false);
+  const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
 
   // Custom AI-generated Phrases State
   const [customPhrases, setCustomPhrases] = useState<Phrase[]>(() => {
@@ -74,12 +76,42 @@ export default function App() {
 
   const handleAddCustomPhrase = (newPhrase: Phrase) => {
     setCustomPhrases((prev) => {
-      if (prev.some((p) => p.id === newPhrase.id)) return prev;
+      // 같은 질문을 반복하면 내용이 같은 문장이 계속 쌓입니다.
+      // id 는 생성 시각이라 매번 다르므로 원문 기준으로 중복을 막습니다.
+      const isDuplicate = prev.some(
+        (p) =>
+          p.id === newPhrase.id ||
+          (p.countryId === newPhrase.countryId && p.original === newPhrase.original)
+      );
+      if (isDuplicate) return prev;
+
       const updated = [newPhrase, ...prev];
       persistCustomPhrases(updated);
       return updated;
     });
   };
+
+  /** AI 가 만든 문장인지 — 삭제 버튼 노출 여부를 결정합니다. */
+  const isCustomPhrase = useCallback(
+    (id: string) => customPhrases.some((p) => p.id === id),
+    [customPhrases]
+  );
+
+  /** AI 가 만든 문장 삭제. 기본 제공 문장은 지울 수 없습니다. */
+  const handleDeleteCustomPhrase = useCallback((phraseId: string) => {
+    setCustomPhrases((prev) => {
+      const updated = prev.filter((p) => p.id !== phraseId);
+      persistCustomPhrases(updated);
+      return updated;
+    });
+    // 지운 문장이 보관함에 남아 유령 항목이 되지 않게 함께 정리합니다.
+    setBookmarkedIds((prev) => {
+      if (!prev.includes(phraseId)) return prev;
+      const updated = prev.filter((id) => id !== phraseId);
+      saveBookmarkIds(updated);
+      return updated;
+    });
+  }, []);
 
   const handleRestoreData = (savedIds: string[], restoredCustom: Phrase[]) => {
     // 저장 경로를 pwa.ts 로 통일했습니다. 예전에는 여기서 다른 키에 써서
@@ -283,7 +315,17 @@ export default function App() {
                 <Headphones className="w-5 h-5" />
               </button>
 
-              {/* AI 는 서버가 필요합니다. 정적 배포에서는 버튼째로 숨깁니다. */}
+              {/* 사진 번역 · AI 모두 서버가 필요합니다. 정적 배포에서는 숨깁니다. */}
+              {!IS_STATIC_BUILD && (
+                <button
+                  onClick={() => setShowPhotoModal(true)}
+                  aria-label="사진 찍어 번역하기"
+                  title="사진 번역"
+                  className="w-13 h-13 shrink-0 flex items-center justify-center bg-ink hover:bg-black text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                >
+                  <Camera className="w-5 h-5" />
+                </button>
+              )}
               {!IS_STATIC_BUILD && (
                 <button
                   onClick={() => setShowAIAssistant(true)}
@@ -317,6 +359,9 @@ export default function App() {
                     onToggleBookmark={handleToggleBookmark}
                     onOpenBillboard={setBillboardPhrase}
                     onOpenMicPractice={setMicPracticePhrase}
+                    onDelete={
+                      isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
+                    }
                   />
                 ))}
               </div>
@@ -384,6 +429,9 @@ export default function App() {
                       onToggleBookmark={handleToggleBookmark}
                       onOpenBillboard={setBillboardPhrase}
                       onOpenMicPractice={setMicPracticePhrase}
+                      onDelete={
+                        isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
+                      }
                     />
                   );
                 })}
@@ -541,6 +589,11 @@ export default function App() {
           countryPhrases={countryPhrases}
         />
         </Suspense>
+      )}
+
+      {/* 사진 번역 — 메뉴판·표지판·약봉투 */}
+      {showPhotoModal && (
+        <PhotoTranslateModal country={selectedCountry} onClose={() => setShowPhotoModal(false)} />
       )}
 
       {/* 전체 화면 연속 듣기 플레이어 — 접어도 재생은 계속됩니다. */}

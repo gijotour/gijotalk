@@ -16,7 +16,8 @@ import {
   Sparkles,
   ShieldCheck,
 } from 'lucide-react';
-import { googleSignIn, logoutGoogle, initAuth } from '../utils/googleAuth';
+import { googleSignIn, logoutGoogle, initAuth, GoogleAuthError } from '../utils/googleAuth';
+import { isInAppBrowser, isKakaoTalk } from '../utils/pwa';
 import {
   listQuickPassDriveFiles,
   uploadBackupToDrive,
@@ -52,9 +53,11 @@ export const DriveModal: React.FC<DriveModalProps> = ({
   const [files, setFiles] = useState<DriveFile[]>([]);
   const [loadingFiles, setLoadingFiles] = useState<boolean>(false);
   const [actionLoading, setActionLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
-    null
-  );
+  const [message, setMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+    hint?: string;
+  } | null>(null);
 
   // File Deletion Confirmation State (Mandatory Workspace requirement)
   const [fileToDelete, setFileToDelete] = useState<DriveFile | null>(null);
@@ -111,7 +114,8 @@ export const DriveModal: React.FC<DriveModalProps> = ({
       console.error(err);
       setMessage({
         type: 'error',
-        text: err.message || 'Google 로그인 중 오류가 발생했습니다.',
+        text: err?.message || 'Google 로그인 중 오류가 발생했습니다.',
+        hint: err instanceof GoogleAuthError ? err.hint : undefined,
       });
     } finally {
       setIsLoggingIn(false);
@@ -285,18 +289,23 @@ export const DriveModal: React.FC<DriveModalProps> = ({
           {/* Status Message */}
           {message && (
             <div
-              className={`p-3.5 rounded-2xl text-xs font-bold flex items-center gap-2 border ${
+              className={`p-3.5 rounded-2xl text-xs font-bold flex items-start gap-2 border ${
                 message.type === 'success'
                   ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                   : 'bg-rose-50 text-rose-700 border-rose-200'
               }`}
             >
               {message.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
               ) : (
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
               )}
-              <span>{message.text}</span>
+              <div className="min-w-0">
+                <p>{message.text}</p>
+                {message.hint && (
+                  <p className="mt-1 font-medium opacity-80 leading-relaxed">{message.hint}</p>
+                )}
+              </div>
             </div>
           )}
 
@@ -319,6 +328,18 @@ export const DriveModal: React.FC<DriveModalProps> = ({
                 스마트폰 변경이나 앱 초기화 시에도 안심! 내가 저장한 단어장과 AI 맞춤 회화를
                 Google Drive에 안전하게 저장하고 원클릭 복원할 수 있습니다.
               </p>
+
+              {/* 인앱 브라우저는 팝업 로그인이 차단됩니다.
+                  눌러봐야 실패하므로 미리 알려줍니다. */}
+              {isInAppBrowser() && (
+                <div className="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-left flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <p className="text-xs text-rose-800 font-bold leading-relaxed">
+                    {isKakaoTalk() ? '카카오톡' : '인앱'} 브라우저에서는 Google 로그인이
+                    차단됩니다. Safari 또는 Chrome으로 열어주세요.
+                  </p>
+                </div>
+              )}
 
               <div className="pt-2">
                 <button

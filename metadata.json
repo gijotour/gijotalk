@@ -1,6 +1,10 @@
 {
-  "name": "GIJO Talk",
-  "description": "GIJO LABS에서 제공하는 동남아 여행자 전용 오프라인 PWA 오디오 학습 및 3초 긴급 현장 외치기 회화 앱",
-  "requestFramePermissions": ["microphone"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "Gijo talk(PH)",
+  "description": "GIJO LABS 제공 · 필리핀 여행자 전용 오프라인 PWA. 타갈로그·영어 현장회화와 3초 긴급 전광판.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

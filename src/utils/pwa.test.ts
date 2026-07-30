@@ -18,11 +18,11 @@ describe('북마크 저장', () => {
   /**
    * 회귀 테스트.
    *
-   * 예전에는 Drive 복원이 'quickpass_bookmarks' 에 쓰고 읽기는
-   * 'quickpass_bookmarks_v1' 에서 했습니다. 복원 직후에는 화면에 보이지만
-   * 새로고침하면 통째로 사라졌습니다. 저장 경로를 saveBookmarkIds 하나로 모았습니다.
+   * 예전에는 쓰는 곳과 읽는 곳의 키가 달라('quickpass_bookmarks' vs '..._v1')
+   * 저장한 북마크가 새로고침하면 통째로 사라졌습니다.
+   * 저장 경로를 saveBookmarkIds 하나로 모아 다시 어긋나지 않게 합니다.
    */
-  it('저장과 읽기가 같은 키를 쓴다 (Drive 복원 유실 회귀)', () => {
+  it('저장과 읽기가 같은 키를 쓴다 (북마크 유실 회귀)', () => {
     saveBookmarkIds(['ph-eme-01']);
     const keys = Object.keys(localStorage);
     expect(keys).toHaveLength(1);
@@ -48,16 +48,16 @@ describe('북마크 저장', () => {
    * 회귀 테스트.
    *
    * 예전 toggleBookmarkId 는 localStorage 를 다시 읽어서 동작했습니다.
-   * 그래서 Drive 복원 직후 북마크를 하나 누르면 복원된 목록이 통째로
-   * 옛 값으로 덮어써졌습니다. 이제 호출자가 넘긴 현재 상태를 기준으로 합니다.
+   * 저장소 값이 화면 상태와 어긋나 있으면 옛 값 위에 덮어쓰게 됩니다.
+   * 이제 호출자가 넘긴 현재 상태를 기준으로 합니다.
    */
   it('토글이 localStorage 가 아니라 넘겨받은 목록을 기준으로 한다', () => {
     // 저장소에는 옛 값이 남아 있는 상황
     saveBookmarkIds(['old-1', 'old-2']);
 
-    // 복원으로 화면 상태는 이미 다른 값
-    const restored = ['ph-eme-01', 'ph-eme-02'];
-    const next = toggleBookmarkId('ph-tra-01', restored);
+    // 화면 상태는 이미 다른 값
+    const current = ['ph-eme-01', 'ph-eme-02'];
+    const next = toggleBookmarkId('ph-tra-01', current);
 
     expect(next).toEqual(['ph-eme-01', 'ph-eme-02', 'ph-tra-01']);
     expect(next).not.toContain('old-1');

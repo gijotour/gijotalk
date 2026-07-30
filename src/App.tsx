@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { CategoryId, Phrase } from './types';
 import { COUNTRIES, PHRASES, IS_STATIC_BUILD } from './config';
 import {
@@ -21,11 +21,6 @@ import { BillboardModal } from './components/BillboardModal';
 import { AITranslateModal } from './components/AITranslateModal';
 import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
-// Drive 백업은 firebase 전체(약 300KB)를 끌고 옵니다.
-// 모달을 열기 전에는 필요 없으므로 지연 로딩해 첫 진입을 가볍게 합니다.
-const DriveModal = lazy(() =>
-  import('./components/DriveModal').then((m) => ({ default: m.DriveModal }))
-);
 import { BottomNav, TabType } from './components/BottomNav';
 
 import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Camera } from 'lucide-react';
@@ -48,7 +43,6 @@ export default function App() {
   const [billboardPhrase, setBillboardPhrase] = useState<Phrase | null>(null);
   const [showAIAssistant, setShowAIAssistant] = useState<boolean>(false);
   const [micPracticePhrase, setMicPracticePhrase] = useState<Phrase | null>(null);
-  const [showDriveModal, setShowDriveModal] = useState<boolean>(false);
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
 
   // Custom AI-generated Phrases State
@@ -109,23 +103,6 @@ export default function App() {
     });
   }, []);
 
-  const handleRestoreData = (savedIds: string[], restoredCustom: Phrase[]) => {
-    // 저장 경로를 pwa.ts 로 통일했습니다. 예전에는 여기서 다른 키에 써서
-    // 복원 결과가 새로고침하면 사라졌습니다.
-    setBookmarkedIds(savedIds);
-    saveBookmarkIds(savedIds);
-
-    if (Array.isArray(restoredCustom) && restoredCustom.length > 0) {
-      setCustomPhrases((prev) => {
-        const combinedMap = new Map<string, Phrase>();
-        prev.forEach((p) => combinedMap.set(p.id, p));
-        restoredCustom.forEach((p) => combinedMap.set(p.id, p));
-        const combined = Array.from(combinedMap.values());
-        persistCustomPhrases(combined);
-        return combined;
-      });
-    }
-  };
 
   // Register PWA Service Worker & Load Bookmarks on Mount
   useEffect(() => {
@@ -146,7 +123,7 @@ export default function App() {
 
   // Bookmark Toggle Handler
   // localStorage 를 다시 읽지 않고 현재 상태를 넘깁니다.
-  // (Drive 복원 직후 토글하면 복원 결과가 통째로 덮어써지던 문제)
+  // 저장소를 재조회하면 화면 상태와 어긋난 값 위에 덮어쓰게 됩니다.
   const handleToggleBookmark = useCallback((id: string) => {
     setBookmarkedIds((prev) => toggleBookmarkId(id, prev));
   }, []);
@@ -255,7 +232,6 @@ export default function App() {
             setBillboardPhrase(emergencyPhrases[0]);
           }
         }}
-        onOpenDriveModal={() => setShowDriveModal(true)}
       />
 
       {/* Main Content Area */}
@@ -539,27 +515,6 @@ export default function App() {
         />
       )}
 
-      {/* MODAL 4: Google Drive Backup & Restore Sync */}
-      {showDriveModal && (
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 z-[110] bg-black/80 flex items-center justify-center">
-              <div className="bg-white rounded-2xl px-6 py-4 text-xs font-bold text-slate-700">
-                Drive 백업 불러오는 중…
-              </div>
-            </div>
-          }
-        >
-        <DriveModal
-          onClose={() => setShowDriveModal(false)}
-          savedPhraseIds={bookmarkedIds}
-          customPhrases={customPhrases}
-          onRestoreData={handleRestoreData}
-          currentCountry={selectedCountry}
-          countryPhrases={countryPhrases}
-        />
-        </Suspense>
-      )}
 
       {/* 사진 번역 — 메뉴판·표지판·약봉투 */}
       {showPhotoModal && (

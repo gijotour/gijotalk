@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert, HardDrive } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, ShieldAlert } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
   onSelectCountry: (country: Country) => void;
   onOpenAIAssistant: () => void;
   onOpenEmergencyModal: () => void;
-  onOpenDriveModal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,7 +15,6 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectCountry,
   onOpenAIAssistant,
   onOpenEmergencyModal,
-  onOpenDriveModal,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -126,17 +124,6 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         )}
 
-        {/* Google Drive Backup & Sync */}
-        {onOpenDriveModal && (
-          <button
-            onClick={onOpenDriveModal}
-            aria-label="Google Drive 백업 및 동기화"
-            className="p-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-full transition-all active:scale-95 shrink-0"
-            title="Google Drive 백업 및 동기화"
-          >
-            <HardDrive className="w-4 h-4" />
-          </button>
-        )}
 
         {/* Emergency Billboard Direct Launch */}
         <button

@@ -53,7 +53,7 @@ export function saveBookmarkIds(ids: string[]): void {
 /**
  * 북마크를 토글합니다.
  * localStorage 를 다시 읽지 않고 호출자가 넘긴 현재 목록을 기준으로 동작합니다.
- * (Drive 복원 직후 토글하면 복원 결과가 통째로 날아가던 문제를 막습니다.)
+ * 저장소를 재조회하면 화면 상태와 어긋난 값 위에 덮어쓰게 됩니다.
  */
 export function toggleBookmarkId(phraseId: string, current: string[]): string[] {
   const updated = current.includes(phraseId)
@@ -96,9 +96,8 @@ export function isIOS(): boolean {
 /**
  * 카카오톡·인스타그램 등 인앱 브라우저 여부.
  *
- * 지인 배포에서 제일 흔한 실패 원인입니다. 인앱 브라우저에서는
- *  - "홈 화면에 추가" 메뉴가 아예 없고
- *  - Firebase 팝업 로그인(Drive 백업)이 차단됩니다.
+ * 지인 배포에서 제일 흔한 실패 원인입니다.
+ * 인앱 브라우저에는 "홈 화면에 추가" 메뉴가 아예 없어 설치가 불가능합니다.
  */
 export function isInAppBrowser(): boolean {
   const ua = navigator.userAgent || '';

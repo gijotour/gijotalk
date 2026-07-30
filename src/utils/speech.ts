@@ -6,7 +6,6 @@
 // 오디오 파일을 우선하는 이유:
 //   · 타갈로그(tl-PH)는 브라우저 내장 음성이 아예 없습니다.
 //   · iOS 홈화면 PWA 에서 speechSynthesis 는 무음 실패가 잦습니다.
-//   · <audio> + Media Session 이라야 화면을 끄고도 재생이 이어집니다.
 //   · 서비스 워커가 캐시하므로 완전 오프라인에서 동작합니다.
 
 import { Phrase, Country } from '../types';
@@ -139,79 +138,4 @@ export function playPhrase({ phrase, country, rate = 1.0, onEnd, onError }: Play
   el.play().catch(() => {
     if (myGeneration === generation) onError?.();
   });
-}
-
-/* ------------------------------------------------------------------ */
-/* 잠금화면 / 백그라운드 재생 제어                                        */
-/* ------------------------------------------------------------------ */
-
-interface MediaSessionHandlers {
-  onNext?: () => void;
-  onPrev?: () => void;
-  onPlay?: () => void;
-  onPause?: () => void;
-}
-
-/**
- * 잠금화면·이어폰 버튼 제어를 붙입니다.
- * 이게 있어야 "화면 끄고 이어폰으로 반복 듣기"가 실제로 가능합니다.
- */
-export function updateMediaSession(
-  phrase: Phrase,
-  country: Country,
-  handlers: MediaSessionHandlers = {}
-): void {
-  if (!('mediaSession' in navigator)) return;
-
-  try {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: phrase.original,
-      artist: phrase.translation,
-      album: `Gijo talk(PH) · ${country.name}`,
-      artwork: [
-        { src: `${BASE_URL}icon-192.png`, sizes: '192x192', type: 'image/png' },
-        { src: `${BASE_URL}icon-512.png`, sizes: '512x512', type: 'image/png' },
-      ],
-    });
-
-    const set = (action: MediaSessionAction, fn?: () => void) => {
-      try {
-        navigator.mediaSession.setActionHandler(action, fn ? () => fn() : null);
-      } catch {
-        /* 브라우저가 지원하지 않는 액션은 무시 */
-      }
-    };
-
-    set('play', handlers.onPlay);
-    set('pause', handlers.onPause);
-    set('nexttrack', handlers.onNext);
-    set('previoustrack', handlers.onPrev);
-  } catch {
-    /* MediaMetadata 미지원 브라우저 */
-  }
-}
-
-export function clearMediaSession(): void {
-  if (!('mediaSession' in navigator)) return;
-  try {
-    navigator.mediaSession.metadata = null;
-    (['play', 'pause', 'nexttrack', 'previoustrack'] as MediaSessionAction[]).forEach((a) => {
-      try {
-        navigator.mediaSession.setActionHandler(a, null);
-      } catch {
-        /* noop */
-      }
-    });
-  } catch {
-    /* noop */
-  }
-}
-
-export function setMediaSessionPlaybackState(state: 'playing' | 'paused' | 'none'): void {
-  if (!('mediaSession' in navigator)) return;
-  try {
-    navigator.mediaSession.playbackState = state;
-  } catch {
-    /* noop */
-  }
 }

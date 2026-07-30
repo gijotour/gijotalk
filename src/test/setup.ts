@@ -78,20 +78,6 @@ vi.stubGlobal(
   }
 );
 
-// Media Session — 잠금화면 제어. jsdom 에 없습니다.
-Object.defineProperty(navigator, 'mediaSession', {
-  value: { metadata: null, playbackState: 'none', setActionHandler: vi.fn() },
-  writable: true,
-  configurable: true,
-});
-vi.stubGlobal(
-  'MediaMetadata',
-  class {
-    constructor(init: unknown) {
-      Object.assign(this, init);
-    }
-  }
-);
 
 // Cache API — 오프라인 저장 카드가 씁니다.
 vi.stubGlobal('caches', {

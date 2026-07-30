@@ -72,7 +72,7 @@ describe('App — 조립 검증', () => {
   });
 });
 
-describe('App — 모달 5개가 공통 동작을 갖는다', () => {
+describe('App — 모달이 공통 동작을 갖는다', () => {
   it('AI 모달이 dialog 로 열리고 ESC 로 닫힌다', async () => {
     const user = userEvent.setup();
     await renderApp();
@@ -108,77 +108,5 @@ describe('App — 모달 5개가 공통 동작을 갖는다', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('연속 듣기 플레이어가 dialog 로 열린다', async () => {
-    const user = userEvent.setup();
-    await renderApp();
-
-    await user.click(screen.getByRole('button', { name: /연속 듣기 시작/ }));
-    expect(screen.getByRole('dialog', { name: '연속 듣기 플레이어' })).toBeInTheDocument();
-  });
 });
 
-describe('App — 미니 플레이어', () => {
-  it('처음에는 보이지 않는다', async () => {
-    await renderApp();
-    expect(screen.queryByRole('region', { name: '연속 듣기 미니 플레이어' })).not.toBeInTheDocument();
-  });
-
-  /**
-   * 이번 IA 개편의 핵심입니다.
-   * 예전에는 재생 로직이 모달 안에 있어서, 모달을 닫으면 재생이 끊겼습니다.
-   */
-  it('플레이어를 닫아도 미니 플레이어로 재생이 이어진다', async () => {
-    const user = userEvent.setup();
-    await renderApp();
-
-    await user.click(screen.getByRole('button', { name: /연속 듣기 시작/ }));
-    const dialog = screen.getByRole('dialog', { name: '연속 듣기 플레이어' });
-
-    // 플레이어 화면 접기
-    await user.click(within(dialog).getByRole('button', { name: /접기/ }));
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-
-    // 미니 플레이어가 재생을 이어받는다
-    const mini = screen.getByRole('region', { name: '연속 듣기 미니 플레이어' });
-    expect(within(mini).getByRole('button', { name: '일시정지' })).toBeInTheDocument();
-
-    // 목록의 첫 문장을 재생 중이어야 합니다.
-    const firstPhrase = PHRASES.find((p) => p.countryId === 'ph')!;
-    expect(within(mini).getByText(firstPhrase.original)).toBeInTheDocument();
-  });
-
-  it('미니 플레이어에서 일시정지·다음·종료가 동작한다', async () => {
-    const user = userEvent.setup();
-    await renderApp();
-
-    await user.click(screen.getByRole('button', { name: /연속 듣기 시작/ }));
-    await user.keyboard('{Escape}');
-
-    const mini = screen.getByRole('region', { name: '연속 듣기 미니 플레이어' });
-
-    await user.click(within(mini).getByRole('button', { name: '일시정지' }));
-    expect(within(mini).getByRole('button', { name: '재생' })).toBeInTheDocument();
-
-    await user.click(within(mini).getByRole('button', { name: '다음 문장' }));
-
-    await user.click(within(mini).getByRole('button', { name: '연속 듣기 종료' }));
-    expect(
-      screen.queryByRole('region', { name: '연속 듣기 미니 플레이어' })
-    ).not.toBeInTheDocument();
-  });
-
-  it('탭을 옮겨도 미니 플레이어가 계속 떠 있다', async () => {
-    const user = userEvent.setup();
-    await renderApp();
-
-    await user.click(screen.getByRole('button', { name: /연속 듣기 시작/ }));
-    await user.keyboard('{Escape}');
-    expect(screen.getByRole('region', { name: '연속 듣기 미니 플레이어' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: '긴급' }));
-    expect(screen.getByRole('region', { name: '연속 듣기 미니 플레이어' })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: '보관함' }));
-    expect(screen.getByRole('region', { name: '연속 듣기 미니 플레이어' })).toBeInTheDocument();
-  });
-});

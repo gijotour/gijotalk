@@ -13,9 +13,7 @@ import {
 import { Header } from './components/Header';
 import { InstallBanner } from './components/InstallBanner';
 import { OfflineAudioCard } from './components/OfflineAudioCard';
-import { MiniPlayer } from './components/MiniPlayer';
 import { PrivacyNotice, PrivacyToggle } from './components/PrivacyToggle';
-import { useListeningPlayer } from './hooks/useListeningPlayer';
 import { track } from './utils/analytics';
 import { CategoryChips } from './components/CategoryChips';
 import { PhraseCard } from './components/PhraseCard';
@@ -28,10 +26,9 @@ import { PronunciationModal } from './components/PronunciationModal';
 const DriveModal = lazy(() =>
   import('./components/DriveModal').then((m) => ({ default: m.DriveModal }))
 );
-import { ListeningModal } from './components/ListeningModal';
 import { BottomNav, TabType } from './components/BottomNav';
 
-import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Headphones, Camera } from 'lucide-react';
+import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Camera } from 'lucide-react';
 
 export default function App() {
   // Country & Filter States
@@ -52,7 +49,6 @@ export default function App() {
   const [showAIAssistant, setShowAIAssistant] = useState<boolean>(false);
   const [micPracticePhrase, setMicPracticePhrase] = useState<Phrase | null>(null);
   const [showDriveModal, setShowDriveModal] = useState<boolean>(false);
-  const [showListeningModal, setShowListeningModal] = useState<boolean>(false);
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
 
   // Custom AI-generated Phrases State
@@ -155,8 +151,8 @@ export default function App() {
     setBookmarkedIds((prev) => toggleBookmarkId(id, prev));
   }, []);
 
-  // 아래 파생값들은 매 렌더마다 새 배열을 만듭니다. 메모이제이션하지 않으면
-  // ListeningModal 의 phrases 참조가 계속 바뀌어 재생 중 1번으로 되감깁니다.
+  // 아래 파생값들은 매 렌더마다 새 배열을 만듭니다.
+  // 메모이제이션하지 않으면 목록이 바뀔 때마다 카드가 전부 다시 그려집니다.
   const allPhrases = useMemo(() => [...PHRASES, ...customPhrases], [customPhrases]);
 
   const countryPhrases = useMemo(
@@ -236,27 +232,12 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [searchQuery, filteredPhrases.length, selectedCountry.id, selectedCategory]);
 
-  // 연속 듣기 재생 엔진.
-  // App 이 들고 있기 때문에 플레이어 화면을 닫아도 재생이 끊기지 않습니다.
-  // 지금 화면에 보이는 목록이 곧 재생 목록입니다.
-  const listeningQueue = filteredPhrases.length > 0 ? filteredPhrases : countryPhrases;
-  const player = useListeningPlayer(listeningQueue, selectedCountry);
-
-  const startListening = () => {
-    player.play(0);
-    setShowListeningModal(true);
-  };
 
   return (
-    // 하단 여백은 네비게이션 높이 + (미니 플레이어가 떠 있으면) 그 높이만큼 확보합니다.
-    // 고정값으로 두면 재생 중에 마지막 카드가 플레이어에 가립니다.
+    // 하단 여백은 고정 네비게이션 높이 + safe-area 만큼 확보합니다.
     <div
       className="min-h-screen bg-canvas text-ink flex flex-col font-['Inter']"
-      style={{
-        paddingBottom: player.isActive
-          ? 'calc(10.5rem + env(safe-area-inset-bottom))'
-          : 'calc(5.5rem + env(safe-area-inset-bottom))',
-      }}
+      style={{ paddingBottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
     >
       {/* 설치 안내 · 인앱 브라우저 경고 · 오프라인 표시 */}
       <InstallBanner isOffline={isOffline} />
@@ -306,14 +287,6 @@ export default function App() {
                 )}
               </div>
 
-              <button
-                onClick={startListening}
-                aria-label={`${listeningQueue.length}개 문장 연속 듣기 시작`}
-                title="연속 듣기"
-                className="w-13 h-13 shrink-0 flex items-center justify-center bg-ink hover:bg-black text-white rounded-2xl shadow-xs active:scale-95 transition-all"
-              >
-                <Headphones className="w-5 h-5" />
-              </button>
 
               {/* 사진 번역 · AI 모두 서버가 필요합니다. 정적 배포에서는 숨깁니다. */}
               {!IS_STATIC_BUILD && (
@@ -528,9 +501,6 @@ export default function App() {
       </main>
 
       {/* Bottom Fixed Navigation Bar */}
-      {/* 하단 미니 플레이어 — 재생 중이면 어느 탭에 있든 떠 있습니다.
-          누르면 전체 플레이어로 펼쳐집니다. */}
-      <MiniPlayer player={player} onExpand={() => setShowListeningModal(true)} />
 
       <BottomNav
         activeTab={activeTab}
@@ -596,12 +566,6 @@ export default function App() {
         <PhotoTranslateModal country={selectedCountry} onClose={() => setShowPhotoModal(false)} />
       )}
 
-      {/* 전체 화면 연속 듣기 플레이어 — 접어도 재생은 계속됩니다. */}
-      <ListeningModal
-        isOpen={showListeningModal}
-        onClose={() => setShowListeningModal(false)}
-        player={player}
-      />
     </div>
   );
 }

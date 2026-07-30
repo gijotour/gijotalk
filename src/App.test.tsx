@@ -20,12 +20,23 @@ const renderApp = async () => {
  * 개별 유닛 테스트가 통과해도 조립이 틀리면 화면은 깨지므로, 조립을 검증합니다.
  */
 describe('App — 조립 검증', () => {
-  it('하단 탭이 3개다', async () => {
+  it('하단 탭이 4개다', async () => {
     await renderApp();
     const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
     const tabs = within(nav).getAllByRole('button');
-    expect(tabs).toHaveLength(3);
-    expect(tabs.map((t) => t.textContent)).toEqual(['회화', '보관함', '긴급']);
+    expect(tabs).toHaveLength(4);
+    expect(tabs.map((t) => t.textContent)).toEqual(['회화', '일정', '보관함', '긴급']);
+  });
+
+  it('일정 탭을 열면 파일 올리기와 양식 받기가 함께 보인다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    await user.click(screen.getByRole('button', { name: '일정' }));
+
+    expect(screen.getByText('일정표 파일 올리기')).toBeInTheDocument();
+    // 양식 없이 업로드만 있으면 가이드가 무엇을 보내야 할지 알 수 없습니다.
+    expect(screen.getByText('일정표 양식 받기')).toBeInTheDocument();
   });
 
   it('첫 화면에 프로모 배너 없이 회화 카드가 바로 보인다', async () => {

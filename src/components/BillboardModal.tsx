@@ -118,9 +118,12 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
           <p className="text-2xl sm:text-3xl font-extrabold text-brand">
             {phrase.translation}
           </p>
-          <p className="text-base sm:text-lg font-mono text-emerald-400 font-bold">
-            발음: {phrase.pronunciation}
-          </p>
+          {/* 일정표의 장소를 띄울 때는 발음 표기가 없습니다. "발음: " 만 뜨지 않게 감춥니다. */}
+          {phrase.pronunciation && (
+            <p className="text-base sm:text-lg font-mono text-emerald-400 font-bold">
+              발음: {phrase.pronunciation}
+            </p>
+          )}
         </div>
       </main>
 

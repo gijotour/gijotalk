@@ -1,14 +1,18 @@
 import React from 'react';
-import { Languages, Bookmark, ShieldAlert } from 'lucide-react';
+import { Languages, CalendarDays, Bookmark, ShieldAlert } from 'lucide-react';
 
 /**
- * 탭을 5개에서 3개로 줄였습니다.
+ * 탭을 5개에서 3개로 줄였다가, 일정표를 더해 4개가 됐습니다.
  *
  * 없앤 것과 그 이유:
  *   · 카테고리  → 메인 화면의 카테고리 칩이 이미 같은 일을 합니다. 순수 중복이었습니다.
  *   · 연속듣기  → 기능 자체를 걷어냈습니다. 문장별 재생만으로 충분하다고 판단했습니다.
+ *
+ * 일정표를 탭으로 올린 이유:
+ *   여행 중 조회 빈도가 회화만큼 높고 성격이 완전히 다릅니다. 회화 화면에 카드로
+ *   끼워 넣으면 정작 회화 목록이 또 첫 화면 아래로 밀려납니다.
  */
-export type TabType = 'translate' | 'bookmarks' | 'emergency';
+export type TabType = 'translate' | 'itinerary' | 'bookmarks' | 'emergency';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -27,6 +31,13 @@ const TABS: Array<{
     id: 'translate',
     label: '회화',
     icon: <Languages className="w-6 h-6" />,
+    activeClass: 'bg-brand text-white',
+    idleClass: 'text-ink-soft hover:text-ink',
+  },
+  {
+    id: 'itinerary',
+    label: '일정',
+    icon: <CalendarDays className="w-6 h-6" />,
     activeClass: 'bg-brand text-white',
     idleClass: 'text-ink-soft hover:text-ink',
   },

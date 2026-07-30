@@ -46,7 +46,7 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
   };
 
   return (
-    <div className="bg-white p-5 sm:p-6 rounded-2xl border-2 border-slate-100 hover:border-brand-vivid shadow-xs relative overflow-hidden group transition-all duration-200">
+    <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 hover:border-brand-vivid shadow-xs relative overflow-hidden group transition-all duration-200">
       {/* Top Meta Row */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-2 flex-wrap">
@@ -97,20 +97,20 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
       {/* 본문 — 위계는 현장에서 쓰는 순서를 따릅니다.
           ① 원문(현지인에게 보여줌) ② 발음(내가 소리 내어 읽음) ③ 뜻 ④ 팁
           예전에는 넷이 전부 굵어서 무엇을 먼저 볼지 알 수 없었습니다. */}
-      <div className="my-3 space-y-2">
+      <div className="my-2.5 space-y-1.5">
         {/* ① 원문 — 유일한 font-black */}
-        <h2 className="text-3xl sm:text-4xl font-black text-ink leading-tight font-display">
+        <h2 className="text-2xl sm:text-3xl font-black text-ink leading-tight font-display">
           {phrase.original}
         </h2>
 
         {/* ② 발음 — 한국인이 실제로 읽는 줄. 원문 다음으로 큽니다. */}
-        <p className="inline-block bg-accent text-ink px-3 py-1.5 rounded-xl text-base sm:text-lg font-bold tracking-tight">
+        <p className="inline-block bg-accent text-ink px-2.5 py-1 rounded-xl text-sm sm:text-base font-bold tracking-tight">
           {phrase.pronunciation}
         </p>
 
         {/* ③ 뜻 — 굵기를 낮춰 원문과 경쟁하지 않게 합니다. */}
         <div className="flex items-baseline justify-between gap-3 flex-wrap">
-          <p className="text-lg sm:text-xl font-semibold text-ink-soft">{phrase.translation}</p>
+          <p className="text-sm sm:text-base font-semibold text-ink-soft">{phrase.translation}</p>
           <span className="text-xs text-ink-mute font-medium">{country.language}</span>
         </div>
       </div>
@@ -133,12 +133,12 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
 
       {/* ④ 팁 — 본문보다 한 단계 아래. 12px → 14px 로 키웠습니다. */}
       {phrase.usageTip && (
-        <div className="bg-brand-tint p-3.5 rounded-xl mb-4 border-l-4 border-brand-vivid">
+        <div className="bg-brand-tint p-3 rounded-xl mb-3 border-l-4 border-brand-vivid">
           <div className="flex items-center gap-1.5 text-brand font-bold mb-1 text-xs uppercase tracking-wider">
             <Info className="w-3.5 h-3.5" />
             <span>현장 사용 팁</span>
           </div>
-          <p className="text-sm leading-relaxed font-medium text-ink-soft">{phrase.usageTip}</p>
+          <p className="text-xs leading-relaxed font-medium text-ink-soft">{phrase.usageTip}</p>
         </div>
       )}
 
@@ -203,7 +203,7 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
           <button
             onClick={handleSpeak}
             aria-label={`${phrase.original} 큰 소리로 재생`}
-            className="flex items-center gap-2 px-5 py-3 rounded-full bg-brand hover:bg-brand-hover text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-vivid/25 active:scale-95 transition-all duration-150"
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-brand hover:bg-brand-hover text-white font-bold text-xs sm:text-xs shadow-md shadow-brand-vivid/25 active:scale-95 transition-all duration-150"
           >
             <Volume2 className="w-4 h-4 fill-current" />
             <span>큰 소리로 재생</span>

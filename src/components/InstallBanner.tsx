@@ -72,7 +72,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
     <>
       {/* 오프라인 알림 — 설치가 제대로 됐다는 신호이기도 합니다 */}
       {isOffline && (
-        <div className="w-full bg-accent text-slate-900 border-b border-amber-600/20 px-4 py-2 text-sm flex items-center gap-2 font-bold shadow-xs">
+        <div className="w-full bg-accent text-slate-900 border-b border-amber-600/20 px-4 py-2 text-xs flex items-center gap-2 font-bold shadow-xs">
           <WifiOff className="w-4 h-4 shrink-0" />
           <span>오프라인 모드 — 저장된 회화와 발음은 그대로 사용할 수 있습니다</span>
         </div>
@@ -80,7 +80,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
 
       {/* 인앱 브라우저 경고 — 지인 배포에서 설치 실패의 가장 흔한 원인 */}
       {inApp && !installed && (
-        <div className="w-full bg-rose-600 text-white px-4 py-3 text-sm font-bold shadow-md">
+        <div className="w-full bg-rose-600 text-white px-4 py-3 text-xs font-bold shadow-md">
           <div className="max-w-screen-md mx-auto flex flex-col sm:flex-row sm:items-center gap-2.5">
             <div className="flex items-start gap-2 flex-1">
               <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -99,7 +99,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
             </div>
             <button
               onClick={handleCopyLink}
-              className="shrink-0 px-3.5 py-2 bg-white text-rose-700 rounded-xl font-bold text-sm flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+              className="shrink-0 px-3.5 py-2 bg-white text-rose-700 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               <span>{copied ? '복사됨!' : '주소 복사'}</span>
@@ -112,7 +112,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
       {!installed && !inApp && !dismissed && (
         <div className="w-full bg-orange-100/90 text-slate-800 px-4 py-2.5 border-b border-orange-200 shadow-xs">
           <div className="max-w-screen-md mx-auto flex justify-between items-center gap-3">
-            <div className="flex items-center gap-2 text-sm font-bold min-w-0">
+            <div className="flex items-center gap-2 text-xs font-bold min-w-0">
               <Download className="w-4 h-4 text-brand shrink-0" />
               <span className="truncate">
                 현지에서 인터넷 없이 쓰려면 홈 화면에 추가하세요
@@ -123,14 +123,14 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
               {installable ? (
                 <button
                   onClick={handleInstall}
-                  className="px-3.5 py-1.5 bg-brand hover:bg-brand-hover text-white rounded-xl font-bold text-sm active:scale-95 transition-all shadow-xs"
+                  className="px-3.5 py-1.5 bg-brand hover:bg-brand-hover text-white rounded-xl font-bold text-xs active:scale-95 transition-all shadow-xs"
                 >
                   앱 설치
                 </button>
               ) : (
                 <button
                   onClick={() => setShowGuide(true)}
-                  className="px-3 py-1.5 text-brand underline font-bold text-sm flex items-center gap-1"
+                  className="px-3 py-1.5 text-brand underline font-bold text-xs flex items-center gap-1"
                 >
                   설치 방법 <HelpCircle className="w-3.5 h-3.5" />
                 </button>
@@ -170,8 +170,8 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
                 <Smartphone className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-black text-lg text-slate-900">홈 화면에 GIJO Talk 추가</h3>
-                <p className="text-sm text-slate-500 font-bold">
+                <h3 className="font-black text-base text-slate-900">홈 화면에 GIJO Talk 추가</h3>
+                <p className="text-xs text-slate-500 font-bold">
                   추가해야 현지에서 인터넷 없이 열립니다
                 </p>
               </div>
@@ -179,7 +179,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
 
             <div className="bg-accent/15 border border-accent/60 rounded-2xl p-3.5 mb-4 flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-alert shrink-0 mt-0.5" />
-              <p className="text-sm text-slate-800 font-bold leading-relaxed">
+              <p className="text-xs text-slate-800 font-bold leading-relaxed">
                 카카오톡·인스타그램 안에서 열었다면 먼저{' '}
                 <span className="text-alert">Safari 또는 Chrome으로 열어야</span> 합니다.
               </p>
@@ -191,10 +191,10 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
                   ios ? 'bg-orange-50 border-brand' : 'bg-canvas border-slate-100'
                 }`}
               >
-                <p className="font-bold text-alert text-sm uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <p className="font-bold text-alert text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   아이폰 (Safari) {ios && <span className="text-brand">← 내 기기</span>}
                 </p>
-                <ol className="list-decimal list-inside space-y-1.5 text-sm text-slate-700 font-medium">
+                <ol className="list-decimal list-inside space-y-1.5 text-xs text-slate-700 font-medium">
                   <li>
                     화면 하단 중앙 <span className="font-black text-slate-900">[공유 ↑]</span> 버튼
                   </li>
@@ -212,10 +212,10 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
                   !ios ? 'bg-blue-50 border-blue-400' : 'bg-canvas border-slate-100'
                 }`}
               >
-                <p className="font-bold text-blue-700 text-sm uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <p className="font-bold text-blue-700 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   안드로이드 (Chrome) {!ios && <span className="text-blue-600">← 내 기기</span>}
                 </p>
-                <ol className="list-decimal list-inside space-y-1.5 text-sm text-slate-700 font-medium">
+                <ol className="list-decimal list-inside space-y-1.5 text-xs text-slate-700 font-medium">
                   <li>
                     우측 상단 <span className="font-black text-slate-900">[⋮ 더보기]</span>
                   </li>
@@ -230,7 +230,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
 
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5 mb-4 flex items-start gap-2">
               <ExternalLink className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-              <p className="text-sm text-emerald-900 font-bold leading-relaxed">
+              <p className="text-xs text-emerald-900 font-bold leading-relaxed">
                 추가한 뒤 <span className="underline">한 번 열어두면</span> 필리핀 회화와 발음이
                 기기에 저장되어, 현지에서 데이터 없이 그대로 열립니다.
               </p>

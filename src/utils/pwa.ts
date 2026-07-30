@@ -1,5 +1,7 @@
 // PWA 설치 · 오프라인 · 북마크 저장 유틸리티
 
+import { BASE_URL } from './env';
+
 const BOOKMARKS_STORAGE_KEY = 'quickpass_bookmarks_v1';
 export const CUSTOM_PHRASES_STORAGE_KEY = 'quickpass_custom_phrases_v1';
 
@@ -14,7 +16,7 @@ export function registerServiceWorker() {
   window.addEventListener('load', () => {
     // 서브패스 배포(GitHub Pages)에서도 올바른 위치의 워커를 등록합니다.
     navigator.serviceWorker
-      .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
+      .register(`${BASE_URL}sw.js`, { scope: BASE_URL })
       .then((reg) => {
         console.log('[GIJO Talk] 오프라인 캐시 준비됨:', reg.scope);
       })

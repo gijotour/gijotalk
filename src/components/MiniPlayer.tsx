@@ -45,7 +45,7 @@ export const MiniPlayer: React.FC<MiniPlayerProps> = ({ player, onExpand }) => {
           >
             <ChevronUp className="w-4 h-4 text-white/50 shrink-0" />
             <div className="min-w-0">
-              <p className="text-sm font-bold truncate leading-tight">{currentPhrase.original}</p>
+              <p className="text-xs font-bold truncate leading-tight">{currentPhrase.original}</p>
               <p className="text-xs text-white/60 truncate leading-tight mt-0.5">
                 {currentIndex + 1}/{phrases.length} · 반복 {repeatProgress}/{repeatCount} ·{' '}
                 {currentPhrase.translation}

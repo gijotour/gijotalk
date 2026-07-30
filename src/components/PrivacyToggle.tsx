@@ -33,8 +33,8 @@ export const PrivacyNotice: React.FC = () => {
           <Info className="w-5 h-5" />
         </div>
         <div className="min-w-0">
-          <h4 className="text-sm font-bold text-ink">사용 기록을 조금 모읍니다</h4>
-          <p className="text-sm text-ink-soft font-medium mt-1 leading-relaxed">
+          <h4 className="text-xs font-bold text-ink">사용 기록을 조금 모읍니다</h4>
+          <p className="text-xs text-ink-soft font-medium mt-1 leading-relaxed">
             어떤 문장이 부족한지 알기 위해 <b>검색어 · AI 질문 · 재생 기록</b>만 익명으로
             모읍니다. 계정·위치·연락처는 수집하지 않고, 아래 스위치로 언제든 끌 수 있습니다.
           </p>
@@ -42,14 +42,14 @@ export const PrivacyNotice: React.FC = () => {
           <div className="flex gap-2 mt-3">
             <button
               onClick={() => close(true)}
-              className="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-brand hover:bg-brand-hover text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
             >
               <Check className="w-4 h-4" />
               도와줄게요
             </button>
             <button
               onClick={() => close(false)}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-ink-soft text-sm font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
+              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-ink-soft text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
             >
               <X className="w-4 h-4" />
               안 보낼래요

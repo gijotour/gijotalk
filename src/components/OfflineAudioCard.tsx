@@ -68,12 +68,12 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
           </div>
 
           <div className="min-w-0">
-            <h4 className="text-sm font-bold text-slate-900">
+            <h4 className="text-xs font-bold text-slate-900">
               {status.complete
                 ? `${country.flag} ${country.name} 오프라인 저장 완료`
                 : `${country.flag} ${country.name} 발음을 기기에 저장하기`}
             </h4>
-            <p className="text-sm text-slate-600 font-medium mt-0.5 leading-relaxed">
+            <p className="text-xs text-slate-600 font-medium mt-0.5 leading-relaxed">
               {status.complete ? (
                 <>
                   {status.total}개 발음이 저장되어 있습니다. 이제 <b>인터넷 없이도</b> 그대로
@@ -88,7 +88,7 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
             </p>
 
             {!status.complete && status.cached > 0 && (
-              <p className="text-sm text-alert font-bold mt-1">
+              <p className="text-xs text-alert font-bold mt-1">
                 현재 {status.cached}/{status.total}개 ({pct}%) 저장됨
               </p>
             )}
@@ -99,7 +99,7 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
           <button
             onClick={handleDownload}
             disabled={downloading || isOffline}
-            className="shrink-0 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
+            className="shrink-0 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
           >
             {downloading ? (
               <>
@@ -123,14 +123,14 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
       )}
 
       {isOffline && !status.complete && (
-        <p className="mt-3 text-sm text-alert font-bold flex items-center gap-1.5">
+        <p className="mt-3 text-xs text-alert font-bold flex items-center gap-1.5">
           <WifiOff className="w-4 h-4 shrink-0" />
           인터넷에 연결되면 받을 수 있습니다.
         </p>
       )}
 
       {!status.complete && !isOffline && (
-        <p className="mt-3 text-sm text-slate-500 font-medium flex items-start gap-1.5">
+        <p className="mt-3 text-xs text-slate-500 font-medium flex items-start gap-1.5">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-alert" />
           저장하지 않으면 현지에서 발음이 재생되지 않을 수 있습니다.
         </p>

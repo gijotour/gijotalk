@@ -102,7 +102,7 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-black text-lg text-slate-900">AI 맞춤 현지 회화</h3>
+              <h3 className="font-black text-base text-slate-900">AI 맞춤 현지 회화</h3>
               <p className="text-xs text-slate-500 font-bold">
                 GIJO LABS AI · {country.flag} {country.name} ({country.language})
               </p>
@@ -125,7 +125,7 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleTranslate()}
               placeholder="예: 얼음 빼고 과일주스 만들어 주세요"
-              className="w-full bg-canvas border-2 border-slate-200 rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-vivid pr-12 font-bold"
+              className="w-full bg-canvas border-2 border-slate-200 rounded-2xl px-4 py-3.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-vivid pr-12 font-bold"
             />
             <button
               onClick={() => handleTranslate()}
@@ -174,10 +174,10 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
                 <span className="px-2.5 py-0.5 bg-orange-100 text-brand text-xs font-bold rounded-xl uppercase">
                   AI 생성 표현
                 </span>
-                <h4 className="text-2xl font-black text-slate-900 mt-1.5 italic font-['Montserrat']">
+                <h4 className="text-xl font-black text-slate-900 mt-1.5 italic font-['Montserrat']">
                   {generatedPhrase.original}
                 </h4>
-                <p className="text-lg font-bold text-slate-700">
+                <p className="text-base font-bold text-slate-700">
                   {generatedPhrase.translation}
                 </p>
               </div>

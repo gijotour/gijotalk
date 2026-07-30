@@ -1,4 +1,5 @@
 import { CountryId, Country, Phrase } from './types';
+export { IS_STATIC_BUILD } from './utils/env';
 import { COUNTRIES as BASE_COUNTRIES, PHRASES as BASE_PHRASES } from './data/phrases';
 import { PH_EXTRA_PHRASES } from './data/phrases.ph';
 import { PH_SOCIAL_PHRASES } from './data/phrases.ph.social';
@@ -41,14 +42,3 @@ export const IS_SINGLE_COUNTRY = COUNTRIES.length === 1;
 
 export const getCountryById = (id: CountryId): Country | undefined =>
   COUNTRIES.find((c) => c.id === id);
-
-/**
- * 정적 호스팅(GitHub Pages) 여부.
- *
- * Pages 에는 Express 서버가 없으므로 /api/* 를 부를 수 없습니다.
- * 해당하는 기능(AI 맞춤 회화·사용 기록 수집)은 버튼째로 숨깁니다 —
- * 눌렀는데 매번 실패하는 것보다 아예 없는 편이 덜 헷갈립니다.
- *
- * 회화·발음·오프라인·전광판·연속듣기·북마크는 서버 없이 전부 동작합니다.
- */
-export const IS_STATIC_BUILD = import.meta.env.VITE_STATIC_BUILD === 'true';

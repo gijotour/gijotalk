@@ -266,7 +266,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
               <HardDrive className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-black text-lg text-slate-900">GIJO Talk Drive 동기화</h3>
+              <h3 className="font-black text-base text-slate-900">GIJO Talk Drive 동기화</h3>
               <p className="text-xs text-slate-500 font-bold">
                 GIJO LABS · 북마크 회화 & AI 맞춤 문장 백업/복원
               </p>
@@ -312,7 +312,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
               <div className="inline-flex p-3 bg-blue-50 text-blue-600 rounded-2xl mb-1">
                 <ShieldCheck className="w-8 h-8" />
               </div>
-              <h4 className="font-extrabold text-slate-900 text-base">
+              <h4 className="font-extrabold text-slate-900 text-sm">
                 Google 계정을 연결하여 백업하세요
               </h4>
               <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto font-medium">
@@ -324,7 +324,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
                 <button
                   onClick={handleLogin}
                   disabled={isLoggingIn}
-                  className="w-full py-3 px-4 bg-white hover:bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-700 font-bold text-sm flex items-center justify-center gap-3 shadow-xs hover:shadow transition-all active:scale-98 disabled:opacity-50"
+                  className="w-full py-3 px-4 bg-white hover:bg-slate-50 border-2 border-slate-200 rounded-2xl text-slate-700 font-bold text-xs flex items-center justify-center gap-3 shadow-xs hover:shadow transition-all active:scale-98 disabled:opacity-50"
                 >
                   {isLoggingIn ? (
                     <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
@@ -369,12 +369,12 @@ export const DriveModal: React.FC<DriveModalProps> = ({
                       className="w-10 h-10 rounded-full border border-orange-200"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm">
+                    <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs">
                       {user.displayName?.[0] || 'U'}
                     </div>
                   )}
                   <div className="truncate">
-                    <p className="font-bold text-sm text-slate-900 truncate">
+                    <p className="font-bold text-xs text-slate-900 truncate">
                       {user.displayName || 'Google 사용자'}
                     </p>
                     <p className="text-xs text-slate-500 font-medium truncate">{user.email}</p>
@@ -403,7 +403,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
                     </span>
                   </div>
                   <div>
-                    <p className="font-bold text-sm">Drive 백업 저장</p>
+                    <p className="font-bold text-xs">Drive 백업 저장</p>
                     <p className="text-xs text-blue-100 font-medium">
                       북마크 {savedPhraseIds.length}개 / AI문장 {customPhrases.length}개
                     </p>
@@ -422,7 +422,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
                     </span>
                   </div>
                   <div>
-                    <p className="font-bold text-sm">{currentCountry.name} 치트시트</p>
+                    <p className="font-bold text-xs">{currentCountry.name} 치트시트</p>
                     <p className="text-xs text-orange-100 font-medium">
                       Drive 텍스트 요약문 생성
                     </p>
@@ -533,7 +533,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
               <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl inline-block">
                 <AlertCircle className="w-6 h-6" />
               </div>
-              <h4 className="font-bold text-sm text-slate-900">Google Drive 파일 삭제</h4>
+              <h4 className="font-bold text-xs text-slate-900">Google Drive 파일 삭제</h4>
               <p className="text-xs text-slate-600 leading-relaxed font-bold">
                 '<span className="text-rose-600">{fileToDelete.name}</span>' 파일을 Google Drive에서
                 영구 삭제하시겠습니까?

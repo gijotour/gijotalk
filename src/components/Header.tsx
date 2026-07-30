@@ -39,33 +39,33 @@ export const Header: React.FC<HeaderProps> = ({
   }, [dropdownOpen]);
 
   return (
-    <header className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-md px-4 sm:px-8 py-4 flex items-center justify-between border-b border-orange-100 shadow-xs">
-      {/* Brand Title */}
-      <div className="flex items-center gap-3">
-        <div className="bg-brand p-2 sm:p-2.5 rounded-xl shadow-md shadow-brand-vivid/20 text-white">
-          <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
+    <header className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-md px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 border-b border-orange-100 shadow-xs">
+      {/* 브랜드.
+          min-w-0 + whitespace-nowrap 이 없으면 좁은 화면에서 우측 버튼에 밀려
+          제목이 글자 단위로 세로로 쪼개집니다. */}
+      <div className="flex items-center gap-2 min-w-0">
+        <div className="bg-brand p-1.5 rounded-xl text-white shrink-0">
+          <Globe className="w-4 h-4" />
         </div>
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 font-['Montserrat']">
-              GIJO Talk
-            </h1>
-            <span className="text-blue-600 bg-blue-50 text-xs sm:text-xs font-bold uppercase px-2 py-0.5 border border-blue-200 rounded-xl tracking-wider">
-              GIJO LABS
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 font-bold tracking-wide hidden sm:block">동남아 3초 긴급 현장회화 & 도로소음 오디오</p>
+        <div className="min-w-0">
+          <h1 className="text-base sm:text-lg font-black tracking-tight text-ink font-display whitespace-nowrap">
+            Gijo talk(PH)
+          </h1>
+          {/* 좁은 화면에서는 숨깁니다 — 이 줄이 제목을 밀어내던 주범입니다. */}
+          <p className="text-xs text-ink-mute font-medium whitespace-nowrap hidden md:block">
+            필리핀 3초 긴급 현장회화 · GIJO LABS
+          </p>
         </div>
       </div>
 
       {/* Country Selector & Action Buttons */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-1.5 shrink-0">
         {/* Country Selector — 국가가 하나뿐이면 고정 배지로 표시합니다.
             config.ts 의 ENABLED_COUNTRY_IDS 에 나라를 추가하면 자동으로 드롭다운이 됩니다. */}
         {IS_SINGLE_COUNTRY ? (
-          <div className="flex items-center gap-2 bg-white border-2 border-accent text-slate-900 px-3.5 py-1.5 rounded-full font-bold shadow-xs text-xs sm:text-sm">
-            <span className="text-lg leading-none">{selectedCountry.flag}</span>
-            <span className="font-bold">{selectedCountry.name}</span>
+          <div className="flex items-center gap-1.5 bg-white border-2 border-accent text-ink px-2.5 py-1 rounded-full font-bold shadow-xs text-xs whitespace-nowrap">
+            <span className="text-base leading-none">{selectedCountry.flag}</span>
+            <span>{selectedCountry.name}</span>
           </div>
         ) : (
         <div className="relative" ref={dropdownRef}>
@@ -73,10 +73,10 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             aria-haspopup="listbox"
             aria-expanded={dropdownOpen}
-            className="flex items-center gap-2 bg-white hover:bg-orange-50/50 border-2 border-accent text-slate-900 px-3.5 py-1.5 rounded-full transition-all active:scale-95 font-bold shadow-xs text-xs sm:text-sm"
+            className="flex items-center gap-1.5 bg-white hover:bg-orange-50/50 border-2 border-accent text-ink px-2.5 py-1 rounded-full transition-all active:scale-95 font-bold shadow-xs text-xs whitespace-nowrap"
           >
-            <span className="text-lg leading-none">{selectedCountry.flag}</span>
-            <span className="font-bold">{selectedCountry.name}</span>
+            <span className="text-base leading-none">{selectedCountry.flag}</span>
+            <span>{selectedCountry.name}</span>
             <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -117,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onOpenAIAssistant}
           aria-label="AI 상황별 맞춤 회화 질문"
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-brand hover:bg-brand-hover text-white rounded-full text-xs font-bold transition-all active:scale-95 shadow-md shadow-brand-vivid/20"
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-brand hover:bg-brand-hover text-white rounded-full text-xs font-bold transition-all active:scale-95 shrink-0 whitespace-nowrap"
           title="AI 상황별 맞춤 회화 질문"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-200" />
@@ -131,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onOpenDriveModal}
             aria-label="Google Drive 백업 및 동기화"
-            className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 border-2 border-blue-200 rounded-full transition-all active:scale-95 shadow-xs"
+            className="p-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-full transition-all active:scale-95 shrink-0"
             title="Google Drive 백업 및 동기화"
           >
             <HardDrive className="w-4 h-4" />
@@ -142,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onOpenEmergencyModal}
           aria-label="3초 긴급 전광판 모드 실행"
-          className="p-2 bg-accent/20 text-alert hover:bg-accent/30 border-2 border-accent/60 rounded-full transition-all active:scale-95 shadow-xs"
+          className="p-1.5 bg-accent/25 text-alert hover:bg-accent/40 border border-accent/60 rounded-full transition-all active:scale-95 shrink-0"
           title="3초 긴급 전광판 모드 실행"
         >
           <ShieldAlert className="w-4 h-4" />

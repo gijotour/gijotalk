@@ -56,7 +56,7 @@ export const PronunciationModal: React.FC<PronunciationModalProps> = ({
         <div className="flex justify-between items-center pb-3 border-b border-orange-100 mb-4">
           <div className="flex items-center gap-2">
             <Mic className="w-5 h-5 text-brand" />
-            <h3 className="font-extrabold text-base text-slate-900">실전 발음 체크 (STT)</h3>
+            <h3 className="font-extrabold text-sm text-slate-900">실전 발음 체크 (STT)</h3>
           </div>
           <button
             onClick={onClose}
@@ -68,10 +68,10 @@ export const PronunciationModal: React.FC<PronunciationModalProps> = ({
 
         {/* Phrase Info */}
         <div className="bg-canvas p-4 rounded-2xl border-2 border-slate-100 mb-6 shadow-xs">
-          <p className="text-brand font-black text-2xl italic font-['Montserrat']">
+          <p className="text-brand font-black text-xl italic font-['Montserrat']">
             {phrase.original}
           </p>
-          <p className="text-sm font-bold text-slate-800 mt-0.5">{phrase.translation}</p>
+          <p className="text-xs font-bold text-slate-800 mt-0.5">{phrase.translation}</p>
           <p className="text-xs font-bold text-alert mt-1">발음: {phrase.pronunciation}</p>
         </div>
 
@@ -91,7 +91,7 @@ export const PronunciationModal: React.FC<PronunciationModalProps> = ({
             </div>
           ) : score !== null ? (
             <div className="space-y-3 w-full animate-in fade-in duration-200">
-              <div className="flex items-center justify-center gap-2 text-3xl font-black">
+              <div className="flex items-center justify-center gap-2 text-2xl font-black">
                 <span className={score >= 60 ? 'text-emerald-600' : 'text-alert'}>
                   {score}점
                 </span>

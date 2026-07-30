@@ -100,7 +100,7 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
               <Headphones className="w-6 h-6 text-white" />
             </div>
             <div className="min-w-0">
-              <h3 className="font-extrabold text-base flex items-center gap-2">
+              <h3 className="font-extrabold text-sm flex items-center gap-2">
                 <span>{country.flag}</span>
                 <span className="truncate">연속 듣기</span>
               </h3>
@@ -137,13 +137,13 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
 
             {/* 위계: 원문 → 발음 → 뜻 */}
             <div className="relative space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-snug">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-snug">
                 {currentPhrase.original}
               </h2>
-              <p className="inline-block bg-accent text-ink px-3 py-1 rounded-xl text-base font-bold">
+              <p className="inline-block bg-accent text-ink px-3 py-1 rounded-xl text-sm font-bold">
                 {currentPhrase.pronunciation}
               </p>
-              <p className="text-sm font-medium text-slate-300 pt-1">
+              <p className="text-xs font-medium text-slate-300 pt-1">
                 {currentPhrase.translation}
               </p>
             </div>
@@ -161,7 +161,7 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
             {settingRows.map((row) => (
               <div
                 key={row.label}
-                className="flex items-center justify-between text-sm font-bold text-ink-soft"
+                className="flex items-center justify-between text-xs font-bold text-ink-soft"
               >
                 <span className="flex items-center gap-1.5 text-ink">
                   {row.icon} {row.label}
@@ -172,7 +172,7 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
                       key={opt}
                       onClick={() => row.onChange(opt)}
                       aria-pressed={row.value === opt}
-                      className={`px-3 py-1.5 rounded-xl text-sm font-bold transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                         row.value === opt
                           ? row.dark
                             ? 'bg-ink text-white'
@@ -194,7 +194,7 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
             <button
               onClick={() => setShowPlaylist(!showPlaylist)}
               aria-expanded={showPlaylist}
-              className="w-full flex items-center justify-between p-3 bg-slate-100 hover:bg-slate-200/80 rounded-2xl text-sm font-bold text-ink-soft transition-colors"
+              className="w-full flex items-center justify-between p-3 bg-slate-100 hover:bg-slate-200/80 rounded-2xl text-xs font-bold text-ink-soft transition-colors"
             >
               <span className="flex items-center gap-2">
                 <ListMusic className="w-4 h-4" />
@@ -214,7 +214,7 @@ export const ListeningModal: React.FC<ListeningModalProps> = ({ isOpen, onClose,
                       key={p.id}
                       onClick={() => player.play(idx)}
                       aria-current={isActive}
-                      className={`w-full text-left p-2.5 rounded-xl text-sm flex items-center justify-between gap-2 transition-all ${
+                      className={`w-full text-left p-2.5 rounded-xl text-xs flex items-center justify-between gap-2 transition-all ${
                         isActive
                           ? 'bg-brand-tint border border-brand-vivid font-bold text-ink'
                           : 'hover:bg-slate-50 text-ink-soft border border-transparent'

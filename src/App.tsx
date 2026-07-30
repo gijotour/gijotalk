@@ -246,10 +246,10 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-grow w-full max-w-screen-md mx-auto px-4 sm:px-6 py-5 space-y-5">
+      <main className="flex-grow w-full max-w-screen-md mx-auto px-3 sm:px-6 py-4 space-y-4">
         {/* TAB 1: 회화 / 번역 메인 뷰 */}
         {activeTab === 'translate' && (
-          <div className="space-y-5 animate-in fade-in duration-150">
+          <div className="space-y-4 animate-in fade-in duration-150">
             {/* 검색 + 액션.
                 예전에는 검색줄 아래로 프로모 배너 2개가 화면을 채워서, 정작 회화 카드가
                 첫 화면 아래로 밀려나 있었습니다. 배너를 아이콘 버튼으로 접었습니다. */}
@@ -261,7 +261,7 @@ export default function App() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="회화 검색"
                   placeholder="원문 · 뜻 · 발음 검색"
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-sm text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs"
+                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs"
                 />
                 <Search className="w-4 h-4 text-ink-mute absolute left-4 top-4.5" />
                 {searchQuery && (
@@ -305,7 +305,7 @@ export default function App() {
 
             {/* Phrase Cards Feed */}
             {filteredPhrases.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {filteredPhrases.map((phrase) => (
                   <PhraseCard
                     key={phrase.id}
@@ -323,21 +323,21 @@ export default function App() {
             ) : (
               <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
                 <Search className="w-10 h-10 text-ink-mute mx-auto mb-2" />
-                <h3 className="text-sm font-bold text-slate-700">
+                <h3 className="text-xs font-bold text-slate-700">
                   검색 조건에 일치하는 회화 문장이 없습니다.
                 </h3>
                 {IS_STATIC_BUILD ? (
-                  <p className="text-sm text-ink-mute mt-1">
+                  <p className="text-xs text-ink-mute mt-1">
                     다른 검색어로 찾아보거나 카테고리를 바꿔보세요.
                   </p>
                 ) : (
                   <>
-                    <p className="text-sm text-ink-mute mt-1 mb-4">
+                    <p className="text-xs text-ink-mute mt-1 mb-4">
                       AI 맞춤 질문으로 필요한 문장을 즉시 생성해보세요!
                     </p>
                     <button
                       onClick={() => setShowAIAssistant(true)}
-                      className="px-4 py-2 bg-brand text-white text-sm font-bold rounded-xl shadow-xs"
+                      className="px-4 py-2 bg-brand text-white text-xs font-bold rounded-xl shadow-xs"
                     >
                       AI 질문으로 생성하기
                     </button>
@@ -360,7 +360,7 @@ export default function App() {
           <div className="space-y-4 animate-in fade-in duration-150">
             <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
                   <Bookmark className="w-5 h-5 text-accent fill-current" />
                   <span>내 보관함 ({bookmarkedPhrases.length})</span>
                 </h2>
@@ -391,7 +391,7 @@ export default function App() {
             ) : (
               <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
                 <Bookmark className="w-10 h-10 text-ink-mute mx-auto mb-2" />
-                <h3 className="text-sm font-bold text-slate-700">
+                <h3 className="text-xs font-bold text-slate-700">
                   아직 저장된 문장이 없습니다.
                 </h3>
                 <p className="text-xs text-ink-mute mt-1 mb-4">
@@ -408,7 +408,7 @@ export default function App() {
             <div className="bg-accent/20 border-2 border-accent/60 p-4 rounded-2xl text-slate-900 shadow-xs">
               <div className="flex items-center gap-2 mb-1">
                 <ShieldAlert className="w-5 h-5 text-alert" />
-                <h2 className="font-extrabold text-base text-slate-900">
+                <h2 className="font-extrabold text-sm text-slate-900">
                   3초 긴급 현장 외치기 전광판 모드
                 </h2>
               </div>
@@ -431,10 +431,10 @@ export default function App() {
                     <Maximize2 className="w-4 h-4 text-brand group-hover:scale-110 transition-transform" />
                   </div>
 
-                  <h3 className="text-2xl font-black text-slate-900 font-['Montserrat'] tracking-tight italic">
+                  <h3 className="text-xl font-black text-slate-900 font-['Montserrat'] tracking-tight italic">
                     {phrase.original}
                   </h3>
-                  <p className="text-sm font-bold text-slate-700 mt-1">
+                  <p className="text-xs font-bold text-slate-700 mt-1">
                     {phrase.translation}
                   </p>
                   <p className="text-xs font-bold text-alert mt-0.5">
@@ -526,7 +526,7 @@ export default function App() {
         <Suspense
           fallback={
             <div className="fixed inset-0 z-[110] bg-black/80 flex items-center justify-center">
-              <div className="bg-white rounded-2xl px-6 py-4 text-sm font-bold text-slate-700">
+              <div className="bg-white rounded-2xl px-6 py-4 text-xs font-bold text-slate-700">
                 Drive 백업 불러오는 중…
               </div>
             </div>

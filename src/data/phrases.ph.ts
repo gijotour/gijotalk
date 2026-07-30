@@ -304,7 +304,7 @@ export const PH_EXTRA_PHRASES: Phrase[] = [
     category: '흥정',
     original: 'Wala po akong barya.',
     translation: '잔돈이 없어요.',
-    pronunciation: '[왈라 포 아콩 바리야?]',
+    pronunciation: '[왈라 포 아콩 바리야]',
     toneGuide: '상황 설명',
     usageTip: '반대로 상인이 이 말을 하면 거스름돈이 없다는 뜻입니다. 소액권을 늘 챙기세요.',
   },

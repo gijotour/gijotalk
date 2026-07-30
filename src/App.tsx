@@ -21,6 +21,8 @@ import { BillboardModal } from './components/BillboardModal';
 import { AITranslateModal } from './components/AITranslateModal';
 import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
+import { ItineraryTab } from './components/ItineraryTab';
+import { hasItineraryLink } from './utils/itineraryLink';
 import { BottomNav, TabType } from './components/BottomNav';
 
 import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Camera } from 'lucide-react';
@@ -30,7 +32,10 @@ export default function App() {
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('전체');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<TabType>('translate');
+  // 카톡방의 일정표 링크를 누르고 들어온 사람은 회화가 아니라 일정을 보러 온 것입니다.
+  const [activeTab, setActiveTab] = useState<TabType>(() =>
+    hasItineraryLink() ? 'itinerary' : 'translate'
+  );
 
   // Audio Settings
   const [speed, setSpeed] = useState<number>(1.0);
@@ -348,6 +353,19 @@ export default function App() {
           </div>
         )}
 
+
+        {/* TAB 2: 일정표 — 가이드가 보낸 .txt 파일을 올려서 오프라인으로 봅니다 */}
+        {activeTab === 'itinerary' && (
+          <ItineraryTab
+            country={selectedCountry}
+            onOpenBillboard={setBillboardPhrase}
+            onJumpToCategory={(category) => {
+              setSelectedCategory(category);
+              setSearchQuery('');
+              setActiveTab('translate');
+            }}
+          />
+        )}
 
         {/* TAB 3: 저장됨 (북마크) */}
         {activeTab === 'bookmarks' && (

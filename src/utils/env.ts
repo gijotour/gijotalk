@@ -19,3 +19,15 @@ export const BASE_URL: string = env?.BASE_URL ?? '/';
  * 서버가 필요한 기능(AI 맞춤 회화·사용 기록)을 버튼째로 숨깁니다.
  */
 export const IS_STATIC_BUILD: boolean = env?.VITE_STATIC_BUILD === 'true';
+
+/**
+ * 가이드 모드(일정표 작성) 진입 코드.
+ *
+ * ⚠️ 이건 보안 장치가 아닙니다. 서버가 없어 코드가 앱 번들 안에 들어가므로
+ *    마음먹고 뜯어보면 보입니다. 목적은 딱 하나 — 일반 여행자에게 편집 화면을
+ *    보이지 않게 하는 것입니다. 각자 기기의 자기 일정을 고치는 것뿐이라
+ *    새어나가도 실질적 피해가 없습니다.
+ *
+ *    바꾸려면 빌드할 때: VITE_GUIDE_CODE=원하는코드 npm run build
+ */
+export const GUIDE_CODE: string = env?.VITE_GUIDE_CODE || 'gijohn';

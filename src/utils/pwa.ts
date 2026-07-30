@@ -13,7 +13,7 @@ export function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   if (process.env.NODE_ENV !== 'production') return;
 
-  window.addEventListener('load', () => {
+  const register = () => {
     // 서브패스 배포(GitHub Pages)에서도 올바른 위치의 워커를 등록합니다.
     navigator.serviceWorker
       .register(`${BASE_URL}sw.js`, { scope: BASE_URL })
@@ -23,7 +23,17 @@ export function registerServiceWorker() {
       .catch((err) => {
         console.warn('[GIJO Talk] 서비스 워커 등록 실패:', err);
       });
-  });
+  };
+
+  // ⚠️ load 를 무조건 기다리면 안 됩니다.
+  //
+  //   이 함수는 App 의 마운트 이펙트에서 불립니다. React 는 이펙트를 첫 페인트
+  //   뒤로 미루므로, 번들이 다 실행된 배포 환경에서는 load 가 이미 지나간 뒤에
+  //   여기 도착합니다. 그러면 리스너는 영영 불리지 않고 워커가 등록되지 않습니다.
+  //   실제 배포본(GitHub Pages)에서 register 호출이 0회였던 원인입니다 —
+  //   설치는 되는데 오프라인에서는 아무것도 열리지 않는 상태였습니다.
+  if (document.readyState === 'complete') register();
+  else window.addEventListener('load', register, { once: true });
 }
 
 /* ------------------------------------------------------------------ */

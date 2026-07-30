@@ -1,21 +1,28 @@
 // GIJO Talk Service Worker — 오프라인 우선 캐싱
 //
 // 릴리스할 때마다 VERSION 을 올리면 이전 캐시가 자동 정리됩니다.
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL_CACHE = `gijo-shell-${VERSION}`;
 const ASSET_CACHE = `gijo-assets-${VERSION}`;
 const FONT_CACHE = `gijo-fonts-${VERSION}`;
 const CURRENT_CACHES = [SHELL_CACHE, ASSET_CACHE, FONT_CACHE];
 
-// 빌드 산출물(/assets/*.js)은 파일명에 해시가 붙어 이름을 미리 알 수 없으므로
+// 이 워커가 서빙되는 기준 경로.
+// GitHub Pages 는 https://user.github.io/repo/ 처럼 서브패스로 서빙되므로
+// 절대경로('/index.html')를 쓰면 저장소 루트를 가리켜 전부 깨집니다.
+// sw.js 가 놓인 위치에서 base 를 계산해 어디에 배포하든 동작하게 합니다.
+const BASE = new URL('./', self.location.href).pathname; // '/' 또는 '/gijotlak/'
+const at = (path) => BASE + path;
+
+// 빌드 산출물(assets/*.js)은 파일명에 해시가 붙어 이름을 미리 알 수 없으므로
 // 여기서는 셸만 프리캐시하고, 해시 자산은 최초 방문 시 런타임에 캐시합니다.
 const SHELL_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-180.png',
-  '/icon-192.png',
-  '/icon-512.png',
+  at(''),
+  at('index.html'),
+  at('manifest.json'),
+  at('icon-180.png'),
+  at('icon-192.png'),
+  at('icon-512.png'),
 ];
 
 const isFontRequest = (url) =>
@@ -24,7 +31,7 @@ const isFontRequest = (url) =>
 // 해시가 박힌 불변 자산 — 한 번 받으면 다시 받을 필요가 없습니다.
 const isImmutableAsset = (url) =>
   url.origin === self.location.origin &&
-  (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/audio/'));
+  (url.pathname.startsWith(at('assets/')) || url.pathname.startsWith(at('audio/')));
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -65,7 +72,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // API 응답은 절대 캐시하지 않습니다 (AI 생성 결과 / Drive / Firebase).
-  if (url.origin === self.location.origin && url.pathname.startsWith('/api/')) return;
+  if (url.origin === self.location.origin && url.pathname.startsWith(at('api/'))) return;
   if (url.hostname.endsWith('googleapis.com') && !isFontRequest(url)) return;
   if (url.hostname.endsWith('firebaseapp.com')) return;
 
@@ -75,10 +82,10 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(SHELL_CACHE).then((cache) => cache.put('/index.html', copy));
+          caches.open(SHELL_CACHE).then((cache) => cache.put(at('index.html'), copy));
           return response;
         })
-        .catch(async () => (await caches.match('/index.html')) || Response.error())
+        .catch(async () => (await caches.match(at('index.html'))) || Response.error())
     );
     return;
   }

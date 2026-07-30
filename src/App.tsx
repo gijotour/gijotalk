@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
 import { CategoryId, Phrase } from './types';
-import { COUNTRIES, PHRASES } from './config';
+import { COUNTRIES, PHRASES, IS_STATIC_BUILD } from './config';
 import {
   registerServiceWorker,
   getSavedBookmarkIds,
@@ -283,14 +283,17 @@ export default function App() {
                 <Headphones className="w-5 h-5" />
               </button>
 
-              <button
-                onClick={() => setShowAIAssistant(true)}
-                aria-label="AI에게 맞춤 표현 질문하기"
-                title="AI 질문"
-                className="w-13 h-13 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl shadow-xs active:scale-95 transition-all"
-              >
-                <Sparkles className="w-5 h-5" />
-              </button>
+              {/* AI 는 서버가 필요합니다. 정적 배포에서는 버튼째로 숨깁니다. */}
+              {!IS_STATIC_BUILD && (
+                <button
+                  onClick={() => setShowAIAssistant(true)}
+                  aria-label="AI에게 맞춤 표현 질문하기"
+                  title="AI 질문"
+                  className="w-13 h-13 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                >
+                  <Sparkles className="w-5 h-5" />
+                </button>
+              )}
             </div>
 
             {/* Category Chips */}
@@ -323,23 +326,31 @@ export default function App() {
                 <h3 className="text-sm font-bold text-slate-700">
                   검색 조건에 일치하는 회화 문장이 없습니다.
                 </h3>
-                <p className="text-xs text-ink-mute mt-1 mb-4">
-                  AI 맞춤 질문으로 필요한 문장을 즉시 생성해보세요!
-                </p>
-                <button
-                  onClick={() => setShowAIAssistant(true)}
-                  className="px-4 py-2 bg-brand text-white text-xs font-bold rounded-xl shadow-xs"
-                >
-                  AI 질문으로 생성하기
-                </button>
+                {IS_STATIC_BUILD ? (
+                  <p className="text-sm text-ink-mute mt-1">
+                    다른 검색어로 찾아보거나 카테고리를 바꿔보세요.
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-sm text-ink-mute mt-1 mb-4">
+                      AI 맞춤 질문으로 필요한 문장을 즉시 생성해보세요!
+                    </p>
+                    <button
+                      onClick={() => setShowAIAssistant(true)}
+                      className="px-4 py-2 bg-brand text-white text-sm font-bold rounded-xl shadow-xs"
+                    >
+                      AI 질문으로 생성하기
+                    </button>
+                  </>
+                )}
               </div>
             )}
 
             {/* 오프라인 저장 — 목록 아래에 두어 먼저 회화가 보이게 합니다. */}
             <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
 
-            {/* 사용 기록 첫 안내 — 한 번 선택하면 다시 뜨지 않습니다. */}
-            <PrivacyNotice />
+            {/* 사용 기록 첫 안내 — 정적 배포에서는 수집 자체를 하지 않습니다. */}
+            {!IS_STATIC_BUILD && <PrivacyNotice />}
           </div>
         )}
 
@@ -460,9 +471,11 @@ export default function App() {
             <span className="text-brand">{countryPhrases.length}개 현장회화 탑재</span>
           </div>
 
-          <div className="mt-2 flex justify-center">
-            <PrivacyToggle />
-          </div>
+          {!IS_STATIC_BUILD && (
+            <div className="mt-2 flex justify-center">
+              <PrivacyToggle />
+            </div>
+          )}
         </footer>
       </main>
 

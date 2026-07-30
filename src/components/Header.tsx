@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
-import { COUNTRIES, IS_SINGLE_COUNTRY } from '../config';
+import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
 import { Globe, ChevronDown, Sparkles, ShieldAlert, HardDrive } from 'lucide-react';
 
 interface HeaderProps {
@@ -112,7 +112,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         )}
 
-        {/* AI Travel Assistant Trigger */}
+        {/* AI Travel Assistant Trigger — 서버 필요 */}
+        {!IS_STATIC_BUILD && (
         <button
           onClick={onOpenAIAssistant}
           aria-label="AI 상황별 맞춤 회화 질문"
@@ -123,6 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* 'xs' 는 Tailwind 기본 브레이크포인트가 아니라 이 라벨이 항상 숨어 있었습니다. */}
           <span className="hidden sm:inline">AI 질문</span>
         </button>
+        )}
 
         {/* Google Drive Backup & Sync */}
         {onOpenDriveModal && (

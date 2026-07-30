@@ -16,6 +16,7 @@
 //   · 오프라인 우선 앱이라 이벤트는 로컬에 모았다가 온라인일 때 보냅니다.
 
 import { accessHeaders } from './accessCode';
+import { IS_STATIC_BUILD } from '../config';
 
 const DEVICE_ID_KEY = 'gijo_device_id_v1';
 const OPT_OUT_KEY = 'gijo_analytics_opt_out_v1';
@@ -46,6 +47,8 @@ export interface GijoEvent {
 /* ------------------------------------------------------------------ */
 
 export function isAnalyticsEnabled(): boolean {
+  // 정적 배포에는 수집 서버가 없습니다. 보낼 곳이 없으니 모으지도 않습니다.
+  if (IS_STATIC_BUILD) return false;
   try {
     return localStorage.getItem(OPT_OUT_KEY) !== '1';
   } catch {

@@ -12,8 +12,9 @@ export function registerServiceWorker() {
   if (process.env.NODE_ENV !== 'production') return;
 
   window.addEventListener('load', () => {
+    // 서브패스 배포(GitHub Pages)에서도 올바른 위치의 워커를 등록합니다.
     navigator.serviceWorker
-      .register('/sw.js')
+      .register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
       .then((reg) => {
         console.log('[GIJO Talk] 오프라인 캐시 준비됨:', reg.scope);
       })

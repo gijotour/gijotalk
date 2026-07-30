@@ -1,0 +1,67 @@
+name: Deploy to GitHub Pages
+
+# 테스터에게 보낼 링크를 만드는 워크플로입니다.
+#
+# GitHub Pages 는 정적 호스팅이라 Express 서버가 없습니다. 그래서
+# VITE_STATIC_BUILD=true 로 빌드해 서버가 필요한 기능(AI 질문·사용 기록)을
+# 버튼째로 숨깁니다. 회화·발음·오프라인·설치·전광판은 전부 그대로 동작합니다.
+#
+# 서브패스(https://<user>.github.io/<repo>/)로 서빙되므로 BASE_PATH 가 필요합니다.
+
+on:
+  push:
+    branches: ['gijotour/클루드', 'main']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 배포는 하나씩. 진행 중인 배포를 취소하지는 않습니다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      - name: 정적 빌드 (서브패스)
+        env:
+          BASE_PATH: /gijotlak/
+          VITE_STATIC_BUILD: 'true'
+        run: npx vite build
+
+      - name: 오디오 포함 확인
+        run: |
+          count=$(find dist/audio -type f | wc -l)
+          echo "오디오 파일 $count 개"
+          if [ "$count" -lt 100 ]; then
+            echo "::error::오디오가 빌드에 포함되지 않았습니다"
+            exit 1
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

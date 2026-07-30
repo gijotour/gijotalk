@@ -1,7 +1,8 @@
 // 이 파일은 `npm run audio` 가 자동 생성합니다. 직접 수정하지 마세요.
 // 생성 백엔드: say
 
-export const AUDIO_BASE = '/audio';
+// 서브패스 배포에서도 동작하도록 빌드 base 를 붙입니다.
+export const AUDIO_BASE = `${import.meta.env.BASE_URL}audio`;
 
 /** 사전 생성된 오디오가 있는 문장 id → 상대 경로 */
 export const AUDIO_FILES: Record<string, string> = {

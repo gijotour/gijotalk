@@ -22,7 +22,7 @@ npm start             # NODE_ENV=production 으로 로컬 확인 → http://loca
 | 파일 | 지키는 것 |
 |---|---|
 | `Modal.test.tsx` | ESC·포커스 트랩·배경 스크롤 잠금·포커스 복원 |
-| `pwa.test.ts` | 북마크 저장/읽기 키 일치(Drive 복원 유실), 카톡 인앱 브라우저 감지 |
+| `pwa.test.ts` | 북마크 저장/읽기 키 일치, 카톡 인앱 브라우저 감지 |
 | `App.test.tsx` | 탭 3개, 검색·북마크 동작, 모달이 모두 dialog 로 열릴 것 |
 | `analytics.test.ts` | 껐을 때 정말 안 보낼 것, 오프라인 기록이 유실되지 않을 것 |
 
@@ -54,7 +54,6 @@ npm run audio -- --backend=google      # 실제 필리핀어 음성 (GOOGLE_TTS_
 | AI 맞춤 회화 | ❌ 서버 필요 | ✅ |
 | 사용 기록 수집 | ❌ 서버 필요 | ✅ |
 | 접근 코드 | ❌ 정적이라 무의미 | ✅ |
-| Google Drive 백업 | ⚠️ Firebase 승인 도메인 추가 필요 | ✅ |
 
 Pages 빌드는 `VITE_STATIC_BUILD=true` 로 나가서 **서버가 필요한 기능은 버튼째로 숨겨집니다.**
 눌렀는데 매번 실패하는 것보다 아예 없는 편이 덜 헷갈리기 때문입니다.
@@ -131,7 +130,6 @@ https://<앱주소>/?key=<APP_ACCESS_CODE 값>
 카톡 인앱 브라우저에서는
 
 - **"홈 화면에 추가" 메뉴가 없습니다** → 설치 불가
-- Firebase 팝업 로그인이 차단됩니다 → Drive 백업 불가
 
 앱이 인앱 브라우저를 감지해 빨간 경고와 "주소 복사" 버튼을 띄우긴 하지만,
 **문자나 이메일로 보내는 게 훨씬 확실합니다.**
@@ -211,7 +209,7 @@ gcloud logging read \
 `public/sw.js` 의 `VERSION` 을 올리면 기존 사용자의 캐시가 자동 정리됩니다.
 
 ```js
-const VERSION = 'v5';   // v4 → v5
+const VERSION = 'v6';   // v5 → v6
 ```
 
 `index.html` 과 `sw.js` 는 `no-cache` 헤더로 나가므로 새 배포가 바로 반영됩니다.

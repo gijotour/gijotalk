@@ -7,7 +7,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇵🇭',
     language: 'Tagalog',
     langCode: 'tl-PH',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '욕설/은어', '비상'],
     description: '마닐라, 세부, 보라카이, 팔라완 여행 필수 타갈로그어'
   },
   {
@@ -16,7 +16,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇻🇳',
     language: 'Vietnamese',
     langCode: 'vi-VN',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '욕설/은어', '비상'],
     description: '다낭, 하노이, 호치민, 나트랑 필수 베트남어'
   },
   {
@@ -25,7 +25,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇹🇭',
     language: 'Thai',
     langCode: 'th-TH',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '욕설/은어', '비상'],
     description: '방콕, 푸켓, 치앙마이 필수 태국어'
   },
   {
@@ -34,7 +34,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇮🇩',
     language: 'Indonesian',
     langCode: 'id-ID',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '욕설/은어', '비상'],
     description: '발리, 자카르타, 롬복 필수 인도네시아어'
   },
   {
@@ -43,7 +43,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇱🇦',
     language: 'Lao',
     langCode: 'lo-LA',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '미팅/사교', '욕설/은어', '비상'],
     description: '비엔티안, 방비엥, 루앙프라방 필수 라오어'
   }
 ];
@@ -214,9 +214,9 @@ export const PHRASES: Phrase[] = [
     id: 'ph-10',
     countryId: 'ph',
     category: '교통',
-    original: 'Paki-meter po, pakiusap!',
+    original: 'Pakibuksan po ang metro.',
     translation: '미터기 켜고 가주세요!',
-    pronunciation: '[파키-미터 포, 파키우삽!]',
+    pronunciation: '[파키북산 포 앙 메트로]',
     toneGuide: 'Firm request',
     usageTip: '마닐라/세부 택시 탑승 시 출발 직후 미터기 작동을 요청하세요.'
   },
@@ -246,9 +246,9 @@ export const PHRASES: Phrase[] = [
     id: 'ph-06',
     countryId: 'ph',
     category: '식당',
-    original: 'Pahingi ng tubig, pakiusap.',
+    original: 'Pahingi po ng tubig.',
     translation: '물 좀 부탁드립니다.',
-    pronunciation: '[파힝기 낭 투빅, 파키우삽]',
+    pronunciation: '[파힝기 포 낭 투빅]',
     toneGuide: 'Polite request',
     usageTip: '필리핀 식당에서는 물을 기본 제공 안 하는 곳도 있어 요청이 필요합니다.'
   },
@@ -256,9 +256,9 @@ export const PHRASES: Phrase[] = [
     id: 'ph-07',
     countryId: 'ph',
     category: '식당',
-    original: 'Bill statement po!',
+    original: 'Bill out po!',
     translation: '계산서 주세요!',
-    pronunciation: '[빌 스테이트먼트 포!]',
+    pronunciation: '[빌 아웃 포!]',
     toneGuide: 'Asking bill',
     usageTip: '손가락으로 공중에 서명하는 흉내를 내며 외치면 바로 알아듣습니다.'
   },
@@ -266,9 +266,9 @@ export const PHRASES: Phrase[] = [
     id: 'ph-12',
     countryId: 'ph',
     category: '식당',
-    original: 'Walang cilantro/Coriander, pakiusap!',
+    original: 'Walang wansoy po.',
     translation: '고수 빼주세요!',
-    pronunciation: '[와랑 실란트로, 파키우삽!]',
+    pronunciation: '[왈랑 완소이 포]',
     toneGuide: 'Dietary restriction',
     usageTip: '향신료 알레르기가 있거나 고수를 못 드시는 분 필수 문장.'
   },

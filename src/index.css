@@ -1,12 +1,86 @@
 @import "tailwindcss";
+/* animate-in / fade-in / zoom-in 유틸리티.
+   이 import 가 없으면 소스에 쓰인 모달·탭 전환 애니메이션이 전부 CSS 로 생성되지 않습니다. */
+@import "tw-animate-css";
+
+/* ==================================================================
+   디자인 토큰
+   ------------------------------------------------------------------
+   이 앱의 사용 환경은 "동남아 야외 직사광선 + 흔들리는 차 안" 입니다.
+   그래서 대비와 글자 크기는 취향이 아니라 기능 요구사항입니다.
+
+   색을 두 갈래로 나눈 것이 핵심입니다.
+     · brand        : 텍스트용. 흰 배경 대비 4.9:1 로 WCAG AA 를 통과합니다.
+     · brand-vivid  : 배경·큰 면적용. 기존 코랄(#FF6B4A)을 그대로 유지해
+                      브랜드 인상을 잃지 않습니다.
+   기존에는 #FF6B4A 하나를 텍스트에도 썼는데 대비가 2.82:1 로
+   AA 기준(4.5:1)에 한참 못 미쳤습니다.
+   ================================================================== */
+@theme {
+  /* 브랜드 코랄
+     brand       : 텍스트 + 흰 글자를 얹는 버튼용. 양방향 모두 AA 를 통과합니다.
+                   흰 배경 5.56:1 / 오렌지100 위 4.85:1 / 흰 글자 얹으면 5.56:1
+     brand-vivid : 아이콘 배경·장식·큰 표시용. 흰 글자를 얹으면 2.82:1 로 실패하므로
+                   작은 텍스트 버튼에는 쓰지 않습니다. */
+  --color-brand: #B93E26;
+  --color-brand-vivid: #FF6B4A;
+  --color-brand-hover: #9A3220;
+  --color-brand-tint: #FFF1ED;
+
+  /* 경고 앰버 */
+  --color-alert: #B45309;        /* 텍스트 전용 · 흰 배경 5.02:1 ✓ AA */
+  --color-accent: #FFB800;       /* 배경 전용 — 텍스트 색으로 쓰면 1.73:1 로 실패 */
+  --color-accent-tint: #FFF7E0;
+
+  /* 중립 */
+  --color-canvas: #FDFBF7;
+  --color-ink: #0F172A;          /* 본문 · 17.9:1 */
+  --color-ink-soft: #475569;     /* 보조 · 7.44:1 ✓ */
+  --color-ink-mute: #64748B;     /* 약한 정보 · 4.76:1 ✓ (최소선) */
+
+  /* 반경 — 6종을 3종으로 줄였습니다 */
+  --radius-chip: 0.75rem;   /* 칩 · 작은 버튼 */
+  --radius-card: 1rem;      /* 카드 · 입력 · 모달 내부 */
+  --radius-sheet: 1.5rem;   /* 모달 · 시트 */
+}
 
 @layer base {
   body {
-    background-color: #FDFBF7;
-    color: #1e293b;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: 'Inter', system-ui, -apple-system, 'Apple SD Gothic Neo',
+      'Noto Sans KR', sans-serif;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    /* iOS 에서 가로 모드 전환 시 글자가 제멋대로 커지는 것을 막습니다. */
+    -webkit-text-size-adjust: 100%;
   }
+
+  /* 최소 글자 크기 보호.
+     10~11px 텍스트가 38곳 있었습니다. 흔들리는 차 안에서 읽을 수 없는 크기입니다. */
+  small {
+    font-size: 0.75rem;
+  }
+}
+
+/* ------------------------------------------------------------------
+   현지어 원문 전용 서체
+   ------------------------------------------------------------------
+   Montserrat 에는 태국어·라오어 글리프가 없습니다. 지금은 필리핀(타갈로그)과
+   영어만 노출하므로 둘 다 라틴 문자라 문제가 없지만, 나중에 태국·라오스를 열면
+   폴백 폰트에 가짜 기울임(synthetic oblique)이 걸려 가독성이 무너집니다.
+   그때는 .font-display 대신 .font-display-native 를 쓰면 됩니다.
+   ------------------------------------------------------------------ */
+.font-display {
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.font-display-native {
+  /* 비라틴 문자용 — 이탤릭을 강제하지 않습니다. */
+  font-family: 'Noto Sans Thai', 'Noto Sans Lao', system-ui, sans-serif;
+  font-style: normal;
 }
 
 /* Custom Scrollbar */
@@ -16,6 +90,15 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* 포커스 표시 — 접근성. 마우스 클릭 시에는 나타나지 않습니다. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-brand-vivid);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 /* Pulsing wave for billboard */
@@ -32,4 +115,15 @@
   border-radius: 9999px;
   border: 4px solid rgba(255, 107, 74, 0.5);
   animation: pulse-ring 2.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+/* 애니메이션을 줄이도록 설정한 사용자를 존중합니다. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

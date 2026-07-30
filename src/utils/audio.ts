@@ -149,19 +149,55 @@ class StreetNoiseAudioEngine {
 
 export const noiseEngine = new StreetNoiseAudioEngine();
 
+/**
+ * 브라우저에 내장 음성이 없는 언어를 위한 대체 음성 순서.
+ *
+ * 타갈로그(tl-PH)는 iOS·안드로이드·데스크톱 어디에도 음성이 없습니다.
+ * 아무 처리도 안 하면 voices[0](보통 영어)이 잡혀 "Para po!" 를 영어식으로 읽습니다.
+ *
+ *  1) fil-PH  — 안드로이드 Google TTS 에는 필리핀어가 있습니다. 있으면 이게 정답입니다.
+ *  2) id-ID   — 인도네시아어. 타갈로그와 같은 오스트로네시아어족이라 5모음 체계와
+ *               철자-발음 대응이 거의 같습니다. 현지인이 알아듣는 수준은 됩니다.
+ *  3) es-*    — 스페인어. 필리핀어 어휘의 상당수가 스페인어 차용어라 모음이 잘 맞습니다.
+ *
+ * ※ 이건 어디까지나 임시방편입니다. 근본 해결은 문장별 오디오 파일 사전 생성입니다.
+ */
+const VOICE_FALLBACK_CHAIN: Record<string, string[]> = {
+  'tl-ph': ['fil-PH', 'id-ID', 'es-ES', 'es-MX', 'es-US'],
+  'lo-la': ['th-TH'],
+};
+
+/** langCode 에 맞는 음성 후보를 (정확한 언어 → 대체 언어) 순으로 모읍니다. */
+function collectCandidateVoices(
+  voices: SpeechSynthesisVoice[],
+  langCode: string
+): SpeechSynthesisVoice[] {
+  const matchBy = (code: string) => {
+    const target = code.toLowerCase();
+    const prefix = target.split('-')[0];
+    return voices.filter((v) => {
+      const vl = v.lang.toLowerCase().replace('_', '-');
+      return vl === target || vl.startsWith(`${prefix}-`) || vl === prefix;
+    });
+  };
+
+  const exact = matchBy(langCode);
+  if (exact.length > 0) return exact;
+
+  for (const fallback of VOICE_FALLBACK_CHAIN[langCode.toLowerCase()] || []) {
+    const hit = matchBy(fallback);
+    if (hit.length > 0) return hit;
+  }
+  return [];
+}
+
 // Helper to select optimal local female or male voice from available browser voices
 export function getLocalVoice(langCode: string, gender: 'female' | 'male' = 'female'): SpeechSynthesisVoice | null {
   if (!('speechSynthesis' in window)) return null;
   const voices = window.speechSynthesis.getVoices();
   if (!voices || voices.length === 0) return null;
 
-  const langPrefix = langCode.split('-')[0].toLowerCase();
-  
-  // Filter voices matching target language
-  const matchedVoices = voices.filter(
-    (v) => v.lang.toLowerCase() === langCode.toLowerCase() || 
-           v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix)
-  );
+  const matchedVoices = collectCandidateVoices(voices, langCode);
 
   const femaleKeywords = [
     'female', 'woman', 'girl', 'samantha', 'kanya', 'linh', 'zira', 'jenny', 'victoria', 
@@ -232,7 +268,6 @@ export function speakPhrase({
 
   const executeSpeak = () => {
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = langCode;
     utterance.rate = rate;
     utterance.pitch = voiceGender === 'female' ? pitch : 1.0;
     utterance.volume = Math.min(1.0, Math.max(0.0, volume));
@@ -240,6 +275,11 @@ export function speakPhrase({
     const matchedVoice = getLocalVoice(langCode, voiceGender);
     if (matchedVoice) {
       utterance.voice = matchedVoice;
+      // lang 을 지원되지 않는 코드(tl-PH 등)로 두면 엔진이 voice 지정을 무시하고
+      // 기본 음성으로 읽어버립니다. 실제 선택된 음성의 lang 을 따라갑니다.
+      utterance.lang = matchedVoice.lang;
+    } else {
+      utterance.lang = langCode;
     }
 
     utterance.onend = () => {

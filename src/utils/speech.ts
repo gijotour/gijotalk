@@ -12,6 +12,7 @@
 import { Phrase, Country } from '../types';
 import { audioUrlFor, hasRecordedAudio } from '../data/audioManifest';
 import { speakPhrase } from './audio';
+import { BASE_URL } from './env';
 
 export { hasRecordedAudio };
 
@@ -166,10 +167,10 @@ export function updateMediaSession(
     navigator.mediaSession.metadata = new MediaMetadata({
       title: phrase.original,
       artist: phrase.translation,
-      album: `GIJO Talk · ${country.name}`,
+      album: `Gijo talk(PH) · ${country.name}`,
       artwork: [
-        { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-        { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+        { src: `${BASE_URL}icon-192.png`, sizes: '192x192', type: 'image/png' },
+        { src: `${BASE_URL}icon-512.png`, sizes: '512x512', type: 'image/png' },
       ],
     });
 

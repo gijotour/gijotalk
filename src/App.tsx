@@ -460,7 +460,7 @@ export default function App() {
                   isOffline ? 'bg-accent' : 'bg-emerald-500'
                 }`}
               />
-              <span>GIJO Talk · {isOffline ? '오프라인' : '온라인'}</span>
+              <span>Gijo talk(PH) · {isOffline ? '오프라인' : '온라인'}</span>
             </div>
             <div className="flex items-center gap-1.5 text-ink">
               <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-xl border border-blue-200">

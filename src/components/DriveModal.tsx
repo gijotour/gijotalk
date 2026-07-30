@@ -266,7 +266,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
               <HardDrive className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-black text-base text-slate-900">GIJO Talk Drive 동기화</h3>
+              <h3 className="font-black text-base text-slate-900">Gijo talk(PH) Drive 동기화</h3>
               <p className="text-xs text-slate-500 font-bold">
                 GIJO LABS · 북마크 회화 & AI 맞춤 문장 백업/복원
               </p>

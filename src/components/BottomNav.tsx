@@ -1,7 +1,15 @@
 import React from 'react';
-import { Languages, Grid, Bookmark, ShieldAlert, Headphones } from 'lucide-react';
+import { Languages, Bookmark, ShieldAlert } from 'lucide-react';
 
-export type TabType = 'translate' | 'categories' | 'bookmarks' | 'emergency' | 'listening';
+/**
+ * 탭을 5개에서 3개로 줄였습니다.
+ *
+ * 없앤 것과 그 이유:
+ *   · 카테고리  → 메인 화면의 카테고리 칩이 이미 같은 일을 합니다. 순수 중복이었습니다.
+ *   · 연속듣기  → 하단 미니 플레이어로 승격했습니다. 탭으로 두면 재생 중에 문장 목록을
+ *                 볼 수 없는데, "이어폰 끼고 반복 듣기"는 목록을 보면서 하는 일입니다.
+ */
+export type TabType = 'translate' | 'bookmarks' | 'emergency';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -9,84 +17,75 @@ interface BottomNavProps {
   bookmarkCount: number;
 }
 
+const TABS: Array<{
+  id: TabType;
+  label: string;
+  icon: React.ReactNode;
+  activeClass: string;
+  idleClass: string;
+}> = [
+  {
+    id: 'translate',
+    label: '회화',
+    icon: <Languages className="w-6 h-6" />,
+    activeClass: 'bg-brand text-white',
+    idleClass: 'text-ink-soft hover:text-ink',
+  },
+  {
+    id: 'bookmarks',
+    label: '보관함',
+    icon: <Bookmark className="w-6 h-6" />,
+    activeClass: 'bg-brand text-white',
+    idleClass: 'text-ink-soft hover:text-ink',
+  },
+  {
+    id: 'emergency',
+    label: '긴급',
+    icon: <ShieldAlert className="w-6 h-6" />,
+    activeClass: 'bg-accent text-ink',
+    idleClass: 'text-alert hover:text-alert',
+  },
+];
+
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onChangeTab,
   bookmarkCount,
 }) => {
+  // paddingBottom 에 safe-area 를 더해야 아이폰 홈 인디케이터에 버튼이 깔리지 않습니다.
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-orange-100 px-3 py-2.5 flex justify-around items-center shadow-[0_-8px_30px_rgba(0,0,0,0.06)]">
-      {/* 1. Phrases / Main */}
-      <button
-        onClick={() => onChangeTab('translate')}
-        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-xl transition-all active:scale-90 ${
-          activeTab === 'translate'
-            ? 'bg-[#FF6B4A] text-white font-black shadow-xs'
-            : 'text-slate-500 hover:text-slate-900 font-bold'
-        }`}
-      >
-        <Languages className="w-5 h-5" />
-        <span className="text-[10px]">회화/번역</span>
-      </button>
-
-      {/* 2. Categories */}
-      <button
-        onClick={() => onChangeTab('categories')}
-        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-xl transition-all active:scale-90 ${
-          activeTab === 'categories'
-            ? 'bg-[#FF6B4A] text-white font-black shadow-xs'
-            : 'text-slate-500 hover:text-slate-900 font-bold'
-        }`}
-      >
-        <Grid className="w-5 h-5" />
-        <span className="text-[10px]">카테고리</span>
-      </button>
-
-      {/* 3. Bookmarks */}
-      <button
-        onClick={() => onChangeTab('bookmarks')}
-        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-xl transition-all relative active:scale-90 ${
-          activeTab === 'bookmarks'
-            ? 'bg-[#FF6B4A] text-white font-black shadow-xs'
-            : 'text-slate-500 hover:text-slate-900 font-bold'
-        }`}
-      >
-        <div className="relative">
-          <Bookmark className="w-5 h-5" />
-          {bookmarkCount > 0 && (
-            <span className="absolute -top-1 -right-2 bg-[#FFB800] text-slate-900 text-[9px] font-black px-1 rounded-full border border-white">
-              {bookmarkCount}
-            </span>
-          )}
-        </div>
-        <span className="text-[10px]">저장됨</span>
-      </button>
-
-      {/* 4. Emergency Billboard */}
-      <button
-        onClick={() => onChangeTab('emergency')}
-        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-xl transition-all active:scale-90 ${
-          activeTab === 'emergency'
-            ? 'bg-[#FFB800] text-slate-900 font-black shadow-xs'
-            : 'text-[#D97706] hover:text-[#b45309] font-bold'
-        }`}
-      >
-        <ShieldAlert className="w-5 h-5 text-[#D97706]" />
-        <span className="text-[10px]">긴급전광판</span>
-      </button>
-
-      {/* 5. Continuous Listening Mode Tab */}
-      <button
-        onClick={() => onChangeTab('listening')}
-        className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-xl transition-all active:scale-90 ${
-          activeTab === 'listening'
-            ? 'bg-slate-900 text-white font-black shadow-xs'
-            : 'text-slate-500 hover:text-slate-900 font-bold'
-        }`}
-      >
-        <Headphones className="w-5 h-5" />
-        <span className="text-[10px]">연속듣기</span>
-      </button>
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-orange-100 px-3 pt-2 shadow-[0_-8px_30px_rgba(0,0,0,0.06)]"
+      style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
+      aria-label="주요 메뉴"
+    >
+      <div className="max-w-screen-md mx-auto flex justify-around items-center">
+        {TABS.map((tab) => {
+          const active = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onChangeTab(tab.id)}
+              aria-current={active ? 'page' : undefined}
+              // 탭이 3개가 되면서 터치 영역을 넉넉히 잡을 수 있게 됐습니다.
+              // 흔들리는 차 안에서 누르는 앱이라 여백이 곧 기능입니다.
+              className={`flex-1 max-w-36 flex flex-col items-center justify-center gap-1 py-2 rounded-2xl transition-all active:scale-95 font-bold ${
+                active ? tab.activeClass : tab.idleClass
+              }`}
+            >
+              <span className="relative">
+                {tab.icon}
+                {tab.id === 'bookmarks' && bookmarkCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2.5 bg-accent text-ink text-xs font-bold min-w-5 px-1 rounded-full border-2 border-white">
+                    {bookmarkCount}
+                  </span>
+                )}
+              </span>
+              <span className="text-xs">{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
     </nav>
   );
 };

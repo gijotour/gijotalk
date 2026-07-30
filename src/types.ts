@@ -1,6 +1,8 @@
-export type CountryId = 'ph' | 'vn' | 'th' | 'id' | 'la';
+// 'en' 은 나라가 아니라 "영어 트랙"입니다.
+// 필리핀은 영어가 공용어라 타갈로그와 영어를 나란히 쓰는 게 실전에서 가장 효과적입니다.
+export type CountryId = 'ph' | 'en' | 'vn' | 'th' | 'id' | 'la';
 
-export type CategoryId = '전체' | '항공' | '호텔' | '교통' | '식당' | '흥정' | '미팅/사교' | '비상';
+export type CategoryId = '전체' | '항공' | '호텔' | '교통' | '식당' | '흥정' | '미팅/사교' | '욕설/은어' | '비상';
 
 export interface Phrase {
   id: string;

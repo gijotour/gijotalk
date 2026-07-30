@@ -1,6 +1,6 @@
 import React from 'react';
 import { CategoryId } from '../types';
-import { Layers, Plane, Hotel, Bus, Utensils, Tag, Heart, AlertTriangle } from 'lucide-react';
+import { Layers, Plane, Hotel, Bus, Utensils, Tag, Heart, MessageCircleWarning, AlertTriangle } from 'lucide-react';
 
 interface CategoryChipsProps {
   selectedCategory: CategoryId;
@@ -16,6 +16,7 @@ const CATEGORIES: { id: CategoryId; icon: React.ReactNode }[] = [
   { id: '식당', icon: <Utensils className="w-3.5 h-3.5" /> },
   { id: '흥정', icon: <Tag className="w-3.5 h-3.5" /> },
   { id: '미팅/사교', icon: <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" /> },
+  { id: '욕설/은어', icon: <MessageCircleWarning className="w-3.5 h-3.5" /> },
   { id: '비상', icon: <AlertTriangle className="w-3.5 h-3.5" /> },
 ];
 
@@ -37,9 +38,9 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
             onClick={() => onSelectCategory(c.id)}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 shadow-xs ${
               active
-                ? 'bg-[#FF6B4A] text-white shadow-md shadow-[#FF6B4A]/30 scale-[1.02]'
+                ? 'bg-brand text-white shadow-md shadow-brand-vivid/30 scale-[1.02]'
                 : isEmergencyCat
-                ? 'bg-[#FFB800]/20 text-[#D97706] border-2 border-[#FFB800]/60 hover:bg-[#FFB800]/30'
+                ? 'bg-accent/20 text-alert border-2 border-accent/60 hover:bg-accent/30'
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-orange-50/60'
             }`}
           >
@@ -47,7 +48,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
             <span>{c.id}</span>
             {count !== undefined && (
               <span
-                className={`text-[10px] font-black px-1.5 py-0.2 rounded-full ${
+                className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
                   active
                     ? 'bg-white/20 text-white'
                     : 'bg-slate-100 text-slate-500'

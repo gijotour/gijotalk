@@ -1,11 +1,70 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   getSavedBookmarkIds,
   saveBookmarkIds,
   toggleBookmarkId,
   isInAppBrowser,
   isKakaoTalk,
+  registerServiceWorker,
 } from './pwa';
+
+/**
+ * 오프라인이 이 앱의 존재 이유입니다. 워커가 등록되지 않으면 현지에서 아무것도
+ * 열리지 않는데, 화면상으로는 멀쩡해 보여서 눈으로는 절대 못 잡습니다.
+ * 실제로 배포본에서 register 가 한 번도 불리지 않은 채로 나간 적이 있습니다.
+ */
+describe('서비스 워커 등록', () => {
+  const originalEnv = process.env.NODE_ENV;
+  let registered: string[];
+
+  beforeEach(() => {
+    process.env.NODE_ENV = 'production';
+    registered = [];
+    Object.defineProperty(navigator, 'serviceWorker', {
+      configurable: true,
+      value: {
+        register: (url: string) => {
+          registered.push(url);
+          return Promise.resolve({ scope: '/' });
+        },
+      },
+    });
+  });
+
+  afterEach(() => {
+    process.env.NODE_ENV = originalEnv;
+    vi.restoreAllMocks();
+  });
+
+  const setReadyState = (state: DocumentReadyState) =>
+    vi.spyOn(document, 'readyState', 'get').mockReturnValue(state);
+
+  it('load 가 이미 지나갔으면 즉시 등록한다 (배포본 무등록 회귀)', () => {
+    setReadyState('complete');
+    registerServiceWorker();
+    expect(registered).toHaveLength(1);
+  });
+
+  it('아직 로딩 중이면 load 를 기다렸다가 등록한다', () => {
+    setReadyState('loading');
+    registerServiceWorker();
+    expect(registered).toHaveLength(0);
+
+    window.dispatchEvent(new Event('load'));
+    expect(registered).toHaveLength(1);
+
+    // once 로 걸어 두 번 등록되지 않아야 합니다.
+    window.dispatchEvent(new Event('load'));
+    expect(registered).toHaveLength(1);
+  });
+
+  it('개발 모드에서는 등록하지 않는다', () => {
+    process.env.NODE_ENV = 'development';
+    setReadyState('complete');
+    registerServiceWorker();
+    expect(registered).toHaveLength(0);
+  });
+});
 
 describe('북마크 저장', () => {
   beforeEach(() => localStorage.clear());

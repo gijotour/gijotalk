@@ -6,8 +6,7 @@ import { Languages, Bookmark, ShieldAlert } from 'lucide-react';
  *
  * 없앤 것과 그 이유:
  *   · 카테고리  → 메인 화면의 카테고리 칩이 이미 같은 일을 합니다. 순수 중복이었습니다.
- *   · 연속듣기  → 하단 미니 플레이어로 승격했습니다. 탭으로 두면 재생 중에 문장 목록을
- *                 볼 수 없는데, "이어폰 끼고 반복 듣기"는 목록을 보면서 하는 일입니다.
+ *   · 연속듣기  → 기능 자체를 걷어냈습니다. 문장별 재생만으로 충분하다고 판단했습니다.
  */
 export type TabType = 'translate' | 'bookmarks' | 'emergency';
 

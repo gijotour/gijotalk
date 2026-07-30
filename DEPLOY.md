@@ -9,7 +9,7 @@
 ```bash
 npm ci
 npm run lint          # tsc --noEmit
-npm test              # vitest — 57개 테스트
+npm test              # vitest — 45개 테스트
 npm run audio:check   # 오디오와 문장 데이터 일치 확인
 npm run build         # dist/ 생성
 npm start             # NODE_ENV=production 으로 로컬 확인 → http://localhost:3000
@@ -21,10 +21,9 @@ npm start             # NODE_ENV=production 으로 로컬 확인 → http://loca
 
 | 파일 | 지키는 것 |
 |---|---|
-| `useListeningPlayer.test.tsx` | 연속 듣기가 한 문장 만에 멈추지 않을 것 (stale closure), 재생 중 설정 변경 반영, **플레이어를 닫아도 재생 지속** |
 | `Modal.test.tsx` | ESC·포커스 트랩·배경 스크롤 잠금·포커스 복원 |
 | `pwa.test.ts` | 북마크 저장/읽기 키 일치(Drive 복원 유실), 카톡 인앱 브라우저 감지 |
-| `App.test.tsx` | 탭 3개, 미니 플레이어 인수인계, 모달 5개가 모두 dialog 로 열릴 것 |
+| `App.test.tsx` | 탭 3개, 검색·북마크 동작, 모달이 모두 dialog 로 열릴 것 |
 | `analytics.test.ts` | 껐을 때 정말 안 보낼 것, 오프라인 기록이 유실되지 않을 것 |
 
 ### 오디오는 반드시 커밋되어 있어야 합니다
@@ -51,7 +50,7 @@ npm run audio -- --backend=google      # 실제 필리핀어 음성 (GOOGLE_TTS_
 | 링크 | `https://gijotour.github.io/gijotlak/` | `https://gijo-talk-xxxx.a.run.app` |
 | 배포 | **push 하면 자동** | `gcloud run deploy` 수동 |
 | 회화·발음·오프라인·설치 | ✅ | ✅ |
-| 전광판·연속듣기·북마크 | ✅ | ✅ |
+| 전광판·북마크·발음체크 | ✅ | ✅ |
 | AI 맞춤 회화 | ❌ 서버 필요 | ✅ |
 | 사용 기록 수집 | ❌ 서버 필요 | ✅ |
 | 접근 코드 | ❌ 정적이라 무의미 | ✅ |
@@ -101,7 +100,7 @@ Dockerfile 이 있으니 컨테이너를 받는 곳이면 어디든 됩니다.
 
 ---
 
-## 3. 배포 후 반드시 확인할 것
+## 4. 배포 후 반드시 확인할 것
 
 | 확인 | 방법 | 통과 기준 |
 |---|---|---|
@@ -116,7 +115,7 @@ Dockerfile 이 있으니 컨테이너를 받는 곳이면 어디든 됩니다.
 
 ---
 
-## 4. 지인에게 링크 보내기
+## 5. 지인에게 링크 보내기
 
 ### 링크 형식
 
@@ -144,12 +143,12 @@ https://<앱주소>/?key=<APP_ACCESS_CODE 값>
 >
 > **꼭 카톡 말고 Safari(아이폰)나 Chrome(안드로이드)으로 열어줘.**
 > 열면 위에 "홈 화면에 추가" 안내 나오는데 그거 꼭 해줘. 안 하면 현지에서 안 열려.
-> 추가하고 나서 "연속듣기" 탭에서 **"받기" 버튼 한 번 눌러줘** (발음 파일 저장, 1.5MB).
+> 추가하고 나서 아래로 내려서 **"받기" 버튼 한 번 눌러줘** (발음 파일 저장, 1.5MB).
 > 이거까지 해야 데이터 없이 완전히 돼.
 
 ---
 
-## 5. 사용 기록 보기
+## 6. 사용 기록 보기
 
 앱은 5가지만 익명으로 기록합니다. 목적은 대시보드가 아니라 **"다음에 뭘 고칠지 아는 것"** 입니다.
 
@@ -207,19 +206,19 @@ gcloud logging read \
 
 ---
 
-## 6. 업데이트 배포
+## 7. 업데이트 배포
 
 `public/sw.js` 의 `VERSION` 을 올리면 기존 사용자의 캐시가 자동 정리됩니다.
 
 ```js
-const VERSION = 'v3';   // v2 → v3
+const VERSION = 'v5';   // v4 → v5
 ```
 
 `index.html` 과 `sw.js` 는 `no-cache` 헤더로 나가므로 새 배포가 바로 반영됩니다.
 
 ---
 
-## 7. 나중에 나라 추가하기
+## 8. 나중에 나라 추가하기
 
 `src/config.ts` 한 줄만 고치면 됩니다.
 

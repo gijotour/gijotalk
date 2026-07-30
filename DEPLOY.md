@@ -44,7 +44,42 @@ npm run audio -- --backend=google      # 실제 필리핀어 음성 (GOOGLE_TTS_
 
 ---
 
-## 2. Cloud Run (권장)
+## 2. 배포 대상 두 가지
+
+| | GitHub Pages | Cloud Run |
+|---|---|---|
+| 링크 | `https://gijotour.github.io/gijotlak/` | `https://gijo-talk-xxxx.a.run.app` |
+| 배포 | **push 하면 자동** | `gcloud run deploy` 수동 |
+| 회화·발음·오프라인·설치 | ✅ | ✅ |
+| 전광판·연속듣기·북마크 | ✅ | ✅ |
+| AI 맞춤 회화 | ❌ 서버 필요 | ✅ |
+| 사용 기록 수집 | ❌ 서버 필요 | ✅ |
+| 접근 코드 | ❌ 정적이라 무의미 | ✅ |
+| Google Drive 백업 | ⚠️ Firebase 승인 도메인 추가 필요 | ✅ |
+
+Pages 빌드는 `VITE_STATIC_BUILD=true` 로 나가서 **서버가 필요한 기능은 버튼째로 숨겨집니다.**
+눌렀는데 매번 실패하는 것보다 아예 없는 편이 덜 헷갈리기 때문입니다.
+
+> ⚠️ **Pages 링크는 아는 사람 누구나 접속할 수 있습니다.** 접근 코드가 동작하지 않습니다.
+> 회화 데이터가 노출돼도 무해하고 Gemini 비용도 새지 않지만, 공개 게시판에 올리지는 마세요.
+
+### GitHub Pages
+
+`gijotour/클루드` 또는 `main` 에 push 하면 `.github/workflows/pages.yml` 이 자동 배포합니다.
+수동 실행: Actions 탭 → Deploy to GitHub Pages → Run workflow
+
+서브패스(`/gijotlak/`)로 서빙되므로 `BASE_PATH` 가 필요합니다. 로컬에서 같은 조건으로 확인하려면:
+
+```bash
+BASE_PATH=/gijotlak/ VITE_STATIC_BUILD=true npx vite build
+mkdir -p /tmp/pages/gijotlak && cp -R dist/* /tmp/pages/gijotlak/
+cd /tmp/pages && python3 -m http.server 4321
+# → http://localhost:4321/gijotlak/
+```
+
+---
+
+## 3. Cloud Run (전체 기능)
 
 ```bash
 gcloud run deploy gijo-talk \

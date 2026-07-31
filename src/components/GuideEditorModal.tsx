@@ -4,7 +4,8 @@ import { GUIDE_CODE } from '../utils/env';
 import { Itinerary } from '../types';
 import { ITINERARY_TEMPLATE_FILE, parseItinerary } from '../utils/itinerary';
 import { BASE_URL } from '../utils/env';
-import { buildItineraryLink } from '../utils/itineraryLink';
+import { buildItineraryLink, buildSheetLink } from '../utils/itineraryLink';
+import { parseSheetUrl, sheetHomeUrl, sheetToItineraryText } from '../utils/itinerarySheet';
 import {
   X,
   PencilLine,
@@ -14,6 +15,7 @@ import {
   AlertTriangle,
   Save,
   FileDown,
+  FileSpreadsheet,
   Lock,
 } from 'lucide-react';
 
@@ -73,6 +75,11 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
   const [copied, setCopied] = useState(false);
   const [linkError, setLinkError] = useState<string | null>(null);
 
+  const [sheetInput, setSheetInput] = useState('');
+  const [sheetLink, setSheetLink] = useState<string | null>(null);
+  const [sheetCopied, setSheetCopied] = useState(false);
+  const [sheetError, setSheetError] = useState<string | null>(null);
+
   // 한 글자 칠 때마다 다시 읽습니다. 순수 문자열 처리라 서버도 지연도 없습니다.
   const parsed = useMemo(() => parseItinerary(text), [text]);
 
@@ -101,6 +108,36 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
       setText((await res.text()).replace(/^\uFEFF/, ''));
     } catch {
       setLinkError('양식을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');
+    }
+  };
+
+  /**
+   * 시트 연결 링크를 만듭니다.
+   *
+   * 링크를 뿌리기 전에 시트를 실제로 한 번 읽어봅니다. 공유 설정을 안 열어둔 채로
+   * 링크만 뿌리면 여행자 전원이 오류를 보게 되는데, 가이드는 자기 계정으로
+   * 로그인돼 있어 정작 본인 화면에서는 멀쩡해 보입니다.
+   */
+  const handleMakeSheetLink = async () => {
+    const ref = parseSheetUrl(sheetInput);
+    if (!ref) return;
+
+    setSheetError(null);
+    setSheetCopied(false);
+    try {
+      await sheetToItineraryText(ref);
+    } catch (e: unknown) {
+      setSheetError(e instanceof Error ? e.message : '시트를 읽지 못했습니다.');
+      return;
+    }
+
+    const url = buildSheetLink(sheetHomeUrl(ref));
+    setSheetLink(url);
+    try {
+      await navigator.clipboard.writeText(url);
+      setSheetCopied(true);
+    } catch {
+      // 클립보드가 막힌 브라우저 — 아래 상자에서 직접 복사하면 됩니다.
     }
   };
 
@@ -234,6 +271,71 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
       </div>
 
       <div className="p-5 overflow-y-auto space-y-4 flex-1">
+        {/* 구글시트 연결 — 이게 유일하게 "고치면 자동 반영" 되는 방식입니다.
+            아래 텍스트 편집은 그 순간의 사본을 만드는 것이라, 고칠 때마다
+            링크를 다시 보내야 합니다. 그래서 시트를 맨 위에 둡니다. */}
+        <div className="p-4 bg-brand-tint border-2 border-brand/30 rounded-2xl space-y-3">
+          <div className="flex items-center gap-2">
+            <FileSpreadsheet className="w-4 h-4 text-brand" />
+            <h4 className="text-xs font-extrabold text-ink">구글시트로 연결하기 (권장)</h4>
+          </div>
+          <p className="text-xs text-ink-soft font-medium leading-relaxed">
+            시트 주소를 넣고 링크를 만들어 카톡방에 뿌리면, 이후 <b>시트만 고쳐도</b> 여행자
+            앱이 열릴 때마다 최신 일정이 됩니다. 다시 보낼 필요가 없습니다.
+          </p>
+          <input
+            type="url"
+            value={sheetInput}
+            onChange={(e) => {
+              setSheetInput(e.target.value);
+              setSheetLink(null);
+              setSheetError(null);
+            }}
+            aria-label="구글시트 주소"
+            placeholder="https://docs.google.com/spreadsheets/…"
+            className="w-full bg-white border-2 border-slate-200 rounded-xl px-3 py-2.5 text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid"
+          />
+          <button
+            onClick={handleMakeSheetLink}
+            disabled={!parseSheetUrl(sheetInput)}
+            className="w-full py-3 bg-brand text-white text-xs font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 disabled:active:scale-100 flex items-center justify-center gap-2"
+          >
+            {sheetCopied ? <Check className="w-4 h-4" /> : <Link2 className="w-4 h-4" />}
+            {sheetCopied ? '시트 링크 복사됨' : '시트 연결 링크 만들기'}
+          </button>
+
+          {sheetLink && (
+            <div className="space-y-1.5">
+              <p className="text-xs font-mono text-ink-soft break-all bg-white rounded-xl p-2.5 border border-slate-200">
+                {sheetLink}
+              </p>
+              <p className="text-xs font-bold text-ink-soft">
+                {sheetCopied ? '복사했습니다. ' : '위 주소를 복사해 '}카톡방에 붙여넣으세요. (
+                {sheetLink.length}자)
+              </p>
+            </div>
+          )}
+
+          {sheetError ? (
+            <p className="text-xs font-bold text-rose-600 flex items-start gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              {sheetError}
+            </p>
+          ) : (
+            <p className="text-xs text-ink-mute font-medium leading-relaxed">
+              시트는 [공유] → <b>링크가 있는 모든 사용자</b>(뷰어)로 열어두셔야 합니다. 주소를 아는
+              사람은 누구나 보게 되니 여권번호 같은 것은 넣지 마세요. 시트 이름은{' '}
+              <b>일정</b>·<b>안내</b> 그대로 두세요.
+            </p>
+          )}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="h-px bg-slate-200 flex-1" />
+          <span className="text-xs font-bold text-ink-mute">또는 직접 작성</span>
+          <div className="h-px bg-slate-200 flex-1" />
+        </div>
+
         {!text && (
           <button
             onClick={loadTemplate}

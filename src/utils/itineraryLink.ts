@@ -19,6 +19,15 @@ import { ByteTransform, transformBytes } from './bytes';
 
 const HASH_PREFIX = '#itin=';
 
+/**
+ * 구글시트 연결 링크.
+ *
+ * #itin= 은 일정표 내용을 통째로 실어 2천 자가 넘습니다. 시트는 주소만 실으면
+ * 되므로 링크가 100자 안팎으로 짧아지고, 무엇보다 가이드가 시트를 고치면
+ * 여행자 앱이 알아서 최신 내용을 받아옵니다.
+ */
+const SHEET_PREFIX = '#sheet=';
+
 /** gzip 압축본 / 무압축본 구분자. 오래된 사파리에는 CompressionStream 이 없습니다. */
 const TAG_GZIP = 'Z';
 const TAG_PLAIN = 'P';
@@ -141,15 +150,35 @@ export async function buildItineraryLink(text: string, origin?: string): Promise
   return `${base}${BASE_URL}${HASH_PREFIX}${await encodeItineraryPayload(text)}`;
 }
 
-/** 지금 열린 주소에 일정표가 실려 있는지 (동기 — 첫 화면 탭을 정하는 데 씁니다) */
+/** 카톡방에 붙여넣을 구글시트 연결 링크 */
+export function buildSheetLink(sheetUrl: string, origin?: string): string {
+  const base = origin ?? (typeof location !== 'undefined' ? location.origin : '');
+  return `${base}${BASE_URL}${SHEET_PREFIX}${toBase64Url(new TextEncoder().encode(sheetUrl))}`;
+}
+
+/**
+ * 지금 열린 주소에 일정표가 실려 있는지 (동기 — 첫 화면 탭을 정하는 데 씁니다).
+ * 내용을 실은 링크든 시트 연결 링크든 "일정 보러 온 사람" 인 건 같습니다.
+ */
 export function hasItineraryLink(): boolean {
   if (typeof location === 'undefined') return false;
-  return location.hash.startsWith(HASH_PREFIX);
+  return location.hash.startsWith(HASH_PREFIX) || location.hash.startsWith(SHEET_PREFIX);
 }
 
 export function readItineraryLink(): string | null {
-  if (!hasItineraryLink()) return null;
+  if (typeof location === 'undefined' || !location.hash.startsWith(HASH_PREFIX)) return null;
   return location.hash.slice(HASH_PREFIX.length);
+}
+
+/** 시트 연결 링크로 들어왔다면 그 시트 주소 */
+export function readSheetLink(): string | null {
+  if (typeof location === 'undefined' || !location.hash.startsWith(SHEET_PREFIX)) return null;
+  try {
+    const decoded = new TextDecoder().decode(fromBase64Url(location.hash.slice(SHEET_PREFIX.length)));
+    return decoded || null;
+  } catch {
+    return null;
+  }
 }
 
 /**

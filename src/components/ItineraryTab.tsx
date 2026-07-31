@@ -771,18 +771,12 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                         </p>
                       )}
 
-                      {/* 현장 동작 — 여기가 이 앱 안에 일정표가 있어야 하는 이유입니다 */}
+                      {/* 현장 동작 — 여기가 이 앱 안에 일정표가 있어야 하는 이유입니다.
+                          회화를 먼저, 보여주기를 그 옆에 둡니다. "기사에게 보여주기" 는
+                          이름이 길어 줄을 혼자 다 먹었고, 그 탓에 회화 버튼이 다음 줄로
+                          밀리는 카드가 많았습니다. */}
                       {(item.place || category) && (
                         <div className="flex flex-wrap gap-2 mt-3">
-                          {item.place && (
-                            <button
-                              onClick={() => onOpenBillboard(placePhrase(item))}
-                              className="inline-flex items-center gap-1.5 px-3 py-2 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
-                            >
-                              <Maximize2 className="w-3.5 h-3.5" />
-                              기사에게 보여주기
-                            </button>
-                          )}
                           {category && (
                             <button
                               onClick={() => onJumpToCategory(category)}
@@ -790,6 +784,15 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                             >
                               <MessageSquareQuote className="w-3.5 h-3.5" />
                               {category} 회화
+                            </button>
+                          )}
+                          {item.place && (
+                            <button
+                              onClick={() => onOpenBillboard(placePhrase(item))}
+                              className="inline-flex items-center gap-1.5 px-3 py-2 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
+                            >
+                              <Maximize2 className="w-3.5 h-3.5" />
+                              보여주기
                             </button>
                           )}
                         </div>

@@ -12,7 +12,8 @@
     "audio": "tsx scripts/generate-audio.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "audio:check": "tsx scripts/check-audio.ts"
+    "audio:check": "tsx scripts/check-audio.ts",
+    "xlsx": "tsx scripts/build-itinerary-xlsx.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

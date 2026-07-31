@@ -36,7 +36,9 @@ describe('App — 조립 검증', () => {
 
     expect(screen.getByText('일정표 파일 올리기')).toBeInTheDocument();
     // 양식 없이 업로드만 있으면 가이드가 무엇을 보내야 할지 알 수 없습니다.
-    expect(screen.getByText('일정표 양식 받기')).toBeInTheDocument();
+    // 엑셀을 앞에 두되 텍스트 양식도 남깁니다 — 붙여넣기·링크 경로가 텍스트 기반입니다.
+    expect(screen.getByText('엑셀 양식 받기')).toBeInTheDocument();
+    expect(screen.getByText('텍스트 양식')).toBeInTheDocument();
     // 안드로이드 파일 선택기가 카톡 파일을 회색 처리해 아예 못 고르는 일이 있습니다.
     // 붙여넣기 우회로가 없으면 그 상태에서 할 수 있는 게 없습니다.
     expect(screen.getByLabelText('일정표 붙여넣기')).toBeInTheDocument();

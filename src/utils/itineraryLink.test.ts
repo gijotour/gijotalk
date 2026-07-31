@@ -28,6 +28,18 @@ describe('일정표 링크', () => {
     expect(await decodeItineraryPayload(payload)).toBe(SAMPLE);
   });
 
+  it('압축 경로를 실제로 탄다', async () => {
+    // 'Z' = gzip. 예전에는 Blob.stream() 이 테스트 환경에 없어서 조용히 무압축('P')으로
+    // 떨어졌고, 그래서 압축 경로가 한 번도 검증되지 않은 채로 배포됐습니다.
+    const payload = await encodeItineraryPayload(SAMPLE);
+    expect(payload.startsWith('Z')).toBe(true);
+
+    // 압축이 실제로 먹었는지 — 무압축으로 실었을 때보다 짧아야 합니다.
+    // (base64 는 3바이트를 4글자로 늘리므로 원문 바이트 수와 비교하면 안 됩니다)
+    const rawBytes = new TextEncoder().encode(SAMPLE).length;
+    expect(payload.length).toBeLessThan(Math.ceil((rawBytes * 4) / 3));
+  });
+
   it('한글·이모지·긴 공백이 깨지지 않는다', async () => {
     const tricky = '#기조톡일정 v1\n제목: 🇵🇭 세부 · 100% 확정  (두 칸 공백)\n[2026-08-01] 1일차\n09:00 | 기타 | 「집합」 ※ 지각 금지';
     expect(await decodeItineraryPayload(await encodeItineraryPayload(tricky))).toBe(tricky);

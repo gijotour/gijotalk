@@ -87,6 +87,24 @@ const KIND_ICON: Record<ItineraryKind, React.ReactNode> = {
   기타: <Clock className="w-3.5 h-3.5" />,
 };
 
+/**
+ * 종류별 색 띠.
+ * 목록을 훑을 때 글자를 읽기 전에 "밥/이동/투어" 가 먼저 잡히게 합니다.
+ * 흔들리는 차 안에서 보는 화면이라 색이 곧 속도입니다.
+ */
+const KIND_BAR: Record<ItineraryKind, string> = {
+  집합: 'bg-rose-400',
+  항공: 'bg-sky-400',
+  이동: 'bg-violet-400',
+  식사: 'bg-amber-400',
+  투어: 'bg-emerald-400',
+  숙소: 'bg-indigo-400',
+  쇼핑: 'bg-pink-400',
+  자유: 'bg-slate-300',
+  스파: 'bg-teal-400',
+  기타: 'bg-slate-300',
+};
+
 /** 메모에 적힌 전화번호를 눌러서 걸 수 있게 바꿉니다 (호텔 프런트·기사 번호). */
 const NoteText: React.FC<{ text: string }> = ({ text }) => (
   <>
@@ -512,97 +530,82 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   /* ---------------------------------------------------------------- */
   return (
     <div className="space-y-4 animate-in fade-in duration-150">
-      {/* 제목 · 기간 */}
-      <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-brand shrink-0" />
-              <span className="truncate">{itinerary.title}</span>
-            </h2>
-            {itinerary.period && (
-              <p className="text-xs text-slate-500 font-bold mt-0.5">{itinerary.period}</p>
-            )}
-            {/* 시트에 연결돼 있으면 그 사실을 보여줍니다 — 이 일정표가 스스로
-                최신을 유지한다는 걸 알아야 여행자가 안심합니다. */}
+      {/* 머리말 — 한 줄로 접어둡니다.
+          제목·기간·연결상태는 한 번 확인하면 끝인데, 카드로 두면 매번 오늘 일정을
+          화면 밖으로 밀어냅니다. 주인공은 일정입니다. */}
+      <div className="flex items-center gap-2 px-1">
+        <CalendarDays className="w-4 h-4 text-brand shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-extrabold text-slate-900 truncate">{itinerary.title}</p>
+          <p className="text-xs text-ink-mute font-bold truncate">
+            {itinerary.period}
             {itinerary.sheetUrl && (
-              <p className="text-xs font-bold text-emerald-700 mt-1 flex items-center gap-1.5">
-                {syncing ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    최신 일정 확인 중…
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="w-3 h-3" />
-                    구글시트 연결됨 · 열 때마다 자동 갱신
-                  </>
-                )}
-              </p>
+              <span className="text-emerald-700">
+                {itinerary.period ? ' · ' : ''}
+                {syncing ? '갱신 중…' : '시트 자동갱신'}
+              </span>
             )}
-          </div>
-          <button
-            onClick={handleRemove}
-            aria-label="저장된 일정표 지우기"
-            className="p-2 text-ink-mute hover:text-alert rounded-full bg-slate-100 shrink-0"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          </p>
         </div>
+        {syncing && <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-700 shrink-0" />}
+        <button
+          onClick={handleRemove}
+          aria-label="저장된 일정표 지우기"
+          className="p-1.5 text-ink-mute hover:text-alert rounded-full shrink-0"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      {/* 특이사항 — 일정 스크롤에 묻히면 안 되는 것들이라 항상 위에 둡니다 */}
+      {/* 특이사항 — 기본은 한 줄 띠. 눈에는 띄되 일정을 밀어내지 않습니다. */}
       {itinerary.notices.length > 0 && (
-        <div className="bg-accent/20 border-2 border-accent/60 p-4 rounded-2xl shadow-xs">
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="w-4 h-4 text-alert" />
-            <h3 className="font-extrabold text-xs text-slate-900">특이사항</h3>
-          </div>
-          {/* 특이사항이 8건씩 되면 정작 오늘 일정이 화면 밖으로 밀려납니다.
-              중요하지만 매번 다 읽을 것은 아니므로 3건만 펼쳐둡니다. */}
-          <ul className="space-y-1.5">
-            {(showAllNotices ? itinerary.notices : itinerary.notices.slice(0, 3)).map(
-              (notice, i) => (
+        <div className="bg-accent/20 border border-accent/60 rounded-2xl overflow-hidden">
+          <button
+            onClick={() => setShowAllNotices((v) => !v)}
+            aria-expanded={showAllNotices}
+            className="w-full flex items-center gap-2 px-3.5 py-2.5 text-left"
+          >
+            <AlertTriangle className="w-4 h-4 text-alert shrink-0" />
+            <span className="text-xs font-extrabold text-slate-900 flex-1">
+              특이사항 {itinerary.notices.length}건
+            </span>
+            <span className="text-xs font-bold text-alert">
+              {showAllNotices ? '접기' : '보기'}
+            </span>
+          </button>
+
+          {showAllNotices && (
+            <ul className="px-3.5 pb-3 space-y-1.5">
+              {itinerary.notices.map((notice, i) => (
                 <li key={i} className="text-xs font-bold text-slate-800 leading-relaxed flex gap-2">
                   <span className="text-alert shrink-0">•</span>
                   <span>
                     <NoteText text={notice} />
                   </span>
                 </li>
-              )
-            )}
-          </ul>
-
-          {itinerary.notices.length > 3 && (
-            <button
-              onClick={() => setShowAllNotices((v) => !v)}
-              className="mt-2 text-xs font-bold text-alert underline underline-offset-2"
-            >
-              {showAllNotices
-                ? '접기'
-                : `${itinerary.notices.length - 3}건 더 보기`}
-            </button>
+              ))}
+            </ul>
           )}
         </div>
       )}
 
-      {/* 연락처 — 현지에서 바로 걸 수 있게 tel: 로 겁니다 */}
+      {/* 연락처 — 한 줄로 눕히고 옆으로 밉니다. 6개가 넘어도 두 줄을 먹지 않습니다. */}
       {itinerary.contacts.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
           {itinerary.contacts.map((c, i) =>
             c.phone ? (
               <a
                 key={i}
                 href={`tel:${c.phone.replace(/[^\d+]/g, '')}`}
-                className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border-2 border-slate-100 rounded-xl text-xs font-bold text-ink shadow-xs active:scale-95 transition-all"
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-bold text-ink active:scale-95 transition-all"
               >
-                <Phone className="w-3.5 h-3.5 text-brand" />
+                <Phone className="w-3 h-3 text-brand" />
                 {c.label}
               </a>
             ) : (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border-2 border-slate-100 rounded-xl text-xs font-bold text-ink-soft shadow-xs"
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-full text-xs font-bold text-ink-soft"
               >
                 {c.label}
               </span>
@@ -643,25 +646,31 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
         </div>
       )}
 
-      {/* 다음 일정 — 오늘을 보고 있을 때만 */}
+      {/* 다음 일정 — 한 줄. 내용은 아래 카드에 이미 있으므로 여기서는 "어디로 가면 되는지"만
+          알려주고, 누르면 그 카드로 데려갑니다. 하루 끝 무렵이면 한참 아래에 있습니다. */}
       {nextItem && (
-        <div className="bg-ink text-white p-4 rounded-2xl shadow-xs">
-          <p className="text-xs font-bold text-white/60">
-            다음 일정 · {formatCountdown(now.minutes, nextItem.minutes as number)}
-          </p>
-          <p className="text-sm font-extrabold mt-1">
-            {nextItem.time} {nextItem.title}
-          </p>
-          {nextItem.note && (
-            <p className="text-xs font-bold text-accent mt-1">💡 {nextItem.note}</p>
-          )}
-        </div>
+        <button
+          onClick={() =>
+            document
+              .getElementById('gijo-next-item')
+              ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+          className="w-full flex items-center gap-2 bg-ink text-white px-4 py-2.5 rounded-2xl shadow-xs active:scale-[0.98] transition-all text-left"
+        >
+          <Clock className="w-4 h-4 shrink-0 text-accent" />
+          <span className="text-xs font-bold text-accent shrink-0">
+            {formatCountdown(now.minutes, nextItem.minutes as number)}
+          </span>
+          <span className="text-xs font-extrabold truncate flex-1">
+            {nextItem.time?.split('~')[0].trim()} {nextItem.title}
+          </span>
+        </button>
       )}
 
       {/* 하루 일정 */}
       {selectedDay && (
         <div className="space-y-3">
-          <h3 className="text-xs font-extrabold text-slate-900 px-1">{selectedDay.label}</h3>
+          <h3 className="text-sm font-black text-slate-900 px-1">{selectedDay.label}</h3>
 
           {selectedDay.items.length === 0 ? (
             <div className="text-center py-10 bg-white rounded-2xl border-2 border-slate-100 shadow-xs">
@@ -671,18 +680,40 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             selectedDay.items.map((item, i) => {
               const category = KIND_TO_CATEGORY[item.kind];
               const isPast = isToday && typeof item.minutes === 'number' && item.minutes < now.minutes;
+              // 지금 향해 가고 있는 일정. 흔들리는 차 안에서 훑을 때 여기부터 눈에 걸려야 합니다.
+              const isNext = nextItem === item;
 
               return (
                 <div
                   key={i}
-                  className={`bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs ${
-                    isPast ? 'opacity-55' : ''
-                  }`}
+                  id={isNext ? 'gijo-next-item' : undefined}
+                  className={`relative bg-white pl-5 pr-4 py-4 rounded-2xl border-2 overflow-hidden transition-all scroll-mt-4 ${
+                    isNext
+                      ? 'border-brand shadow-md ring-2 ring-brand/20'
+                      : 'border-slate-100 shadow-xs'
+                  } ${isPast ? 'opacity-50' : ''}`}
                 >
+                  {/* 종류별 색 띠 — 목록을 훑을 때 글자를 읽기 전에 종류가 먼저 보입니다 */}
+                  <span
+                    aria-hidden
+                    className={`absolute left-0 top-0 bottom-0 w-1.5 ${KIND_BAR[item.kind]}`}
+                  />
+
                   <div className="flex items-start gap-3">
-                    {/* 시간 */}
-                    <div className="shrink-0 w-14 text-center">
-                      <span className="text-xs font-black text-brand">{item.time || '—'}</span>
+                    {/* 시간 — 일정표에서 가장 먼저 찾는 정보라 가장 크게 둡니다 */}
+                    <div className="shrink-0 w-16">
+                      <span
+                        className={`block text-sm font-black leading-tight ${
+                          isNext ? 'text-brand' : 'text-slate-900'
+                        }`}
+                      >
+                        {item.time?.split('~')[0].trim() || '—'}
+                      </span>
+                      {item.time?.includes('~') && (
+                        <span className="block text-xs font-bold text-ink-mute leading-tight">
+                          ~{item.time.split('~')[1].trim()}
+                        </span>
+                      )}
                     </div>
 
                     <div className="min-w-0 flex-1">
@@ -691,6 +722,11 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                           {KIND_ICON[item.kind]}
                           {item.kind}
                         </span>
+                        {isNext && (
+                          <span className="px-2 py-0.5 bg-brand text-white text-xs font-bold rounded-lg">
+                            다음 · {formatCountdown(now.minutes, item.minutes as number)}
+                          </span>
+                        )}
                         {/* 신청자만 가는 일정 — 확정 일정과 섞이면 안 갈 곳에 나가게 됩니다 */}
                         {item.optional && (
                           <span className="px-2 py-0.5 bg-accent/40 text-alert text-xs font-bold rounded-lg">
@@ -699,12 +735,12 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                         )}
                       </div>
 
-                      <p className="text-sm font-extrabold text-slate-900 leading-snug">
+                      <p className="text-base font-extrabold text-slate-900 leading-snug">
                         {item.title}
                       </p>
 
                       {item.place && (
-                        <p className="text-xs text-ink-soft font-bold mt-0.5 break-words">
+                        <p className="text-sm text-ink-soft font-bold mt-1 break-words">
                           📍 {item.place}
                         </p>
                       )}

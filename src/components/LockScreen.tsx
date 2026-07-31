@@ -109,7 +109,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
 
       <p className="mt-8 text-xs text-ink-mute font-bold">
         <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-xl border border-blue-200">
-          GIJO LABS
+          지아이조 투어
         </span>{' '}
         제공
       </p>

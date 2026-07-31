@@ -36,10 +36,15 @@ interface ModalProps {
   panelClassName?: string;
 }
 
+// ⚠️ 하단 네비게이션이 z-50 입니다.
+//
+//   sheet 도 z-50 이었는데, 네비게이션이 DOM 상 뒤에 있어 같은 층에서는 항상
+//   위로 올라옵니다. 그래서 아래에서 올라오는 시트의 밑부분(버튼·안내문)이
+//   네비게이션에 가려 잘렸습니다. center(z-110)와 같은 층으로 올립니다.
 const BACKDROP: Record<ModalVariant, string> = {
   center: 'fixed inset-0 z-[110] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4',
   sheet:
-    'fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-end sm:items-center justify-center sm:p-4',
+    'fixed inset-0 z-[110] bg-slate-900/80 backdrop-blur-md flex items-end sm:items-center justify-center sm:p-4',
   fullscreen: 'fixed inset-0 z-[200]',
 };
 

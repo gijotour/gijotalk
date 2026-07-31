@@ -20,11 +20,12 @@
  */
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { mkdir, writeFile, rm, access } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, rm, access } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { COUNTRIES, PHRASES } from '../src/config';
 import type { Phrase } from '../src/types';
+import { brighten } from './brighten';
 
 const run = promisify(execFile);
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -67,26 +68,37 @@ interface VoiceSpec {
   rate: number;
   /** 기본 음높이. 올리면 밝게 들립니다. 생략하면 음성 기본값. */
   pitch?: number;
+  /**
+   * 합성 뒤 밝기·음량 보정.
+   * macOS 미국 남성 음성은 그대로 쓰면 어둡고 작습니다. 목소리를 바꾸는 대신
+   * 나온 소리를 손봅니다 — 발음은 미국 것이어야 하기 때문입니다.
+   */
+  polish?: { shelfHz: number; gainDb: number; peakDb: number };
 }
 
 const SAY_VOICE: Record<string, VoiceSpec> = {
-  // 영어는 Daniel(영국)입니다.
+  // 영어는 미국 발음(Reed)입니다.
   //
-  //   설치된 미국 남성 음성(Reed·Ralph·Fred)은 전부 어둡고 뭉개집니다.
-  //   같은 문장으로 재보면 밝기(영교차율) Reed 1416 vs Daniel 4416, 음량도
-  //   28% 큽니다. 피치를 올려 미국 음성을 밝혀봐도 1771 이 한계였습니다.
-  //   듣고 따라 하는 용도라 또렷함이 억양 국적보다 중요하다고 봤습니다.
-  //   (필리핀에서 영국 억양도 문제없이 통합니다)
-  //
-  //   미국 발음으로 되돌리려면 candidates 에서 Daniel 을 빼면 됩니다.
+  //   필리핀은 미국 영어권이라 발음도 미국 것이어야 합니다. 다만 설치된 미국
+  //   남성 음성은 그냥 쓰면 어둡고 작습니다(밝기 1416). 그래서
+  //     · 피치를 올리고 (1416 → 1771)
+  //     · 속도를 낮춰 또박또박하게 하고
+  //     · 합성 뒤 하이셸프 EQ + 정규화로 자음 대역을 살립니다.
+  //   목소리를 영국 것으로 바꾸는 대신 소리를 손보는 쪽을 택했습니다.
   'en-US': {
     candidates: [
-      { locale: 'en_GB', name: 'Daniel' },
       { locale: 'en_US', name: 'Reed' },
       { locale: 'en_US', name: 'Ralph' },
+      { locale: 'en_US', name: 'Fred' },
     ],
-    rate: 150, // 또박또박하게. Daniel 은 빨라서 낮춰도 기존보다 짧습니다.
-    pitch: 55, // 밝게
+    rate: 155,
+    pitch: 60,
+    // 2.5kHz 위 = 자음(s·t·k·th)이 몰린 대역. 여기를 올리면 또렷해집니다.
+    //
+    // 더 올리면 수치는 오르지만(14dB 에서 밝기 2648) 치찰음이 거슬릴 위험이
+    // 커집니다. 10dB 는 또렷함과 자연스러움이 갈라지기 직전 지점입니다.
+    // 더 밝게 원하면 gainDb 만 올리고 `npm run audio -- --force --lang=en`.
+    polish: { shelfHz: 2500, gainDb: 10, peakDb: -1 },
   },
   // 인도네시아어 — 타갈로그와 같은 오스트로네시아어족이라 모음이 거의 같습니다.
   'tl-PH': { candidates: [{ locale: 'id_ID', name: 'Damayanti' }], rate: 170 },
@@ -153,6 +165,48 @@ function shouldSkipAudio(p: Phrase): string | null {
 }
 
 /* ------------------------------------------------------------------ */
+/* 후처리                                                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * say 가 뱉은 AIFF 를 제자리에서 보정합니다.
+ *
+ * AIFF 는 빅엔디안 16비트 PCM 입니다. SSND 청크의 오디오 데이터만 손대고
+ * 헤더는 그대로 두므로 길이·샘플레이트가 바뀌지 않습니다.
+ */
+async function polishAiff(file: string, opts: { shelfHz: number; gainDb: number; peakDb: number }) {
+  const buf = await readFile(file);
+
+  // COMM 청크에서 샘플레이트와 채널 수를 읽습니다.
+  const commAt = buf.indexOf('COMM');
+  const ssndAt = buf.indexOf('SSND');
+  if (commAt < 0 || ssndAt < 0) return; // 모르는 형식이면 건드리지 않습니다
+
+  const channels = buf.readUInt16BE(commAt + 8);
+  const bits = buf.readUInt16BE(commAt + 14);
+  if (bits !== 16) return;
+
+  // 80비트 확장 부동소수 — 정수부만 있으면 충분합니다.
+  const expo = buf.readUInt16BE(commAt + 16) - 16383;
+  const mant = Number(buf.readBigUInt64BE(commAt + 18));
+  const sampleRate = Math.round(mant / Math.pow(2, 63 - expo));
+
+  // SSND: 4바이트 크기 + offset(4) + blockSize(4) 다음이 오디오입니다.
+  const dataStart = ssndAt + 4 + 4 + 8;
+  const dataEnd = ssndAt + 4 + 4 + buf.readUInt32BE(ssndAt + 4);
+  const count = Math.floor((dataEnd - dataStart) / 2);
+
+  const samples = new Int16Array(count);
+  for (let i = 0; i < count; i++) samples[i] = buf.readInt16BE(dataStart + i * 2);
+
+  const fixed = brighten(samples, { sampleRate, shelfHz: opts.shelfHz, gainDb: opts.gainDb, peakDb: opts.peakDb });
+  void channels;
+
+  for (let i = 0; i < count; i++) buf.writeInt16BE(fixed[i], dataStart + i * 2);
+  await writeFile(file, buf);
+}
+
+/* ------------------------------------------------------------------ */
 /* 백엔드 구현                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -165,6 +219,7 @@ async function synthesizeWithSay(text: string, langCode: string, outPath: string
 
   const aiff = path.join(TMP_DIR, `${path.basename(outPath, '.m4a')}.aiff`);
   await run('say', ['-v', voice, '-r', String(spec.rate), '-o', aiff, spoken]);
+  if (spec.polish) await polishAiff(aiff, spec.polish);
   // 48kbps 모노 AAC — 음성에는 충분하고 1초당 약 6KB 입니다.
   await run('afconvert', ['-f', 'm4af', '-d', 'aac', '-b', '48000', '-q', '127', aiff, outPath]);
   await rm(aiff, { force: true });

@@ -15,7 +15,7 @@ export const EN_COUNTRY: Country = {
   flag: '🌐',
   language: 'English',
   langCode: 'en-US',
-  categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+  categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
   description: '필리핀 어디서나 통하는 영어 표현 (공용어)',
 };
 

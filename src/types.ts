@@ -4,7 +4,7 @@ export type CountryId = 'ph' | 'en' | 'vn' | 'th' | 'id' | 'la';
 
 export type CategoryId =
   | '전체' | '항공' | '호텔' | '교통' | '식당' | '흥정'
-  | '관광' | '마사지'
+  | '관광' | '마사지' | '음식'
   | '미팅/사교' | '욕설/은어' | '비상';
 
 export interface Phrase {

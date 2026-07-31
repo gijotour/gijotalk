@@ -6,6 +6,12 @@ import { BASE_URL } from '../utils/env';
 // 서브패스 배포에서도 동작하도록 빌드 base 를 붙입니다.
 export const AUDIO_BASE = `${BASE_URL}audio`;
 
+/**
+ * 오디오 내용의 판 번호. 파일 하나라도 바뀌면 달라집니다.
+ * 기기에 저장해 둔 오디오를 언제 갈아치울지 판단하는 데 씁니다.
+ */
+export const AUDIO_REVISION = '7c7880e5';
+
 /** 사전 생성된 오디오가 있는 문장 id → 상대 경로 */
 export const AUDIO_FILES: Record<string, string> = {
   'en-air-01': 'en/en-air-01.m4a',

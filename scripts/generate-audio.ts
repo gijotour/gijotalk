@@ -21,6 +21,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, writeFile, readFile, rm, access } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { COUNTRIES, PHRASES } from '../src/config';
@@ -332,6 +333,18 @@ async function main() {
   }
 
   const entries = Object.entries(generated).sort(([a], [b]) => a.localeCompare(b));
+
+  // 오디오 판(revision) — 파일 "내용" 을 해시합니다.
+  //
+  //   파일 이름은 그대로인 채 내용만 바뀌는 일이 잦습니다(음성 교체·EQ 조정).
+  //   그때 기기에 저장해 둔 오디오가 그대로 남아 옛 목소리가 계속 재생됐습니다.
+  //   목록만 해시하면 이름이 안 바뀌니 못 잡습니다. 그래서 내용을 봅니다.
+  const hash = createHash('sha1');
+  for (const [id, rel] of entries) {
+    hash.update(id);
+    hash.update(await readFile(path.join(OUT_DIR, rel)));
+  }
+  const revision = hash.digest('hex').slice(0, 8);
   const manifest = `// 이 파일은 \`npm run audio\` 가 자동 생성합니다. 직접 수정하지 마세요.
 // 생성 백엔드: ${BACKEND}
 
@@ -339,6 +352,12 @@ import { BASE_URL } from '../utils/env';
 
 // 서브패스 배포에서도 동작하도록 빌드 base 를 붙입니다.
 export const AUDIO_BASE = \`\${BASE_URL}audio\`;
+
+/**
+ * 오디오 내용의 판 번호. 파일 하나라도 바뀌면 달라집니다.
+ * 기기에 저장해 둔 오디오를 언제 갈아치울지 판단하는 데 씁니다.
+ */
+export const AUDIO_REVISION = '${revision}';
 
 /** 사전 생성된 오디오가 있는 문장 id → 상대 경로 */
 export const AUDIO_FILES: Record<string, string> = {
@@ -359,7 +378,7 @@ export const audioUrlFor = (phraseId: string): string | null =>
   console.log(`  실패        ${failed}`);
   console.log(`  의도적 제외 ${skipped.length}`);
   skipped.forEach((s) => console.log(`     · ${s.id} — ${s.reason}`));
-  console.log(`\n  매니페스트  src/data/audioManifest.ts (${entries.length}개)`);
+  console.log(`\n  매니페스트  src/data/audioManifest.ts (${entries.length}개 · 판 ${revision})`);
   console.log('────────────────────────────────');
 
   await access(OUT_DIR).catch(() => {});

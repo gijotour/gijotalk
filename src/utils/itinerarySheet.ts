@@ -145,6 +145,12 @@ export function parseCsv(text: string): Grid {
 /* ------------------------------------------------------------------ */
 
 async function fetchCsv(url: string, signal?: AbortSignal): Promise<Grid | null> {
+  // 오프라인에서 실패하면 "공유 설정을 확인하세요" 라는 엉뚱한 안내가 나갑니다.
+  // 원인이 인터넷인데 시트를 뒤지게 만들면 안 됩니다.
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    throw new Error('인터넷에 연결되어 있지 않습니다. 시트는 온라인일 때만 불러올 수 있습니다.');
+  }
+
   const res = await fetch(url, { signal, redirect: 'follow' });
   if (!res.ok) return null;
 

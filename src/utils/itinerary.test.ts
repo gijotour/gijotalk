@@ -8,6 +8,7 @@ import {
   formatCountdown,
   tripNow,
   shortDate,
+  splitDayChip,
   splitPhones,
 } from './itinerary';
 
@@ -319,5 +320,16 @@ describe('배포되는 양식 파일', () => {
 describe('shortDate', () => {
   it('요일을 붙여 짧게 만든다', () => {
     expect(shortDate('2026-08-01')).toBe('8/1 (토)');
+  });
+});
+
+describe('splitDayChip', () => {
+  it('날짜와 요일을 나눈다 — 칩을 두 줄로 세워 폭을 줄입니다', () => {
+    expect(splitDayChip('2026-08-01')).toEqual(['8/1', '토']);
+    expect(splitDayChip('2026-12-25')).toEqual(['12/25', '금']);
+  });
+
+  it('날짜 모양이 아니면 그대로 둔다', () => {
+    expect(splitDayChip('셋째날')).toEqual(['셋째날', '']);
   });
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   CategoryId,
   Country,
@@ -20,6 +20,7 @@ import {
   parseItinerary,
   saveItinerary,
   shortDate,
+  splitDayChip,
   splitPhones,
   tripNow,
 } from '../utils/itinerary';
@@ -147,6 +148,17 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const now = useMemo(() => tripNow(), []);
+
+  /**
+   * 고른 날짜 칩을 보이는 곳으로 끌어옵니다.
+   * 여행이 길어지면 오늘이 오른쪽 밖으로 밀려나, 앱을 열자마자 옆으로 밀어야
+   * 오늘을 볼 수 있게 됩니다. block:'nearest' 라 세로 스크롤은 건드리지 않습니다.
+   */
+  // scrollIntoView 는 브라우저에만 있습니다. 없는 환경에서 렌더가 통째로
+  // 죽지 않도록 있을 때만 부릅니다.
+  const scrollChipIntoView = useCallback((el: HTMLButtonElement | null) => {
+    el?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+  }, []);
 
   // 시트 연결 링크로 들어왔거나, 이미 시트에 연결된 일정표가 있으면 최신 내용을 받아옵니다.
   //
@@ -614,32 +626,40 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
         </div>
       )}
 
-      {/* 날짜 칩 */}
+      {/* 날짜 칩.
+          "8/2 (일)" 에 "오늘" 배지까지 붙으니 6일치가 화면을 넘어가 옆으로 밀어야
+          했습니다. 날짜와 요일을 두 줄로 세워 폭을 반으로 줄이고, "오늘" 은 글자
+          대신 점으로 표시합니다. 일주일치가 한 화면에 들어옵니다. */}
       {itinerary.days.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
           {itinerary.days.map((day) => {
             const active = day.date === selectedDate;
             const today = day.date === now.date;
+            const [md, wd] = splitDayChip(day.date);
             return (
               <button
                 key={day.date}
+                ref={active ? scrollChipIntoView : undefined}
                 onClick={() => setSelectedDate(day.date)}
-                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold border-2 transition-all active:scale-95 ${
+                aria-label={`${shortDate(day.date)}${today ? ' 오늘' : ''}`}
+                aria-current={active ? 'true' : undefined}
+                className={`shrink-0 min-w-12 px-2.5 py-1.5 rounded-xl border-2 transition-all active:scale-95 leading-tight ${
                   active
                     ? 'bg-brand text-white border-brand'
-                    : 'bg-white text-ink-soft border-slate-100'
+                    : today
+                      ? 'bg-white text-ink border-accent'
+                      : 'bg-white text-ink-soft border-slate-100'
                 }`}
               >
-                {shortDate(day.date)}
-                {today && (
-                  <span
-                    className={`ml-1.5 px-1.5 py-0.5 rounded-lg ${
-                      active ? 'bg-white/25' : 'bg-accent/40 text-alert'
-                    }`}
-                  >
-                    오늘
-                  </span>
-                )}
+                <span className="block text-xs font-black">{md}</span>
+                {/* 오늘은 요일을 강조색으로. 글자 "오늘" 을 붙이면 칩이 두 배로 넓어집니다. */}
+                <span
+                  className={`block text-xs font-bold ${
+                    active ? 'text-white/70' : today ? 'text-alert' : 'text-ink-mute'
+                  }`}
+                >
+                  {wd}
+                </span>
               </button>
             );
           })}
@@ -653,7 +673,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
           onClick={() =>
             document
               .getElementById('gijo-next-item')
-              ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              ?.scrollIntoView?.({ behavior: 'smooth', block: 'center' })
           }
           className="w-full flex items-center gap-2 bg-ink text-white px-4 py-2.5 rounded-2xl shadow-xs active:scale-[0.98] transition-all text-left"
         >

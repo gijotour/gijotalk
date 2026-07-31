@@ -27,11 +27,9 @@ export interface SheetRef {
   id: string;
   /** doc = /d/<id> (링크 공유) · pub = /d/e/<id> (웹에 게시) */
   kind: 'doc' | 'pub';
+  /** 주소에 탭이 지정돼 있으면 그 탭 (없으면 첫 탭) */
+  gid?: string;
 }
-
-/** 가져올 시트 이름 — 엑셀 양식과 같은 구성을 씁니다 */
-const SHEET_SCHEDULE = '일정';
-const SHEET_INFO = '안내';
 
 /** 시트가 아무리 커도 일정표가 이 이상일 수는 없습니다 */
 const MAX_CSV_BYTES = 1_000_000;
@@ -53,12 +51,16 @@ export function parseSheetUrl(url: string): SheetRef | null {
   const text = url.trim();
   if (!/^https?:\/\/docs\.google\.com\/spreadsheets\//i.test(text)) return null;
 
+  // 주소창을 복사해 오면 보통 "#gid=0" 이 붙어 옵니다. 탭이 여러 개인 문서에서
+  // 어느 탭을 보고 있었는지가 그 안에 들어 있으므로 살려둡니다.
+  const gid = text.match(/[#&?]gid=(\d+)/)?.[1];
+
   // 게시 주소(/d/e/...)를 먼저 봅니다 — /d/ 규칙이 먼저 걸리면 e 를 ID 로 잡습니다.
   const pub = text.match(/\/spreadsheets\/d\/e\/([\w-]+)/);
-  if (pub) return { id: pub[1], kind: 'pub' };
+  if (pub) return { id: pub[1], kind: 'pub', gid };
 
   const doc = text.match(/\/spreadsheets\/d\/([\w-]+)/);
-  if (doc) return { id: doc[1], kind: 'doc' };
+  if (doc) return { id: doc[1], kind: 'doc', gid };
 
   return null;
 }
@@ -70,12 +72,20 @@ export function sheetHomeUrl(ref: SheetRef): string {
     : `https://docs.google.com/spreadsheets/d/${ref.id}/edit`;
 }
 
-/** 시트 한 장을 CSV 로 받는 주소 */
-export function csvUrl(ref: SheetRef, sheetName: string): string {
-  const name = encodeURIComponent(sheetName);
+/**
+ * 시트를 CSV 로 받는 주소.
+ *
+ * ⚠️ gviz(/gviz/tq?tqx=out:csv)를 쓰면 안 됩니다.
+ *    그건 질의 엔진이라 시트 위쪽 여러 줄을 통째로 "머리글" 하나로 뭉쳐버립니다.
+ *    실제 시트에서 안내 블록 11줄과 표 머리글이 한 줄로 합쳐지면서 "날짜" 열이
+ *    사라졌고, 앱은 "읽을 수 있는 일정이 없습니다" 만 뱉었습니다.
+ *    export 는 질의 엔진을 거치지 않고 시트를 적힌 그대로 내려줍니다.
+ */
+export function csvUrl(ref: SheetRef): string {
+  const gid = ref.gid ? `&gid=${ref.gid}` : '';
   return ref.kind === 'pub'
-    ? `https://docs.google.com/spreadsheets/d/e/${ref.id}/pub?output=csv&sheet=${name}`
-    : `https://docs.google.com/spreadsheets/d/${ref.id}/gviz/tq?tqx=out:csv&sheet=${name}`;
+    ? `https://docs.google.com/spreadsheets/d/e/${ref.id}/pub?output=csv${gid}`
+    : `https://docs.google.com/spreadsheets/d/${ref.id}/export?format=csv${gid}`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -159,20 +169,17 @@ export async function sheetToItineraryText(
   ref: SheetRef,
   signal?: AbortSignal
 ): Promise<string> {
-  const schedule = await fetchCsv(csvUrl(ref, SHEET_SCHEDULE), signal);
-  if (!schedule) {
+  const grid = await fetchCsv(csvUrl(ref), signal);
+  if (!grid) {
     throw new Error(
-      `시트를 읽지 못했습니다. [${SHEET_SCHEDULE}] 라는 이름의 시트가 있는지, 공유 설정이 열려 있는지 확인해 주세요.`
+      '시트를 읽지 못했습니다. [공유] → "링크가 있는 모든 사용자" 로 열려 있는지 확인해 주세요.'
     );
   }
 
-  // 안내 시트는 없어도 됩니다. 일정만 있는 시트도 그대로 씁니다.
-  let info: Grid | undefined;
-  try {
-    info = (await fetchCsv(csvUrl(ref, SHEET_INFO), signal)) ?? undefined;
-  } catch {
-    info = undefined;
-  }
-
-  return gridsToItineraryText(schedule, info);
+  // 같은 시트를 일정표와 안내 양쪽으로 읽습니다.
+  //
+  //   구글시트는 탭 하나로 쓰는 경우가 대부분입니다. 제목·기간·연락처·특이사항을
+  //   표 위쪽에 적어두면 그대로 읽히고, 없으면 일정만 읽힙니다. 안내 블록의 줄들은
+  //   일정 표 쪽에서 머리글로도 항목으로도 잡히지 않으므로 서로 방해하지 않습니다.
+  return gridsToItineraryText(grid, grid);
 }

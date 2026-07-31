@@ -12,16 +12,15 @@ describe('구글시트 주소 해석', () => {
       '  https://docs.google.com/spreadsheets/d/1AbC-dEf_123/edit  ',
     ];
     for (const url of forms) {
-      expect(parseSheetUrl(url)).toEqual({ id: '1AbC-dEf_123', kind: 'doc' });
+      expect(parseSheetUrl(url)).toMatchObject({ id: '1AbC-dEf_123', kind: 'doc' });
     }
   });
 
   it('웹에 게시(/d/e/) 주소를 doc 으로 잘못 읽지 않는다', () => {
     // /d/ 규칙이 먼저 걸리면 ID 가 "e" 가 되어 조용히 엉뚱한 문서를 가리킵니다.
-    expect(parseSheetUrl('https://docs.google.com/spreadsheets/d/e/2PACX-1vABC/pubhtml')).toEqual({
-      id: '2PACX-1vABC',
-      kind: 'pub',
-    });
+    expect(
+      parseSheetUrl('https://docs.google.com/spreadsheets/d/e/2PACX-1vABC/pubhtml')
+    ).toMatchObject({ id: '2PACX-1vABC', kind: 'pub' });
   });
 
   it('구글시트가 아닌 주소는 거부한다', () => {
@@ -36,14 +35,21 @@ describe('구글시트 주소 해석', () => {
     }
   });
 
-  it('연결 방식에 맞는 CSV 주소를 만든다', () => {
+  it('질의 엔진(gviz)이 아니라 원본 내보내기 주소를 쓴다', () => {
+    // gviz 는 시트 위쪽 여러 줄을 머리글 하나로 뭉개버립니다. 실제 시트에서
+    // 그 탓에 "날짜" 열이 사라져 "읽을 수 있는 일정이 없습니다" 가 났습니다.
     const doc = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!;
-    expect(csvUrl(doc, '일정')).toBe(
-      'https://docs.google.com/spreadsheets/d/ID1/gviz/tq?tqx=out:csv&sheet=%EC%9D%BC%EC%A0%95'
-    );
+    expect(csvUrl(doc)).toBe('https://docs.google.com/spreadsheets/d/ID1/export?format=csv');
+    expect(csvUrl(doc)).not.toContain('gviz');
 
     const pub = parseSheetUrl('https://docs.google.com/spreadsheets/d/e/PUB1/pubhtml')!;
-    expect(csvUrl(pub, '안내')).toContain('/d/e/PUB1/pub?output=csv&sheet=');
+    expect(csvUrl(pub)).toBe('https://docs.google.com/spreadsheets/d/e/PUB1/pub?output=csv');
+  });
+
+  it('주소에 붙은 탭(gid)을 살린다', () => {
+    const ref = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit#gid=12345')!;
+    expect(ref.gid).toBe('12345');
+    expect(csvUrl(ref)).toContain('&gid=12345');
   });
 
   it('사람이 보는 주소로 되돌린다', () => {
@@ -88,46 +94,51 @@ describe('CSV 해석', () => {
 
 /* ------------------------------------------------------------------ */
 
-const SCHEDULE_CSV = `날짜,일차,시간,종류,내용,장소,메모
+/**
+ * 실제 가이드 시트의 모양.
+ *
+ * 안내 블록(제목·기간·연락처·특이사항)이 표 위에 있고, 그 아래 빈 줄, 그다음
+ * 일정 표가 옵니다. 구글시트는 탭 하나로 쓰는 경우가 대부분이라 이 배치가 기본입니다.
+ */
+const SHEET_CSV = `제목,세부 2박3일 · 김기조님,,,,,
+기간,2026-08-01 ~ 2026-08-02,,,,,
+연락처,현지가이드 제이,+63 917 555 0101,,,,
+특이사항,여권 유효기간 6개월 이상,,,,,
+특이사항,우비를 챙기세요,,,,,
+,,,,,,
+날짜,일차,시간,종류,내용,장소,메모
 2026-08-01,1일차 · 출국,06:30,집합,인천공항 3층 M카운터,,여권 지참
 ,,13:40,이동,공항에서 호텔로,"Bai Hotel Cebu, Mandaue City",
 ,,15:00,숙소,체크인,,"보증금 2000페소, 프런트 +63 32 342 8888"
 2026-08-02,2일차 · 호핑,08:00,투어,(옵션) 힐루뚱안 섬,Hilutungan Island,1인 1500페소`;
 
-const INFO_CSV = `항목,내용,(추가)
-제목,세부 2박3일 · 김기조님
-기간,2026-08-01 ~ 2026-08-02
-연락처,현지가이드 제이,+63 917 555 0101
-특이사항,여권 유효기간 6개월 이상
-특이사항,우비를 챙기세요`;
-
 describe('구글시트 → 일정표', () => {
   afterEach(() => vi.unstubAllGlobals());
 
-  /** sheet= 파라미터를 보고 알맞은 CSV 를 돌려주는 가짜 구글 */
-  const stubGoogle = (opts: { info?: string | null; html?: boolean } = {}) => {
+  const stubGoogle = (opts: { body?: string; status?: number; html?: boolean } = {}) => {
+    const calls: string[] = [];
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) => {
+        calls.push(url);
         if (opts.html) return new Response('<!doctype html><html>로그인</html>', { status: 200 });
-        const isInfo = decodeURIComponent(url).includes('sheet=안내');
-        if (isInfo) {
-          if (opts.info === null) return new Response('', { status: 404 });
-          return new Response(opts.info ?? INFO_CSV, { status: 200 });
-        }
-        return new Response(SCHEDULE_CSV, { status: 200 });
+        return new Response(opts.body ?? SHEET_CSV, { status: opts.status ?? 200 });
       })
     );
+    return calls;
   };
 
-  it('일정·안내 두 시트를 합쳐 읽는다', async () => {
+  const load = async (url = 'https://docs.google.com/spreadsheets/d/ID1/edit') =>
+    parseItinerary(await sheetToItineraryText(parseSheetUrl(url)!));
+
+  it('탭 하나에 안내와 일정이 같이 있어도 둘 다 읽는다', async () => {
     stubGoogle();
-    const ref = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!;
-    const { itinerary, error, warnings } = parseItinerary(await sheetToItineraryText(ref));
+    const { itinerary, error, warnings } = await load();
 
     expect(error).toBeUndefined();
     expect(warnings).toEqual([]);
     expect(itinerary!.title).toBe('세부 2박3일 · 김기조님');
+    expect(itinerary!.period).toBe('2026-08-01 ~ 2026-08-02');
     expect(itinerary!.contacts).toEqual([
       { label: '현지가이드 제이', phone: '+63 917 555 0101' },
     ]);
@@ -135,10 +146,16 @@ describe('구글시트 → 일정표', () => {
     expect(itinerary!.days).toHaveLength(2);
   });
 
+  it('시트를 한 번만 받아온다', async () => {
+    const calls = stubGoogle();
+    await load();
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toContain('export?format=csv');
+  });
+
   it('엑셀과 똑같은 규칙이 적용된다 (날짜 물려받기·장소·옵션·전화번호)', async () => {
     stubGoogle();
-    const ref = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!;
-    const { itinerary } = parseItinerary(await sheetToItineraryText(ref));
+    const { itinerary } = await load();
 
     const day1 = itinerary!.days[0];
     expect(day1.label).toBe('1일차 · 출국');
@@ -151,20 +168,24 @@ describe('구글시트 → 일정표', () => {
     expect(optional.title).toBe('힐루뚱안 섬');
   });
 
-  it('안내 시트가 없어도 일정만으로 동작한다', async () => {
-    stubGoogle({ info: null });
-    const ref = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!;
-    const { itinerary } = parseItinerary(await sheetToItineraryText(ref));
+  it('안내 블록이 없어도 일정만으로 동작한다', async () => {
+    stubGoogle({ body: SHEET_CSV.split(',,,,,,\n')[1] });
+    const { itinerary } = await load();
     expect(itinerary!.days).toHaveLength(2);
     expect(itinerary!.notices).toEqual([]);
   });
 
   it('공유가 안 열려 있으면 무엇을 해야 하는지 알려준다', async () => {
-    // 구글은 권한이 없을 때 CSV 대신 로그인 HTML 을 200 으로 돌려줍니다.
-    // 그대로 파싱하면 "일정 표를 찾지 못했습니다" 라는 엉뚱한 안내가 나갑니다.
+    // 권한이 없으면 구글은 CSV 대신 로그인 HTML 을 200 으로 돌려줍니다.
     stubGoogle({ html: true });
-    const ref = parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!;
-    await expect(sheetToItineraryText(ref)).rejects.toThrow('링크가 있는 모든 사용자');
+    await expect(sheetToItineraryText(parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!))
+      .rejects.toThrow('링크가 있는 모든 사용자');
+  });
+
+  it('열리지 않으면(401 등) 공유 설정을 안내한다', async () => {
+    stubGoogle({ status: 401 });
+    await expect(sheetToItineraryText(parseSheetUrl('https://docs.google.com/spreadsheets/d/ID1/edit')!))
+      .rejects.toThrow('링크가 있는 모든 사용자');
   });
 });
 

@@ -42,6 +42,7 @@ import { GuideEditorModal } from './GuideEditorModal';
 import { Modal } from './Modal';
 import {
   CalendarDays,
+  X,
   Download,
   FileUp,
   FileSpreadsheet,
@@ -144,6 +145,8 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   const [pasteText, setPasteText] = useState('');
   // 장소 후보가 둘 이상일 때 어디로 갈지 고르는 중인 항목
   const [choosingPlace, setChoosingPlace] = useState<ItineraryItem | null>(null);
+  // 이미 일정표가 있는 상태에서 "새 일정표로 바꾸기" 를 눌렀을 때
+  const [showReplace, setShowReplace] = useState(false);
   const [syncing, setSyncing] = useState(false);
   // 링크로 들어온 경우, 푸는 동안 "일정표가 없습니다" 화면이 깜빡이지 않게 합니다.
   const [receivingLink, setReceivingLink] = useState(
@@ -271,6 +274,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     setItinerary(next);
     setSelectedDate(null); // 오늘 날짜로 다시 맞춥니다
     setWarnings(result.warnings);
+    setShowReplace(false);
     return true;
   };
 
@@ -835,15 +839,19 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
         </div>
       )}
 
-      {/* 다시 올리기 */}
-      {fileInput}
-      <label
-        htmlFor="gijo-itinerary-input"
-        className="flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-300 rounded-2xl cursor-pointer text-xs font-bold text-ink-soft hover:border-brand hover:text-brand transition-colors"
+      {/* 다시 올리기 — 곧바로 파일 선택기를 열지 않습니다.
+          새 일정표는 구글시트 주소로 오는 경우가 더 많은데, 파일 선택기만 열리면
+          일정표를 지우는 것 말고는 주소를 넣을 방법이 없었습니다. */}
+      <button
+        onClick={() => {
+          setError(null);
+          setShowReplace(true);
+        }}
+        className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-300 rounded-2xl text-xs font-bold text-ink-soft hover:border-brand hover:text-brand transition-colors"
       >
         <FileUp className="w-4 h-4" />
-        새 일정표 파일로 바꾸기
-      </label>
+        새 일정표로 바꾸기
+      </button>
 
       {error && (
         <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-bold flex items-start gap-2">
@@ -854,6 +862,97 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
 
       {guideEntry}
       {guideEditor}
+
+      {/* 새 일정표로 바꾸기 — 주소 붙여넣기와 파일 중에서 고릅니다.
+          전에는 곧바로 OS 파일 선택기가 열려서, 새 구글시트 주소를 받아도
+          일정표를 지우는 것 말고는 넣을 방법이 없었습니다. */}
+      {showReplace && (
+        <Modal
+          onClose={() => setShowReplace(false)}
+          label="새 일정표로 바꾸기"
+          variant="sheet"
+          panelClassName="bg-white border-2 border-orange-100 rounded-t-3xl sm:rounded-3xl max-w-lg w-full text-ink shadow-2xl max-h-[88vh] flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200"
+        >
+          <div className="flex items-center justify-between p-5 border-b border-orange-100 shrink-0">
+            <div>
+              <h3 className="font-black text-sm">새 일정표로 바꾸기</h3>
+              <p className="text-xs text-ink-mute font-medium mt-0.5">
+                지금 저장된 일정표를 덮어씁니다
+              </p>
+            </div>
+            <button
+              onClick={() => setShowReplace(false)}
+              aria-label="닫기"
+              className="p-2 text-ink-mute hover:text-ink rounded-full bg-slate-100 shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="p-5 overflow-y-auto space-y-4 flex-1">
+            {/* ① 구글시트 주소 · 붙여넣기 — 실제로 가장 흔한 경로입니다 */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-extrabold text-slate-900">
+                구글시트 주소 붙여넣기 <span className="text-brand">(권장)</span>
+              </h4>
+              <p className="text-xs text-ink-soft font-medium leading-relaxed">
+                주소로 연결해두면 가이드가 시트를 고칠 때마다 자동으로 최신이 됩니다. 일정표
+                내용을 그대로 복사해 붙여넣어도 됩니다.
+              </p>
+              <textarea
+                value={pasteText}
+                onChange={(e) => setPasteText(e.target.value)}
+                aria-label="새 일정표 붙여넣기"
+                spellCheck={false}
+                placeholder="https://docs.google.com/spreadsheets/…"
+                className="w-full h-24 bg-canvas border-2 border-slate-200 rounded-2xl p-3 text-xs font-mono text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid resize-y"
+              />
+              <button
+                onClick={handlePaste}
+                disabled={!pasteText.trim() || syncing}
+                className="w-full py-3 bg-brand text-white text-xs font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 disabled:active:scale-100 flex items-center justify-center gap-2"
+              >
+                {syncing && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {syncing
+                  ? '시트를 읽는 중…'
+                  : parseSheetUrl(pasteText)
+                    ? '구글시트 연결하기'
+                    : '붙여넣은 내용으로 바꾸기'}
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="h-px bg-slate-200 flex-1" />
+              <span className="text-xs font-bold text-ink-mute">또는</span>
+              <div className="h-px bg-slate-200 flex-1" />
+            </div>
+
+            {/* ② 내려받은 파일 */}
+            <div className="space-y-2">
+              <h4 className="text-xs font-extrabold text-slate-900">파일에서 가져오기</h4>
+              <p className="text-xs text-ink-soft font-medium leading-relaxed">
+                카톡·메일로 받아 휴대폰에 저장한 엑셀(.xlsx) 또는 텍스트(.txt) 파일. 구글시트를{' '}
+                <b>엑셀로 내려받은 파일</b>도 그대로 됩니다.
+              </p>
+              {fileInput}
+              <label
+                htmlFor="gijo-itinerary-input"
+                className="flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-300 rounded-2xl cursor-pointer text-xs font-bold text-ink-soft hover:border-brand hover:text-brand transition-colors"
+              >
+                <FileUp className="w-4 h-4" />
+                파일 고르기
+              </label>
+            </div>
+
+            {error && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-bold flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
 
       {/* 어느 곳으로 갈지 고르기 — 일정표에 후보가 둘 이상 적힌 경우 */}
       {choosingPlace && (

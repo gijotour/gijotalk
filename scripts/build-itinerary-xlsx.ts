@@ -169,7 +169,7 @@ const FILES: Record<string, string> = {
 <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>기조톡 일정표 양식</dc:title><dc:creator>GIJO LABS</dc:creator><cp:lastModifiedBy>GIJO LABS</cp:lastModifiedBy></cp:coreProperties>`,
 
   'docProps/app.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>GIJO Talk</Application></Properties>`,
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>GIJO Tour</Application></Properties>`,
 
   'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="${NS_MAIN}" xmlns:r="${NS_REL}"><bookViews><workbookView/></bookViews><sheets><sheet name="일정" sheetId="1" r:id="rId1"/><sheet name="안내" sheetId="2" r:id="rId2"/><sheet name="설명" sheetId="3" r:id="rId3"/></sheets></workbook>`,

@@ -293,7 +293,7 @@ Rules:
   app.get("/api/health", (req, res) => {
     res.json({
       status: "ok",
-      app: "GIJO Talk",
+      app: "GIJO Tour",
       accessCodeRequired: Boolean(ACCESS_CODE),
     });
   });
@@ -335,7 +335,7 @@ Rules:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`GIJO Talk server running on http://0.0.0.0:${PORT}`);
+    console.log(`GIJO Tour server running on http://0.0.0.0:${PORT}`);
     console.log(`  접근 코드: ${ACCESS_CODE ? "설정됨" : "없음 (누구나 AI 호출 가능)"}`);
   });
 }

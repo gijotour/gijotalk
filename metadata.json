@@ -1,5 +1,5 @@
 {
-  "name": "Gijo talk(PH)",
+  "name": "GIJO Tour(PH)",
   "description": "GIJO LABS 제공 · 필리핀 여행자 전용 오프라인 PWA. 타갈로그·영어 현장회화와 3초 긴급 전광판.",
   "requestFramePermissions": [
     "microphone"

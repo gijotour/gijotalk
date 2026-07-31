@@ -170,7 +170,7 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
                 <Smartphone className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-black text-base text-slate-900">홈 화면에 Gijo talk(PH) 추가</h3>
+                <h3 className="font-black text-base text-slate-900">홈 화면에 GIJO Tour(PH) 추가</h3>
                 <p className="text-xs text-slate-500 font-bold">
                   추가해야 현지에서 인터넷 없이 열립니다
                 </p>

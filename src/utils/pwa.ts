@@ -18,10 +18,10 @@ export function registerServiceWorker() {
     navigator.serviceWorker
       .register(`${BASE_URL}sw.js`, { scope: BASE_URL })
       .then((reg) => {
-        console.log('[GIJO Talk] 오프라인 캐시 준비됨:', reg.scope);
+        console.log('[GIJO Tour] 오프라인 캐시 준비됨:', reg.scope);
       })
       .catch((err) => {
-        console.warn('[GIJO Talk] 서비스 워커 등록 실패:', err);
+        console.warn('[GIJO Tour] 서비스 워커 등록 실패:', err);
       });
   };
 

@@ -60,6 +60,7 @@ import {
   Users,
   Camera,
   Coffee,
+  Sparkles,
 } from 'lucide-react';
 
 interface ItineraryTabProps {
@@ -82,6 +83,7 @@ const KIND_ICON: Record<ItineraryKind, React.ReactNode> = {
   숙소: <BedDouble className="w-3.5 h-3.5" />,
   쇼핑: <ShoppingBag className="w-3.5 h-3.5" />,
   자유: <Coffee className="w-3.5 h-3.5" />,
+  스파: <Sparkles className="w-3.5 h-3.5" />,
   기타: <Clock className="w-3.5 h-3.5" />,
 };
 

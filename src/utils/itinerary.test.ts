@@ -130,16 +130,34 @@ describe('parseItinerary', () => {
     expect(warnings.some((w) => w.includes('날짜를 알아보지'))).toBe(true);
   });
 
-  it('종류를 생략하거나 잘못 써도 내용으로 살린다', () => {
+  it('종류를 생략하거나 모르는 말을 써도 내용으로 살린다', () => {
     const { itinerary } = parseItinerary(
       `#기조톡일정 v1
 [2026-08-01] 1일차
 09:00 | 그냥 내용만 적음
-10:00 | 관광 | 종류가 목록에 없음`
+10:00 | 골프 | 종류가 목록에 없음`
     );
     const [a, b] = itinerary!.days[0].items;
     expect(a).toMatchObject({ kind: '기타', title: '그냥 내용만 적음' });
-    expect(b).toMatchObject({ kind: '기타', title: '관광', note: '종류가 목록에 없음' });
+    expect(b).toMatchObject({ kind: '기타', title: '골프', note: '종류가 목록에 없음' });
+  });
+
+  // 가이드마다 쓰는 단어가 다릅니다. 실제 시트에서 공항·관광·마사지·교통이 나왔습니다.
+  it('가이드가 흔히 쓰는 다른 표현도 대표 종류로 알아본다', () => {
+    const { itinerary } = parseItinerary(
+      `#기조톡일정 v1
+[2026-08-01] 1일차
+09:00 | 공항 | 인천공항 출발
+10:00 | 교통 | 밴으로 이동
+11:00 | 관광 | 시내 명소
+12:00 | 마사지 | 힐링 스파`
+    );
+    expect(itinerary!.days[0].items.map((i) => i.kind)).toEqual([
+      '항공',
+      '이동',
+      '투어',
+      '스파',
+    ]);
   });
 
   it('BOM 과 윈도우 줄바꿈이 붙어도 읽는다', () => {

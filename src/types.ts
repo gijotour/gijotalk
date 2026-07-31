@@ -42,7 +42,7 @@ export interface AudioSettings {
 // 파싱 규칙은 utils/itinerary.ts, 양식 원본은 public/itinerary-template.txt.
 
 export type ItineraryKind =
-  | '집합' | '항공' | '이동' | '식사' | '투어' | '숙소' | '쇼핑' | '자유' | '기타';
+  | '집합' | '항공' | '이동' | '식사' | '투어' | '숙소' | '쇼핑' | '자유' | '스파' | '기타';
 
 export interface ItineraryItem {
   /** 화면에 그대로 보여줄 시간 문자열 ("06:30", "오후 2시"). 없을 수 있습니다. */

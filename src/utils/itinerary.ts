@@ -42,10 +42,29 @@ export const ITINERARY_XLSX_TEMPLATE_FILE = 'itinerary-template.xlsx';
  */
 export const TRIP_TIMEZONE = 'Asia/Manila';
 
-const KINDS: ItineraryKind[] = [
-  '집합', '항공', '이동', '식사', '투어', '숙소', '쇼핑', '자유', '기타',
-];
-const KIND_SET = new Set<string>(KINDS);
+/**
+ * 종류로 쓸 수 있는 말들.
+ *
+ * 가이드마다 쓰는 단어가 다릅니다 — 실제 시트에서 "공항" "관광" "마사지" "교통"
+ * 이 나왔습니다. 새 단어를 외우게 하는 대신 흔한 표현을 다 받아 대표 종류로
+ * 모읍니다. 여기 없는 말은 "기타" 로 들어갑니다.
+ */
+const KIND_ALIASES: Record<string, ItineraryKind> = {
+  집합: '집합', 미팅: '집합', 모임: '집합',
+  항공: '항공', 공항: '항공', 비행: '항공', 출국: '항공', 입국: '항공',
+  이동: '이동', 교통: '이동', 차량: '이동', 픽업: '이동',
+  식사: '식사', 맛집: '식사', 식당: '식사', 조식: '식사', 중식: '식사', 석식: '식사',
+  투어: '투어', 관광: '투어', 체험: '투어', 액티비티: '투어', 명소: '투어',
+  숙소: '숙소', 호텔: '숙소', 체크인: '숙소', 체크아웃: '숙소',
+  쇼핑: '쇼핑', 구매: '쇼핑',
+  자유: '자유', 휴식: '자유',
+  스파: '스파', 마사지: '스파',
+  기타: '기타',
+};
+
+/** 가이드가 쓴 말 → 대표 종류. 모르는 말이면 undefined. */
+export const normalizeKind = (word: string): ItineraryKind | undefined =>
+  KIND_ALIASES[word.trim().replace(/\s+/g, '')];
 
 /** 일정 종류 → 회화 카테고리. 없는 종류는 연결할 회화가 마땅치 않습니다. */
 export const KIND_TO_CATEGORY: Partial<Record<ItineraryKind, CategoryId>> = {
@@ -54,6 +73,7 @@ export const KIND_TO_CATEGORY: Partial<Record<ItineraryKind, CategoryId>> = {
   이동: '교통',
   식사: '식당',
   쇼핑: '흥정',
+  // 스파·투어·집합·자유·기타는 이어줄 회화 카테고리가 마땅치 않습니다.
 };
 
 export interface ItineraryParseResult {
@@ -173,8 +193,9 @@ function parseItemLine(line: string): ItineraryItem | null {
   let body: string;
   let note: string | undefined;
 
-  if (rest.length >= 2 && KIND_SET.has(rest[0])) {
-    kind = rest[0] as ItineraryKind;
+  const alias = rest.length >= 2 ? normalizeKind(rest[0]) : undefined;
+  if (alias) {
+    kind = alias;
     body = rest[1] ?? '';
     note = rest[2];
   } else {

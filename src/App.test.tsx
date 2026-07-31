@@ -3,6 +3,7 @@ import { render, screen, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { PHRASES } from './config';
+import { PASSCODE_HASH, UNLOCK_STORAGE_KEY } from './utils/appLock';
 
 /**
  * 앱을 띄우고 마운트 시 시작된 비동기 작업(오프라인 저장 상태 조회 등)이
@@ -10,6 +11,9 @@ import { PHRASES } from './config';
  * act() 경고가 납니다.
  */
 const renderApp = async () => {
+  // 앱은 잠금 화면 뒤에 있습니다. 조립 검증이 목적인 테스트들은 풀린 상태에서 시작합니다.
+  // (잠금 자체는 아래 "앱 잠금" 묶음에서 따로 봅니다)
+  localStorage.setItem(UNLOCK_STORAGE_KEY, PASSCODE_HASH);
   const result = render(<App />);
   await act(async () => {});
   return result;
@@ -152,3 +156,56 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
 
 });
 
+
+/**
+ * 앱 잠금.
+ *
+ * 번호 자체는 저장소 어디에도 적지 않습니다 — 이 저장소는 공개돼 있고,
+ * 테스트 파일에 적으면 잠금을 건 의미가 없어집니다. 그래서 여기서는
+ * "잠긴 채로는 앱이 안 보인다" 와 "틀린 번호는 막힌다" 만 검증합니다.
+ */
+describe('앱 잠금', () => {
+  it('풀리기 전에는 앱 화면이 그려지지 않는다', async () => {
+    localStorage.removeItem(UNLOCK_STORAGE_KEY);
+    render(<App />);
+    await act(async () => {});
+
+    expect(screen.getByLabelText('비밀번호')).toBeInTheDocument();
+    // 하단 탭도, 회화 카드도 없어야 합니다.
+    expect(screen.queryByRole('navigation', { name: '주요 메뉴' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Para po!' })).not.toBeInTheDocument();
+  });
+
+  it('번호를 모르는 사람에게 물어볼 곳을 알려준다', async () => {
+    localStorage.removeItem(UNLOCK_STORAGE_KEY);
+    render(<App />);
+    await act(async () => {});
+
+    // 여기서 막히면 여행자가 할 수 있는 게 없습니다.
+    expect(screen.getByText(/지아이조테크놀러지에 문의하세요/)).toBeInTheDocument();
+    const tel = screen.getByRole('link', { name: /010-7707-5915/ });
+    expect(tel).toHaveAttribute('href', 'tel:01077075915');
+  });
+
+  it('틀린 번호는 들여보내지 않는다', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem(UNLOCK_STORAGE_KEY);
+    render(<App />);
+    await act(async () => {});
+
+    await user.type(screen.getByLabelText('비밀번호'), '9999');
+    await user.click(screen.getByRole('button', { name: '들어가기' }));
+
+    expect(await screen.findByText('비밀번호가 맞지 않습니다.')).toBeInTheDocument();
+    expect(screen.queryByRole('navigation', { name: '주요 메뉴' })).not.toBeInTheDocument();
+  });
+
+  it('푼 기기에서는 다시 묻지 않는다', async () => {
+    localStorage.setItem(UNLOCK_STORAGE_KEY, PASSCODE_HASH);
+    render(<App />);
+    await act(async () => {});
+
+    expect(screen.queryByLabelText('비밀번호')).not.toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: '주요 메뉴' })).toBeInTheDocument();
+  });
+});

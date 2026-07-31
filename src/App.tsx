@@ -23,11 +23,18 @@ import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
 import { ItineraryTab } from './components/ItineraryTab';
 import { hasItineraryLink } from './utils/itineraryLink';
+import { isUnlocked } from './utils/appLock';
+import { LockScreen } from './components/LockScreen';
 import { BottomNav, TabType } from './components/BottomNav';
 
 import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Camera } from 'lucide-react';
 
 export default function App() {
+  // 잠금. 풀리기 전에는 앱의 어떤 화면도 그리지 않습니다.
+  // 주소에 실린 일정표(#sheet=·#itin=)는 해시에 그대로 남아 있으므로,
+  // 잠금을 푼 뒤 일정 탭이 열리면서 정상적으로 반영됩니다.
+  const [unlocked, setUnlocked] = useState(() => isUnlocked());
+
   // Country & Filter States
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('전체');
@@ -230,6 +237,8 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [searchQuery, filteredPhrases.length, selectedCountry.id, selectedCategory]);
 
+
+  if (!unlocked) return <LockScreen onUnlock={() => setUnlocked(true)} />;
 
   return (
     // 하단 여백은 고정 네비게이션 높이 + safe-area 만큼 확보합니다.

@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>
+  html, body { margin: 0; padding: 0; }
+  svg { display: block; }
+</style>
+<!--
+  GIJO Tour(PH) 앱 아이콘.
+
+  · 배경을 꽉 채웁니다 — 안드로이드 maskable 은 가장자리를 원형으로 잘라냅니다.
+  · 모든 그림을 가운데 원(지름 80%) 안에 넣습니다. 잘려도 살아남는 영역입니다.
+  · 상징: 지도 핀(여행지) + 필리핀 8각 태양(국기 문양). 192px 에서도 형태가 남게
+    선을 굵게, 요소를 둘로만 제한했습니다.
+-->
+<svg id="icon" width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF7E5A" />
+      <stop offset="100%" stop-color="#E8543A" />
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#7A1F0E" flood-opacity="0.28" />
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)" />
+
+  <g filter="url(#soft)">
+    <!-- 지도 핀 -->
+    <path
+      fill="#FFFFFF"
+      d="M256 116c-56.6 0-102.5 45.9-102.5 102.5 0 24.3 8.7 43.4 22.7 62.1
+         L256 396l79.8-115.4c14-18.7 22.7-37.8 22.7-62.1C358.5 161.9 312.6 116 256 116z" />
+
+    <!-- 필리핀 8각 태양 -->
+    <g fill="#FFB800">
+      <circle cx="256" cy="215" r="36" />
+      <g id="rays">
+        <path d="M256 148 l11 26 -22 0 z" />
+        <path d="M256 282 l11 -26 -22 0 z" />
+        <path d="M189 215 l26 11 0 -22 z" />
+        <path d="M323 215 l-26 11 0 -22 z" />
+        <path d="M209 168 l26 11 -15 15 z" />
+        <path d="M303 262 l-26 -11 15 -15 z" />
+        <path d="M303 168 l-11 26 -15 -15 z" />
+        <path d="M209 262 l11 -26 15 15 z" />
+      </g>
+    </g>
+  </g>
+</svg>

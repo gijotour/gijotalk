@@ -138,7 +138,7 @@ function sheetXml(rows: string[][], widths: number[]): string {
 
 /** 설명 시트 — 사용법이 파일 안에 같이 다녀야 가이드가 따로 찾지 않습니다. */
 const HELP_ROWS: string[][] = [
-  ['기조톡 일정표 양식 — 사용법'],
+  ['GIJO Tour 일정표 양식 — 사용법'],
   [''],
   ['1', '[일정] 시트의 칸만 채우고 저장한 뒤, 카톡·텔레그램으로 보내면 됩니다.'],
   ['2', '날짜와 일차는 그날 첫 줄에만 적으세요. 아래 줄은 비워두면 이어집니다.'],
@@ -166,7 +166,7 @@ const FILES: Record<string, string> = {
 <Relationships xmlns="${NS_PKG_REL}"><Relationship Id="rId1" Type="${NS_REL}/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="${NS_REL}/extended-properties" Target="docProps/app.xml"/></Relationships>`,
 
   'docProps/core.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>기조톡 일정표 양식</dc:title><dc:creator>GIJO LABS</dc:creator><cp:lastModifiedBy>GIJO LABS</cp:lastModifiedBy></cp:coreProperties>`,
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>GIJO Tour 일정표 양식</dc:title><dc:creator>지아이조 투어</dc:creator><cp:lastModifiedBy>지아이조 투어</cp:lastModifiedBy></cp:coreProperties>`,
 
   'docProps/app.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>GIJO Tour</Application></Properties>`,

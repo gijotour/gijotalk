@@ -104,7 +104,7 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
             <div>
               <h3 className="font-black text-base text-slate-900">AI 맞춤 현지 회화</h3>
               <p className="text-xs text-slate-500 font-bold">
-                GIJO LABS AI · {country.flag} {country.name} ({country.language})
+                지아이조 투어 AI · {country.flag} {country.name} ({country.language})
               </p>
             </div>
           </div>

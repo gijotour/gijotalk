@@ -39,7 +39,7 @@ describe('parseItinerary', () => {
   it('양식 파일이 아니면 거부한다', () => {
     const result = parseItinerary('그냥 메모입니다\n내일 10시 집합');
     expect(result.itinerary).toBeNull();
-    expect(result.error).toContain('기조톡 일정표 파일이 아닙니다');
+    expect(result.error).toContain('GIJO Tour 일정표 파일이 아닙니다');
   });
 
   it('빈 파일도 거부한다', () => {

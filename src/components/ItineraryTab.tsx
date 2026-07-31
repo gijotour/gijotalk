@@ -525,7 +525,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
           <div className="flex flex-wrap gap-2">
             <a
               href={`${BASE_URL}${ITINERARY_XLSX_TEMPLATE_FILE}`}
-              download="기조톡_일정표_양식.xlsx"
+              download="GIJO Tour_일정표_양식.xlsx"
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -533,7 +533,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             </a>
             <a
               href={`${BASE_URL}${ITINERARY_TEMPLATE_FILE}`}
-              download="기조톡_일정표_양식.txt"
+              download="GIJO Tour_일정표_양식.txt"
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-ink text-xs font-bold rounded-xl active:scale-95 transition-all"
             >
               <Download className="w-4 h-4" />

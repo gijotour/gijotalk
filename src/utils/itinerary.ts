@@ -237,7 +237,7 @@ export function parseItinerary(raw: string): ItineraryParseResult {
       itinerary: null,
       warnings,
       error:
-        '기조톡 일정표 파일이 아닙니다. 첫 줄이 "#기조톡일정 v1" 인 .txt 파일만 열 수 있습니다.',
+        'GIJO Tour 일정표 파일이 아닙니다. 첫 줄이 "#기조톡일정 v1" 인 파일만 열 수 있습니다.',
     };
   }
 

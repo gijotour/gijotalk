@@ -534,7 +534,7 @@ export default function App() {
             </div>
             <div className="flex items-center gap-1.5 text-ink">
               <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-xl border border-blue-200">
-                GIJO LABS
+                지아이조 투어
               </span>
               <span>제공</span>
             </div>

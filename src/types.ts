@@ -88,6 +88,16 @@ export interface Itinerary {
    * 파싱 결과에서 원문을 복원하면 가이드가 쓴 주석·줄바꿈이 사라집니다.
    */
   source?: string;
+  /**
+   * 구글시트에서 가져온 경우 그 주소.
+   *
+   * 이게 있으면 앱을 열 때마다 최신 내용을 다시 받아옵니다. 파일·링크로 받은
+   * 일정표는 "그 순간의 사본" 이라 가이드가 고치면 다시 보내야 하지만,
+   * 시트로 연결하면 가이드가 시트만 고치면 됩니다.
+   */
+  sheetUrl?: string;
+  /** 시트에서 마지막으로 받아온 시각 (ISO) */
+  syncedAt?: string;
 }
 
 export interface PracticeResult {

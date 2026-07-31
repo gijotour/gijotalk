@@ -8,7 +8,7 @@ import {
   Phrase,
 } from '../types';
 import { BASE_URL } from '../utils/env';
-import { isKakaoTalk } from '../utils/pwa';
+import { isBrowserOnline, isKakaoTalk } from '../utils/pwa';
 import {
   ITINERARY_TEMPLATE_FILE,
   ITINERARY_XLSX_TEMPLATE_FILE,
@@ -27,8 +27,15 @@ import { looksLikeXlsx, xlsxToItineraryText } from '../utils/itineraryXlsx';
 import {
   clearItineraryLink,
   readItineraryLink,
+  readSheetLink,
   decodeItineraryPayload,
 } from '../utils/itineraryLink';
+import {
+  SheetRef,
+  parseSheetUrl,
+  sheetHomeUrl,
+  sheetToItineraryText,
+} from '../utils/itinerarySheet';
 import { GuideEditorModal } from './GuideEditorModal';
 import {
   CalendarDays,
@@ -36,6 +43,7 @@ import {
   FileUp,
   FileSpreadsheet,
   Loader2,
+  RefreshCw,
   PencilLine,
   AlertCircle,
   AlertTriangle,
@@ -111,11 +119,53 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   const [showGuideEditor, setShowGuideEditor] = useState(false);
   const [showAllNotices, setShowAllNotices] = useState(false);
   const [pasteText, setPasteText] = useState('');
+  const [syncing, setSyncing] = useState(false);
   // 링크로 들어온 경우, 푸는 동안 "일정표가 없습니다" 화면이 깜빡이지 않게 합니다.
-  const [receivingLink, setReceivingLink] = useState(() => readItineraryLink() !== null);
+  const [receivingLink, setReceivingLink] = useState(
+    () => readItineraryLink() !== null || readSheetLink() !== null
+  );
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const now = useMemo(() => tripNow(), []);
+
+  // 시트 연결 링크로 들어왔거나, 이미 시트에 연결된 일정표가 있으면 최신 내용을 받아옵니다.
+  //
+  // 이것이 시트 방식의 존재 이유입니다 — 가이드가 시트를 고치면 여행자는 앱을 열기만
+  // 하면 됩니다. 오프라인이면 조용히 건너뛰고 저장해 둔 내용을 그대로 씁니다.
+  useEffect(() => {
+    const linked = readSheetLink();
+    const ref = parseSheetUrl(linked ?? itinerary?.sheetUrl ?? '');
+    if (!ref) return;
+
+    const controller = new AbortController();
+    const isFirstLoad = Boolean(linked);
+
+    (async () => {
+      if (!isFirstLoad && !isBrowserOnline()) return;
+      setSyncing(true);
+      try {
+        await loadFromSheet(ref, controller.signal);
+        setError(null);
+      } catch (e: unknown) {
+        if (controller.signal.aborted) return;
+        // 이미 저장된 일정표가 있으면 조용히 넘어갑니다. 현지에서 신호가 약할 때
+        // 멀쩡히 보이던 일정 위에 빨간 오류를 띄우면 안 됩니다.
+        if (isFirstLoad || !itinerary) {
+          setError(e instanceof Error ? e.message : '시트를 읽지 못했습니다.');
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setSyncing(false);
+          setReceivingLink(false);
+          if (linked) clearItineraryLink();
+        }
+      }
+    })();
+
+    return () => controller.abort();
+    // 마운트 시 한 번만. itinerary 를 의존성에 넣으면 저장할 때마다 다시 받아옵니다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 카톡방에 붙여넣은 링크로 들어온 경우 — 파일을 고를 필요 없이 바로 저장됩니다.
   useEffect(() => {
@@ -173,23 +223,49 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     [isToday, selectedDay, now.minutes]
   );
 
-  /** 파일이든 붙여넣기든, 들어온 글자를 읽어 저장하는 한 곳 */
-  const acceptText = (text: string): boolean => {
+  /** 파일이든 붙여넣기든 시트든, 들어온 글자를 읽어 저장하는 한 곳 */
+  const acceptText = (text: string, extra?: Partial<Itinerary>): boolean => {
     const result = parseItinerary(text);
     if (!result.itinerary) {
       setError(result.error ?? '일정표를 읽지 못했습니다.');
       return false;
     }
-    saveItinerary(result.itinerary);
-    setItinerary(result.itinerary);
+    const next = { ...result.itinerary, ...extra };
+    saveItinerary(next);
+    setItinerary(next);
     setSelectedDate(null); // 오늘 날짜로 다시 맞춥니다
     setWarnings(result.warnings);
     return true;
   };
 
-  const handlePaste = () => {
+  /** 구글시트에서 최신 내용을 받아 저장합니다. */
+  const loadFromSheet = async (ref: SheetRef, signal?: AbortSignal): Promise<boolean> => {
+    const text = await sheetToItineraryText(ref, signal);
+    return acceptText(text, {
+      sheetUrl: sheetHomeUrl(ref),
+      syncedAt: new Date().toISOString(),
+    });
+  };
+
+  const handlePaste = async () => {
     setError(null);
     setWarnings([]);
+
+    // 가이드가 우리 링크 대신 구글시트 주소를 그대로 카톡에 붙여넣는 일이 훨씬
+    // 흔합니다. 그 주소를 붙여넣어도 바로 연결되게 합니다.
+    const ref = parseSheetUrl(pasteText);
+    if (ref) {
+      setSyncing(true);
+      try {
+        if (await loadFromSheet(ref)) setPasteText('');
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : '시트를 읽지 못했습니다.');
+      } finally {
+        setSyncing(false);
+      }
+      return;
+    }
+
     if (acceptText(pasteText)) setPasteText('');
   };
 
@@ -334,26 +410,34 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             카톡에서 받은 파일이 안 보이거나 회색이면 여기로 오면 됩니다 —
             메시지를 길게 눌러 복사한 뒤 붙여넣기만 하면 똑같이 동작합니다. */}
         <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs space-y-3">
-          <h3 className="text-xs font-extrabold text-slate-900">파일이 안 보이거나 회색인가요?</h3>
+          <h3 className="text-xs font-extrabold text-slate-900">
+            구글시트 주소를 받으셨거나, 파일이 안 보이나요?
+          </h3>
           <p className="text-xs text-ink-soft font-medium leading-relaxed">
-            카톡에서 일정표 내용을 길게 눌러 복사한 뒤, 아래에 붙여넣어도 똑같이 저장됩니다.
-            파일로 받으셨다면 카톡에서 먼저 <span className="font-bold">저장</span>을 눌러 휴대폰에
-            내려받은 뒤 위에서 골라주세요.
+            <span className="font-bold text-brand">구글시트 주소</span>를 붙여넣으면 연결됩니다 —
+            이후 가이드가 시트를 고치면 앱을 열 때마다 자동으로 최신 일정이 됩니다. 일정표 내용을
+            복사해 붙여넣어도 똑같이 저장됩니다. 파일로 받으셨다면 카톡에서 먼저{' '}
+            <span className="font-bold">저장</span>을 눌러 휴대폰에 내려받은 뒤 위에서 골라주세요.
           </p>
           <textarea
             value={pasteText}
             onChange={(e) => setPasteText(e.target.value)}
             aria-label="일정표 붙여넣기"
             spellCheck={false}
-            placeholder={'#기조톡일정 v1\n제목: …'}
+            placeholder={'https://docs.google.com/spreadsheets/…\n\n또는\n\n#기조톡일정 v1\n제목: …'}
             className="w-full h-28 bg-canvas border-2 border-slate-200 rounded-2xl p-3 text-xs font-mono text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid resize-y"
           />
           <button
             onClick={handlePaste}
-            disabled={!pasteText.trim()}
-            className="w-full py-3 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 disabled:active:scale-100"
+            disabled={!pasteText.trim() || syncing}
+            className="w-full py-3 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 disabled:active:scale-100 flex items-center justify-center gap-2"
           >
-            붙여넣은 내용으로 저장
+            {syncing && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+            {syncing
+              ? '시트를 읽는 중…'
+              : parseSheetUrl(pasteText)
+                ? '구글시트 연결하기'
+                : '붙여넣은 내용으로 저장'}
           </button>
         </div>
 
@@ -436,6 +520,23 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             </h2>
             {itinerary.period && (
               <p className="text-xs text-slate-500 font-bold mt-0.5">{itinerary.period}</p>
+            )}
+            {/* 시트에 연결돼 있으면 그 사실을 보여줍니다 — 이 일정표가 스스로
+                최신을 유지한다는 걸 알아야 여행자가 안심합니다. */}
+            {itinerary.sheetUrl && (
+              <p className="text-xs font-bold text-emerald-700 mt-1 flex items-center gap-1.5">
+                {syncing ? (
+                  <>
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    최신 일정 확인 중…
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-3 h-3" />
+                    구글시트 연결됨 · 열 때마다 자동 갱신
+                  </>
+                )}
+              </p>
             )}
           </div>
           <button

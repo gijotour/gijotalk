@@ -10,6 +10,7 @@ import {
   shortDate,
   splitDayChip,
   splitPhones,
+  splitPlaceOptions,
 } from './itinerary';
 
 const SAMPLE = `#기조톡일정 v1
@@ -320,6 +321,33 @@ describe('배포되는 양식 파일', () => {
 describe('shortDate', () => {
   it('요일을 붙여 짧게 만든다', () => {
     expect(shortDate('2026-08-01')).toBe('8/1 (토)');
+  });
+});
+
+describe('splitPlaceOptions', () => {
+  // 가이드 일정표의 장소 칸은 "추천" 인 경우가 많아 후보가 여러 개 적힙니다.
+  // 그대로 전광판에 띄우면 기사에게 "A 또는 B" 가 통째로 보여 아무 데도 못 갑니다.
+  it('"또는" 으로 이어진 후보를 나눈다', () => {
+    expect(splitPlaceOptions("Balay Dako 또는 Leslie's")).toEqual(['Balay Dako', "Leslie's"]);
+    expect(splitPlaceOptions('스카이 랜치 (Sky Ranch) 또는 피플스 파크')).toEqual([
+      '스카이 랜치 (Sky Ranch)',
+      '피플스 파크',
+    ]);
+  });
+
+  it('슬래시와 or 도 구분자로 본다', () => {
+    expect(splitPlaceOptions('인트라무로스 마차투어 / 오션파크')).toHaveLength(2);
+    expect(splitPlaceOptions('Mandara Spa or Nuat Thai')).toEqual(['Mandara Spa', 'Nuat Thai']);
+  });
+
+  it('한 곳이면 그대로 한 개다', () => {
+    expect(splitPlaceOptions('Bai Hotel Cebu, Mandaue City')).toEqual([
+      'Bai Hotel Cebu, Mandaue City',
+    ]);
+  });
+
+  it('빈 값이면 빈 목록이다', () => {
+    expect(splitPlaceOptions('')).toEqual([]);
   });
 });
 

@@ -473,6 +473,21 @@ export function formatCountdown(fromMinutes: number, targetMinutes: number): str
   return `${h}시간 ${m}분 뒤`;
 }
 
+/**
+ * 장소 칸에 후보가 여러 개 적힌 경우를 나눕니다.
+ *
+ * 가이드 일정표의 장소 칸은 "추천"인 경우가 많아 "A 또는 B" 로 적힙니다
+ * (실제 시트에서 장소 18건 중 10건). 이걸 그대로 전광판에 띄우면
+ * "Balay Dako 또는 Leslie's" 가 기사에게 통째로 보입니다 — 아무 데도 못 갑니다.
+ * 나눠두면 그 자리에서 어디로 갈지 고를 수 있습니다.
+ */
+export function splitPlaceOptions(place: string): string[] {
+  return place
+    .split(/\s*(?:또는|혹은|\bor\b|\/)\s*/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 /** 날짜 칩용 두 줄 표기: ["8/1", "금"] */
 export function splitDayChip(date: string): [string, string] {
   const m = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);

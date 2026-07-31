@@ -190,6 +190,20 @@ export default function App() {
     [countryPhrases]
   );
 
+  // 긴급 목록을 두 덩어리로 나눕니다.
+  //
+  //   회화가 늘면서 긴급 탭이 26개가 됐습니다. "3초 긴급" 이 컨셉인데 도난·부상·미아
+  //   같은 진짜 급한 것과 "아파요(마사지)" "구명조끼" 가 한 줄에 섞여 있으면
+  //   정작 급할 때 못 찾습니다. 진짜 비상을 위로 올리고 나머지는 아래로 내립니다.
+  const criticalPhrases = useMemo(
+    () => emergencyPhrases.filter((p) => p.category === '비상'),
+    [emergencyPhrases]
+  );
+  const situationalPhrases = useMemo(
+    () => emergencyPhrases.filter((p) => p.category !== '비상'),
+    [emergencyPhrases]
+  );
+
   // 북마크한 문장은 다른 나라 것일 수 있으므로 문장 자신의 국가를 씁니다.
   const countryForPhrase = useCallback(
     (p: Phrase) => COUNTRIES.find((c) => c.id === p.countryId) || selectedCountry,
@@ -434,8 +448,12 @@ export default function App() {
               </p>
             </div>
 
+            <h3 className="text-xs font-extrabold text-slate-900 px-1">
+              진짜 비상 ({criticalPhrases.length})
+            </h3>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {emergencyPhrases.map((phrase) => (
+              {criticalPhrases.map((phrase) => (
                 <div
                   key={`emerg-${phrase.id}`}
                   onClick={() => setBillboardPhrase(phrase)}
@@ -465,6 +483,32 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+            {situationalPhrases.length > 0 && (
+              <>
+                <h3 className="text-xs font-extrabold text-slate-900 px-1 pt-2">
+                  상황별로 급한 말 ({situationalPhrases.length})
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {situationalPhrases.map((phrase) => (
+                    <div
+                      key={`urgent-${phrase.id}`}
+                      onClick={() => setBillboardPhrase(phrase)}
+                      className="bg-white hover:border-brand-vivid p-4 rounded-2xl border-2 border-slate-100 cursor-pointer transition-all active:scale-95 shadow-xs"
+                    >
+                      <span className="px-2.5 py-0.5 bg-slate-100 text-ink-soft text-xs font-bold rounded-xl">
+                        {phrase.category}
+                      </span>
+                      <h3 className="text-lg font-black text-slate-900 font-['Montserrat'] tracking-tight italic mt-2">
+                        {phrase.original}
+                      </h3>
+                      <p className="text-xs font-bold text-slate-700 mt-1">{phrase.translation}</p>
+                      <p className="text-xs font-bold text-alert mt-0.5">[{phrase.pronunciation}]</p>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
 

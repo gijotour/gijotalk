@@ -28,7 +28,9 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
   categoryCounts,
 }) => {
   return (
-    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 pt-0.5">
+    // 칩이 11개가 되면서 가로 스크롤로는 첫 화면에 3개밖에 안 보였습니다.
+    // 뒤쪽 카테고리(관광·마사지)는 있는 줄도 모르게 됩니다. 줄바꿈으로 전부 노출합니다.
+    <div className="flex flex-wrap gap-1.5 pb-1 pt-0.5">
       {CATEGORIES.map((c) => {
         const active = selectedCategory === c.id;
         const isEmergencyCat = c.id === '비상';
@@ -38,7 +40,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
           <button
             key={c.id}
             onClick={() => onSelectCategory(c.id)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 shadow-xs ${
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 shadow-xs ${
               active
                 ? 'bg-brand text-white shadow-md shadow-brand-vivid/30 scale-[1.02]'
                 : isEmergencyCat

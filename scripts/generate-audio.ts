@@ -77,28 +77,29 @@ interface VoiceSpec {
 }
 
 const SAY_VOICE: Record<string, VoiceSpec> = {
-  // 영어는 미국 발음(Reed)입니다.
+  // 영어는 가장 깔끔하게 들리는 음성으로 갑니다 — Daniel.
   //
-  //   필리핀은 미국 영어권이라 발음도 미국 것이어야 합니다. 다만 설치된 미국
-  //   남성 음성은 그냥 쓰면 어둡고 작습니다(밝기 1416). 그래서
-  //     · 피치를 올리고 (1416 → 1771)
-  //     · 속도를 낮춰 또박또박하게 하고
-  //     · 합성 뒤 하이셸프 EQ + 정규화로 자음 대역을 살립니다.
-  //   목소리를 영국 것으로 바꾸는 대신 소리를 손보는 쪽을 택했습니다.
+  //   설치된 음성들을 같은 문장으로 재본 결과(밝기 = 영교차율):
+  //     Reed 1416 · Eddy 1427 · Ralph 1310 · Rocko 1113 · Daniel 4436
+  //   미국 음성은 피치를 올리고 EQ 로 자음을 들어올려도 3249 가 한계였고,
+  //   그 과정에서 소리에 색이 입혀집니다. Daniel 은 손대지 않아도 그보다
+  //   밝고 또렷합니다.
+  //
+  //   Daniel 은 영국 억양입니다. 듣고 따라 하는 용도라 또렷함을 택했고,
+  //   필리핀에서 영국 억양은 문제없이 통합니다.
+  //   미국 발음으로 바꾸려면 candidates 에서 Daniel 을 빼고 polish.gainDb 를
+  //   10 쯤으로 올리세요 (그래야 안 어둡습니다).
   'en-US': {
     candidates: [
+      { locale: 'en_GB', name: 'Daniel' },
       { locale: 'en_US', name: 'Reed' },
       { locale: 'en_US', name: 'Ralph' },
-      { locale: 'en_US', name: 'Fred' },
     ],
-    rate: 155,
-    pitch: 60,
-    // 2.5kHz 위 = 자음(s·t·k·th)이 몰린 대역. 여기를 올리면 또렷해집니다.
-    //
-    // 더 올리면 수치는 오르지만(14dB 에서 밝기 2648) 치찰음이 거슬릴 위험이
-    // 커집니다. 10dB 는 또렷함과 자연스러움이 갈라지기 직전 지점입니다.
-    // 더 밝게 원하면 gainDb 만 올리고 `npm run audio -- --force --lang=en`.
-    polish: { shelfHz: 2500, gainDb: 10, peakDb: -1 },
+    rate: 145, // 또박또박하게. Daniel 은 빨라서 낮춰도 답답하지 않습니다.
+    // EQ 는 걸지 않습니다(gainDb 0). 이미 충분히 밝아서 더 올리면 치찰음만
+    // 거슬립니다. 음량만 고르게 맞춥니다 — 문장마다 크기가 들쭉날쭉하면
+    // 흔들리는 차 안에서 어떤 건 안 들립니다.
+    polish: { shelfHz: 2500, gainDb: 0, peakDb: -1 },
   },
   // 인도네시아어 — 타갈로그와 같은 오스트로네시아어족이라 모음이 거의 같습니다.
   'tl-PH': { candidates: [{ locale: 'id_ID', name: 'Damayanti' }], rate: 170 },

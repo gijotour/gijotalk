@@ -47,9 +47,16 @@ export interface BrightenOptions {
   peakDb: number;
 }
 
-/** 16비트 정수 샘플 배열을 제자리에서 보정합니다. */
+/**
+ * 16비트 정수 샘플 배열을 보정합니다.
+ * gainDb 가 0 이면 EQ 를 건너뛰고 음량만 고릅니다 — 소리에 색을 입히지 않는
+ * 가장 깔끔한 선택입니다.
+ */
 export function brighten(samples: Int16Array, opts: BrightenOptions): Int16Array {
-  const { b0, b1, b2, a1, a2 } = highShelfCoeffs(opts.sampleRate, opts.shelfHz, opts.gainDb);
+  const flat = opts.gainDb === 0;
+  const { b0, b1, b2, a1, a2 } = flat
+    ? { b0: 1, b1: 0, b2: 0, a1: 0, a2: 0 }
+    : highShelfCoeffs(opts.sampleRate, opts.shelfHz, opts.gainDb);
 
   let x1 = 0;
   let x2 = 0;

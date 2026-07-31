@@ -85,6 +85,10 @@ const SCHEDULE_ROWS: string[][] = [
 /* XML 만들기                                                          */
 /* ------------------------------------------------------------------ */
 
+const NS_REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+const NS_PKG_REL = 'http://schemas.openxmlformats.org/package/2006/relationships';
+const NS_MAIN = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
 const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -99,41 +103,87 @@ const colName = (i: number): string => {
   return out;
 };
 
-function sheetXml(rows: string[][]): string {
+/**
+ * 시트 XML.
+ *
+ * 요소 순서(dimension → sheetViews → sheetFormatPr → cols → sheetData)는 OOXML
+ * 스키마가 정한 것입니다. 어긋나면 엑셀이 "복구가 필요합니다" 를 띄웁니다.
+ * SheetJS 같은 관대한 파서는 그냥 읽어버려서 눈치채기 어렵습니다.
+ */
+function sheetXml(rows: string[][], widths: number[]): string {
   const body = rows
     .map((cells, r) => {
       const cs = cells
         .map((value, c) =>
           value
-            ? `<c r="${colName(c)}${r + 1}" t="inlineStr"><is><t xml:space="preserve">${esc(
+            ? `<c r="${colName(c)}${r + 1}"${r === 0 ? ' s="1"' : ''} t="inlineStr"><is><t xml:space="preserve">${esc(
                 value
               )}</t></is></c>`
             : ''
         )
         .join('');
-      return `<row r="${r + 1}">${cs}</row>`;
+      return `<row r="${r + 1}"${r === 0 ? ' ht="20" customHeight="1"' : ''}>${cs}</row>`;
     })
     .join('');
 
+  const cols = widths
+    .map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`)
+    .join('');
+
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${body}</sheetData></worksheet>`;
+<worksheet xmlns="${NS_MAIN}"><dimension ref="A1:${colName(
+    Math.max(1, widths.length) - 1
+  )}${rows.length}"/><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetFormatPr defaultRowHeight="16"/><cols>${cols}</cols><sheetData>${body}</sheetData></worksheet>`;
 }
 
+/** 설명 시트 — 사용법이 파일 안에 같이 다녀야 가이드가 따로 찾지 않습니다. */
+const HELP_ROWS: string[][] = [
+  ['기조톡 일정표 양식 — 사용법'],
+  [''],
+  ['1', '[일정] 시트의 칸만 채우고 저장한 뒤, 카톡·텔레그램으로 보내면 됩니다.'],
+  ['2', '날짜와 일차는 그날 첫 줄에만 적으세요. 아래 줄은 비워두면 이어집니다.'],
+  ['3', '종류에 쓸 수 있는 말: 집합 항공 이동 식사 투어 숙소 쇼핑 자유 기타'],
+  ['', '(여기 없는 말을 쓰면 "기타" 로 들어갑니다)'],
+  ['4', '장소 칸을 채우면 그 일정에 [기사에게 보여주기] 버튼이 생깁니다.'],
+  ['', '기사에게 폰을 그대로 보여주는 화면입니다. 현지 표기(영문)로 적어주세요.'],
+  ['5', '신청자만 가는 옵션투어는 내용 앞에 "(옵션)" 을 붙여주세요.'],
+  ['', '안 붙이면 신청하지 않은 분에게도 곧 출발한다고 알림이 갑니다.'],
+  ['6', '메모에 적은 전화번호(+63 32 342 8888)는 앱에서 눌러 바로 걸립니다.'],
+  ['7', '[안내] 시트에는 제목·기간·연락처·특이사항을 적습니다.'],
+  ['', '연락처와 특이사항은 줄을 늘려 여러 개 적을 수 있습니다.'],
+  [''],
+  ['※', '시트 이름(일정·안내)은 바꾸지 마세요.'],
+];
+
+const CT_SHEET = 'application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml';
+
 const FILES: Record<string, string> = {
+  // [Content_Types].xml 은 ZIP 의 첫 항목이어야 합니다. 엑셀이 여기부터 읽습니다.
   '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`,
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="${CT_SHEET}"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="${CT_SHEET}"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="${CT_SHEET}"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`,
 
   '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+<Relationships xmlns="${NS_PKG_REL}"><Relationship Id="rId1" Type="${NS_REL}/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="${NS_REL}/extended-properties" Target="docProps/app.xml"/></Relationships>`,
+
+  'docProps/core.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>기조톡 일정표 양식</dc:title><dc:creator>GIJO LABS</dc:creator><cp:lastModifiedBy>GIJO LABS</cp:lastModifiedBy></cp:coreProperties>`,
+
+  'docProps/app.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>GIJO Talk</Application></Properties>`,
 
   'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="일정" sheetId="1" r:id="rId1"/><sheet name="안내" sheetId="2" r:id="rId2"/></sheets></workbook>`,
+<workbook xmlns="${NS_MAIN}" xmlns:r="${NS_REL}"><bookViews><workbookView/></bookViews><sheets><sheet name="일정" sheetId="1" r:id="rId1"/><sheet name="안내" sheetId="2" r:id="rId2"/><sheet name="설명" sheetId="3" r:id="rId3"/></sheets></workbook>`,
 
   'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>`,
+<Relationships xmlns="${NS_PKG_REL}"><Relationship Id="rId1" Type="${NS_REL}/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="${NS_REL}/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="${NS_REL}/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="${NS_REL}/styles" Target="styles.xml"/></Relationships>`,
 
-  'xl/worksheets/sheet1.xml': sheetXml(SCHEDULE_ROWS),
-  'xl/worksheets/sheet2.xml': sheetXml(INFO_ROWS),
+  // fills 0·1 은 반드시 none·gray125 여야 합니다. 엑셀이 요구하는 고정 규칙입니다.
+  'xl/styles.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="${NS_MAIN}"><fonts count="2"><font><sz val="11"/><name val="맑은 고딕"/></font><font><b/><sz val="11"/><name val="맑은 고딕"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFFE9D6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`,
+
+  'xl/worksheets/sheet1.xml': sheetXml(SCHEDULE_ROWS, [13, 18, 8, 8, 34, 34, 34]),
+  'xl/worksheets/sheet2.xml': sheetXml(INFO_ROWS, [12, 44, 24]),
+  'xl/worksheets/sheet3.xml': sheetXml(HELP_ROWS, [5, 78]),
 };
 
 /* ------------------------------------------------------------------ */

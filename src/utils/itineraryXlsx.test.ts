@@ -1,8 +1,51 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import { inflateRawSync } from 'node:zlib';
 import { xlsxToItineraryText, looksLikeXlsx } from './itineraryXlsx';
 import { parseItinerary } from './itinerary';
+
+/**
+ * 검사용 ZIP 리더.
+ *
+ * 일부러 앱 코드의 리더를 쓰지 않습니다. 같은 코드로 읽고 검사하면 리더가 관대해서
+ * 넘어가는 구조 오류를 영원히 못 잡습니다. 여기서는 파일이 규격에 맞는지를 봅니다.
+ */
+function readZipForTest(buf: Buffer): { order: string[]; parts: Map<string, string> } {
+  const order: string[] = [];
+  const parts = new Map<string, string>();
+
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= 0; i--) {
+    if (buf.readUInt32LE(i) === 0x06054b50) {
+      eocd = i;
+      break;
+    }
+  }
+  if (eocd < 0) throw new Error('ZIP 끝 레코드를 찾지 못했습니다.');
+
+  const count = buf.readUInt16LE(eocd + 10);
+  let at = buf.readUInt32LE(eocd + 16);
+
+  for (let i = 0; i < count; i++) {
+    if (buf.readUInt32LE(at) !== 0x02014b50) throw new Error('중앙 디렉터리가 깨졌습니다.');
+    const method = buf.readUInt16LE(at + 10);
+    const size = buf.readUInt32LE(at + 20);
+    const nameLen = buf.readUInt16LE(at + 28);
+    const extraLen = buf.readUInt16LE(at + 30);
+    const commentLen = buf.readUInt16LE(at + 32);
+    const offset = buf.readUInt32LE(at + 42);
+    const name = buf.subarray(at + 46, at + 46 + nameLen).toString('utf8');
+
+    const start = offset + 30 + buf.readUInt16LE(offset + 26) + buf.readUInt16LE(offset + 28);
+    const raw = buf.subarray(start, start + size);
+
+    order.push(name);
+    parts.set(name, (method === 0 ? raw : inflateRawSync(raw)).toString('utf8'));
+    at += 46 + nameLen + extraLen + commentLen;
+  }
+  return { order, parts };
+}
 
 const templateBytes = () =>
   new Uint8Array(fs.readFileSync(path.join(process.cwd(), 'public', 'itinerary-template.xlsx')));
@@ -65,6 +108,110 @@ describe('배포되는 엑셀 양식', () => {
   it('메모의 전화번호가 살아 있다 (통화 링크가 걸려야 함)', async () => {
     const text = await xlsxToItineraryText(templateBytes());
     expect(text).toContain('+63 32 342 8888');
+  });
+});
+
+/**
+ * 엑셀이 실제로 보는 것들.
+ *
+ * .xlsx 를 라이브러리 없이 직접 쓰기 때문에 패키지 구조가 조금만 어긋나도 엑셀이
+ * "복구가 필요합니다" 를 띄웁니다. 그런데 우리 리더와 SheetJS 같은 관대한 파서는
+ * 그런 파일도 그냥 읽어버려서, 위 테스트가 전부 통과하는데 정작 가이드의 엑셀에서만
+ * 안 열리는 상황이 생깁니다. 실제 엑셀로 열어볼 수 없는 만큼 여기가 유일한 방어선입니다.
+ */
+describe('배포되는 엑셀 양식 — 패키지 구조', () => {
+  const { order, parts } = readZipForTest(
+    fs.readFileSync(path.join(process.cwd(), 'public', 'itinerary-template.xlsx'))
+  );
+
+  const xml = (name: string) =>
+    new DOMParser().parseFromString(parts.get(name) ?? '', 'application/xml');
+
+  const attrs = (doc: Document, tag: string, attr: string) =>
+    Array.from(doc.getElementsByTagName(tag)).map((el) => el.getAttribute(attr) ?? '');
+
+  it('[Content_Types].xml 이 ZIP 의 첫 항목이다 — 엑셀이 여기부터 읽는다', () => {
+    expect(order[0]).toBe('[Content_Types].xml');
+  });
+
+  it('모든 파트가 올바른 XML 이다', () => {
+    for (const name of order) {
+      expect(xml(name).getElementsByTagName('parsererror')).toHaveLength(0);
+    }
+  });
+
+  it('모든 파트가 [Content_Types].xml 에 선언돼 있다', () => {
+    const types = xml('[Content_Types].xml');
+    const defaults = new Set(attrs(types, 'Default', 'Extension').map((e) => e.toLowerCase()));
+    const overrides = new Set(
+      attrs(types, 'Override', 'PartName').map((p) => p.replace(/^\//, ''))
+    );
+
+    const undeclared = order.filter((name) => {
+      if (name === '[Content_Types].xml') return false;
+      const ext = (name.split('.').pop() ?? '').toLowerCase();
+      return !overrides.has(name) && !defaults.has(ext);
+    });
+    expect(undeclared).toEqual([]);
+  });
+
+  // Default Extension="xml" 이 있어서 위 검사는 통과하지만, 엑셀은 workbook·worksheet·
+  // styles 에 전용 content type 을 요구합니다. 일반 application/xml 로 남겨두면
+  // 우리 리더와 SheetJS 는 멀쩡히 읽는데 엑셀만 복구 대화상자를 띄웁니다.
+  it('핵심 파트에 전용 content type 이 지정돼 있다', () => {
+    const overrides = new Map(
+      Array.from(xml('[Content_Types].xml').getElementsByTagName('Override')).map((o) => [
+        (o.getAttribute('PartName') ?? '').replace(/^\//, ''),
+        o.getAttribute('ContentType') ?? '',
+      ])
+    );
+
+    const needsOverride = order.filter(
+      (n) => n === 'xl/workbook.xml' || n === 'xl/styles.xml' || n.startsWith('xl/worksheets/')
+    );
+    expect(needsOverride.length).toBeGreaterThan(0);
+
+    for (const part of needsOverride) {
+      expect(overrides.get(part), `${part} 에 전용 content type 이 없습니다`).toMatch(
+        /spreadsheetml\.(sheet\.main|worksheet|styles)\+xml$/
+      );
+    }
+  });
+
+  it('모든 관계(Relationship)의 대상이 실재한다', () => {
+    const resolve = (base: string, target: string) => {
+      const stack = base ? base.split('/') : [];
+      for (const seg of target.replace(/^\//, '').split('/')) {
+        if (seg === '..') stack.pop();
+        else if (seg !== '.') stack.push(seg);
+      }
+      return stack.join('/');
+    };
+
+    const broken: string[] = [];
+    for (const name of order.filter((n) => n.endsWith('.rels'))) {
+      const base = name.split('/').slice(0, -2).join('/');
+      for (const target of attrs(xml(name), 'Relationship', 'Target')) {
+        if (/^https?:/.test(target)) continue;
+        const resolved = resolve(base, target);
+        if (!parts.has(resolved)) broken.push(`${name} → ${target}`);
+      }
+    }
+    expect(broken).toEqual([]);
+  });
+
+  it('workbook 이 쓰는 r:id 가 전부 정의돼 있다', () => {
+    const defined = new Set(attrs(xml('xl/_rels/workbook.xml.rels'), 'Relationship', 'Id'));
+    const used = attrs(xml('xl/workbook.xml'), 'sheet', 'r:id');
+
+    expect(used.length).toBeGreaterThan(0);
+    expect(used.filter((id) => !defined.has(id))).toEqual([]);
+  });
+
+  it('리더가 이름으로 찾는 [일정]·[안내] 시트가 있다', () => {
+    const names = attrs(xml('xl/workbook.xml'), 'sheet', 'name');
+    expect(names.some((n) => n.includes('일정'))).toBe(true);
+    expect(names.some((n) => n.includes('안내'))).toBe(true);
   });
 });
 

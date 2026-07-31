@@ -4,6 +4,7 @@ import { COUNTRIES as BASE_COUNTRIES, PHRASES as BASE_PHRASES } from './data/phr
 import { PH_EXTRA_PHRASES } from './data/phrases.ph';
 import { PH_SOCIAL_PHRASES } from './data/phrases.ph.social';
 import { PH_TOUR_PHRASES } from './data/phrases.ph.tour';
+import { PH_FOOD_PHRASES } from './data/phrases.ph.food';
 import { EN_COUNTRY, EN_PHRASES } from './data/phrases.en';
 import { EN_SOCIAL_PHRASES } from './data/phrases.en.social';
 import { EN_TOUR_PHRASES } from './data/phrases.en.tour';
@@ -29,6 +30,7 @@ const ALL_PHRASES: Phrase[] = [
   ...PH_EXTRA_PHRASES,
   ...PH_SOCIAL_PHRASES,
   ...PH_TOUR_PHRASES,
+  ...PH_FOOD_PHRASES,
   ...EN_PHRASES,
   ...EN_SOCIAL_PHRASES,
   ...EN_TOUR_PHRASES,

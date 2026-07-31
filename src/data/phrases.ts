@@ -7,7 +7,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇵🇭',
     language: 'Tagalog',
     langCode: 'tl-PH',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
     description: '마닐라, 세부, 보라카이, 팔라완 여행 필수 타갈로그어'
   },
   {
@@ -16,7 +16,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇻🇳',
     language: 'Vietnamese',
     langCode: 'vi-VN',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
     description: '다낭, 하노이, 호치민, 나트랑 필수 베트남어'
   },
   {
@@ -25,7 +25,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇹🇭',
     language: 'Thai',
     langCode: 'th-TH',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
     description: '방콕, 푸켓, 치앙마이 필수 태국어'
   },
   {
@@ -34,7 +34,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇮🇩',
     language: 'Indonesian',
     langCode: 'id-ID',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
     description: '발리, 자카르타, 롬복 필수 인도네시아어'
   },
   {
@@ -43,7 +43,7 @@ export const COUNTRIES: Country[] = [
     flag: '🇱🇦',
     language: 'Lao',
     langCode: 'lo-LA',
-    categories: ['전체', '항공', '호텔', '교통', '식당', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+    categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
     description: '비엔티안, 방비엥, 루앙프라방 필수 라오어'
   }
 ];

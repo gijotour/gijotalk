@@ -50,7 +50,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
       <h1 className="mt-5 text-lg font-black text-slate-900 font-['Montserrat'] tracking-tight">
         GIJO Tour(PH)
       </h1>
-      <p className="mt-1 text-xs font-bold text-ink-mute">필리핀 여행 일정표 · 현장회화</p>
+      <p className="mt-1 text-xs font-bold text-ink-mute">일정표 및 생활영어</p>
 
       <form onSubmit={submit} className="w-full max-w-xs mt-8 space-y-3">
         <div className="flex items-center gap-2 justify-center text-ink-soft">

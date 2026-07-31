@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
           </h1>
           {/* 좁은 화면에서는 숨깁니다 — 이 줄이 제목을 밀어내던 주범입니다. */}
           <p className="text-xs text-ink-mute font-medium whitespace-nowrap hidden md:block">
-            필리핀 3초 긴급 현장회화 · GIJO LABS
+            지아이조 투어에서 제공하는 일정표 및 생활영어
           </p>
         </div>
       </div>

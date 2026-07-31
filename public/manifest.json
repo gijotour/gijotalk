@@ -1,8 +1,8 @@
 {
   "id": ".",
-  "name": "GIJO Tour(PH) — 필리핀 3초 긴급 현장회화",
+  "name": "GIJO Tour(PH) — 지아이조 투어에서 제공하는 일정표 및 생활영어",
   "short_name": "GIJO Tour(PH)",
-  "description": "필리핀 여행자를 위한 오프라인 일정표 + 현장회화. 인터넷 없이 오늘 일정 확인, 발음 재생, 3초 긴급 전광판을 사용하세요. GIJO LABS 제공.",
+  "description": "지아이조 투어에서 제공하는 일정표 및 생활영어. 인터넷 없이 오늘 일정 확인, 발음 재생, 3초 긴급 전광판을 사용하세요.",
   "lang": "ko",
   "dir": "ltr",
   "start_url": ".",

@@ -1,7 +1,7 @@
 // GIJO Tour Service Worker — 오프라인 우선 캐싱
 //
 // 릴리스할 때마다 VERSION 을 올리면 이전 캐시가 자동 정리됩니다.
-const VERSION = 'v18';
+const VERSION = 'v20';
 const SHELL_CACHE = `gijo-shell-${VERSION}`;
 const ASSET_CACHE = `gijo-assets-${VERSION}`;
 const FONT_CACHE = `gijo-fonts-${VERSION}`;
@@ -50,12 +50,25 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// 페이지가 직접 관리하는 캐시. 워커가 건드리면 안 됩니다.
+//
+// 🔴 예전에는 CURRENT_CACHES 에 없는 캐시를 전부 지웠습니다. 그래서 버전을
+//    올릴 때마다 — 즉 배포할 때마다 — 사용자가 "기기에 저장하기" 로 받아둔
+//    음성 5MB 가 통째로 날아갔습니다. 출국 전에 받아둔 사람이 현지에서
+//    소리가 안 나는 상태가 되는 것이고, 본인은 이유를 알 수 없습니다.
+//    이 캐시는 판(revision)이 바뀔 때 페이지가 스스로 갈아치웁니다.
+const APP_MANAGED_PREFIX = 'gijo-audio-';
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((k) => !CURRENT_CACHES.includes(k)).map((k) => caches.delete(k)))
+        Promise.all(
+          keys
+            .filter((k) => !CURRENT_CACHES.includes(k) && !k.startsWith(APP_MANAGED_PREFIX))
+            .map((k) => caches.delete(k))
+        )
       )
       .then(() => self.clients.claim())
   );

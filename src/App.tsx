@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { CategoryId, Phrase } from './types';
 import { COUNTRIES, PHRASES, IS_STATIC_BUILD } from './config';
+import { syncAudioCache } from './utils/offlineAudio';
 import {
   registerServiceWorker,
   getSavedBookmarkIds,
@@ -119,6 +120,9 @@ export default function App() {
   // Register PWA Service Worker & Load Bookmarks on Mount
   useEffect(() => {
     registerServiceWorker();
+    // 오디오가 바뀌었으면 저장해 둔 것을 새 판으로 갈아둡니다.
+    // 새것을 다 받은 뒤에 옛것을 지우므로, 도중에 끊겨도 음성이 사라지지 않습니다.
+    void syncAudioCache();
     setBookmarkedIds(getSavedBookmarkIds());
 
     const handleOnline = () => setIsOffline(false);

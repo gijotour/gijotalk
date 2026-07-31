@@ -889,7 +889,10 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             </button>
           </div>
 
-          <div className="p-5 overflow-y-auto space-y-4 flex-1">
+          <div
+            className="p-5 overflow-y-auto space-y-4 flex-1"
+            style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}
+          >
             {/* ① 구글시트 주소 · 붙여넣기 — 실제로 가장 흔한 경로입니다 */}
             <div className="space-y-2">
               <h4 className="text-xs font-extrabold text-slate-900">

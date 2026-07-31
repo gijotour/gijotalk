@@ -60,14 +60,39 @@ const FORCE = args.includes('--force');
  *   영어는 남성(Reed), 타갈로그는 여성(Damayanti)입니다.
  *   두 트랙을 목소리로 구분하면 어느 언어를 듣고 있는지 소리만으로 알 수 있습니다.
  */
-const SAY_VOICE: Record<string, { locale: string; names: string[] }> = {
-  // 새 음성(Reed)이 없는 macOS 를 위해 뒤에 예전 남성 음성을 남겨둡니다.
-  'en-US': { locale: 'en_US', names: ['Reed', 'Ralph', 'Fred'] },
+interface VoiceSpec {
+  /** 앞에서부터 설치된 것을 찾습니다 */
+  candidates: Array<{ locale: string; name: string }>;
+  /** 말하기 속도 (기본 175). 낮출수록 또박또박해집니다. */
+  rate: number;
+  /** 기본 음높이. 올리면 밝게 들립니다. 생략하면 음성 기본값. */
+  pitch?: number;
+}
+
+const SAY_VOICE: Record<string, VoiceSpec> = {
+  // 영어는 Daniel(영국)입니다.
+  //
+  //   설치된 미국 남성 음성(Reed·Ralph·Fred)은 전부 어둡고 뭉개집니다.
+  //   같은 문장으로 재보면 밝기(영교차율) Reed 1416 vs Daniel 4416, 음량도
+  //   28% 큽니다. 피치를 올려 미국 음성을 밝혀봐도 1771 이 한계였습니다.
+  //   듣고 따라 하는 용도라 또렷함이 억양 국적보다 중요하다고 봤습니다.
+  //   (필리핀에서 영국 억양도 문제없이 통합니다)
+  //
+  //   미국 발음으로 되돌리려면 candidates 에서 Daniel 을 빼면 됩니다.
+  'en-US': {
+    candidates: [
+      { locale: 'en_GB', name: 'Daniel' },
+      { locale: 'en_US', name: 'Reed' },
+      { locale: 'en_US', name: 'Ralph' },
+    ],
+    rate: 150, // 또박또박하게. Daniel 은 빨라서 낮춰도 기존보다 짧습니다.
+    pitch: 55, // 밝게
+  },
   // 인도네시아어 — 타갈로그와 같은 오스트로네시아어족이라 모음이 거의 같습니다.
-  'tl-PH': { locale: 'id_ID', names: ['Damayanti'] },
-  'id-ID': { locale: 'id_ID', names: ['Damayanti'] },
-  'vi-VN': { locale: 'vi_VN', names: ['Linh'] },
-  'th-TH': { locale: 'th_TH', names: ['Kanya'] },
+  'tl-PH': { candidates: [{ locale: 'id_ID', name: 'Damayanti' }], rate: 170 },
+  'id-ID': { candidates: [{ locale: 'id_ID', name: 'Damayanti' }], rate: 170 },
+  'vi-VN': { candidates: [{ locale: 'vi_VN', name: 'Linh' }], rate: 170 },
+  'th-TH': { candidates: [{ locale: 'th_TH', name: 'Kanya' }], rate: 170 },
 };
 
 /** `say -v '?'` 를 한 번만 읽어 캐시합니다. */
@@ -90,12 +115,13 @@ async function resolveVoice(langCode: string): Promise<string> {
   if (!want) throw new Error(`macOS 음성 매핑 없음: ${langCode}`);
 
   const voices = await listVoices();
-  for (const name of want.names) {
-    const hit = voices.find((v) => v.locale === want.locale && v.name.startsWith(name));
+  for (const c of want.candidates) {
+    const hit = voices.find((v) => v.locale === c.locale && v.name.startsWith(c.name));
     if (hit) return hit.name;
   }
   throw new Error(
-    `${langCode} 용 음성을 찾지 못했습니다 (${want.locale}: ${want.names.join(', ')}). ` +
+    `${langCode} 용 음성을 찾지 못했습니다 ` +
+      `(${want.candidates.map((c) => `${c.name}/${c.locale}`).join(', ')}). ` +
       `시스템 설정 > 손쉬운 사용 > 음성 에서 내려받으세요.`
   );
 }
@@ -132,9 +158,13 @@ function shouldSkipAudio(p: Phrase): string | null {
 
 async function synthesizeWithSay(text: string, langCode: string, outPath: string) {
   const voice = await resolveVoice(langCode);
+  const spec = SAY_VOICE[langCode];
+
+  // [[pbas N]] 은 say 의 음높이 지정입니다. 문장 맨 앞에 와야 합니다.
+  const spoken = spec.pitch ? `[[pbas ${spec.pitch}]] ${text}` : text;
 
   const aiff = path.join(TMP_DIR, `${path.basename(outPath, '.m4a')}.aiff`);
-  await run('say', ['-v', voice, '-r', '170', '-o', aiff, text]);
+  await run('say', ['-v', voice, '-r', String(spec.rate), '-o', aiff, spoken]);
   // 48kbps 모노 AAC — 음성에는 충분하고 1초당 약 6KB 입니다.
   await run('afconvert', ['-f', 'm4af', '-d', 'aac', '-b', '48000', '-q', '127', aiff, outPath]);
   await rm(aiff, { force: true });

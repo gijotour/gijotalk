@@ -282,11 +282,11 @@ export const EN_FOOD_PHRASES: Phrase[] = [
     countryId: 'en',
     category: '음식',
     original: 'Humba',
-    translation: '홍바(훔바) — 필리핀식 돼지 장조림',
+    translation: '훔바 — 필리핀식 돼지 장조림',
     pronunciation: '[훔바]',
     toneGuide: 'Sweet braised pork belly',
     usageTip:
-      '삼겹살을 간장·흑설탕·두시(발효 검은콩)로 달콤짭짤하게 푹 조립니다. 아도보보다 달고 부드러워 한국인 입맛에 아주 잘 맞습니다. 세부·보홀에서 특히 흔합니다.',
+      '삼겹살을 간장·흑설탕·두시(발효 검은콩)로 달콤짭짤하게 푹 조립니다. 아도보보다 달고 부드러워 한국인 입맛에 아주 잘 맞습니다. 세부·보홀에서 특히 흔합니다. 한국인들이 "홍바" 로 적기도 하는데 현지 발음은 훔바입니다.',
   },
   {
     id: 'en-fud-26',

@@ -82,7 +82,7 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
         <div className="flex items-center gap-2">
           <ShieldAlert className="w-6 h-6 text-brand" />
           <span className="font-black text-lg tracking-tight font-['Montserrat'] text-white">
-            Gijo talk(PH) <span className="text-xs font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 border border-blue-800 rounded">GIJO LABS</span> <span className="text-xs font-normal text-ink-mute">| 3초 긴급 전광판</span>
+            GIJO Tour(PH) <span className="text-xs font-bold text-blue-400 bg-blue-950/60 px-2 py-0.5 border border-blue-800 rounded">GIJO LABS</span> <span className="text-xs font-normal text-ink-mute">| 3초 긴급 전광판</span>
           </span>
         </div>
         <button

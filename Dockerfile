@@ -1,7 +1,7 @@
-# GIJO Talk — Cloud Run / 일반 컨테이너 배포용
+# GIJO Tour — Cloud Run / 일반 컨테이너 배포용
 #
-#   docker build -t gijo-talk .
-#   docker run -p 8080:8080 -e GEMINI_API_KEY=... -e APP_ACCESS_CODE=... gijo-talk
+#   docker build -t gijo-tour .
+#   docker run -p 8080:8080 -e GEMINI_API_KEY=... -e APP_ACCESS_CODE=... gijo-tour
 
 FROM node:22-slim AS build
 WORKDIR /app

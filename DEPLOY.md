@@ -1,4 +1,4 @@
-# GIJO Talk 배포 가이드
+# GIJO Tour 배포 가이드
 
 지인 배포용 체크리스트입니다. **HTTPS가 아니면 PWA 설치도, 서비스 워커도 동작하지 않습니다.**
 
@@ -47,7 +47,7 @@ npm run audio -- --backend=google      # 실제 필리핀어 음성 (GOOGLE_TTS_
 
 | | GitHub Pages | Cloud Run |
 |---|---|---|
-| 링크 | `https://gijotour.github.io/gijotlak/` | `https://gijo-talk-xxxx.a.run.app` |
+| 링크 | `https://gijotour.github.io/gijotlak/` | `https://gijo-tour-xxxx.a.run.app` |
 | 배포 | **push 하면 자동** | `gcloud run deploy` 수동 |
 | 회화·발음·오프라인·설치 | ✅ | ✅ |
 | 전광판·북마크·발음체크 | ✅ | ✅ |
@@ -80,7 +80,7 @@ cd /tmp/pages && python3 -m http.server 4321
 ## 3. Cloud Run (전체 기능)
 
 ```bash
-gcloud run deploy gijo-talk \
+gcloud run deploy gijo-tour \
   --source . \
   --region asia-northeast3 \
   --allow-unauthenticated \

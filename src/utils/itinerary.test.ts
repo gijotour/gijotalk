@@ -272,6 +272,15 @@ describe('배포되는 양식 파일', () => {
     'utf8'
   );
 
+  it('UTF-8 BOM 으로 시작한다 (윈도우 메모장 한글 깨짐 회귀)', () => {
+    // BOM 이 없으면 메모장이 ANSI(CP949)로 열어 한글이 통째로 깨집니다.
+    // 서버 헤더의 charset=utf-8 은 내려받은 파일 안에 남지 않아 소용없습니다.
+    const bytes = fs.readFileSync(
+      path.join(process.cwd(), 'public', 'itinerary-template.txt')
+    );
+    expect([bytes[0], bytes[1], bytes[2]]).toEqual([0xef, 0xbb, 0xbf]);
+  });
+
   it('경고 하나 없이 읽힌다', () => {
     const { itinerary, warnings, error } = parseItinerary(template);
     expect(error).toBeUndefined();

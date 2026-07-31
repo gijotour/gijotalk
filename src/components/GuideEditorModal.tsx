@@ -96,7 +96,9 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
   const loadTemplate = async () => {
     try {
       const res = await fetch(`${BASE_URL}${ITINERARY_TEMPLATE_FILE}`);
-      setText(await res.text());
+      // 양식 파일에는 BOM 이 붙어 있습니다(윈도우 메모장 대응). 편집창에는 빼고 넣습니다 —
+      // 안 그러면 저장할 때 BOM 이 두 번 붙습니다.
+      setText((await res.text()).replace(/^\uFEFF/, ''));
     } catch {
       setLinkError('양식을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');
     }
@@ -119,7 +121,15 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
   };
 
   const handleDownload = () => {
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    // ⚠️ BOM 을 반드시 붙입니다.
+    //
+    //   윈도우 메모장은 BOM 이 없는 파일을 UTF-8 이 아니라 ANSI(CP949)로 열어서
+    //   한글이 통째로 깨집니다. charset=utf-8 을 지정해도 소용없습니다 —
+    //   그건 다운로드 시점의 힌트일 뿐, 파일 안에는 남지 않기 때문입니다.
+    //   파서는 BOM 을 떼고 읽으므로 다시 올려도 문제없습니다.
+    const blob = new Blob(['\uFEFF' + text.replace(/^\uFEFF/, '')], {
+      type: 'text/plain;charset=utf-8',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

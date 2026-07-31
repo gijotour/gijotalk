@@ -372,4 +372,40 @@ export const PH_FOOD_PHRASES: Phrase[] = [
     usageTip:
       '필리핀 전통 과자(polvoron, yema)와 케이크를 파는 체인. 한국에 가져갈 선물을 공항 면세점보다 싸게 살 수 있습니다. 몰 안에 대부분 있습니다.',
   },
+  // ==========================================
+  // 내장 요리 — 간(Atay). 메뉴에서 자주 보이지만 뜻을 몰라 못 시키는 것들.
+  // ==========================================
+  {
+    id: 'ph-fud-31',
+    countryId: 'ph',
+    category: '음식',
+    original: 'Adobong Atay',
+    translation: '아도봉 아따이 — 돼지 간 간장 조림',
+    pronunciation: '[아도봉 아따이]',
+    toneGuide: 'atay = 간(肝)',
+    usageTip:
+      'atay(아따이/이따이)가 타갈로그로 간입니다. 돼지 간을 아도보 방식(간장·식초·마늘)으로 조립니다. 순대 간을 좋아하시면 잘 맞습니다. 퍽퍽하니 밥과 함께 드세요. 닭 간이면 atay ng manok.',
+  },
+  {
+    id: 'ph-fud-32',
+    countryId: 'ph',
+    category: '음식',
+    original: 'Igado',
+    translation: '이가도 — 일로카노식 돼지 간·살코기 볶음',
+    pronunciation: '[이가도]',
+    toneGuide: '북부 일로코스 지방 대표',
+    usageTip:
+      '돼지 간과 살코기를 길게 썰어 간장·식초에 볶고 피망·완두콩을 넣습니다. 아도봉 아따이보다 덜 짜고 야채가 들어가 먹기 편합니다. 이름이 비슷한 Igado 와 Adobo 를 헷갈리지 마세요.',
+  },
+  {
+    id: 'ph-fud-33',
+    countryId: 'ph',
+    category: '음식',
+    original: 'Atay (BBQ)',
+    translation: '아따이 꼬치 — 길거리 간 바비큐',
+    pronunciation: '[아따이]',
+    toneGuide: '⚠️ 길거리 위생 주의',
+    usageTip:
+      '닭·돼지 간을 꽂아 숯불에 굽는 길거리 꼬치. isaw(곱창), balunbalunan(모래주머니)과 함께 팝니다. 아주 싸지만 배탈 위험이 있으니 손님이 많아 회전이 빠른 집에서, 갓 구운 것만 드세요.',
+  },
 ];

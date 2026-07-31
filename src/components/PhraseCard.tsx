@@ -204,7 +204,11 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
                   : '기기 내장 음성 합성 — 인터넷/기기에 따라 품질이 달라집니다'
               }
             >
-              {hasAudio ? '👩 내장 음성' : '🤖 기기 음성'}
+              {/* 트랙마다 목소리 성별이 다릅니다 — 타갈로그 여성, 영어 남성.
+                  소리만 들어도 어느 언어인지 알 수 있게 표시도 맞춥니다. */}
+              {hasAudio
+                ? `${phrase.countryId === 'en' ? '👨' : '👩'} 내장 음성`
+                : '🤖 기기 음성'}
             </span>
           )}
 

@@ -11,6 +11,7 @@ import { BASE_URL } from '../utils/env';
 import { isKakaoTalk } from '../utils/pwa';
 import {
   ITINERARY_TEMPLATE_FILE,
+  ITINERARY_XLSX_TEMPLATE_FILE,
   KIND_TO_CATEGORY,
   clearItinerary,
   findNextItem,
@@ -22,6 +23,7 @@ import {
   splitPhones,
   tripNow,
 } from '../utils/itinerary';
+import { looksLikeXlsx, xlsxToItineraryText } from '../utils/itineraryXlsx';
 import {
   clearItineraryLink,
   readItineraryLink,
@@ -32,6 +34,7 @@ import {
   CalendarDays,
   Download,
   FileUp,
+  FileSpreadsheet,
   Loader2,
   PencilLine,
   AlertCircle,
@@ -201,9 +204,20 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     }
 
     try {
-      acceptText(await file.text());
-    } catch {
-      setError('파일을 읽지 못했습니다. 받은 .txt 파일 그대로 올려주세요.');
+      // 엑셀인지 텍스트인지는 확장자가 아니라 파일 앞머리를 보고 정합니다 —
+      // 카톡·안드로이드를 거치면서 확장자나 MIME 이 바뀌는 일이 잦습니다.
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (looksLikeXlsx(bytes)) {
+        acceptText(await xlsxToItineraryText(bytes));
+      } else {
+        acceptText(new TextDecoder().decode(bytes));
+      }
+    } catch (e: unknown) {
+      setError(
+        e instanceof Error && e.message
+          ? e.message
+          : '파일을 읽지 못했습니다. 받은 파일을 그대로 올려주세요.'
+      );
     } finally {
       // 같은 파일을 다시 골라도 change 가 뜨게 비웁니다.
       if (inputRef.current) inputRef.current.value = '';
@@ -311,7 +325,9 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             <FileUp className="w-7 h-7" />
           </div>
           <p className="text-sm font-bold text-ink">일정표 파일 올리기</p>
-          <p className="text-xs text-ink-mute font-medium">받으신 .txt 파일을 그대로 고르세요</p>
+          <p className="text-xs text-ink-mute font-medium">
+            받으신 엑셀(.xlsx) 또는 텍스트(.txt) 파일을 그대로 고르세요
+          </p>
         </label>
 
         {/* 파일 선택기가 말을 안 들을 때의 확실한 우회로.
@@ -365,17 +381,34 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
         <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs space-y-3">
           <h3 className="text-xs font-extrabold text-slate-900">일정표를 보내시는 분께</h3>
           <p className="text-xs text-ink-soft font-medium leading-relaxed">
-            아래 양식 파일을 받아 메모장으로 열고 내용만 바꿔 저장한 뒤, 카톡·텔레그램으로
-            보내주세요. 정해진 양식으로 적힌 .txt 파일만 열립니다.
+            양식을 받아 내용만 바꿔 저장한 뒤 카톡·텔레그램으로 보내주세요. 정해진 양식으로 적힌
+            파일만 열립니다.
           </p>
-          <a
-            href={`${BASE_URL}${ITINERARY_TEMPLATE_FILE}`}
-            download="기조톡_일정표_양식.txt"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
-          >
-            <Download className="w-4 h-4" />
-            일정표 양식 받기
-          </a>
+          {/* 엑셀을 앞에 둡니다 — 여행사 일정표는 원래 엑셀로 만들고,
+              칸이 곧 화면이라 배울 게 없습니다. 게다가 .xlsx 안은 항상 UTF-8 이라
+              메모장이 한글을 깨뜨리는 사고가 아예 일어나지 않습니다. */}
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`${BASE_URL}${ITINERARY_XLSX_TEMPLATE_FILE}`}
+              download="기조톡_일정표_양식.xlsx"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
+            >
+              <FileSpreadsheet className="w-4 h-4" />
+              엑셀 양식 받기
+            </a>
+            <a
+              href={`${BASE_URL}${ITINERARY_TEMPLATE_FILE}`}
+              download="기조톡_일정표_양식.txt"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-ink text-xs font-bold rounded-xl active:scale-95 transition-all"
+            >
+              <Download className="w-4 h-4" />
+              텍스트 양식
+            </a>
+          </div>
+          <p className="text-xs text-ink-mute font-medium leading-relaxed">
+            엑셀은 [일정] 시트의 칸만 채우면 됩니다. 날짜와 일차는 그날 첫 줄에만 적으면 아래로
+            이어집니다.
+          </p>
         </div>
 
         <p className="text-xs text-ink-mute font-medium leading-relaxed px-1">

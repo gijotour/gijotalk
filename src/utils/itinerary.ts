@@ -30,6 +30,9 @@ export const ITINERARY_STORAGE_KEY = 'quickpass_itinerary_v1';
 /** 양식 파일 이름 (public/ 에 그대로 놓여 있습니다) */
 export const ITINERARY_TEMPLATE_FILE = 'itinerary-template.txt';
 
+/** 엑셀 양식. scripts/build-itinerary-xlsx.ts 가 만듭니다 (npm run xlsx) */
+export const ITINERARY_XLSX_TEMPLATE_FILE = 'itinerary-template.xlsx';
+
 /**
  * 여행지 기준 시간대.
  *

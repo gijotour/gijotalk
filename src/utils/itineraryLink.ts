@@ -15,6 +15,7 @@
 //   · 이미 받은 사람에게 밀어넣지는 못합니다. 고치면 새 링크를 다시 보내야 합니다.
 
 import { BASE_URL } from './env';
+import { ByteTransform, transformBytes } from './bytes';
 
 const HASH_PREFIX = '#itin=';
 
@@ -51,14 +52,13 @@ function fromBase64Url(text: string): Uint8Array {
 /* 압축                                                                */
 /* ------------------------------------------------------------------ */
 
-type StreamCtor = new (format: string) => ReadableWritablePair<Uint8Array, Uint8Array>;
+type StreamCtor = new (format: string) => ByteTransform;
 
 const compressionAvailable = (): boolean =>
   typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined';
 
-async function pipe(bytes: Uint8Array, Ctor: StreamCtor): Promise<Uint8Array> {
-  const stream = new Blob([bytes as BlobPart]).stream().pipeThrough(new Ctor('gzip'));
-  return new Uint8Array(await new Response(stream as BodyInit).arrayBuffer());
+function pipe(bytes: Uint8Array, Ctor: StreamCtor): Promise<Uint8Array> {
+  return transformBytes(bytes, new Ctor('gzip'));
 }
 
 /* ------------------------------------------------------------------ */

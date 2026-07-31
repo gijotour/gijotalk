@@ -471,7 +471,17 @@ export function formatCountdown(fromMinutes: number, targetMinutes: number): str
   return `${h}시간 ${m}분 뒤`;
 }
 
-/** "8/1 (금)" — 칩에 쓰는 짧은 표기 */
+/** 날짜 칩용 두 줄 표기: ["8/1", "금"] */
+export function splitDayChip(date: string): [string, string] {
+  const m = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return [date, ''];
+  const weekday = ['일', '월', '화', '수', '목', '금', '토'][
+    new Date(`${date}T00:00:00`).getDay()
+  ];
+  return [`${Number(m[2])}/${Number(m[3])}`, weekday ?? ''];
+}
+
+/** "8/1 (금)" — 읽어주기(aria)용 한 줄 표기 */
 export function shortDate(date: string): string {
   const m = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return date;

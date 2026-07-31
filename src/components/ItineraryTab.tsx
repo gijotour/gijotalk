@@ -107,6 +107,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showGuideEditor, setShowGuideEditor] = useState(false);
   const [showAllNotices, setShowAllNotices] = useState(false);
+  const [pasteText, setPasteText] = useState('');
   // 링크로 들어온 경우, 푸는 동안 "일정표가 없습니다" 화면이 깜빡이지 않게 합니다.
   const [receivingLink, setReceivingLink] = useState(() => readItineraryLink() !== null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -169,6 +170,26 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     [isToday, selectedDay, now.minutes]
   );
 
+  /** 파일이든 붙여넣기든, 들어온 글자를 읽어 저장하는 한 곳 */
+  const acceptText = (text: string): boolean => {
+    const result = parseItinerary(text);
+    if (!result.itinerary) {
+      setError(result.error ?? '일정표를 읽지 못했습니다.');
+      return false;
+    }
+    saveItinerary(result.itinerary);
+    setItinerary(result.itinerary);
+    setSelectedDate(null); // 오늘 날짜로 다시 맞춥니다
+    setWarnings(result.warnings);
+    return true;
+  };
+
+  const handlePaste = () => {
+    setError(null);
+    setWarnings([]);
+    if (acceptText(pasteText)) setPasteText('');
+  };
+
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
     setError(null);
@@ -180,18 +201,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     }
 
     try {
-      const text = await file.text();
-      const result = parseItinerary(text);
-
-      if (!result.itinerary) {
-        setError(result.error ?? '파일을 읽지 못했습니다.');
-        return;
-      }
-
-      saveItinerary(result.itinerary);
-      setItinerary(result.itinerary);
-      setSelectedDate(null); // 오늘 날짜로 다시 맞춥니다
-      setWarnings(result.warnings);
+      acceptText(await file.text());
     } catch {
       setError('파일을 읽지 못했습니다. 받은 .txt 파일 그대로 올려주세요.');
     } finally {
@@ -219,11 +229,19 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     usageTip: '이 화면을 기사에게 그대로 보여주세요.',
   });
 
+  // accept 를 걸지 않습니다.
+  //
+  //   안드로이드 파일 선택기는 확장자가 아니라 MIME 으로 거릅니다. 그런데 카카오톡이
+  //   넘겨주는 파일은 MIME 이 application/octet-stream 인 경우가 많아,
+  //   accept=".txt,text/plain" 을 걸면 정작 우리가 받아야 할 파일이 회색으로
+  //   비활성화돼 아예 고를 수가 없습니다. 실제로 안드로이드에서 막혔습니다.
+  //
+  //   어차피 파일 형식은 첫 줄(#기조톡일정)로 내용을 보고 판별하므로,
+  //   선택기에서 미리 거르는 것은 편의일 뿐입니다. 편의가 기능을 막으면 버립니다.
   const fileInput = (
     <input
       ref={inputRef}
       type="file"
-      accept=".txt,text/plain"
       className="sr-only"
       id="gijo-itinerary-input"
       onChange={(e) => handleFile(e.target.files?.[0])}
@@ -295,6 +313,33 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
           <p className="text-sm font-bold text-ink">일정표 파일 올리기</p>
           <p className="text-xs text-ink-mute font-medium">받으신 .txt 파일을 그대로 고르세요</p>
         </label>
+
+        {/* 파일 선택기가 말을 안 들을 때의 확실한 우회로.
+            카톡에서 받은 파일이 안 보이거나 회색이면 여기로 오면 됩니다 —
+            메시지를 길게 눌러 복사한 뒤 붙여넣기만 하면 똑같이 동작합니다. */}
+        <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs space-y-3">
+          <h3 className="text-xs font-extrabold text-slate-900">파일이 안 보이거나 회색인가요?</h3>
+          <p className="text-xs text-ink-soft font-medium leading-relaxed">
+            카톡에서 일정표 내용을 길게 눌러 복사한 뒤, 아래에 붙여넣어도 똑같이 저장됩니다.
+            파일로 받으셨다면 카톡에서 먼저 <span className="font-bold">저장</span>을 눌러 휴대폰에
+            내려받은 뒤 위에서 골라주세요.
+          </p>
+          <textarea
+            value={pasteText}
+            onChange={(e) => setPasteText(e.target.value)}
+            aria-label="일정표 붙여넣기"
+            spellCheck={false}
+            placeholder={'#기조톡일정 v1\n제목: …'}
+            className="w-full h-28 bg-canvas border-2 border-slate-200 rounded-2xl p-3 text-xs font-mono text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid resize-y"
+          />
+          <button
+            onClick={handlePaste}
+            disabled={!pasteText.trim()}
+            className="w-full py-3 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all disabled:opacity-40 disabled:active:scale-100"
+          >
+            붙여넣은 내용으로 저장
+          </button>
+        </div>
 
         {error && (
           <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-xs font-bold flex items-start gap-2">

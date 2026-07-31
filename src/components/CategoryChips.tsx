@@ -1,6 +1,6 @@
 import React from 'react';
 import { CategoryId } from '../types';
-import { Layers, Plane, Hotel, Bus, Utensils, Tag, Heart, MessageCircleWarning, AlertTriangle } from 'lucide-react';
+import { Layers, Plane, Hotel, Bus, Utensils, Tag, Camera, Sparkles, Heart, MessageCircleWarning, AlertTriangle } from 'lucide-react';
 
 interface CategoryChipsProps {
   selectedCategory: CategoryId;
@@ -15,6 +15,8 @@ const CATEGORIES: { id: CategoryId; icon: React.ReactNode }[] = [
   { id: '교통', icon: <Bus className="w-3.5 h-3.5" /> },
   { id: '식당', icon: <Utensils className="w-3.5 h-3.5" /> },
   { id: '흥정', icon: <Tag className="w-3.5 h-3.5" /> },
+  { id: '관광', icon: <Camera className="w-3.5 h-3.5" /> },
+  { id: '마사지', icon: <Sparkles className="w-3.5 h-3.5" /> },
   { id: '미팅/사교', icon: <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" /> },
   { id: '욕설/은어', icon: <MessageCircleWarning className="w-3.5 h-3.5" /> },
   { id: '비상', icon: <AlertTriangle className="w-3.5 h-3.5" /> },

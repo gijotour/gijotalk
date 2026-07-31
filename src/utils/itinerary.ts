@@ -73,7 +73,9 @@ export const KIND_TO_CATEGORY: Partial<Record<ItineraryKind, CategoryId>> = {
   이동: '교통',
   식사: '식당',
   쇼핑: '흥정',
-  // 스파·투어·집합·자유·기타는 이어줄 회화 카테고리가 마땅치 않습니다.
+  투어: '관광',
+  스파: '마사지',
+  // 집합·자유·기타는 이어줄 회화가 마땅치 않습니다.
 };
 
 export interface ItineraryParseResult {

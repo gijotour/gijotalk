@@ -3,8 +3,10 @@ export { IS_STATIC_BUILD } from './utils/env';
 import { COUNTRIES as BASE_COUNTRIES, PHRASES as BASE_PHRASES } from './data/phrases';
 import { PH_EXTRA_PHRASES } from './data/phrases.ph';
 import { PH_SOCIAL_PHRASES } from './data/phrases.ph.social';
+import { PH_TOUR_PHRASES } from './data/phrases.ph.tour';
 import { EN_COUNTRY, EN_PHRASES } from './data/phrases.en';
 import { EN_SOCIAL_PHRASES } from './data/phrases.en.social';
+import { EN_TOUR_PHRASES } from './data/phrases.en.tour';
 
 /**
  * 지금 화면에 노출할 언어.
@@ -26,8 +28,10 @@ const ALL_PHRASES: Phrase[] = [
   ...BASE_PHRASES,
   ...PH_EXTRA_PHRASES,
   ...PH_SOCIAL_PHRASES,
+  ...PH_TOUR_PHRASES,
   ...EN_PHRASES,
   ...EN_SOCIAL_PHRASES,
+  ...EN_TOUR_PHRASES,
 ];
 
 export const COUNTRIES: Country[] = ENABLED_COUNTRY_IDS.map((id) =>

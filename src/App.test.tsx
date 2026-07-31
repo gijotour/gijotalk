@@ -37,6 +37,35 @@ describe('App — 조립 검증', () => {
     expect(screen.getByText('일정표 파일 올리기')).toBeInTheDocument();
     // 양식 없이 업로드만 있으면 가이드가 무엇을 보내야 할지 알 수 없습니다.
     expect(screen.getByText('일정표 양식 받기')).toBeInTheDocument();
+    // 안드로이드 파일 선택기가 카톡 파일을 회색 처리해 아예 못 고르는 일이 있습니다.
+    // 붙여넣기 우회로가 없으면 그 상태에서 할 수 있는 게 없습니다.
+    expect(screen.getByLabelText('일정표 붙여넣기')).toBeInTheDocument();
+  });
+
+  it('붙여넣기로도 일정표가 저장된다 (파일 선택기가 막혔을 때의 우회로)', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    await user.click(screen.getByRole('button', { name: '일정' }));
+    await user.click(screen.getByLabelText('일정표 붙여넣기'));
+    await user.paste(
+      '#기조톡일정 v1\n제목: 붙여넣기 테스트\n[2026-08-01] 1일차\n09:00 | 이동 | 공항으로 이동'
+    );
+    await user.click(screen.getByRole('button', { name: '붙여넣은 내용으로 저장' }));
+
+    expect(screen.getByText('붙여넣기 테스트')).toBeInTheDocument();
+    expect(screen.getByText('공항으로 이동')).toBeInTheDocument();
+  });
+
+  it('일정표 파일 선택기에 accept 필터를 걸지 않는다 (안드로이드 회귀)', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    await user.click(screen.getByRole('button', { name: '일정' }));
+    const input = document.getElementById('gijo-itinerary-input');
+    // accept 를 걸면 카톡이 넘기는 application/octet-stream 파일이 회색 처리됩니다.
+    expect(input).not.toBeNull();
+    expect(input!.hasAttribute('accept')).toBe(false);
   });
 
   it('첫 화면에 프로모 배너 없이 회화 카드가 바로 보인다', async () => {

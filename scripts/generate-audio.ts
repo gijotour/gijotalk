@@ -48,14 +48,57 @@ const FORCE = args.includes('--force');
 /* 음성 매핑                                                            */
 /* ------------------------------------------------------------------ */
 
-// macOS 내장 음성. `say -v '?'` 로 설치된 목록을 확인할 수 있습니다.
-const SAY_VOICE: Record<string, string> = {
-  'en-US': 'Samantha',
-  'tl-PH': 'Damayanti', // 인도네시아어 — 타갈로그 근사치
-  'id-ID': 'Damayanti',
-  'vi-VN': 'Linh',
-  'th-TH': 'Kanya',
+/**
+ * macOS 내장 음성.
+ *
+ * ⚠️ 이름만으로 고르면 안 됩니다.
+ *    같은 이름이 여러 언어에 존재합니다 — `say -v Reed` 는 독일어 Reed 를
+ *    집을 수도 있습니다(실제로 미국 영어 Reed 와 결과가 달랐습니다).
+ *    그래서 `say -v '?'` 목록에서 로케일까지 맞는 항목을 찾아 정확한 이름을 씁니다.
+ *
+ * ── 성별
+ *   영어는 남성(Reed), 타갈로그는 여성(Damayanti)입니다.
+ *   두 트랙을 목소리로 구분하면 어느 언어를 듣고 있는지 소리만으로 알 수 있습니다.
+ */
+const SAY_VOICE: Record<string, { locale: string; names: string[] }> = {
+  // 새 음성(Reed)이 없는 macOS 를 위해 뒤에 예전 남성 음성을 남겨둡니다.
+  'en-US': { locale: 'en_US', names: ['Reed', 'Ralph', 'Fred'] },
+  // 인도네시아어 — 타갈로그와 같은 오스트로네시아어족이라 모음이 거의 같습니다.
+  'tl-PH': { locale: 'id_ID', names: ['Damayanti'] },
+  'id-ID': { locale: 'id_ID', names: ['Damayanti'] },
+  'vi-VN': { locale: 'vi_VN', names: ['Linh'] },
+  'th-TH': { locale: 'th_TH', names: ['Kanya'] },
 };
+
+/** `say -v '?'` 를 한 번만 읽어 캐시합니다. */
+let installedVoices: Array<{ name: string; locale: string }> | null = null;
+
+async function listVoices() {
+  if (installedVoices) return installedVoices;
+  const { stdout } = await run('say', ['-v', '?']);
+  installedVoices = stdout
+    .split('\n')
+    .map((line) => line.match(/^(.*?)\s{2,}([a-z]{2}_[A-Z]{2})\s/))
+    .filter((m): m is RegExpMatchArray => Boolean(m))
+    .map((m) => ({ name: m[1].trim(), locale: m[2] }));
+  return installedVoices;
+}
+
+/** 로케일까지 맞는 실제 음성 이름을 찾습니다. */
+async function resolveVoice(langCode: string): Promise<string> {
+  const want = SAY_VOICE[langCode];
+  if (!want) throw new Error(`macOS 음성 매핑 없음: ${langCode}`);
+
+  const voices = await listVoices();
+  for (const name of want.names) {
+    const hit = voices.find((v) => v.locale === want.locale && v.name.startsWith(name));
+    if (hit) return hit.name;
+  }
+  throw new Error(
+    `${langCode} 용 음성을 찾지 못했습니다 (${want.locale}: ${want.names.join(', ')}). ` +
+      `시스템 설정 > 손쉬운 사용 > 음성 에서 내려받으세요.`
+  );
+}
 
 // Google Cloud TTS 음성. fil-PH 는 실제 필리핀어입니다.
 const GOOGLE_VOICE: Record<string, { languageCode: string; name: string }> = {
@@ -88,8 +131,7 @@ function shouldSkipAudio(p: Phrase): string | null {
 /* ------------------------------------------------------------------ */
 
 async function synthesizeWithSay(text: string, langCode: string, outPath: string) {
-  const voice = SAY_VOICE[langCode];
-  if (!voice) throw new Error(`macOS 음성 매핑 없음: ${langCode}`);
+  const voice = await resolveVoice(langCode);
 
   const aiff = path.join(TMP_DIR, `${path.basename(outPath, '.m4a')}.aiff`);
   await run('say', ['-v', voice, '-r', '170', '-o', aiff, text]);
@@ -186,6 +228,23 @@ async function main() {
 
   // 앱이 "어떤 문장에 녹음이 있는지" 를 런타임 fetch 없이 알 수 있도록
   // TS 파일로 내보냅니다. 번들에 포함되므로 오프라인에서도 즉시 동작합니다.
+  //
+  // ⚠️ 이번에 만든 것만 적으면 안 됩니다.
+  //    --lang=en 처럼 한 언어만 다시 만들면 매니페스트에서 나머지 언어가 통째로
+  //    사라져, 앱에서 타갈로그 음성이 전부 먹통이 됩니다(실제로 겪었습니다).
+  //    그래서 필터와 무관하게 "디스크에 파일이 있는 모든 문장" 을 기준으로 씁니다.
+  for (const country of COUNTRIES) {
+    for (const phrase of PHRASES.filter((p) => p.countryId === country.id)) {
+      if (generated[phrase.id] || shouldSkipAudio(phrase)) continue;
+      const rel = `${country.id}/${phrase.id}.m4a`;
+      const exists = await access(path.join(OUT_DIR, rel)).then(
+        () => true,
+        () => false
+      );
+      if (exists) generated[phrase.id] = rel;
+    }
+  }
+
   const entries = Object.entries(generated).sort(([a], [b]) => a.localeCompare(b));
   const manifest = `// 이 파일은 \`npm run audio\` 가 자동 생성합니다. 직접 수정하지 마세요.
 // 생성 백엔드: ${BACKEND}

@@ -8,6 +8,7 @@ import { PH_FOOD_PHRASES } from './data/phrases.ph.food';
 import { EN_COUNTRY, EN_PHRASES } from './data/phrases.en';
 import { EN_SOCIAL_PHRASES } from './data/phrases.en.social';
 import { EN_TOUR_PHRASES } from './data/phrases.en.tour';
+import { EN_FOOD_PHRASES } from './data/phrases.en.food';
 
 /**
  * 지금 화면에 노출할 언어.
@@ -34,6 +35,7 @@ const ALL_PHRASES: Phrase[] = [
   ...EN_PHRASES,
   ...EN_SOCIAL_PHRASES,
   ...EN_TOUR_PHRASES,
+  ...EN_FOOD_PHRASES,
 ];
 
 export const COUNTRIES: Country[] = ENABLED_COUNTRY_IDS.map((id) =>

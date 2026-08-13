@@ -66,14 +66,27 @@ Pages 빌드는 `VITE_STATIC_BUILD=true` 로 나가서 **서버가 필요한 기
 `gijotour/클루드` 또는 `main` 에 push 하면 `.github/workflows/pages.yml` 이 자동 배포합니다.
 수동 실행: Actions 탭 → Deploy to GitHub Pages → Run workflow
 
-서브패스(`/gijotlak/`)로 서빙되므로 `BASE_PATH` 가 필요합니다. 로컬에서 같은 조건으로 확인하려면:
+서브패스(`/<저장소이름>/`)로 서빙되므로 `BASE_PATH` 가 필요합니다. 워크플로가
+`GITHUB_REPOSITORY` 에서 저장소 이름을 떼어 자동으로 넣으므로 손댈 것은 없습니다.
+로컬에서 같은 조건으로 확인하려면:
 
 ```bash
-BASE_PATH=/gijotlak/ VITE_STATIC_BUILD=true npx vite build
-mkdir -p /tmp/pages/gijotlak && cp -R dist/* /tmp/pages/gijotlak/
+REPO=$(basename "$PWD")
+BASE_PATH=/$REPO/ VITE_STATIC_BUILD=true npx vite build
+mkdir -p "/tmp/pages/$REPO" && cp -R dist/* "/tmp/pages/$REPO/"
 cd /tmp/pages && python3 -m http.server 4321
-# → http://localhost:4321/gijotlak/
+# → http://localhost:4321/<저장소이름>/
 ```
+
+> 📝 **저장소 이름이 `gijotlak` 입니다 — `gijotalk` 의 오타입니다.**
+> 이름을 바꾸려면 GitHub → Settings → 맨 위 Repository name → `gijotalk` → Rename.
+> 코드에는 이름이 박혀 있지 않으므로 **고칠 파일은 없습니다.** 다음 push 부터
+> `https://gijotour.github.io/gijotalk/` 로 나갑니다. 바꾼 뒤 할 일은 두 가지입니다.
+>
+> 1. `TRAVELER_GUIDE.md` 안내문의 링크를 새 주소로 고치기
+> 2. 이미 옛 주소를 받은 분들에게 새 링크 다시 보내기
+>    (GitHub 이 옛 주소를 새 주소로 넘겨주긴 하지만, 홈 화면에 **설치해 둔 앱**은
+>    옛 주소에 묶여 있어 오프라인 저장분이 따라오지 않습니다)
 
 ---
 

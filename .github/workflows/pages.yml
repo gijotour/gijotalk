@@ -36,11 +36,18 @@ jobs:
 
       - run: npm ci
 
+      # 서브패스는 저장소 이름 그대로입니다. 예전에는 여기에 이름을 손으로 적어뒀는데,
+      # 저장소 이름을 고치는 순간(오타 수정 포함) 자산 경로가 전부 어긋나 흰 화면이 됩니다.
+      # GITHUB_REPOSITORY('owner/repo')에서 뒷부분을 떼어 쓰면 이름이 바뀌어도 따라옵니다.
+      - name: 기준 경로 계산
+        run: echo "BASE_PATH=/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"
+
       - name: 정적 빌드 (서브패스)
         env:
-          BASE_PATH: /gijotlak/
           VITE_STATIC_BUILD: 'true'
-        run: npx vite build
+        run: |
+          echo "BASE_PATH=$BASE_PATH"
+          npx vite build
 
       - name: 오디오 포함 확인
         run: |

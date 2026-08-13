@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import App from './App';
 import { PHRASES } from './config';
 import { PASSCODE_HASH, UNLOCK_STORAGE_KEY } from './utils/appLock';
+import { BASE_URL } from './utils/env';
 
 /**
  * 앱을 띄우고 마운트 시 시작된 비동기 작업(오프라인 저장 상태 조회 등)이
@@ -101,6 +102,29 @@ describe('App — 조립 검증', () => {
 
     await user.click(screen.getByRole('button', { name: '보관함' }));
     expect(screen.getByText(/아직 저장된 문장이 없습니다/)).toBeInTheDocument();
+  });
+
+  it('일정 탭 아래에 파티 게임이 있고, 열고 닫을 수 있다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    // 게임은 탭이 아니라 일정 아래에 붙어 있습니다. 회화 화면에는 나오면 안 됩니다.
+    expect(screen.queryByRole('button', { name: '게임 시작' })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '일정' }));
+    await user.click(screen.getByRole('button', { name: '게임 시작' }));
+
+    const dialog = screen.getByRole('dialog', { name: 'GIJO Drink 파티 게임' });
+    // 게임 주소는 배포 위치를 따라가야 합니다. '/game/…' 로 박으면 Pages 서브패스에서
+    // 저장소 루트를 가리켜 404 가 됩니다.
+    expect(within(dialog).getByTitle('GIJO Drink 파티 게임')).toHaveAttribute(
+      'src',
+      `${BASE_URL}game/gijo-drink.html`
+    );
+
+    // 게임 본체에는 뒤로 가는 길이 없습니다. 닫기가 유일한 출구입니다.
+    await user.click(within(dialog).getByRole('button', { name: '게임 닫기' }));
+    expect(screen.queryByRole('dialog', { name: 'GIJO Drink 파티 게임' })).not.toBeInTheDocument();
   });
 
   it('북마크를 누르면 보관함에 담기고 뱃지가 올라간다', async () => {

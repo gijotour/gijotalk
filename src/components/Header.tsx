@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
   onSelectCountry: (country: Country) => void;
   onOpenAIAssistant: () => void;
   onOpenEmergencyModal: () => void;
+  onOpenPartyGame: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectCountry,
   onOpenAIAssistant,
   onOpenEmergencyModal,
+  onOpenPartyGame,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -124,6 +126,16 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         )}
 
+
+        {/* 파티 게임 직행 — 긴급 버튼 바로 옆. 둘 다 "탭 갈아타지 않고 바로 뜨는" 같은 성격입니다. */}
+        <button
+          onClick={onOpenPartyGame}
+          aria-label="파티 게임 실행"
+          className="p-1.5 bg-ink text-white hover:bg-black rounded-full transition-all active:scale-95 shrink-0"
+          title="파티 게임 실행"
+        >
+          <PartyPopper className="w-4 h-4" />
+        </button>
 
         {/* Emergency Billboard Direct Launch */}
         <button

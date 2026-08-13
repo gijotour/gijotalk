@@ -23,7 +23,7 @@ import { AITranslateModal } from './components/AITranslateModal';
 import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
 import { ItineraryTab } from './components/ItineraryTab';
-import { PartyGameCard } from './components/PartyGameCard';
+import { PartyGameModal } from './components/PartyGameModal';
 import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
@@ -58,6 +58,7 @@ export default function App() {
   const [showAIAssistant, setShowAIAssistant] = useState<boolean>(false);
   const [micPracticePhrase, setMicPracticePhrase] = useState<Phrase | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
+  const [showPartyGame, setShowPartyGame] = useState<boolean>(false);
 
   // Custom AI-generated Phrases State
   const [customPhrases, setCustomPhrases] = useState<Phrase[]>(() => {
@@ -268,6 +269,7 @@ export default function App() {
             setBillboardPhrase(emergencyPhrases[0]);
           }
         }}
+        onOpenPartyGame={() => setShowPartyGame(true)}
       />
 
       {/* Main Content Area */}
@@ -387,21 +389,15 @@ export default function App() {
 
         {/* TAB 2: 일정표 — 가이드가 보낸 .txt 파일을 올려서 오프라인으로 봅니다 */}
         {activeTab === 'itinerary' && (
-          <div className="space-y-4">
-            <ItineraryTab
-              country={selectedCountry}
-              onOpenBillboard={setBillboardPhrase}
-              onJumpToCategory={(category) => {
-                setSelectedCategory(category);
-                setSearchQuery('');
-                setActiveTab('translate');
-              }}
-            />
-
-            {/* 파티 게임 — 탭을 하나 더 늘리는 대신 일정 아래에 둡니다.
-                하루 일정을 확인하는 자리가 곧 "저녁에 뭐 하지" 를 정하는 자리입니다. */}
-            <PartyGameCard />
-          </div>
+          <ItineraryTab
+            country={selectedCountry}
+            onOpenBillboard={setBillboardPhrase}
+            onJumpToCategory={(category) => {
+              setSelectedCategory(category);
+              setSearchQuery('');
+              setActiveTab('translate');
+            }}
+          />
         )}
 
         {/* TAB 3: 저장됨 (북마크) */}
@@ -605,6 +601,9 @@ export default function App() {
       {showPhotoModal && (
         <PhotoTranslateModal country={selectedCountry} onClose={() => setShowPhotoModal(false)} />
       )}
+
+      {/* 파티 게임 — 헤더 아이콘에서 탭 갈아타지 않고 바로 뜹니다 */}
+      {showPartyGame && <PartyGameModal onClose={() => setShowPartyGame(false)} />}
 
     </div>
   );

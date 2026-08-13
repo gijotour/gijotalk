@@ -104,15 +104,12 @@ describe('App — 조립 검증', () => {
     expect(screen.getByText(/아직 저장된 문장이 없습니다/)).toBeInTheDocument();
   });
 
-  it('일정 탭 아래에 파티 게임이 있고, 열고 닫을 수 있다', async () => {
+  it('헤더의 파티 게임 아이콘으로 탭 이동 없이 바로 열고 닫을 수 있다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
-    // 게임은 탭이 아니라 일정 아래에 붙어 있습니다. 회화 화면에는 나오면 안 됩니다.
-    expect(screen.queryByRole('button', { name: '게임 시작' })).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: '일정' }));
-    await user.click(screen.getByRole('button', { name: '게임 시작' }));
+    // 긴급과 같은 성격의 버튼이라 헤더에 항상 떠 있습니다 — 탭을 옮길 필요가 없습니다.
+    await user.click(screen.getByRole('button', { name: '파티 게임 실행' }));
 
     const dialog = screen.getByRole('dialog', { name: 'GIJO Drink 파티 게임' });
     // 게임 주소는 배포 위치를 따라가야 합니다. '/game/…' 로 박으면 Pages 서브패스에서

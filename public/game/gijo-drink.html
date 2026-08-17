@@ -1340,15 +1340,31 @@ textarea:focus {
     align-items: center;
 }
 
+/* 맥주잔 — 원래 쓰던 beer_glass_neon.png 가 사실 투명도 없는 jpg라 배경 자리에
+   체크무늬가 그대로 박혀 있었다. 이미지 대신 순수 CSS 도형(테두리+그라디언트)으로
+   다시 그렸다 — 색은 원본 이미지와 같은 사이언 유리 + 호박색 술. */
 .beer-glass {
-    width: clamp(180px, 35vw, 240px);
+    width: clamp(170px, 33vw, 220px);
     height: clamp(280px, 45vh, 420px);
     position: relative;
-    background-image: url('beer_glass_neon.png');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: drop-shadow(0 0 35px rgba(0, 243, 255, 0.45));
+    border: 3px solid var(--secondary-neon);
+    border-top: none;
+    border-radius: 0 0 26px 26px;
+    background: linear-gradient(180deg, rgba(0, 243, 255, 0.1), rgba(0, 243, 255, 0.02));
+    filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.4));
+    overflow: hidden;
+}
+
+.beer-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    border-top: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .beer-liquid {
@@ -1375,18 +1391,19 @@ textarea:focus {
     box-shadow: 0 -2px 5px rgba(255,255,255,0.8);
 }
 
+/* 소주잔도 beer-glass 와 같은 이유로 이미지 대신 CSS 도형. */
 .soju-cup {
     position: absolute;
     width: clamp(70px, 13vw, 95px);
     height: clamp(85px, 16vw, 115px);
     left: 50%;
     transform: translateX(-50%);
-    background-image: url('soju_cup_neon.png');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border: 2.5px solid var(--secondary-neon);
+    border-radius: 4px 4px 10px 10px;
+    background: linear-gradient(180deg, rgba(0, 243, 255, 0.08), rgba(0, 243, 255, 0.02));
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 16px rgba(0, 243, 255, 0.35);
     transition: top 0.4s ease-out;
+    overflow: hidden;
 }
 
 .soju-liquid {

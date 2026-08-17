@@ -1,5 +1,5 @@
 {
-  "name": "GIJO Tour(PH)",
+  "name": "GIJO Tour",
   "description": "지아이조 투어에서 제공하는 일정표 및 생활영어 · 오프라인 PWA.",
   "requestFramePermissions": [
     "microphone"

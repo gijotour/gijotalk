@@ -1,5 +1,5 @@
 // 이 파일은 `npm run audio` 가 자동 생성합니다. 직접 수정하지 마세요.
-// 생성 백엔드: espeak
+// 생성 백엔드: google
 
 import { BASE_URL } from '../utils/env';
 
@@ -10,7 +10,7 @@ export const AUDIO_BASE = `${BASE_URL}audio`;
  * 오디오 내용의 판 번호. 파일 하나라도 바뀌면 달라집니다.
  * 기기에 저장해 둔 오디오를 언제 갈아치울지 판단하는 데 씁니다.
  */
-export const AUDIO_REVISION = 'eb574f44';
+export const AUDIO_REVISION = 'a391a8d5';
 
 /** 사전 생성된 오디오가 있는 문장 id → 상대 경로 */
 export const AUDIO_FILES: Record<string, string> = {
@@ -436,6 +436,12 @@ export const AUDIO_FILES: Record<string, string> = {
   'vn-soc-11': 'vn/vn-soc-11.mp3',
   'vn-soc-12': 'vn/vn-soc-12.mp3',
   'vn-soc-13': 'vn/vn-soc-13.mp3',
+  'vn-soc-14': 'vn/vn-soc-14.mp3',
+  'vn-soc-15': 'vn/vn-soc-15.mp3',
+  'vn-soc-16': 'vn/vn-soc-16.mp3',
+  'vn-soc-17': 'vn/vn-soc-17.mp3',
+  'vn-soc-18': 'vn/vn-soc-18.mp3',
+  'vn-soc-19': 'vn/vn-soc-19.mp3',
   'vn-spa-01': 'vn/vn-spa-01.mp3',
   'vn-spa-02': 'vn/vn-spa-02.mp3',
   'vn-spa-03': 'vn/vn-spa-03.mp3',

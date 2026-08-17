@@ -3,11 +3,12 @@ import { Phrase } from '../types';
 /**
  * 베트남 — 미팅/사교 및 욕설/은어.
  *
- * ── 미팅/사교
+ * ── 미팅/사교 (6 → 25, 필리핀과 동일)
  *   기존 6개(data/phrases.ts)는 호감 표현 위주였습니다. 여기서는 필리핀판과
- *   같은 축 — 인사 → 스몰토크 → 약속 → 정중한 거절 — 로 채워 실제 대화가
- *   이어지고, 원치 않는 접근은 안전하게 끊을 수 있게 균형을 맞췄습니다.
- *   특히 "정중한 거절" 묶음은 기존 6개에 전혀 없던 안전 관련 공백이었습니다.
+ *   같은 축 — 인사 → 스몰토크 → 칭찬/도움/축하 → 약속 → 정중한 거절 — 로
+ *   채워 실제 대화가 이어지고, 원치 않는 접근은 안전하게 끊을 수 있게
+ *   균형을 맞췄습니다. 특히 "정중한 거절" 묶음은 기존 6개에 전혀 없던
+ *   안전 관련 공백이었습니다.
  *
  * ── 욕설/은어
  *   ⚠️ 이 카테고리의 1순위 용도는 "말하기"가 아니라 "알아듣기"입니다.
@@ -100,6 +101,68 @@ export const VN_SOCIAL_PHRASES: Phrase[] = [
     pronunciation: '[아잉/찌 똣 꽈. 깜 언 다 줍 도]',
     toneGuide: '진심 어린 감사',
     usageTip: '도움을 받은 뒤에 쓰면 관계가 확 가까워집니다.',
+  },
+
+  // [미팅/사교] — 칭찬 · 도움 · 축하
+  {
+    id: 'vn-soc-14',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Anh/Chị nói tiếng Anh giỏi quá!',
+    translation: '영어를 정말 잘하시네요!',
+    pronunciation: '[아잉/찌 노이 띠엥 아잉 조이 꽈!]',
+    toneGuide: '칭찬',
+    usageTip: '대화가 매끄럽게 이어질 때 건네는 자연스러운 칭찬입니다.',
+  },
+  {
+    id: 'vn-soc-15',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Vâng, rất vui được gặp anh/chị.',
+    translation: '네, 만나서 반가워요.',
+    pronunciation: '[벙, 젓 부이 드억 갑 아잉/찌]',
+    toneGuide: '인사 응답',
+    usageTip: '소개를 받았거나 첫인사를 나눌 때 자연스러운 응답입니다.',
+  },
+  {
+    id: 'vn-soc-16',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Để tôi giúp anh/chị một tay.',
+    translation: '제가 도와드릴게요.',
+    pronunciation: '[데 또이 줍 아잉/찌 못 따이]',
+    toneGuide: '도움 제안',
+    usageTip: '짐을 들거나 길을 헤매는 사람을 보면 먼저 건네보세요.',
+  },
+  {
+    id: 'vn-soc-17',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Chúc mừng nhé!',
+    translation: '축하해요!',
+    pronunciation: '[쭉 등 냬!]',
+    toneGuide: '축하 인사',
+    usageTip: '생일·결혼·좋은 소식을 들었을 때 씁니다.',
+  },
+  {
+    id: 'vn-soc-18',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Đây là số điện thoại của tôi.',
+    translation: '제 전화번호예요.',
+    pronunciation: '[더이 라 소 디엔 토아이 꾸어 또이]',
+    toneGuide: '연락처 교환',
+    usageTip: 'Zalo 대신 전화번호를 직접 주고받을 때도 있습니다. 숫자를 적어서 보여주면 더 확실합니다.',
+  },
+  {
+    id: 'vn-soc-19',
+    countryId: 'vn',
+    category: '미팅/사교',
+    original: 'Lần sau đi chơi cùng nhau nhé.',
+    translation: '다음에 다 같이 놀러 가요.',
+    pronunciation: '[런 사우 디 쩌이 꿍 냐우 냬]',
+    toneGuide: '그룹 제안',
+    usageTip: '여럿이 함께 있을 때 자연스러운 마무리 인사입니다. 1:1 약속보다 부담이 적습니다.',
   },
 
   // [미팅/사교] — 약속 잡기

@@ -48,7 +48,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
       />
 
       <h1 className="mt-5 text-lg font-black text-slate-900 font-['Montserrat'] tracking-tight">
-        GIJO Tour(PH)
+        GIJO Tour
       </h1>
       <p className="mt-1 text-xs font-bold text-ink-mute">일정표 및 생활영어</p>
 

@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div className="min-w-0">
           <h1 className="text-base sm:text-lg font-black tracking-tight text-ink font-display whitespace-nowrap">
-            GIJO Tour(PH)
+            GIJO Tour
           </h1>
           {/* 좁은 화면에서는 숨깁니다 — 이 줄이 제목을 밀어내던 주범입니다. */}
           <p className="text-xs text-ink-mute font-medium whitespace-nowrap hidden md:block">

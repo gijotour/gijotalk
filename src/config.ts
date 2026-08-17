@@ -27,11 +27,10 @@ import { EN_FOOD_PHRASES } from './data/phrases.en.food';
  * 2개 이상이면 다시 드롭다운으로 돌아옵니다. 지금은 3개(필리핀·영어·베트남)라
  * 드롭다운입니다.
  *
- * 베트남 오디오는 espeak-ng(오픈소스 합성기)로 생성했습니다 — say/Google 의
- * 자연스러운 목소리에 비해 기계음에 가깝지만, 발음은 정확하고 완전 오프라인
- * 재생이 됩니다. 더 자연스러운 목소리로 바꾸려면
- * `npm run audio -- --backend=google --lang=vn --force` (GOOGLE_TTS_API_KEY 필요)
- * 또는 macOS 에서 `npm run audio -- --lang=vn --force` 를 실행하세요.
+ * 베트남 오디오는 Google Cloud TTS(vi-VN-Wavenet-A)로 생성했습니다 — 필리핀·
+ * 영어와 같은 수준의 자연스러운 목소리입니다. 처음엔 이 환경(리눅스, macOS
+ * `say` 도 Google 키도 없음)에서 espeak-ng(오픈소스 포먼트 합성기)로 임시
+ * 생성했었는데, 기계음에 가까웠던 걸 Google 키를 받아 교체했습니다.
  */
 export const ENABLED_COUNTRY_IDS: CountryId[] = ['ph', 'en', 'vn'];
 

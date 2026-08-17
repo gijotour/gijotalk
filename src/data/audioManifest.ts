@@ -1,5 +1,5 @@
 // 이 파일은 `npm run audio` 가 자동 생성합니다. 직접 수정하지 마세요.
-// 생성 백엔드: espeak
+// 생성 백엔드: google
 
 import { BASE_URL } from '../utils/env';
 
@@ -10,7 +10,7 @@ export const AUDIO_BASE = `${BASE_URL}audio`;
  * 오디오 내용의 판 번호. 파일 하나라도 바뀌면 달라집니다.
  * 기기에 저장해 둔 오디오를 언제 갈아치울지 판단하는 데 씁니다.
  */
-export const AUDIO_REVISION = '87cbdd90';
+export const AUDIO_REVISION = 'a391a8d5';
 
 /** 사전 생성된 오디오가 있는 문장 id → 상대 경로 */
 export const AUDIO_FILES: Record<string, string> = {

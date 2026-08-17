@@ -178,13 +178,22 @@ h2.neon-text {
     margin-bottom: 8px;
 }
 
+/* 볼드 벤토 — 균등한 6칸 대신 위계를 준다.
+   "시간 폭탄"을 대표 칸으로 키우고, 각 칸 색은 그 모드의 실제 게임
+   화면 색과 맞췄다(크로커다일→초록 습지, 타이타닉→맥주 호박색,
+   손가락 사다리→보라, 폭탄→빨강/주황 폭발). 메뉴에서 본 색이 게임
+   안에서도 이어지도록 하기 위함. JS 의 app.navigate() 호출은
+   손대지 않았다 — 클래스만 다시 그렸다. */
 .quad-menu {
     width: 100%;
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    gap: 2px;
+    grid-template-columns: 1.15fr 1fr;
+    grid-template-rows: repeat(3, minmax(0, 1fr)) auto;
+    gap: 6px;
+    /* 하단 여백은 footer-copyright(고정, z-index:100)가 배너 칸 위에
+       겹치지 않도록 남겨둔 것입니다. */
+    padding: 0 6px clamp(22px, 5vw, 30px);
 }
 
 .quad-btn {
@@ -193,54 +202,92 @@ h2.neon-text {
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 3px;
     font-family: var(--font-main);
-    color: #fff;
-    background: rgba(255, 255, 255, 0.03);
+    /* ::before 가 대각선 아래쪽만 색을 채우므로, 버튼 자체에도 어두운 배경을
+       깔아둡니다. 안 그러면 브라우저 기본 <button> 배경(밝은 회색)이
+       대각선 위쪽 빈 부분에 그대로 드러납니다. */
+    background: #0d0d10;
     position: relative;
-    transition: background 0.15s ease;
-    padding: 10px;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: clamp(10px, 3vw, 16px);
+    text-align: left;
+    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
 .quad-btn:active {
-    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.96);
+}
+
+.quad-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 100%, 100% 100%, 100% 12%, 0 48%);
+    z-index: 0;
+}
+
+.quad-icon, .quad-label-en, .quad-label-kr {
+    position: relative;
+    z-index: 1;
 }
 
 .quad-icon {
-    font-size: clamp(2.2rem, 11vw, 3.5rem);
+    font-size: clamp(1.5rem, 6vw, 2rem);
     line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 
 .quad-label-en {
-    font-size: clamp(0.95rem, 4vw, 1.3rem);
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-size: clamp(0.82rem, 3.2vw, 1rem);
+    font-weight: 800;
+    letter-spacing: -0.005em;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
 }
 
 .quad-label-kr {
-    font-size: clamp(0.75rem, 3.2vw, 1rem);
-    color: #bbb;
+    font-size: clamp(0.66rem, 2.5vw, 0.78rem);
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
-.quad-1 { box-shadow: inset 0 0 30px rgba(255, 0, 85, 0.18); border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.quad-1 .quad-icon, .quad-1 .quad-label-en { text-shadow: 0 0 14px var(--primary-neon); }
+.quad-1 { grid-column: 2; grid-row: 1; }
+.quad-2 { grid-column: 2; grid-row: 2; }
+.quad-4 { grid-column: 1; grid-row: 3; }
+.quad-5 { grid-column: 2; grid-row: 3; }
 
-.quad-2 { box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.18); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.quad-2 .quad-icon, .quad-2 .quad-label-en { text-shadow: 0 0 14px var(--secondary-neon); }
+/* 시간 폭탄 — 두 행을 차지하는 대표 칸 */
+.quad-3 {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    padding: clamp(14px, 4vw, 20px);
+}
+.quad-3 .quad-icon { font-size: clamp(2.2rem, 8vw, 3rem); }
+.quad-3 .quad-label-en { font-size: clamp(1rem, 4vw, 1.25rem); }
 
-.quad-3 { box-shadow: inset 0 0 30px rgba(162, 0, 255, 0.18); border-right: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.quad-3 .quad-icon, .quad-3 .quad-label-en { text-shadow: 0 0 14px var(--tertiary-neon); }
+/* 손가락 사다리 — 하단 전체 폭 배너 */
+.quad-6 {
+    grid-column: 1 / 3;
+    grid-row: 4;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+}
+.quad-6::before { clip-path: none; }
+.quad-6 .quad-icon { font-size: clamp(1.2rem, 4.5vw, 1.5rem); }
 
-.quad-4 { box-shadow: inset 0 0 30px rgba(255, 170, 0, 0.18); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.quad-4 .quad-icon, .quad-4 .quad-label-en { text-shadow: 0 0 14px #ffaa00; }
-
-.quad-5 { box-shadow: inset 0 0 30px rgba(0, 255, 170, 0.18); border-right: 1px solid rgba(255,255,255,0.08); }
-.quad-5 .quad-icon, .quad-5 .quad-label-en { text-shadow: 0 0 14px #00ffaa; }
-
-.quad-6 { box-shadow: inset 0 0 30px rgba(255, 0, 170, 0.18); }
-.quad-6 .quad-icon, .quad-6 .quad-label-en { text-shadow: 0 0 14px #ff00aa; }
+.quad-1::before { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); }
+.quad-2::before { background: linear-gradient(120deg, #3ed973, #c4ff4d); }
+.quad-3::before { background: linear-gradient(135deg, #ff7b00, var(--primary-neon)); }
+.quad-4::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
+.quad-5::before { background: linear-gradient(120deg, #ffaa00, #ffe14d); }
+.quad-6::before { background: linear-gradient(90deg, #ff4dd8, var(--tertiary-neon)); }
 
 .btn {
     font-family: var(--font-main);

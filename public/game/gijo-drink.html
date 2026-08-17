@@ -497,6 +497,21 @@ h2.neon-text {
     min-height: 2rem;
     text-shadow: 0 0 10px var(--secondary-neon);
     text-align: center;
+    /* 한글은 기본 word-break 로는 음절 중간(마셔/라 처럼)에서도 줄바꿈된다.
+       영어 보조줄이 붙으며 줄바꿈이 잦아져 더 눈에 띄길래 추가했다. */
+    word-break: keep-all;
+}
+
+/* 한글 문장 아래에 붙는 영어 보조줄 — 외국인 참가자도 무슨 상황인지 읽을 수 있게.
+   한글보다 작지만(.title-kr 만큼 작지는 않게) 또렷이 읽히는 크기로 뒀다. */
+.i18n-sub {
+    display: block;
+    font-size: 0.6em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-shadow: none;
+    letter-spacing: 0.01em;
+    margin-top: 4px;
 }
 
 /* Bomb */
@@ -1452,6 +1467,7 @@ textarea:focus {
     color: var(--tertiary-neon);
     text-shadow: 0 0 10px var(--tertiary-neon);
     margin-bottom: 12px;
+    word-break: keep-all;
 }
 
 .bridge-area {
@@ -1464,60 +1480,98 @@ textarea:focus {
     overflow: hidden;
 }
 
-.bridge-player-node {
+/* 손가락 사다리 노드 — 원 대신 하트 모양(SVG). 색은 div 의 border/background 가
+   아니라 안의 .heart-svg 에 fill/stroke 로 준다 — border-radius 를 안 쓰므로. */
+.bridge-player-node,
+.bridge-target-node {
     position: absolute;
-    width: clamp(70px, 15vw, 95px);
-    height: clamp(70px, 15vw, 95px);
-    border-radius: 50%;
-    border: 3px solid var(--tertiary-neon);
-    transform: translate(-50%, -50%);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+}
+
+.bridge-player-node {
+    width: clamp(72px, 15vw, 96px);
+    height: clamp(72px, 15vw, 96px);
+    transform: translate(-50%, -50%);
+}
+
+.bridge-player-node .heart-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: rgba(162, 0, 255, 0.28);
+    stroke: var(--tertiary-neon);
+    stroke-width: 1;
+    filter: drop-shadow(0 0 12px rgba(162, 0, 255, 0.55));
+    transition: fill 0.2s, stroke 0.2s;
+}
+
+.bridge-player-node .node-label {
+    position: relative;
+    z-index: 1;
+    margin-top: 12%;
     font-weight: 800;
+    font-size: clamp(0.85rem, 3vw, 1rem);
     color: #fff;
     text-shadow: 0 0 8px var(--tertiary-neon);
-    box-shadow: 0 0 20px rgba(162, 0, 255, 0.4);
-    background: rgba(162, 0, 255, 0.15);
+}
+
+.bridge-player-node.marked .heart-svg {
+    fill: rgba(255, 0, 85, 0.55);
+    stroke: var(--primary-neon);
+    filter: drop-shadow(0 0 18px var(--primary-neon));
 }
 
 .bridge-line {
     position: absolute;
     height: 4px;
+    width: 0;
     background: linear-gradient(90deg, var(--tertiary-neon), var(--primary-neon));
     transform-origin: 0 50%;
     box-shadow: 0 0 8px var(--tertiary-neon);
     z-index: 1;
+    /* 즉시 나타나지 않고 실제로 "그어지는" 느낌을 준다 — 아미다쿠지류 앱들이
+       공통으로 쓰는 트레이싱 연출. */
+    transition: width var(--bridge-draw-ms, 0.75s) cubic-bezier(0.3, 0.1, 0.2, 1);
 }
 
 .bridge-target-node {
-    position: absolute;
-    bottom: 25px;
-    width: clamp(80px, 20vw, 110px);
-    height: clamp(40px, 10vw, 55px);
-    border-radius: 12px;
-    border: 2px solid var(--primary-neon);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: #fff;
+    bottom: clamp(30px, 8vh, 60px);
+    width: clamp(64px, 14vw, 86px);
+    height: clamp(64px, 14vw, 86px);
     transform: translateX(-50%);
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
-    background: rgba(255, 0, 85, 0.1);
-    font-size: 0.8rem;
-    text-align: center;
 }
 
-.bridge-target-node.loser {
-    background: rgba(255, 0, 85, 0.6);
-    box-shadow: 0 0 35px var(--primary-neon);
+.bridge-target-node .heart-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: rgba(255, 0, 85, 0.12);
+    stroke: var(--primary-neon);
+    stroke-width: 1;
+    filter: drop-shadow(0 0 14px rgba(255, 0, 85, 0.4));
+    transition: fill 0.25s, filter 0.25s;
+}
+
+.bridge-target-node .node-label {
+    position: relative;
+    z-index: 1;
+    margin-top: 10%;
+    font-size: clamp(1.3rem, 6vw, 1.7rem);
+}
+
+.bridge-target-node.loser .heart-svg {
+    fill: rgba(255, 0, 85, 0.75);
+    filter: drop-shadow(0 0 30px var(--primary-neon));
     animation: node-pulse 0.4s infinite alternate;
 }
 
 @keyframes node-pulse {
-    from { transform: translateX(-50%) scale(1); }
-    to { transform: translateX(-50%) scale(1.1); }
+    from { transform: scale(1); }
+    to { transform: scale(1.12); }
 }
 
 /* Footer */
@@ -1612,7 +1666,7 @@ textarea:focus {
                 <div class="bomb-touch-label">TOUCH!</div>
                 <div class="timer" id="bomb-timer">00:00</div>
             </div>
-            <button class="btn neon-btn" id="start-bomb-btn" onclick="app.startBomb()">Start Game</button>
+            <button class="btn neon-btn" id="start-bomb-btn" onclick="app.startBomb()">게임 시작 · Start</button>
             <div id="bomb-result" class="result-text"></div>
         </section>
 
@@ -1718,7 +1772,7 @@ textarea:focus {
         <section id="screen-bridge" class="screen hidden bridge-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
             <h2 class="neon-text">Finger Bridge<br><span class="title-kr">손가락 사다리</span></h2>
-            <div class="bridge-instructions" id="bridge-msg">화면에 손가락을 모두 올려주세요!</div>
+            <div class="bridge-instructions" id="bridge-msg">화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span></div>
             <div id="bridge-area" class="bridge-area"></div>
         </section>
 
@@ -1845,6 +1899,15 @@ const haptics = {
     buildUp() { this.vibrate([60, 40, 60, 40, 80]); },
     loser() { this.vibrate([0, 120, 60, 200, 80, 350]); }
 };
+
+// 손가락 사다리의 연결점(플레이어·타겟 노드) 모양 — 24x24 하트 아이콘 path.
+// viewBox 로 요소 크기에 자동으로 맞춰지므로 clamp() 반응형 크기와 그대로 호환된다.
+const BRIDGE_HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+
+function bridgeHeartHTML(labelText) {
+    const label = labelText ? `<span class="node-label">${labelText}</span>` : '';
+    return `<svg class="heart-svg" viewBox="0 0 24 24"><path d="${BRIDGE_HEART_PATH}"/></svg>${label}`;
+}
 
 const app = {
     currentScreen: 'main',
@@ -2305,9 +2368,9 @@ const app = {
         const screen = document.getElementById('screen-bomb');
         if (screen) screen.classList.remove('bomb-screen-panic');
         document.getElementById('bomb-timer').innerText = '00:00';
-        document.getElementById('bomb-result').innerText = '';
+        document.getElementById('bomb-result').innerHTML = '';
         document.getElementById('start-bomb-btn').style.display = 'block';
-        document.getElementById('start-bomb-btn').innerText = '게임 시작';
+        document.getElementById('start-bomb-btn').innerText = '게임 시작 · Start';
     },
 
     startBomb() {
@@ -2322,7 +2385,8 @@ const app = {
         // Random time between 15 and 30 seconds
         this.bombTimeLeft = 15 + Math.floor(Math.random() * 15);
         this.isBombActive = true;
-        document.getElementById('bomb-result').innerText = '화면의 폭탄을 터치해서 넘기세요!';
+        document.getElementById('bomb-result').innerHTML =
+            '화면의 폭탄을 터치해서 넘기세요!<span class="i18n-sub">Touch the bomb to pass it on!</span>';
         
         this.updateBombDisplay();
         
@@ -2381,25 +2445,28 @@ const app = {
 
         // 35% Chance of a sudden pass mission card
         const passMissions = [
-            "오른쪽 사람 이름 부르며 넘기기! 🗣️",
-            "윙크하면서 패스하기! 😉",
-            "3초간 얼음 후 넘기기! ❄️",
-            "손가락 하트 발사하고 패스! 🫶",
-            "하이파이브하고 넘기기! ✋",
-            "애교 부리면서 패스하기! 💕",
-            "양손으로 정중히 전달하기! 🙇"
+            { kr: '오른쪽 사람 이름 부르며 넘기기! 🗣️', en: "Call out the name of the person on your right!" },
+            { kr: '윙크하면서 패스하기! 😉', en: 'Pass while winking!' },
+            { kr: '3초간 얼음 후 넘기기! ❄️', en: 'Freeze for 3 seconds, then pass!' },
+            { kr: '손가락 하트 발사하고 패스! 🫶', en: 'Make a finger heart, then pass!' },
+            { kr: '하이파이브하고 넘기기! ✋', en: 'High-five, then pass!' },
+            { kr: '애교 부리면서 패스하기! 💕', en: 'Pass while acting extra cute (aegyo)!' },
+            { kr: '양손으로 정중히 전달하기! 🙇', en: 'Pass it with both hands, respectfully!' }
         ];
 
         if (Math.random() < 0.35 && this.bombTimeLeft > 4) {
             const mission = passMissions[Math.floor(Math.random() * passMissions.length)];
-            document.getElementById('bomb-result').innerText = `🚨 돌발 미션: ${mission}`;
+            document.getElementById('bomb-result').innerHTML =
+                `🚨 돌발 미션: ${mission.kr}<span class="i18n-sub">🚨 Surprise mission: ${mission.en}</span>`;
             // Mini vibration alert
             haptics.buildUp();
         } else {
-            document.getElementById('bomb-result').innerText = '폭탄이 옆 사람에게 패스되었습니다! 💣';
+            document.getElementById('bomb-result').innerHTML =
+                '폭탄이 옆 사람에게 패스되었습니다! 💣<span class="i18n-sub">Passed to the next player! 💣</span>';
             setTimeout(() => {
                 if (this.isBombActive && document.getElementById('bomb-result').innerText.includes('패스')) {
-                    document.getElementById('bomb-result').innerText = '화면의 폭탄을 터치해서 넘기세요!';
+                    document.getElementById('bomb-result').innerHTML =
+                        '화면의 폭탄을 터치해서 넘기세요!<span class="i18n-sub">Touch the bomb to pass it on!</span>';
                 }
             }, 1200);
         }
@@ -2415,12 +2482,13 @@ const app = {
         const screen = document.getElementById('screen-bomb');
         if (screen) screen.classList.remove('bomb-screen-panic');
         document.getElementById('bomb-timer').innerText = '💥 BOOM! 💥';
-        document.getElementById('bomb-result').innerText = '💥 펑! 당신 차례에 터졌습니다! 마셔라! 💥';
+        document.getElementById('bomb-result').innerHTML =
+            '💥 펑! 당신 차례에 터졌습니다! 마셔라! 💥<span class="i18n-sub">It exploded on your turn — drink up! 💥</span>';
         haptics.loser();
-        
+
         setTimeout(() => {
             document.getElementById('start-bomb-btn').style.display = 'block';
-            document.getElementById('start-bomb-btn').innerText = '다시 하기';
+            document.getElementById('start-bomb-btn').innerText = '다시 하기 · Retry';
         }, 2000);
     },
 
@@ -2840,8 +2908,9 @@ const app = {
         this.bridgeNodes = [];
         this.bridgeLoserIndex = -1;
         this.bridgeIsActive = false;
-        document.getElementById('bridge-msg').innerText = '화면에 손가락을 모두 올려주세요!';
-        
+        document.getElementById('bridge-msg').innerHTML =
+            '화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span>';
+
         this.teardownBridgeEvents();
         
         this.handleBridgeStart = this.handleBridgeStart.bind(this);
@@ -2880,7 +2949,7 @@ const app = {
             node.className = 'bridge-player-node';
             node.style.left = `${x}px`;
             node.style.top = `${y}px`;
-            node.innerText = `P${i + 1}`;
+            node.innerHTML = bridgeHeartHTML(`P${i + 1}`);
             area.appendChild(node);
             
             this.bridgeNodes.push({ x, y, el: node });
@@ -2899,54 +2968,70 @@ const app = {
     runBridgeGame() {
         this.bridgeIsActive = true;
         const area = document.getElementById('bridge-area');
-        document.getElementById('bridge-msg').innerText = '사다리 연결 중...';
-        
+        document.getElementById('bridge-msg').innerHTML =
+            '사다리 연결 중...<span class="i18n-sub">Connecting the ladder...</span>';
+
+        // 아미다쿠지(사다리 타기) 류 앱들은 선이 "그어지는" 트레이싱 애니메이션으로
+        // 서스펜스를 만든다 — 예전엔 지연 없이 즉시 나타나서 그 느낌이 없었다.
+        // START_DELAY: 노드가 뜨고 첫 선이 그어지기 전 준비 텀
+        // STAGGER_MS : 각 선이 시작하는 간격
+        // DRAW_MS    : 한 선이 다 그어지는 데 걸리는 시간 (.bridge-line 의 transition 과 일치)
+        // REVEAL_PAUSE_MS: 마지막 선이 다 그어진 뒤 결과를 보여주기 전 텀
+        const START_DELAY = 500;
+        const STAGGER_MS = 420;
+        const DRAW_MS = 750;
+        const REVEAL_PAUSE_MS = 550;
+
         // Create target (loser) node at bottom center
         const rect = area.getBoundingClientRect();
         const targetX = rect.width / 2;
         const targetY = rect.height - 50;
-        
+
         const targetNode = document.createElement('div');
         targetNode.className = 'bridge-target-node';
         targetNode.style.left = `${targetX}px`;
-        targetNode.innerText = '벌칙';
+        targetNode.innerHTML = bridgeHeartHTML();
         area.appendChild(targetNode);
-        
+
         // Determine random loser node
         this.bridgeLoserIndex = Math.floor(Math.random() * this.bridgeNodes.length);
-        
-        // Animate laser bridges from all nodes to target
+
+        // Animate laser bridges from all nodes to target — each starts on its own
+        // stagger, then visually draws over DRAW_MS via the .bridge-line CSS transition.
         this.bridgeNodes.forEach((node, i) => {
             const line = document.createElement('div');
             line.className = 'bridge-line';
             line.style.left = `${node.x}px`;
             line.style.top = `${node.y}px`;
-            
+            line.style.setProperty('--bridge-draw-ms', `${DRAW_MS}ms`);
+
             // Calculate distance & angle to target
             const dx = targetX - node.x;
             const dy = targetY - node.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-            
+
             line.style.transform = `rotate(${angle}deg)`;
             area.appendChild(line);
-            
-            // Animate length
+
             setTimeout(() => {
                 line.style.width = `${dist}px`;
                 soundFX.playTick(true);
                 haptics.tick();
-            }, 100 + (i * 150));
+            }, START_DELAY + (i * STAGGER_MS));
         });
-        
-        // Trigger explosion at target Node for loser line completion
+
+        // Reveal — after the last line finishes drawing, pause a beat, then show the loser.
+        const revealAt = START_DELAY + ((this.bridgeNodes.length - 1) * STAGGER_MS) + DRAW_MS + REVEAL_PAUSE_MS;
         setTimeout(() => {
+            const loserNum = this.bridgeLoserIndex + 1;
             targetNode.classList.add('loser');
-            targetNode.innerText = `💥 P${this.bridgeLoserIndex + 1} 벌칙!`;
+            this.bridgeNodes[this.bridgeLoserIndex].el.classList.add('marked');
             soundFX.playBigBoom();
             haptics.loser();
-            document.getElementById('bridge-msg').innerText = '사다리 타기 결과!';
-        }, 150 + (this.bridgeNodes.length * 150));
+            document.getElementById('bridge-msg').innerHTML =
+                `💥 P${loserNum} 벌칙!<span class="i18n-sub">P${loserNum} loses — drink up! 🍻</span>`;
+        }, revealAt);
     }
 };
 

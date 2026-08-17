@@ -26,8 +26,12 @@ const intentionallySilent = (toneGuide?: string, original?: string) =>
  * "대기 중"으로만 집계합니다. macOS 에서 `npm run audio` 를 돌리거나 Google
  * TTS 백엔드로 생성한 뒤 여기서 빼면, 그 다음부터는 이 나라도 다른 나라와
  * 똑같이 엄격하게 검사됩니다.
+ *
+ * 베트남은 espeak-ng 백엔드(리눅스에서도 동작)로 생성을 마쳐서 뺐습니다.
+ * 기계음에 가까우니 say/Google 로 다시 만들면 `npm run audio -- --backend=google
+ * --lang=vn --force` 로 교체하세요.
  */
-const AUDIO_PENDING_COUNTRIES = new Set(['vn']);
+const AUDIO_PENDING_COUNTRIES = new Set<string>([]);
 
 const problems: string[] = [];
 let expected = 0;

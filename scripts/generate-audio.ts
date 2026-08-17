@@ -17,6 +17,11 @@
  *            (인도네시아어는 타갈로그와 같은 오스트로네시아어족이라 모음 체계가 거의 같습니다)
  *   google : Google Cloud TTS. fil-PH 실제 필리핀어 음성이 있어 품질이 가장 좋습니다.
  *            GOOGLE_TTS_API_KEY 환경변수가 필요합니다.
+ *   espeak : espeak-ng(리눅스에서도 동작하는 오픈소스 포먼트 합성기) + ffmpeg.
+ *            macOS 도 Google 키도 없는 환경(예: 리눅스 CI 컨테이너)에서 쓰는
+ *            임시 대안입니다. 발음 규칙은 정확하지만 기계음에 가깝게 들립니다
+ *            — say/Google 이 가능해지면 `--force` 로 다시 만들어 교체하세요.
+ *            `apt install espeak-ng ffmpeg` 필요.
  */
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -42,7 +47,7 @@ const args = process.argv.slice(2);
 const flag = (name: string, fallback = '') =>
   args.find((a) => a.startsWith(`--${name}=`))?.split('=')[1] ?? fallback;
 
-const BACKEND = flag('backend', 'say') as 'say' | 'google';
+const BACKEND = flag('backend', 'say') as 'say' | 'google' | 'espeak';
 const LANG_FILTER = flag('lang', 'all');
 const FORCE = args.includes('--force');
 
@@ -146,6 +151,13 @@ const GOOGLE_VOICE: Record<string, { languageCode: string; name: string }> = {
   'tl-PH': { languageCode: 'fil-PH', name: 'fil-PH-Wavenet-A' },
   'vi-VN': { languageCode: 'vi-VN', name: 'vi-VN-Wavenet-A' },
   'th-TH': { languageCode: 'th-TH', name: 'th-TH-Neural2-C' },
+};
+
+// espeak-ng 음성. `espeak-ng --voices=<lang>` 로 설치된 목록을 확인합니다.
+// 베트남어는 북/중/중남부 세 변종이 있는데, 하노이 표준어에 가장 가까운
+// 북부(vi)를 기본으로 씁니다.
+const ESPEAK_VOICE: Record<string, { voice: string; rate: number }> = {
+  'vi-VN': { voice: 'vi', rate: 150 },
 };
 
 /* ------------------------------------------------------------------ */
@@ -253,6 +265,36 @@ async function synthesizeWithGoogle(text: string, langCode: string, outPath: str
   await writeFile(outPath.replace(/\.m4a$/, '.mp3'), Buffer.from(audioContent, 'base64'));
 }
 
+async function synthesizeWithEspeak(text: string, langCode: string, outPath: string) {
+  const spec = ESPEAK_VOICE[langCode];
+  if (!spec) throw new Error(`espeak-ng 음성 매핑 없음: ${langCode}`);
+
+  // ⚠️ ffmpeg 로 뽑은 AAC/M4A(.m4a)는 ffprobe 로는 멀쩡해 보여도 크롬의 내장
+  //    디먹서(FFmpegDemuxer)가 DEMUXER_ERROR_NO_SUPPORTED_STREAMS 로 거부했습니다
+  //    — moov 위치(+faststart)나 Range 지원 문제가 아니라 인코더가 뱉는 AAC
+  //    extradata 자체를 크롬이 더 깐깐하게 봅니다. MP3(libmp3lame)는 같은
+  //    파이프라인에서 문제없이 재생되어 이쪽으로 통일합니다 — Google 백엔드도
+  //    이미 mp3 를 씁니다.
+  const wav = path.join(TMP_DIR, `${path.basename(outPath, '.mp3')}.wav`);
+  await run('espeak-ng', ['-v', spec.voice, '-s', String(spec.rate), '-w', wav, text]);
+  // say 백엔드의 polish 와 같은 목적 — loudnorm 으로 문장마다 들쭉날쭉한 음량을 고릅니다.
+  await run('ffmpeg', [
+    '-y',
+    '-i',
+    wav,
+    '-af',
+    'loudnorm=I=-16:TP=-1.5:LRA=11',
+    '-c:a',
+    'libmp3lame',
+    '-b:a',
+    '96k',
+    '-ar',
+    '44100',
+    outPath,
+  ]);
+  await rm(wav, { force: true });
+}
+
 /* ------------------------------------------------------------------ */
 /* 메인                                                                */
 /* ------------------------------------------------------------------ */
@@ -266,7 +308,7 @@ async function main() {
 
   await mkdir(TMP_DIR, { recursive: true });
 
-  const ext = BACKEND === 'google' ? '.mp3' : '.m4a';
+  const ext = BACKEND === 'google' || BACKEND === 'espeak' ? '.mp3' : '.m4a';
   const generated: Record<string, string> = {};
   const skipped: Array<{ id: string; reason: string }> = [];
   let made = 0;
@@ -299,6 +341,8 @@ async function main() {
       try {
         if (BACKEND === 'google') {
           await synthesizeWithGoogle(p.original, country.langCode, outPath);
+        } else if (BACKEND === 'espeak') {
+          await synthesizeWithEspeak(p.original, country.langCode, outPath);
         } else {
           await synthesizeWithSay(p.original, country.langCode, outPath);
         }
@@ -320,15 +364,23 @@ async function main() {
   //    --lang=en 처럼 한 언어만 다시 만들면 매니페스트에서 나머지 언어가 통째로
   //    사라져, 앱에서 타갈로그 음성이 전부 먹통이 됩니다(실제로 겪었습니다).
   //    그래서 필터와 무관하게 "디스크에 파일이 있는 모든 문장" 을 기준으로 씁니다.
+  //    확장자도 둘 다 봅니다 — say 는 .m4a, google/espeak 는 .mp3 라 나라마다
+  //    다른 백엔드로 만들어졌을 수 있습니다.
   for (const country of COUNTRIES) {
     for (const phrase of PHRASES.filter((p) => p.countryId === country.id)) {
       if (generated[phrase.id] || shouldSkipAudio(phrase)) continue;
-      const rel = `${country.id}/${phrase.id}.m4a`;
-      const exists = await access(path.join(OUT_DIR, rel)).then(
-        () => true,
-        () => false
+      const found = await Promise.all(
+        ['.m4a', '.mp3'].map(async (candidateExt) => {
+          const candidateRel = `${country.id}/${phrase.id}${candidateExt}`;
+          const exists = await access(path.join(OUT_DIR, candidateRel)).then(
+            () => true,
+            () => false
+          );
+          return exists ? candidateRel : null;
+        })
       );
-      if (exists) generated[phrase.id] = rel;
+      const rel = found.find((r): r is string => Boolean(r));
+      if (rel) generated[phrase.id] = rel;
     }
   }
 

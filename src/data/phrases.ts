@@ -630,65 +630,70 @@ export const PHRASES: Phrase[] = [
   },
 
   // [미팅/사교]
+  //
+  // ⚠️ 원래 이 6개는 "Em đẹp lắm!(너무 예뻐요)" 처럼 헌팅에 가까운 톤이었습니다.
+  //    phrases.vn.social.ts 를 필리핀판과 같은 인사·스몰토크·정중한 거절 축으로
+  //    새로 채우면서, 기존 카테고리와 톤이 어긋나지 않도록 이 6개도 같은 축—
+  //    친구되기·연락처·가벼운 제안·호의·작별 — 으로 다시 썼습니다.
   {
     id: 'vn-13',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Em đẹp lắm!',
-    translation: '너무 예뻐요!',
-    pronunciation: '[엠 뎁 람!]',
-    toneGuide: 'Sweet compliment',
-    usageTip: '베트남 여성에게 호감을 표현할 때 가장 기분 좋은 칭찬 문장입니다.'
+    original: 'Chúng ta làm bạn nhé?',
+    translation: '우리 친구 해도 될까요?',
+    pronunciation: '[쭝 따 람 반 냬?]',
+    toneGuide: '친근하게',
+    usageTip: '베트남에서는 이 말이 어색하지 않습니다. 친구 사귀는 데 매우 개방적입니다.'
   },
   {
     id: 'vn-14',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Cho anh xin Instagram / Zalo nhé?',
-    translation: '인스타나 Zalo 아이디 알려줄 수 있어요?',
-    pronunciation: '[찌어 안 신 인스타그램/자로 넸?]',
-    toneGuide: 'Social connect',
-    usageTip: '베트남에서는 메신저로 Zalo와 Instagram을 제일 많이 씁니다.'
+    original: 'Anh/Chị có dùng Zalo hoặc Instagram không?',
+    translation: '잘로나 인스타 쓰세요?',
+    pronunciation: '[아잉/찌 꼬 중 자로 호악 인스타그램 콤?]',
+    toneGuide: '연락처 교환',
+    usageTip: '베트남은 카카오톡 대신 Zalo를 국민 메신저로 씁니다. Zalo부터 물어보세요.'
   },
   {
     id: 'vn-15',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Em có bạn trai chưa?',
-    translation: '혹시 남자친구 있으신가요?',
-    pronunciation: '[엠 까 반 짜이 찌아?]',
-    toneGuide: 'Polite inquiry',
-    usageTip: '관심을 수줍게 표하며 대화 중에 물어보세요.'
+    original: 'Khi nào rảnh, đi cà phê nhé?',
+    translation: '시간 되실 때 커피 한잔 하실래요?',
+    pronunciation: '[키 나오 자잉, 디 까 페 냬?]',
+    toneGuide: '가벼운 제안',
+    usageTip: '커피는 부담 없는 첫 제안입니다. 상대가 망설이면 더 밀지 마세요.'
   },
   {
     id: 'vn-16',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Đi uống cà phê với anh nhé?',
-    translation: '나랑 같이 커피 마시러 갈래요?',
-    pronunciation: '[디 우옹 까뻬 워이 안 넸?]',
-    toneGuide: 'Coffee invitation',
-    usageTip: '베트남 유명 콩카페나 예쁜 카페 데이트 제안에 필수 표현입니다.'
+    original: 'Để tôi trả tiền cho.',
+    translation: '제가 살게요.',
+    pronunciation: '[데 또이 짜 띠엔 쪼]',
+    toneGuide: '호의 표시',
+    usageTip: '초대한 쪽이 내는 문화입니다. 먼저 제안했다면 계산도 준비하세요.'
   },
   {
     id: 'vn-17',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Em rất đáng yêu!',
-    translation: '정말 귀여워요!',
-    pronunciation: '[엠 믓 당 이에우!]',
-    toneGuide: 'Cute praise',
-    usageTip: '미소가 예쁜 상대에게 마음을 담아 건네보세요.'
+    original: 'Về nhà cẩn thận nhé.',
+    translation: '집에 조심히 들어가세요.',
+    pronunciation: '[베 냐 껀 턴 냬]',
+    toneGuide: '헤어질 때',
+    usageTip: '베트남에서 가장 따뜻하게 들리는 작별 인사 중 하나입니다.'
   },
   {
     id: 'vn-18',
     countryId: 'vn',
     category: '미팅/사교',
-    original: 'Hẹn gặp lại em nhé!',
-    translation: '다음에 또 만나요!',
-    pronunciation: '[헨 겁 라이 엠 넸!]',
-    toneGuide: 'Warm parting',
-    usageTip: '만남을 마치고 헤어질 때 다음 만남을 기약하는 인사입니다.'
+    original: 'Tiếc quá, mai tôi phải đi rồi. Hẹn gặp lại nhé!',
+    translation: '아쉽네요, 내일 떠나요. 다음에 또 만나요!',
+    pronunciation: '[띠엑 꽈, 마이 또이 파이 디 조이. 헨 갑 라이 냬!]',
+    toneGuide: '작별',
+    usageTip: '여행 마지막 날 새로 사귄 인연과 나누기 좋은 인사입니다.'
   },
 
   // [비상]

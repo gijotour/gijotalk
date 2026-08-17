@@ -27,9 +27,11 @@ import { EN_FOOD_PHRASES } from './data/phrases.en.food';
  * 2개 이상이면 다시 드롭다운으로 돌아옵니다. 지금은 3개(필리핀·영어·베트남)라
  * 드롭다운입니다.
  *
- * ⚠️ 베트남은 아직 사전 생성된 오디오 파일이 없습니다(scripts/check-audio.ts
- *    참고). 음성은 브라우저 내장 TTS(vi-VN)로 대체 재생됩니다 — 기기에
- *    vi-VN 음성이 없거나 iOS PWA 환경이면 소리가 안 날 수 있습니다.
+ * 베트남 오디오는 espeak-ng(오픈소스 합성기)로 생성했습니다 — say/Google 의
+ * 자연스러운 목소리에 비해 기계음에 가깝지만, 발음은 정확하고 완전 오프라인
+ * 재생이 됩니다. 더 자연스러운 목소리로 바꾸려면
+ * `npm run audio -- --backend=google --lang=vn --force` (GOOGLE_TTS_API_KEY 필요)
+ * 또는 macOS 에서 `npm run audio -- --lang=vn --force` 를 실행하세요.
  */
 export const ENABLED_COUNTRY_IDS: CountryId[] = ['ph', 'en', 'vn'];
 

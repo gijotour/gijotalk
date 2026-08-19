@@ -1595,6 +1595,97 @@ textarea:focus {
     to { transform: scale(1.12); }
 }
 
+/* ===== HOT 모드 (19금 벌칙 세트) ===== */
+.hot-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 0, 85, 0.07);
+    border: 1px solid rgba(255, 0, 85, 0.28);
+}
+
+.hot-text { flex: 1; min-width: 0; }
+
+.hot-name {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.hot-19 {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: var(--primary-neon);
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 900;
+    vertical-align: middle;
+}
+
+.hot-desc {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #9a9aa4;
+    line-height: 1.45;
+    word-break: keep-all;
+}
+
+/* 켜짐/꺼짐이 한눈에 보이도록 색과 손잡이 위치를 같이 바꿉니다. */
+.hot-switch {
+    flex-shrink: 0;
+    width: 52px;
+    height: 30px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    position: relative;
+    transition: background 0.2s;
+}
+
+.hot-switch span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.hot-switch.on {
+    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
+    box-shadow: 0 0 14px rgba(255, 0, 85, 0.5);
+}
+
+.hot-switch.on span { transform: translateX(22px); }
+
+.hot-badge {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
+    color: #fff;
+    font-size: 0.4em;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-shadow: none;
+    box-shadow: 0 0 14px rgba(255, 0, 85, 0.55);
+}
+
+.hot-badge.hidden { display: none; }
+
 /* Footer */
 .footer-copyright {
     position: absolute;
@@ -1614,7 +1705,7 @@ textarea:focus {
         <!-- Main Menu -->
         <section id="screen-main" class="screen active main-menu-screen">
             <div class="main-header">
-                <h1 class="neon-text title">GIJO Drink</h1>
+                <h1 class="neon-text title">GIJO Drink <span id="hot-badge" class="hot-badge hidden">🔥 HOT</span></h1>
                 <div class="player-setup">
                     <span class="player-label">Players:</span>
                     <button class="cnt-btn" onclick="app.changePlayerCount(-1)">-</button>
@@ -1802,6 +1893,15 @@ textarea:focus {
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
             <h2 class="neon-text">Settings<br><span class="title-kr">설정</span></h2>
             <div class="settings-container">
+                <div class="hot-row">
+                    <div class="hot-text">
+                        <span class="hot-name">🔥 HOT 모드 <span class="hot-19">19+</span></span>
+                        <span class="hot-desc">성인 술자리용 19금 벌칙으로 교체<br>Swap in adult (18+) party penalties</span>
+                    </div>
+                    <button id="hot-switch" class="hot-switch" role="switch" aria-checked="false"
+                            aria-label="HOT 모드" onclick="app.toggleHotMode()"><span></span></button>
+                </div>
+
                 <div class="setting-group">
                     <label>룰렛 벌칙 · Roulette Missions (comma separated)</label>
                     <textarea id="setting-roulette" rows="4"></textarea>
@@ -1930,6 +2030,52 @@ function bridgeHeartHTML(labelText) {
     return `<svg class="heart-svg" viewBox="0 0 24 24"><path d="${BRIDGE_HEART_PATH}"/></svg>${label}`;
 }
 
+/* ============================================================
+   🔥 HOT 모드 — 성인 술자리용 19금 벌칙 세트
+
+   기본은 꺼져 있습니다. 가족 여행·회사 워크숍에서 켜져 있으면 곤란하고,
+   이 앱은 그런 자리에서도 쓰이기 때문입니다. 설정에서 직접 켜야 합니다.
+
+   신체 접촉이 들어가는 벌칙에는 전부 "or 술" 대안을 붙였습니다.
+   빼도 박도 못하는 벌칙은 술게임에서 재미가 아니라 강요가 됩니다.
+   ============================================================ */
+
+const HOT_ROULETTE = [
+    '러브샷 or 2잔',
+    '옆 사람과 3초간 눈 맞추기',
+    '이 자리에서 제일 매력적인 사람 지목',
+    '어깨 마사지 10초 해주기 or 1잔',
+    '작업 멘트 한 마디 날리기',
+    '첫사랑 이야기 30초',
+    '섹시 댄스 5초 or 원샷',
+    '볼 뽀뽀 or 3잔',
+    '이상형 구체적으로 말하기',
+    '가장 최근 썸 이야기 풀기'
+];
+
+const HOT_CARDS = [
+    'Love shot 러브샷',
+    'Eye contact 3s 눈맞춤 3초',
+    'Pick the hottest 매력적인 사람 지목',
+    'Shoulder massage 어깨 마사지 or 1잔',
+    'Pickup line 작업 멘트',
+    'First love story 첫사랑 썰',
+    'Sexy dance 섹시 댄스 or 원샷',
+    'Cheek kiss or 3 shots 볼뽀뽀 or 3잔',
+    'Your ideal type 이상형 고백'
+];
+
+/** 시간 폭탄의 돌발 미션 — HOT 모드일 때 이 세트를 씁니다. */
+const HOT_PASS_MISSIONS = [
+    { kr: '눈 3초 맞추고 패스! 👀', en: 'Hold eye contact for 3s, then pass!' },
+    { kr: '귓속말로 칭찬하고 패스! 💬', en: 'Whisper a compliment, then pass!' },
+    { kr: '손등에 뽀뽀하고 패스! or 1잔 💋', en: 'Kiss their hand and pass — or take a shot!' },
+    { kr: '섹시하게 패스하기! 🔥', en: 'Pass it as seductively as you can!' },
+    { kr: '작업 멘트 날리고 패스! 😏', en: 'Drop a pickup line, then pass!' },
+    { kr: '백허그 1초 후 패스! or 1잔 🫂', en: 'One-second back hug, then pass — or take a shot!' },
+    { kr: '윙크하면서 패스하기! 😉', en: 'Pass while winking!' }
+];
+
 const app = {
     currentScreen: 'main',
     playerCount: 4,
@@ -1998,15 +2144,66 @@ const app = {
         history.replaceState({screen: 'main'}, '');
     },
 
+    hotMode: false,
+
     loadSettings() {
         const savedRoulette = localStorage.getItem('neonDrinks_roulette');
         const savedCards = localStorage.getItem('neonDrinks_cards');
-        
+
+        this.hotMode = localStorage.getItem('neonDrinks_hot') === '1';
+
         this.rouletteOptions = savedRoulette ? JSON.parse(savedRoulette) : [...this.defaultRoulette];
         this.cardMissions = savedCards ? JSON.parse(savedCards) : [...this.defaultCards];
-        
+
         document.getElementById('setting-roulette').value = this.rouletteOptions.join(', ');
         document.getElementById('setting-cards').value = this.cardMissions.join(', ');
+        this.paintHotUI();
+    },
+
+    /**
+     * HOT 모드를 켜고 끕니다.
+     *
+     * 켜면 벌칙 목록 자체를 19금 세트로 갈아끼우고, 끄면 기본 세트로 되돌립니다.
+     * "숨은 상태"로 두지 않고 설정 칸의 내용을 실제로 바꾸는 이유는, 지금 어떤
+     * 벌칙이 돌고 있는지 열어보면 바로 알 수 있어야 하기 때문입니다. 바꾼 뒤에
+     * 직접 편집하는 것도 그대로 됩니다.
+     */
+    toggleHotMode() {
+        this.hotMode = !this.hotMode;
+        localStorage.setItem('neonDrinks_hot', this.hotMode ? '1' : '0');
+
+        this.rouletteOptions = this.hotMode ? [...HOT_ROULETTE] : [...this.defaultRoulette];
+        this.cardMissions = this.hotMode ? [...HOT_CARDS] : [...this.defaultCards];
+
+        localStorage.setItem('neonDrinks_roulette', JSON.stringify(this.rouletteOptions));
+        localStorage.setItem('neonDrinks_cards', JSON.stringify(this.cardMissions));
+
+        document.getElementById('setting-roulette').value = this.rouletteOptions.join(', ');
+        document.getElementById('setting-cards').value = this.cardMissions.join(', ');
+
+        this.setupCards();
+        this.paintHotUI();
+
+        soundFX.init();
+        soundFX.playTick(this.hotMode);
+        haptics.tick();
+
+        const msg = document.getElementById('settings-msg');
+        msg.innerText = this.hotMode
+            ? '🔥 HOT 모드 켜짐 · HOT mode ON (19+)'
+            : 'HOT 모드 꺼짐 · HOT mode OFF';
+        setTimeout(() => msg.innerText = '', 2200);
+    },
+
+    /** 지금 HOT 인지 스위치와 메인 배지에 반영합니다. */
+    paintHotUI() {
+        const sw = document.getElementById('hot-switch');
+        if (sw) {
+            sw.classList.toggle('on', this.hotMode);
+            sw.setAttribute('aria-checked', this.hotMode ? 'true' : 'false');
+        }
+        const badge = document.getElementById('hot-badge');
+        if (badge) badge.classList.toggle('hidden', !this.hotMode);
     },
 
     saveSettings() {
@@ -2465,7 +2662,7 @@ const app = {
         haptics.tick();
 
         // 35% Chance of a sudden pass mission card
-        const passMissions = [
+        const passMissions = this.hotMode ? HOT_PASS_MISSIONS : [
             { kr: '오른쪽 사람 이름 부르며 넘기기! 🗣️', en: "Call out the name of the person on your right!" },
             { kr: '윙크하면서 패스하기! 😉', en: 'Pass while winking!' },
             { kr: '3초간 얼음 후 넘기기! ❄️', en: 'Freeze for 3 seconds, then pass!' },

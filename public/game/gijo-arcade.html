@@ -485,6 +485,94 @@ body.hot .pt-chip b { color: #ff8fb1; }
     line-height: 1.5;
 }
 
+
+/* ===== 🌶️ 스파이시 보너스 인트로 =====
+   💋🔥🍸 를 흩뿌리면서 크게 열어줍니다. 게임을 막지 않도록 pointer-events 는 꺼둡니다. */
+.bonus-intro {
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255,45,120,0.45), rgba(10,0,8,0.94) 72%);
+    animation: bi-in 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes bi-in {
+    0% { opacity: 0; transform: scale(0.7); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.bi-confetti-layer { position: absolute; inset: 0; }
+
+.bi-confetti {
+    position: absolute;
+    top: -14%;
+    font-size: clamp(1.1rem, 5vw, 1.7rem);
+    animation: bi-fall 2.4s linear infinite;
+    opacity: 0.95;
+}
+
+@keyframes bi-fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    12%  { opacity: 1; }
+    100% { transform: translateY(340px) rotate(220deg); opacity: 0; }
+}
+
+.bi-core {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+}
+
+.bi-chilis {
+    font-size: clamp(1.7rem, 9vw, 2.6rem);
+    letter-spacing: 0.1em;
+    animation: bi-shake 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes bi-shake {
+    from { transform: rotate(-7deg) scale(1); }
+    to   { transform: rotate(7deg) scale(1.12); }
+}
+
+.bi-title {
+    font-size: clamp(1.6rem, 10vw, 2.6rem);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 26px #ff2d78, 0 3px 0 rgba(0,0,0,0.55);
+}
+
+.bi-kr {
+    margin-top: 2px;
+    font-size: clamp(0.95rem, 4.4vw, 1.2rem);
+    font-weight: 900;
+    color: #ffd700;
+}
+
+.bi-sub {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+}
+
+/* 고정된 와일드 — 남은 스핀 내내 그 자리에 붙어 있다는 걸 보여줍니다. */
+.sym.sticky {
+    border-radius: 8px;
+    background: radial-gradient(circle, rgba(255,45,120,0.4), rgba(255,45,120,0.08) 70%);
+    box-shadow: inset 0 0 0 2px rgba(255,45,120,0.75);
+    filter: drop-shadow(0 0 10px #ff2d78);
+}
+
+/* 보너스 배지 안의 숫자 강조 */
+.free-badge b { color: #ffd700; font-weight: 900; }
+
 /* 조작부 */
 .slots-controls {
     display: flex;
@@ -2134,15 +2222,15 @@ class BrickBreaker extends Game {
    ============================================================ */
 
 const SYMBOLS = [
-    { id: 'cherry', ch: '🍒', weight: 22, pay: [0, 0, 5, 15, 40] },
-    { id: 'lemon',  ch: '🍋', weight: 20, pay: [0, 0, 5, 20, 50] },
-    { id: 'bell',   ch: '🔔', weight: 16, pay: [0, 0, 10, 30, 80] },
-    { id: 'star',   ch: '⭐', weight: 12, pay: [0, 0, 15, 50, 120] },
-    { id: 'gem',    ch: '💎', weight: 8,  pay: [0, 0, 25, 80, 200] },
-    { id: 'seven',  ch: '7️⃣', weight: 5, pay: [0, 0, 50, 150, 500] },
-    { id: 'crown',  ch: '👑', weight: 3,  pay: [0, 0, 100, 300, 1000] },
-    { id: 'wild',   ch: '🃏', weight: 6,  pay: [0, 0, 20, 60, 150], wild: true },
-    { id: 'scatter',ch: '🎰', weight: 4,  pay: [0, 0, 0, 0, 0], scatter: true }
+    { id: 'cherry',  ch: '🍒', weight: 22, pay: [0, 0, 5, 15, 40] },
+    { id: 'lemon',   ch: '🍋', weight: 20, pay: [0, 0, 5, 20, 50] },
+    { id: 'cocktail',ch: '🍸', weight: 16, pay: [0, 0, 10, 30, 80] },
+    { id: 'lips',    ch: '💋', weight: 12, pay: [0, 0, 15, 50, 120] },
+    { id: 'gem',     ch: '💎', weight: 9,  pay: [0, 0, 25, 80, 200] },
+    { id: 'dancer',  ch: '💃', weight: 6,  pay: [0, 0, 50, 150, 500] },
+    { id: 'bunny',   ch: '👯', weight: 3,  pay: [0, 0, 100, 300, 1000] },
+    { id: 'wild',    ch: '🔥', weight: 6,  pay: [0, 0, 20, 60, 150], wild: true },
+    { id: 'chili',   ch: '🌶️', weight: 4, pay: [0, 0, 0, 0, 0], scatter: true }
 ];
 
 const SYM_BY_ID = Object.fromEntries(SYMBOLS.map(s => [s.id, s]));
@@ -2170,6 +2258,12 @@ const PAYLINES = [
 ];
 
 const BET_LEVELS = [10, 25, 50, 100];
+
+/* 보너스 라운드 상한 — 없으면 스티키 와일드가 판을 뒤덮고 배수가 금방 최대가 되어
+   한 라운드에 베팅의 1000배가 넘게 나옵니다(실제로 그렇게 터졌습니다). */
+const BONUS_MAX_MULT = 5;
+const BONUS_MAX_STICKY = 2;
+const BONUS_MAX_SPINS = 20;
 const ROWS_VISIBLE = 3;
 const REEL_COUNT = 5;
 
@@ -2188,6 +2282,14 @@ class Slots {
     }
 
     get bet() { return BET_LEVELS[this.betIndex]; }
+
+    /** 보너스 라운드 상태를 처음으로 되돌립니다. */
+    resetBonus() {
+        this.bonusActive = false;
+        this.bonusMult = 1;
+        this.stickyWilds = [];
+        this.bonusTotal = 0;
+    }
 
     setStat(name, value) {
         const el = this.screen.querySelector(`[data-${name}]`);
@@ -2212,6 +2314,7 @@ class Slots {
         this.freeSpins = 0;
         this.spinning = false;
         this.running = true;
+        this.resetBonus();
 
         this.offAll();
         this.buildReels();
@@ -2235,8 +2338,8 @@ class Slots {
             .join('');
         document.getElementById('paytable').innerHTML =
             `<div class="pt-row">${rows}</div>` +
-            `<div class="pt-note">5개 맞췄을 때 · 베팅 10 기준 &nbsp;|&nbsp; 🃏 모든 심볼 대체 &nbsp;|&nbsp; 🎰 3개 = 프리스핀 10회(x2)` +
-            `<br>5-of-a-kind at bet 10 · 🃏 wild · 🎰 x3 = 10 free spins</div>`;
+            `<div class="pt-note">5개 맞췄을 때 · 베팅 10 기준 &nbsp;|&nbsp; 🔥 모든 심볼 대체 &nbsp;|&nbsp; 🌶️ 3개 = 스파이시 보너스!` +
+            `<br>5-of-a-kind at bet 10 · 🔥 wild · 🌶️ x3 = SPICY BONUS</div>`;
     }
 
     exit() {
@@ -2264,7 +2367,9 @@ class Slots {
     updateFreeBadge() {
         const b = document.getElementById('free-badge');
         if (this.freeSpins > 0) {
-            b.textContent = `🎁 프리스핀 ${this.freeSpins}회 남음 · ${this.freeSpins} free spins (x2)`;
+            b.innerHTML =
+                `🌶️ 보너스 <b>${this.freeSpins}</b>회 남음 &nbsp;·&nbsp; 배수 <b>x${this.bonusMult}</b>` +
+                (this.stickyWilds.length ? ` &nbsp;·&nbsp; 🔥<b>${this.stickyWilds.length}</b>` : '');
             b.classList.remove('hidden');
         } else {
             b.classList.add('hidden');
@@ -2315,7 +2420,10 @@ class Slots {
         this.stripEls[r].style.transform = `translateY(${-h}px)`;
     }
 
-    /** 지금 화면에 보이는 3x5 심볼 격자 */
+    /**
+     * 지금 화면에 보이는 3x5 심볼 격자.
+     * 보너스 중에는 고정된 스티키 와일드가 릴 결과를 덮어씁니다.
+     */
     visibleGrid() {
         const grid = [];
         for (let r = 0; r < REEL_COUNT; r++) {
@@ -2326,7 +2434,21 @@ class Slots {
             }
             grid.push(col);
         }
+        if (this.bonusActive) {
+            this.stickyWilds.forEach(({ r, row }) => { grid[r][row] = 'wild'; });
+        }
         return grid;
+    }
+
+    /** 고정된 와일드를 화면에도 그대로 박아둡니다. */
+    paintSticky() {
+        this.stickyWilds.forEach(({ r, row }) => {
+            const cell = this.stripEls[r].querySelectorAll('.sym')[row + 1];
+            if (cell) {
+                cell.textContent = SYM_BY_ID.wild.ch;
+                cell.classList.add('sticky');
+            }
+        });
     }
 
     /* ---------- 입력 ---------- */
@@ -2377,7 +2499,7 @@ class Slots {
         const scatterCount = finalPos.reduce((n, p, r) => {
             const strip = this.strips[r];
             for (let row = 0; row < ROWS_VISIBLE; row++) {
-                if (strip[(p + row) % strip.length] === 'scatter') return n + 1;
+                if (SYM_BY_ID[strip[(p + row) % strip.length]].scatter) return n + 1;
             }
             return n;
         }, 0);
@@ -2390,7 +2512,7 @@ class Slots {
                 for (let k = 0; k < r; k++) {
                     const strip = this.strips[k];
                     for (let row = 0; row < ROWS_VISIBLE; row++) {
-                        if (strip[(finalPos[k] + row) % strip.length] === 'scatter') { sofar++; break; }
+                        if (SYM_BY_ID[strip[(finalPos[k] + row) % strip.length]].scatter) { sofar++; break; }
                     }
                 }
                 anticipate = sofar >= 2;
@@ -2458,16 +2580,15 @@ class Slots {
 
     evaluate(scatterCount) {
         const grid = this.visibleGrid();
-        const mult = this.freeSpinsActive ? 2 : 1;
+        const mult = this.bonusActive ? this.bonusMult : 1;
         let total = 0;
         const winningLines = [];
 
         PAYLINES.forEach((line, li) => {
             const ids = line.rows.map((row, r) => grid[r][row]);
-            // 첫 칸부터 같은 심볼(와일드 허용)이 몇 개 이어지는지
-            let base = ids.find(id => id !== 'wild' && id !== 'scatter');
+            let base = ids.find(id => id !== 'wild' && id !== 'chili');
             if (!base) base = ids[0];
-            if (base === 'scatter') return;
+            if (base === 'chili') return;
 
             let count = 0;
             for (const id of ids) {
@@ -2483,14 +2604,53 @@ class Slots {
             }
         });
 
-        // 스캐터 3개 이상 → 프리스핀
-        let gotFree = false;
-        if (scatterCount >= 3) {
-            this.freeSpins += 10;
-            gotFree = true;
+        total = Math.round(total);
+
+        /* ---------- 보너스 라운드 중에만 붙는 추가 혜택 ---------- */
+        let bonusNotes = [];
+        if (this.bonusActive) {
+            // 💋 가 나온 스핀마다 배수 +1 (최대 x10).
+            // 심볼 개수만큼 올리면 서너 스핀 만에 상한을 찍어 나머지가 심심해집니다.
+            let lips = 0;
+            grid.forEach(col => col.forEach(id => { if (id === 'lips') lips++; }));
+            if (lips > 0 && this.bonusMult < BONUS_MAX_MULT) {
+                const before = this.bonusMult;
+                this.bonusMult = Math.min(BONUS_MAX_MULT, this.bonusMult + 1);
+                bonusNotes.push(`💋 배수 x${before} → x${this.bonusMult}`);
+            }
+
+            // 🔥 는 그 자리에 고정되어 남은 스핀 내내 유지.
+            // 상한이 없으면 판의 절반이 와일드가 되어 매 스핀 전 라인이 터집니다.
+            grid.forEach((col, r) => col.forEach((id, row) => {
+                if (id === 'wild' &&
+                    this.stickyWilds.length < BONUS_MAX_STICKY &&
+                    !this.stickyWilds.some(w => w.r === r && w.row === row)) {
+                    this.stickyWilds.push({ r, row });
+                }
+            }));
+            this.paintSticky();
+
+            // 💃 호스티스가 나오면 즉석 팁
+            let dancers = 0;
+            grid.forEach(col => col.forEach(id => { if (id === 'dancer') dancers++; }));
+            if (dancers > 0) {
+                const tip = dancers * this.bet * 3;
+                total += tip;
+                bonusNotes.push(`💃 호스티스 팁 +${tip}`);
+            }
+
+            // 🌶️ 3개 이상이면 스핀 추가 (리트리거). 2개로 두면 거의 매번 걸려
+            // 라운드가 끝나지 않습니다. 남은 스핀에도 상한을 둡니다.
+            if (scatterCount >= 3 && this.freeSpins < BONUS_MAX_SPINS) {
+                this.freeSpins = Math.min(BONUS_MAX_SPINS, this.freeSpins + 5);
+                bonusNotes.push('🌶️ 스핀 +5 추가!');
+            }
+
+            this.bonusTotal += total;
         }
 
-        total = Math.round(total);
+        // 기본 게임에서 🌶️ 3개 → 보너스 시작
+        const triggered = !this.bonusActive && scatterCount >= 3;
 
         if (total > 0) {
             this.credits += total;
@@ -2510,25 +2670,113 @@ class Slots {
         const bigThreshold = this.bet * 20;
         if (total >= bigThreshold && total > 0) {
             this.showBigWin(total);
+        } else if (bonusNotes.length) {
+            this.setMsg(bonusNotes.join(' · '), `+${total}`);
+            sfx.good();
+            vibe([0, 40, 40, 40]);
         } else if (total > 0) {
             this.setMsg(`+${total} 크레딧!`, `You won ${total} credits!`);
             sfx.good();
             vibe([0, 40, 40, 40]);
-        } else if (gotFree) {
-            this.setMsg('🎁 프리스핀 10회 획득!', 'You won 10 free spins!');
-        } else {
+        } else if (!triggered) {
             this.setMsg('아쉽네요. 한 번 더!', 'So close. Spin again!');
-        }
-
-        if (gotFree) {
-            sfx.good();
-            vibe([0, 60, 50, 60, 50, 90]);
         }
 
         this.spinning = false;
         document.getElementById('spin-btn').disabled = false;
 
-        if (this.credits < this.bet && this.freeSpins === 0) this.offerRefill();
+        if (triggered) {
+            this.startBonus();
+            return;
+        }
+
+        // 보너스가 끝났으면 정산 화면
+        if (this.bonusActive && this.freeSpins === 0) {
+            this.endBonus();
+            return;
+        }
+
+        // 보너스 중이면 자동으로 다음 스핀
+        if (this.bonusActive && this.freeSpins > 0) {
+            setTimeout(() => { if (this.running && this.bonusActive) this.spin(); }, 1400);
+            return;
+        }
+
+        if (this.credits < this.bet) this.offerRefill();
+    }
+
+    /* ---------- 🌶️ 스파이시 보너스 ---------- */
+
+    /** 🌶️ 3개 — 화려하게 열고 프리스핀을 시작합니다. */
+    startBonus() {
+        this.bonusActive = true;
+        this.freeSpins = 10;
+        this.bonusMult = 2;
+        this.stickyWilds = [];
+        this.bonusTotal = 0;
+
+        document.getElementById('spin-btn').disabled = true;
+        this.showBonusIntro();
+        this.updateFreeBadge();
+
+        sfx.good();
+        setTimeout(() => sfx.good(), 160);
+        setTimeout(() => sfx.good(), 320);
+        setTimeout(() => sfx.good(), 480);
+        vibe([0, 90, 60, 90, 60, 90, 60, 160]);
+
+        setTimeout(() => {
+            if (!this.running) return;
+            this.screen.querySelector('.bonus-intro')?.remove();
+            this.spin();
+        }, 2600);
+    }
+
+    showBonusIntro() {
+        const frame = document.getElementById('reels-frame');
+        const el = document.createElement('div');
+        el.className = 'bonus-intro';
+        // 💋🔥🍸 를 흩뿌려 화려하게 — 위치·지연을 조금씩 달리해 한꺼번에 튀지 않게 합니다.
+        const confetti = Array.from({ length: 18 }, (_, i) => {
+            const ch = ['💋', '🔥', '🍸', '🌶️', '💃', '👯', '💎'][i % 7];
+            const left = (i * 5.6 + (i % 3) * 4) % 96;
+            const delay = (i % 9) * 0.12;
+            return `<span class="bi-confetti" style="left:${left}%;animation-delay:${delay}s">${ch}</span>`;
+        }).join('');
+        el.innerHTML =
+            `<div class="bi-confetti-layer">${confetti}</div>` +
+            `<div class="bi-core">` +
+            `<div class="bi-chilis">🌶️🌶️🌶️</div>` +
+            `<div class="bi-title">SPICY BONUS</div>` +
+            `<div class="bi-kr">스파이시 보너스!</div>` +
+            `<div class="bi-sub">프리스핀 10회 · 배수 x2 시작<br>10 free spins · starts at x2</div>` +
+            `</div>`;
+        frame.appendChild(el);
+    }
+
+    /** 보너스가 끝나면 총 획득액을 보여주고 기본 게임으로 돌아갑니다. */
+    endBonus() {
+        const won = Math.round(this.bonusTotal);
+        const frame = document.getElementById('reels-frame');
+        const el = document.createElement('div');
+        el.className = 'bigwin';
+        el.innerHTML =
+            `<div class="bigwin-title">BONUS OVER</div>` +
+            `<div class="bigwin-amount">+${won}</div>` +
+            `<div class="bigwin-kr">보너스에서 ${won} 크레딧 획득!</div>`;
+        frame.appendChild(el);
+        sfx.good();
+        vibe([0, 80, 60, 140]);
+        this.setMsg(`🌶️ 보너스 종료 · 총 +${won}`, `Bonus over — you won ${won} credits`);
+
+        setTimeout(() => {
+            el.remove();
+            this.resetBonus();
+            this.clearWinVisuals();
+            this.updateFreeBadge();
+            document.getElementById('spin-btn').disabled = false;
+            if (this.credits < this.bet) this.offerRefill();
+        }, 2600);
     }
 
     get freeSpinsActive() { return this.freeSpins > 0; }

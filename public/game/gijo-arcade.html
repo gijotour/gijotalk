@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>GIJO Arcade</title>
+    <!-- 파티 게임(gijo-drink.html)과 같은 이유로 폰트를 렌더링 차단 없이 받습니다.
+         현지 데이터가 느려 폰트 요청이 걸려도 게임은 그대로 실행돼야 합니다. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"></noscript>
+    <style>
+:root {
+    --bg-color: #0a0a0c;
+    --primary-neon: #ff0055;
+    --secondary-neon: #00f3ff;
+    --tertiary-neon: #a200ff;
+    --lime-neon: #c4ff4d;
+    --amber-neon: #ffaa00;
+    --text-color: #ffffff;
+    --font-main: 'Outfit', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overscroll-behavior: none;
+}
+
+#app {
+    width: 100%;
+    height: 100dvh;
+    position: relative;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.25s ease;
+}
+
+.screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.screen.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* ===== 메뉴 ===== */
+.menu-header {
+    padding: clamp(16px, 5vw, 28px) 20px clamp(8px, 3vw, 16px);
+    text-align: center;
+    flex-shrink: 0;
+    padding-top: calc(clamp(16px, 5vw, 28px) + env(safe-area-inset-top));
+}
+
+.menu-title {
+    font-size: clamp(1.7rem, 8vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: #fff;
+    text-shadow: 0 0 20px var(--secondary-neon);
+}
+
+.menu-sub {
+    margin-top: 6px;
+    font-size: clamp(0.72rem, 3vw, 0.88rem);
+    color: #8b8b95;
+    word-break: keep-all;
+}
+
+.tile-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    padding: 0 8px calc(16px + env(safe-area-inset-bottom));
+    min-height: 0;
+}
+
+.tile {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 14px;
+    /* ::before 가 대각선 아래쪽만 채우므로 버튼 자체에도 어두운 배경을 깔아둡니다.
+       (파티 게임 메뉴에서 브라우저 기본 배경이 드러났던 것과 같은 문제) */
+    background: #101014;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 2px;
+    padding: clamp(12px, 4vw, 18px);
+    text-align: left;
+    font-family: var(--font-main);
+    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.tile:active { transform: scale(0.96); }
+
+.tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 100%, 100% 100%, 100% 14%, 0 50%);
+}
+
+.tile > * { position: relative; z-index: 1; }
+
+.tile-icon {
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+
+.tile-en {
+    font-size: clamp(0.85rem, 3.4vw, 1.05rem);
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+}
+
+.tile-kr {
+    font-size: clamp(0.68rem, 2.7vw, 0.8rem);
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+.tile-best {
+    margin-top: 3px;
+    font-size: clamp(0.6rem, 2.4vw, 0.7rem);
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.02em;
+}
+
+.tile-1::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
+.tile-2::before { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); }
+.tile-3::before { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); }
+.tile-4::before { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); }
+
+/* ===== 게임 화면 공통 ===== */
+.game-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.hud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    flex-shrink: 0;
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--secondary-neon);
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 7px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.btn-back:active { transform: scale(0.95); }
+
+.hud-stats {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: clamp(10px, 4vw, 20px);
+    /* 점수가 늘어도 자리가 흔들리지 않게 합니다. */
+    font-variant-numeric: tabular-nums;
+}
+
+.stat {
+    text-align: right;
+    line-height: 1.15;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7a7a85;
+}
+
+.stat-val {
+    display: block;
+    font-size: clamp(1rem, 4.5vw, 1.3rem);
+    font-weight: 900;
+    color: #fff;
+}
+
+.canvas-wrap {
+    flex: 1;
+    position: relative;
+    min-height: 0;
+    margin: 0 10px 10px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    /* 캔버스 위에서 스크롤·확대가 일어나면 조작이 안 됩니다. */
+    touch-action: none;
+    background: #08080b;
+}
+
+.hint {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #6e6e78;
+    padding: 0 16px 10px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+/* ===== 오버레이 (시작 / 게임 오버 / 일시정지) ===== */
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px;
+    text-align: center;
+    background: rgba(6, 6, 9, 0.86);
+    border-radius: 14px;
+    z-index: 5;
+}
+
+.overlay.hidden { display: none; }
+
+.ov-title {
+    font-size: clamp(1.5rem, 8vw, 2.2rem);
+    font-weight: 900;
+    color: #fff;
+}
+
+.ov-kr {
+    font-size: clamp(0.85rem, 3.6vw, 1rem);
+    font-weight: 700;
+    color: #b6b6c0;
+    word-break: keep-all;
+}
+
+.ov-score {
+    margin-top: 10px;
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+    font-weight: 900;
+    color: var(--secondary-neon);
+    font-variant-numeric: tabular-nums;
+}
+
+.ov-best {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #8b8b95;
+    font-variant-numeric: tabular-nums;
+}
+
+.ov-new {
+    margin-top: 4px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--amber-neon);
+    text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
+    animation: pop 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+
+@keyframes pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.ov-btn {
+    margin-top: 16px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 13px 34px;
+    border-radius: 16px;
+    background: linear-gradient(120deg, var(--secondary-neon), #4d8cff);
+    box-shadow: 0 4px 18px rgba(0, 243, 255, 0.4);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.45);
+}
+
+.ov-btn:active { transform: scale(0.96); }
+
+.ov-hint {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: #7a7a85;
+    line-height: 1.6;
+    word-break: keep-all;
+    max-width: 30ch;
+}
+
+/* 게임별 액센트 — 메뉴 타일 색을 게임 화면 안까지 그대로 잇습니다. */
+#scr-block .ov-btn { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); box-shadow: 0 4px 18px rgba(0,243,255,0.4); }
+#scr-shoot .ov-btn { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); box-shadow: 0 4px 18px rgba(255,0,85,0.4); }
+#scr-snake .ov-btn { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); box-shadow: 0 4px 18px rgba(62,217,115,0.4); }
+#scr-brick .ov-btn { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); box-shadow: 0 4px 18px rgba(255,170,0,0.4); }
+
+#scr-block .ov-score { color: var(--secondary-neon); }
+#scr-shoot .ov-score { color: var(--primary-neon); }
+#scr-snake .ov-score { color: var(--lime-neon); }
+#scr-brick .ov-score { color: var(--amber-neon); }
+
+.footer-note {
+    position: absolute;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(255,255,255,0.28);
+    font-size: 0.72rem;
+    pointer-events: none;
+}
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <!-- ===== 메뉴 ===== -->
+    <section id="scr-menu" class="screen active">
+        <div class="menu-header">
+            <h1 class="menu-title">GIJO Arcade</h1>
+            <p class="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
+        </div>
+        <div class="tile-grid">
+            <button class="tile tile-1" data-go="block">
+                <span class="tile-icon">&#129513;</span>
+                <span class="tile-en">Block Drop</span>
+                <span class="tile-kr">블록 쌓기</span>
+                <span class="tile-best" data-best="block">BEST 0</span>
+            </button>
+            <button class="tile tile-2" data-go="shoot">
+                <span class="tile-icon">&#128760;</span>
+                <span class="tile-en">Space Shooter</span>
+                <span class="tile-kr">비행기 슈팅</span>
+                <span class="tile-best" data-best="shoot">BEST 0</span>
+            </button>
+            <button class="tile tile-3" data-go="snake">
+                <span class="tile-icon">&#128013;</span>
+                <span class="tile-en">Snake</span>
+                <span class="tile-kr">뱀 키우기</span>
+                <span class="tile-best" data-best="snake">BEST 0</span>
+            </button>
+            <button class="tile tile-4" data-go="brick">
+                <span class="tile-icon">&#127934;</span>
+                <span class="tile-en">Brick Breaker</span>
+                <span class="tile-kr">벽돌 깨기</span>
+                <span class="tile-best" data-best="brick">BEST 0</span>
+            </button>
+        </div>
+        <div class="footer-note">&copy; GIJO Labs</div>
+    </section>
+
+    <!-- ===== 블록 쌓기 ===== -->
+    <section id="scr-block" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Lines</span><span class="stat-val" data-lines>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-block"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">좌우 밀기 = 이동 · 탭 = 회전 · 아래로 쓸기 = 빠른 낙하<br>Drag = move · Tap = rotate · Swipe down = drop</p>
+    </section>
+
+    <!-- ===== 비행기 슈팅 ===== -->
+    <section id="scr-shoot" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Wave</span><span class="stat-val" data-wave>1</span></div>
+                <div class="stat"><span class="stat-label">Life</span><span class="stat-val" data-life>3</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-shoot"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">화면을 끌어서 이동 · 총알은 자동 발사<br>Drag to move · Auto-fire</p>
+    </section>
+
+    <!-- ===== 뱀 키우기 ===== -->
+    <section id="scr-snake" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-snake"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">쓸어서 방향 전환 · 벽과 몸에 닿으면 끝<br>Swipe to turn · Avoid walls and yourself</p>
+    </section>
+
+    <!-- ===== 벽돌 깨기 ===== -->
+    <section id="scr-brick" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Stage</span><span class="stat-val" data-stage>1</span></div>
+                <div class="stat"><span class="stat-label">Life</span><span class="stat-val" data-life>3</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-brick"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">화면을 끌어서 받침대 이동<br>Drag to move the paddle</p>
+    </section>
+
+</div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   공용 유틸
+   ============================================================ */
+
+/** 최고 점수는 기기에만 남깁니다(서버 없음). 키는 게임별로 나눕니다. */
+const store = {
+    best(id) {
+        const v = parseInt(localStorage.getItem('gijoArcade_best_' + id) || '0', 10);
+        return Number.isFinite(v) ? v : 0;
+    },
+    setBest(id, v) {
+        if (v > this.best(id)) {
+            localStorage.setItem('gijoArcade_best_' + id, String(v));
+            return true; // 신기록
+        }
+        return false;
+    }
+};
+
+/** 아주 작은 효과음. 첫 사용자 입력 뒤에만 열립니다(브라우저 자동재생 정책). */
+const sfx = {
+    ctx: null,
+    init() {
+        if (this.ctx) return;
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) this.ctx = new AC();
+        } catch { /* 소리는 없어도 게임은 됩니다 */ }
+    },
+    blip(freq = 440, dur = 0.06, type = 'square', gain = 0.05) {
+        if (!this.ctx || this.ctx.state === 'suspended') return;
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(gain, t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        osc.connect(g).connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + dur);
+    },
+    good() { this.blip(880, 0.07, 'square', 0.05); },
+    hit()  { this.blip(180, 0.12, 'sawtooth', 0.06); },
+    over() { this.blip(110, 0.5, 'sawtooth', 0.07); }
+};
+
+const vibe = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
+
+/**
+ * 캔버스를 표시 크기에 맞춰 잡아줍니다.
+ * devicePixelRatio 를 반영하지 않으면 고해상도 폰에서 전부 흐릿하게 보입니다.
+ * 2배까지만 올리는 건 3배 기기에서 픽셀이 9배가 되어 프레임이 떨어지기 때문입니다.
+ */
+function fitCanvas(canvas) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width));
+    const h = Math.max(1, Math.round(r.height));
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { ctx, w, h };
+}
+
+/** 네온 느낌의 사각형 하나. 게임 4개가 전부 이걸로 그립니다. */
+function neonRect(ctx, x, y, w, h, color, radius = 3, glow = 8) {
+    ctx.save();
+    ctx.shadowBlur = glow;
+    ctx.shadowColor = color;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(x, y, w, h, radius);
+    else ctx.rect(x, y, w, h);
+    ctx.fill();
+    ctx.restore();
+}
+
+/* ============================================================
+   게임 공통 뼈대
+
+   각 게임은 { id, canvas, overlay, start(), stop(), ... } 형태의 객체이고
+   engine 이 rAF 루프와 화면 전환을 맡습니다. 게임을 떠날 때 반드시 stop() 이
+   불려야 합니다 — 안 그러면 메뉴로 나간 뒤에도 루프가 계속 돌면서 배터리를
+   먹고, 다시 들어올 때 루프가 두 개가 됩니다.
+   ============================================================ */
+
+class Game {
+    constructor(id, screenId, canvasId) {
+        this.id = id;
+        this.screen = document.getElementById(screenId);
+        this.canvas = document.getElementById(canvasId);
+        this.overlay = this.screen.querySelector('[data-overlay]');
+        this.raf = null;
+        this.last = 0;
+        this.running = false;
+        this.over = false;
+        this.score = 0;
+        this._binds = [];
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    /** addEventListener 를 기억해뒀다가 stop() 에서 한 번에 떼어냅니다. */
+    on(target, type, fn, opts) {
+        target.addEventListener(type, fn, opts);
+        this._binds.push([target, type, fn, opts]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn, o]) => t.removeEventListener(ty, fn, o));
+        this._binds = [];
+    }
+
+    showOverlay(html) {
+        this.overlay.innerHTML = html;
+        this.overlay.classList.remove('hidden');
+        const btn = this.overlay.querySelector('.ov-btn');
+        if (btn) btn.onclick = () => { sfx.init(); this.begin(); };
+    }
+
+    hideOverlay() { this.overlay.classList.add('hidden'); }
+
+    intro() {
+        this.setStat('bestval', store.best(this.id));
+        this.showOverlay(`
+            <div class="ov-title">${this.titleEn}</div>
+            <div class="ov-kr">${this.titleKr}</div>
+            <div class="ov-best">BEST ${store.best(this.id)}</div>
+            <button class="ov-btn">시작 · Start</button>
+            <p class="ov-hint">${this.introHint}</p>
+        `);
+    }
+
+    gameOver() {
+        if (this.over) return;
+        this.over = true;
+        this.running = false;
+        sfx.over();
+        vibe([0, 120, 60, 200]);
+        const isNew = store.setBest(this.id, this.score);
+        this.setStat('bestval', store.best(this.id));
+        this.showOverlay(`
+            <div class="ov-title">GAME OVER</div>
+            <div class="ov-kr">게임 종료</div>
+            <div class="ov-score">${this.score}</div>
+            <div class="ov-best">BEST ${store.best(this.id)}</div>
+            ${isNew ? '<div class="ov-new">🏆 신기록! · New record!</div>' : ''}
+            <button class="ov-btn">다시 하기 · Retry</button>
+        `);
+    }
+
+    /**
+     * 화면에 들어올 때.
+     *
+     * 🔴 입력 바인딩은 반드시 여기서 한 번만 합니다. 예전에는 각 게임의 reset() 안에서
+     *    했는데, reset() 은 enter() 와 begin() 양쪽에서 불립니다. 그래서 시작할 때마다
+     *    리스너가 한 겹씩 쌓여, 재시도를 반복하면 스와이프 한 번에 방향이 두 번 세 번
+     *    바뀌었습니다(뱀이 제멋대로 꺾임). exit() 의 offAll() 과 짝을 맞춥니다.
+     */
+    enter() {
+        this.resize();
+        this.over = false;
+        this.running = false;
+        this.offAll();
+        this.bindInput();
+        this.reset();
+        this.draw();
+        this.intro();
+    }
+
+    /** 화면을 떠날 때 — 루프와 리스너를 반드시 정리합니다. */
+    exit() {
+        this.running = false;
+        if (this.raf) cancelAnimationFrame(this.raf);
+        this.raf = null;
+        this.offAll();
+    }
+
+    resize() {
+        const { ctx, w, h } = fitCanvas(this.canvas);
+        this.ctx = ctx;
+        this.W = w;
+        this.H = h;
+        if (this.onResize) this.onResize();
+    }
+
+    begin() {
+        this.hideOverlay();
+        this.over = false;
+        this.score = 0;
+        this.reset();
+        this.running = true;
+        this.last = performance.now();
+        if (this.raf) cancelAnimationFrame(this.raf);
+        const loop = (t) => {
+            if (!this.running) return;
+            // 탭을 백그라운드에 뒀다 오면 dt 가 몇 초로 튑니다. 물리가 터지지 않게 자릅니다.
+            const dt = Math.min((t - this.last) / 1000, 0.05);
+            this.last = t;
+            this.update(dt);
+            this.draw();
+            if (this.running) this.raf = requestAnimationFrame(loop);
+        };
+        this.raf = requestAnimationFrame(loop);
+    }
+}
+
+/* ============================================================
+   1) Block Drop — 블록 쌓기
+   ============================================================ */
+
+const COLS = 10, ROWS = 20;
+
+const PIECES = [
+    { cells: [[1,1,1,1]],                 color: '#00f3ff' }, // I
+    { cells: [[1,1],[1,1]],               color: '#ffe14d' }, // O
+    { cells: [[0,1,0],[1,1,1]],           color: '#a200ff' }, // T
+    { cells: [[0,1,1],[1,1,0]],           color: '#3ed973' }, // S
+    { cells: [[1,1,0],[0,1,1]],           color: '#ff0055' }, // Z
+    { cells: [[1,0,0],[1,1,1]],           color: '#4d8cff' }, // J
+    { cells: [[0,0,1],[1,1,1]],           color: '#ffaa00' }  // L
+];
+
+class BlockDrop extends Game {
+    constructor() {
+        super('block', 'scr-block', 'cv-block');
+        this.titleEn = 'Block Drop';
+        this.titleKr = '블록 쌓기';
+        this.introHint = '좌우로 밀어 옮기고, 탭하면 회전합니다. 아래로 쓸면 바로 떨어집니다.<br>Drag to move, tap to rotate, swipe down to hard-drop.';
+    }
+
+    reset() {
+        this.grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+        this.lines = 0;
+        this.dropMs = 800;
+        this.acc = 0;
+        this.piece = null;
+        this.setStat('score', 0);
+        this.setStat('lines', 0);
+        this.spawn();
+    }
+
+    onResize() {
+        // 격자가 화면에 꽉 차되 비율(10:20)은 유지되도록 셀 크기를 맞춥니다.
+        this.cell = Math.floor(Math.min(this.W / COLS, this.H / ROWS));
+        this.offX = Math.floor((this.W - this.cell * COLS) / 2);
+        this.offY = Math.floor((this.H - this.cell * ROWS) / 2);
+    }
+
+    spawn() {
+        const p = PIECES[(Math.random() * PIECES.length) | 0];
+        this.piece = {
+            cells: p.cells.map(r => r.slice()),
+            color: p.color,
+            x: ((COLS - p.cells[0].length) / 2) | 0,
+            y: 0
+        };
+        if (this.collides(this.piece.cells, this.piece.x, this.piece.y)) this.gameOver();
+    }
+
+    collides(cells, px, py) {
+        for (let r = 0; r < cells.length; r++) {
+            for (let c = 0; c < cells[r].length; c++) {
+                if (!cells[r][c]) continue;
+                const x = px + c, y = py + r;
+                if (x < 0 || x >= COLS || y >= ROWS) return true;
+                if (y >= 0 && this.grid[y][x]) return true;
+            }
+        }
+        return false;
+    }
+
+    rotate() {
+        const c = this.piece.cells;
+        // 전치 후 각 행을 뒤집으면 시계방향 90도입니다.
+        const rotated = c[0].map((_, i) => c.map(row => row[i]).reverse());
+        // 벽에 붙어 있을 때도 돌아가도록 좌우로 살짝 밀어 봅니다(월킥).
+        for (const dx of [0, -1, 1, -2, 2]) {
+            if (!this.collides(rotated, this.piece.x + dx, this.piece.y)) {
+                this.piece.cells = rotated;
+                this.piece.x += dx;
+                sfx.blip(660, 0.04);
+                return;
+            }
+        }
+    }
+
+    move(dx) {
+        if (!this.collides(this.piece.cells, this.piece.x + dx, this.piece.y)) {
+            this.piece.x += dx;
+        }
+    }
+
+    stepDown() {
+        if (!this.collides(this.piece.cells, this.piece.x, this.piece.y + 1)) {
+            this.piece.y++;
+            return true;
+        }
+        this.lock();
+        return false;
+    }
+
+    hardDrop() {
+        while (!this.collides(this.piece.cells, this.piece.x, this.piece.y + 1)) this.piece.y++;
+        this.lock();
+    }
+
+    lock() {
+        const { cells, x, y, color } = this.piece;
+        for (let r = 0; r < cells.length; r++) {
+            for (let c = 0; c < cells[r].length; c++) {
+                if (cells[r][c] && y + r >= 0) this.grid[y + r][x + c] = color;
+            }
+        }
+        this.clearLines();
+        this.spawn();
+    }
+
+    clearLines() {
+        let cleared = 0;
+        for (let r = ROWS - 1; r >= 0; r--) {
+            if (this.grid[r].every(Boolean)) {
+                this.grid.splice(r, 1);
+                this.grid.unshift(Array(COLS).fill(null));
+                cleared++;
+                r++; // 같은 줄을 다시 검사 (위에서 내려온 줄도 꽉 찼을 수 있음)
+            }
+        }
+        if (!cleared) return;
+        this.lines += cleared;
+        // 한 번에 여러 줄을 지울수록 크게 줍니다.
+        this.score += [0, 100, 300, 500, 800][cleared];
+        this.setStat('score', this.score);
+        this.setStat('lines', this.lines);
+        // 10줄마다 빨라집니다(최소 120ms).
+        this.dropMs = Math.max(120, 800 - Math.floor(this.lines / 10) * 70);
+        sfx.good();
+        vibe(cleared >= 2 ? [0, 40, 30, 60] : 20);
+    }
+
+    bindInput() {
+        let sx = 0, sy = 0, lastX = 0, moved = false, startT = 0;
+
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault();
+            sfx.init();
+            const t = e.touches[0];
+            sx = lastX = t.clientX; sy = t.clientY;
+            moved = false; startT = performance.now();
+        }, { passive: false });
+
+        this.on(this.canvas, 'touchmove', (e) => {
+            e.preventDefault();
+            if (!this.running) return;
+            const t = e.touches[0];
+            // 한 칸 폭만큼 끌 때마다 한 칸씩 옮깁니다.
+            const dx = t.clientX - lastX;
+            if (Math.abs(dx) > this.cell) {
+                this.move(dx > 0 ? 1 : -1);
+                lastX = t.clientX;
+                moved = true;
+            }
+            if (t.clientY - sy > this.cell * 2.5 && Math.abs(t.clientX - sx) < this.cell * 2) {
+                this.hardDrop();
+                moved = true;
+                sy = t.clientY + 9999; // 한 번의 쓸기로 두 번 떨어지지 않게
+            }
+        }, { passive: false });
+
+        this.on(this.canvas, 'touchend', (e) => {
+            e.preventDefault();
+            if (!this.running) return;
+            // 거의 안 움직인 짧은 터치 = 회전
+            if (!moved && performance.now() - startT < 300) this.rotate();
+        }, { passive: false });
+
+        // 데스크톱에서도 해볼 수 있게 키보드도 받습니다.
+        this.on(window, 'keydown', (e) => {
+            if (!this.running) return;
+            if (e.key === 'ArrowLeft') this.move(-1);
+            else if (e.key === 'ArrowRight') this.move(1);
+            else if (e.key === 'ArrowDown') this.stepDown();
+            else if (e.key === 'ArrowUp' || e.key === ' ') { e.preventDefault(); this.rotate(); }
+        });
+    }
+
+    update(dt) {
+        this.acc += dt * 1000;
+        if (this.acc >= this.dropMs) {
+            this.acc = 0;
+            this.stepDown();
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx, cell = this.cell, ox = this.offX, oy = this.offY;
+        ctx.clearRect(0, 0, this.W, this.H);
+
+        // 판 배경 + 격자
+        ctx.fillStyle = '#0b0b10';
+        ctx.fillRect(ox, oy, cell * COLS, cell * ROWS);
+        ctx.strokeStyle = 'rgba(255,255,255,0.045)';
+        ctx.lineWidth = 1;
+        for (let c = 0; c <= COLS; c++) {
+            ctx.beginPath();
+            ctx.moveTo(ox + c * cell + 0.5, oy);
+            ctx.lineTo(ox + c * cell + 0.5, oy + cell * ROWS);
+            ctx.stroke();
+        }
+        for (let r = 0; r <= ROWS; r++) {
+            ctx.beginPath();
+            ctx.moveTo(ox, oy + r * cell + 0.5);
+            ctx.lineTo(ox + cell * COLS, oy + r * cell + 0.5);
+            ctx.stroke();
+        }
+
+        // 쌓인 블록
+        for (let r = 0; r < ROWS; r++) {
+            for (let c = 0; c < COLS; c++) {
+                if (this.grid[r][c]) {
+                    neonRect(ctx, ox + c * cell + 1, oy + r * cell + 1, cell - 2, cell - 2, this.grid[r][c], 3, 6);
+                }
+            }
+        }
+
+        // 떨어질 자리 미리보기 — 어디에 놓일지 모르면 조작이 답답합니다.
+        if (this.piece && !this.over) {
+            let gy = this.piece.y;
+            while (!this.collides(this.piece.cells, this.piece.x, gy + 1)) gy++;
+            ctx.save();
+            ctx.globalAlpha = 0.22;
+            this.piece.cells.forEach((row, r) => row.forEach((v, c) => {
+                if (v) neonRect(ctx, ox + (this.piece.x + c) * cell + 1, oy + (gy + r) * cell + 1, cell - 2, cell - 2, this.piece.color, 3, 0);
+            }));
+            ctx.restore();
+
+            this.piece.cells.forEach((row, r) => row.forEach((v, c) => {
+                if (v && this.piece.y + r >= 0) {
+                    neonRect(ctx, ox + (this.piece.x + c) * cell + 1, oy + (this.piece.y + r) * cell + 1, cell - 2, cell - 2, this.piece.color, 3, 10);
+                }
+            }));
+        }
+    }
+}
+
+/* ============================================================
+   2) Space Shooter — 비행기 슈팅
+   ============================================================ */
+
+class SpaceShooter extends Game {
+    constructor() {
+        super('shoot', 'scr-shoot', 'cv-shoot');
+        this.titleEn = 'Space Shooter';
+        this.titleKr = '비행기 슈팅';
+        this.introHint = '화면을 끌어 비행기를 옮기세요. 총알은 알아서 나갑니다.<br>Drag to move your ship. It fires automatically.';
+    }
+
+    reset() {
+        this.ship = { x: this.W / 2, y: this.H - 46, r: 14 };
+        this.bullets = [];
+        this.enemyShots = [];
+        this.enemies = [];
+        this.stars = Array.from({ length: 46 }, () => ({
+            x: Math.random() * this.W, y: Math.random() * this.H,
+            s: 0.4 + Math.random() * 1.4, v: 14 + Math.random() * 46
+        }));
+        this.wave = 1;
+        this.lives = 3;
+        this.fireAcc = 0;
+        this.invuln = 0;
+        this.setStat('score', 0);
+        this.setStat('wave', 1);
+        this.setStat('life', 3);
+        this.spawnWave();
+    }
+
+    onResize() {
+        if (this.ship) {
+            this.ship.y = this.H - 46;
+            this.ship.x = Math.min(this.ship.x, this.W - 16);
+        }
+    }
+
+    spawnWave() {
+        this.enemies = [];
+        const cols = Math.min(7, 4 + Math.floor(this.wave / 2));
+        const rows = Math.min(4, 2 + Math.floor(this.wave / 3));
+        const gapX = this.W / (cols + 1);
+        const palette = ['#ff0055', '#ff6b9d', '#a200ff', '#4d8cff'];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                this.enemies.push({
+                    x: gapX * (c + 1), y: 52 + r * 40,
+                    baseX: gapX * (c + 1),
+                    r: 13, color: palette[r % palette.length],
+                    diving: false, vx: 0, vy: 0,
+                    hp: 1 + (this.wave > 4 && r === 0 ? 1 : 0)
+                });
+            }
+        }
+        this.swing = 0;
+        this.enemyDir = 1;
+        this.descend = 0;
+    }
+
+    bindInput() {
+        const moveTo = (clientX) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.ship.x = Math.max(16, Math.min(this.W - 16, clientX - rect.left));
+        };
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault(); sfx.init();
+            moveTo(e.touches[0].clientX);
+        }, { passive: false });
+        this.on(this.canvas, 'touchmove', (e) => {
+            e.preventDefault();
+            moveTo(e.touches[0].clientX);
+        }, { passive: false });
+        this.on(this.canvas, 'mousemove', (e) => {
+            if (e.buttons) moveTo(e.clientX);
+        });
+        this.on(window, 'keydown', (e) => {
+            if (!this.running) return;
+            if (e.key === 'ArrowLeft') this.ship.x = Math.max(16, this.ship.x - 24);
+            if (e.key === 'ArrowRight') this.ship.x = Math.min(this.W - 16, this.ship.x + 24);
+        });
+    }
+
+    update(dt) {
+        // 배경 별
+        this.stars.forEach(s => {
+            s.y += s.v * dt;
+            if (s.y > this.H) { s.y = -2; s.x = Math.random() * this.W; }
+        });
+
+        if (this.invuln > 0) this.invuln -= dt;
+
+        // 자동 발사
+        this.fireAcc += dt;
+        const fireRate = 0.22;
+        if (this.fireAcc >= fireRate) {
+            this.fireAcc = 0;
+            this.bullets.push({ x: this.ship.x, y: this.ship.y - 16, v: -430 });
+            sfx.blip(1200, 0.02, 'square', 0.02);
+        }
+
+        this.bullets.forEach(b => b.y += b.v * dt);
+        this.bullets = this.bullets.filter(b => b.y > -10);
+
+        this.enemyShots.forEach(b => b.y += b.v * dt);
+        this.enemyShots = this.enemyShots.filter(b => b.y < this.H + 10);
+
+        // 편대는 좌우로 흔들리며 조금씩 내려옵니다.
+        const speed = 26 + this.wave * 7;
+        this.swing += this.enemyDir * speed * dt;
+        if (Math.abs(this.swing) > 34) {
+            this.enemyDir *= -1;
+            this.descend += 9;
+        }
+
+        this.enemies.forEach(en => {
+            if (en.diving) {
+                en.x += en.vx * dt;
+                en.y += en.vy * dt;
+                // 아래로 빠져나가면 위에서 다시 편대로 복귀
+                if (en.y > this.H + 20) {
+                    en.diving = false;
+                    en.y = -20;
+                    en.vx = en.vy = 0;
+                }
+            } else {
+                en.x = en.baseX + this.swing;
+                en.y += 0; // 세로는 descend 로 반영
+            }
+        });
+
+        // 가끔 한 대가 급강하합니다.
+        if (Math.random() < dt * (0.35 + this.wave * 0.09)) {
+            const pool = this.enemies.filter(e => !e.diving);
+            if (pool.length) {
+                const en = pool[(Math.random() * pool.length) | 0];
+                en.diving = true;
+                en.vx = (this.ship.x - en.x) * 0.55;
+                en.vy = 130 + this.wave * 14;
+            }
+        }
+
+        // 적 사격
+        if (Math.random() < dt * (0.7 + this.wave * 0.2)) {
+            const pool = this.enemies.filter(e => e.y < this.H - 80);
+            if (pool.length) {
+                const en = pool[(Math.random() * pool.length) | 0];
+                this.enemyShots.push({ x: en.x, y: en.y + 12, v: 190 + this.wave * 10 });
+            }
+        }
+
+        const enemyY = (en) => en.diving ? en.y : en.y + this.descend;
+
+        // 내 총알 ↔ 적
+        for (let i = this.bullets.length - 1; i >= 0; i--) {
+            const b = this.bullets[i];
+            for (let j = this.enemies.length - 1; j >= 0; j--) {
+                const en = this.enemies[j];
+                const ey = enemyY(en);
+                if (Math.hypot(b.x - en.x, b.y - ey) < en.r + 4) {
+                    this.bullets.splice(i, 1);
+                    en.hp--;
+                    if (en.hp <= 0) {
+                        this.enemies.splice(j, 1);
+                        this.score += en.diving ? 150 : 100;
+                        this.setStat('score', this.score);
+                        sfx.good();
+                    } else {
+                        sfx.blip(300, 0.04);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // 적 총알 / 적 본체 ↔ 나
+        const hitMe = () => {
+            if (this.invuln > 0) return;
+            this.lives--;
+            this.setStat('life', Math.max(0, this.lives));
+            this.invuln = 1.6;
+            sfx.hit();
+            vibe(90);
+            if (this.lives <= 0) this.gameOver();
+        };
+
+        for (let i = this.enemyShots.length - 1; i >= 0; i--) {
+            const b = this.enemyShots[i];
+            if (Math.hypot(b.x - this.ship.x, b.y - this.ship.y) < this.ship.r + 4) {
+                this.enemyShots.splice(i, 1);
+                hitMe();
+            }
+        }
+        for (const en of this.enemies) {
+            const ey = enemyY(en);
+            if (Math.hypot(en.x - this.ship.x, ey - this.ship.y) < en.r + this.ship.r - 4) {
+                en.diving = false; en.y = -30;
+                hitMe();
+            }
+            // 편대가 바닥까지 내려오면 실패
+            if (ey > this.H - 24 && !en.diving) hitMe();
+        }
+
+        // 다음 웨이브
+        if (this.enemies.length === 0) {
+            this.wave++;
+            this.setStat('wave', this.wave);
+            this.score += 250;
+            this.setStat('score', this.score);
+            this.spawnWave();
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.W, this.H);
+        ctx.fillStyle = '#05050a';
+        ctx.fillRect(0, 0, this.W, this.H);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        this.stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
+
+        this.enemies.forEach(en => {
+            const ey = en.diving ? en.y : en.y + this.descend;
+            ctx.save();
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = en.color;
+            ctx.fillStyle = en.color;
+            // 아래를 향한 삼각형 = 적기
+            ctx.beginPath();
+            ctx.moveTo(en.x, ey + en.r);
+            ctx.lineTo(en.x - en.r, ey - en.r * 0.7);
+            ctx.lineTo(en.x + en.r, ey - en.r * 0.7);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        });
+
+        ctx.fillStyle = '#fff';
+        this.bullets.forEach(b => neonRect(ctx, b.x - 1.5, b.y - 8, 3, 12, '#00f3ff', 2, 8));
+        this.enemyShots.forEach(b => neonRect(ctx, b.x - 2, b.y - 5, 4, 10, '#ffe14d', 2, 8));
+
+        // 무적 시간에는 깜빡입니다.
+        if (this.invuln <= 0 || Math.floor(this.invuln * 12) % 2 === 0) {
+            const s = this.ship;
+            ctx.save();
+            ctx.shadowBlur = 16;
+            ctx.shadowColor = '#00f3ff';
+            ctx.fillStyle = '#e8feff';
+            ctx.beginPath();
+            ctx.moveTo(s.x, s.y - s.r);
+            ctx.lineTo(s.x - s.r, s.y + s.r * 0.8);
+            ctx.lineTo(s.x, s.y + s.r * 0.35);
+            ctx.lineTo(s.x + s.r, s.y + s.r * 0.8);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+    }
+}
+
+/* ============================================================
+   3) Snake — 뱀 키우기
+   ============================================================ */
+
+class Snake extends Game {
+    constructor() {
+        super('snake', 'scr-snake', 'cv-snake');
+        this.titleEn = 'Snake';
+        this.titleKr = '뱀 키우기';
+        this.introHint = '쓸어서 방향을 바꾸세요. 먹을수록 길어지고 빨라집니다.<br>Swipe to turn. It gets longer and faster as you eat.';
+    }
+
+    onResize() {
+        // 짧은 변만 보고 칸을 정하면 세로로 긴 폰에서 40칸이 넘게 나와, 칸이 잘고
+        // 판이 너무 넓어집니다. 가로 16칸 / 세로 24칸을 기준으로 잡습니다.
+        this.cell = Math.max(12, Math.floor(Math.min(this.W / 16, this.H / 24)));
+        this.cols = Math.floor(this.W / this.cell);
+        this.rows = Math.floor(this.H / this.cell);
+        this.offX = Math.floor((this.W - this.cols * this.cell) / 2);
+        this.offY = Math.floor((this.H - this.rows * this.cell) / 2);
+    }
+
+    reset() {
+        this.onResize();
+        // 가운데에서 시작하면 오른쪽 벽까지 8칸뿐이라, 조작법을 읽는 사이에 박습니다.
+        // 왼쪽 1/3 지점에서 시작해 달릴 거리를 벌어줍니다.
+        const cx = Math.max(3, Math.floor(this.cols / 3)), cy = Math.floor(this.rows / 2);
+        this.snake = [{ x: cx, y: cy }, { x: cx - 1, y: cy }, { x: cx - 2, y: cy }];
+        this.dir = { x: 1, y: 0 };
+        this.pendingDir = null;
+        // 🔴 첫 조작 전에는 움직이지 않습니다. 예전에는 시작 버튼을 누른 순간부터
+        //    오른쪽으로 달려서, 안내를 읽는 1~2초 사이에 벽에 박고 끝났습니다.
+        this.awaitingFirstMove = true;
+        this.stepMs = 150;
+        this.acc = 0;
+        this.setStat('score', 0);
+        this.setStat('bestval', store.best(this.id));
+        this.placeFood();
+    }
+
+    placeFood() {
+        const taken = new Set(this.snake.map(s => s.x + ',' + s.y));
+        let x, y, guard = 0;
+        do {
+            x = (Math.random() * this.cols) | 0;
+            y = (Math.random() * this.rows) | 0;
+        } while (taken.has(x + ',' + y) && ++guard < 500);
+        this.food = { x, y };
+    }
+
+    turn(x, y) {
+        // 몸통으로 되돌아가는 반대 방향은 막습니다.
+        if (this.dir.x === -x && this.dir.y === -y) return;
+        this.pendingDir = { x, y };
+        this.awaitingFirstMove = false;
+    }
+
+    bindInput() {
+        let sx = 0, sy = 0;
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault(); sfx.init();
+            sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+        }, { passive: false });
+        this.on(this.canvas, 'touchend', (e) => {
+            e.preventDefault();
+            const t = e.changedTouches[0];
+            const dx = t.clientX - sx, dy = t.clientY - sy;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return; // 그냥 탭
+            if (Math.abs(dx) > Math.abs(dy)) this.turn(dx > 0 ? 1 : -1, 0);
+            else this.turn(0, dy > 0 ? 1 : -1);
+        }, { passive: false });
+        this.on(window, 'keydown', (e) => {
+            if (!this.running) return;
+            const map = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+            if (map[e.key]) { e.preventDefault(); this.turn(...map[e.key]); }
+        });
+    }
+
+    update(dt) {
+        if (this.awaitingFirstMove) return;
+
+        this.acc += dt * 1000;
+        if (this.acc < this.stepMs) return;
+        this.acc = 0;
+
+        if (this.pendingDir) { this.dir = this.pendingDir; this.pendingDir = null; }
+
+        const head = { x: this.snake[0].x + this.dir.x, y: this.snake[0].y + this.dir.y };
+
+        if (head.x < 0 || head.y < 0 || head.x >= this.cols || head.y >= this.rows) return this.gameOver();
+        // 꼬리 끝은 이번 턴에 비워지므로 충돌에서 제외합니다.
+        if (this.snake.slice(0, -1).some(s => s.x === head.x && s.y === head.y)) return this.gameOver();
+
+        this.snake.unshift(head);
+
+        if (head.x === this.food.x && head.y === this.food.y) {
+            this.score += 10;
+            this.setStat('score', this.score);
+            this.stepMs = Math.max(60, this.stepMs - 4);
+            this.placeFood();
+            sfx.good();
+            vibe(18);
+        } else {
+            this.snake.pop();
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx, cell = this.cell, ox = this.offX, oy = this.offY;
+        ctx.clearRect(0, 0, this.W, this.H);
+        ctx.fillStyle = '#07100b';
+        ctx.fillRect(ox, oy, this.cols * cell, this.rows * cell);
+
+        ctx.strokeStyle = 'rgba(196,255,77,0.06)';
+        ctx.lineWidth = 1;
+        for (let c = 0; c <= this.cols; c++) {
+            ctx.beginPath(); ctx.moveTo(ox + c * cell + .5, oy); ctx.lineTo(ox + c * cell + .5, oy + this.rows * cell); ctx.stroke();
+        }
+        for (let r = 0; r <= this.rows; r++) {
+            ctx.beginPath(); ctx.moveTo(ox, oy + r * cell + .5); ctx.lineTo(ox + this.cols * cell, oy + r * cell + .5); ctx.stroke();
+        }
+
+        if (this.food) {
+            neonRect(ctx, ox + this.food.x * cell + cell * 0.2, oy + this.food.y * cell + cell * 0.2,
+                cell * 0.6, cell * 0.6, '#ff0055', cell, 14);
+        }
+
+        this.snake.forEach((s, i) => {
+            const color = i === 0 ? '#eaffb0' : '#3ed973';
+            neonRect(ctx, ox + s.x * cell + 1, oy + s.y * cell + 1, cell - 2, cell - 2, color, 4, i === 0 ? 14 : 6);
+        });
+
+        if (this.awaitingFirstMove && this.running) {
+            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.font = '600 13px ' + getComputedStyle(document.body).fontFamily;
+            ctx.textAlign = 'center';
+            ctx.fillText('쓸어서 출발 · Swipe to start', this.W / 2, this.H * 0.5);
+        }
+    }
+}
+
+/* ============================================================
+   4) Brick Breaker — 벽돌 깨기
+   ============================================================ */
+
+class BrickBreaker extends Game {
+    constructor() {
+        super('brick', 'scr-brick', 'cv-brick');
+        this.titleEn = 'Brick Breaker';
+        this.titleKr = '벽돌 깨기';
+        this.introHint = '화면을 끌어 받침대를 움직이세요. 공을 놓치면 목숨이 줄어듭니다.<br>Drag to move the paddle. Miss the ball and you lose a life.';
+    }
+
+    reset() {
+        this.stage = 1;
+        this.lives = 3;
+        this.setStat('score', 0);
+        this.setStat('stage', 1);
+        this.setStat('life', 3);
+        this.buildStage();
+    }
+
+    onResize() {
+        this.padW = Math.max(56, this.W * 0.2);
+        this.padH = 12;
+        if (this.pad) this.pad.x = Math.min(this.pad.x, this.W - this.padW / 2);
+    }
+
+    buildStage() {
+        this.onResize();
+        this.pad = { x: this.W / 2, y: this.H - 26 };
+        this.resetBall();
+
+        const cols = 7;
+        const rows = Math.min(7, 4 + this.stage);
+        const padX = 8, gap = 4;
+        const bw = (this.W - padX * 2 - gap * (cols - 1)) / cols;
+        const bh = 18;
+        const palette = ['#ff0055', '#ffaa00', '#ffe14d', '#3ed973', '#00f3ff', '#a200ff'];
+        this.bricks = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                this.bricks.push({
+                    x: padX + c * (bw + gap), y: 40 + r * (bh + gap),
+                    w: bw, h: bh,
+                    color: palette[r % palette.length],
+                    hp: r === 0 && this.stage > 2 ? 2 : 1
+                });
+            }
+        }
+    }
+
+    resetBall() {
+        const speed = 260 + this.stage * 18;
+        const angle = (-60 - Math.random() * 60) * Math.PI / 180; // 위쪽으로
+        this.ball = {
+            x: this.pad.x, y: this.pad.y - 14, r: 7,
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            stuck: true
+        };
+    }
+
+    bindInput() {
+        const moveTo = (clientX) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.pad.x = Math.max(this.padW / 2, Math.min(this.W - this.padW / 2, clientX - rect.left));
+            if (this.ball.stuck) this.ball.x = this.pad.x;
+        };
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault(); sfx.init();
+            moveTo(e.touches[0].clientX);
+            this.ball.stuck = false;
+        }, { passive: false });
+        this.on(this.canvas, 'touchmove', (e) => {
+            e.preventDefault();
+            moveTo(e.touches[0].clientX);
+        }, { passive: false });
+        this.on(this.canvas, 'mousemove', (e) => moveTo(e.clientX));
+        this.on(this.canvas, 'mousedown', () => { this.ball.stuck = false; });
+    }
+
+    update(dt) {
+        const b = this.ball;
+        if (b.stuck) { b.x = this.pad.x; b.y = this.pad.y - 14; return; }
+
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+
+        if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx); sfx.blip(500, 0.03); }
+        if (b.x > this.W - b.r) { b.x = this.W - b.r; b.vx = -Math.abs(b.vx); sfx.blip(500, 0.03); }
+        if (b.y < b.r) { b.y = b.r; b.vy = Math.abs(b.vy); sfx.blip(500, 0.03); }
+
+        // 받침대
+        if (b.vy > 0 && b.y + b.r >= this.pad.y && b.y - b.r <= this.pad.y + this.padH &&
+            b.x >= this.pad.x - this.padW / 2 && b.x <= this.pad.x + this.padW / 2) {
+            b.y = this.pad.y - b.r;
+            // 받침대의 어디에 맞았는지로 각도를 바꿉니다 — 조준이 가능해집니다.
+            const rel = (b.x - this.pad.x) / (this.padW / 2);
+            const speed = Math.hypot(b.vx, b.vy);
+            const angle = rel * (Math.PI / 3); // 최대 60도
+            b.vx = Math.sin(angle) * speed;
+            b.vy = -Math.cos(angle) * speed;
+            sfx.blip(700, 0.04);
+            vibe(12);
+        }
+
+        // 바닥
+        if (b.y - b.r > this.H) {
+            this.lives--;
+            this.setStat('life', Math.max(0, this.lives));
+            sfx.hit();
+            vibe(80);
+            if (this.lives <= 0) return this.gameOver();
+            this.resetBall();
+            return;
+        }
+
+        // 벽돌
+        for (let i = this.bricks.length - 1; i >= 0; i--) {
+            const k = this.bricks[i];
+            if (b.x + b.r < k.x || b.x - b.r > k.x + k.w || b.y + b.r < k.y || b.y - b.r > k.y + k.h) continue;
+
+            // 어느 면으로 들어왔는지 겹친 정도로 판단합니다.
+            const overlapX = Math.min(b.x + b.r - k.x, k.x + k.w - (b.x - b.r));
+            const overlapY = Math.min(b.y + b.r - k.y, k.y + k.h - (b.y - b.r));
+            if (overlapX < overlapY) b.vx = -b.vx;
+            else b.vy = -b.vy;
+
+            k.hp--;
+            if (k.hp <= 0) {
+                this.bricks.splice(i, 1);
+                this.score += 50;
+            } else {
+                this.score += 10;
+            }
+            this.setStat('score', this.score);
+            sfx.good();
+            break; // 한 프레임에 벽돌 하나만
+        }
+
+        if (this.bricks.length === 0) {
+            this.stage++;
+            this.score += 300;
+            this.setStat('score', this.score);
+            this.setStat('stage', this.stage);
+            this.buildStage();
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.W, this.H);
+        ctx.fillStyle = '#0d0a04';
+        ctx.fillRect(0, 0, this.W, this.H);
+
+        this.bricks.forEach(k => {
+            ctx.save();
+            if (k.hp > 1) ctx.globalAlpha = 1;
+            neonRect(ctx, k.x, k.y, k.w, k.h, k.color, 4, k.hp > 1 ? 14 : 7);
+            ctx.restore();
+        });
+
+        neonRect(ctx, this.pad.x - this.padW / 2, this.pad.y, this.padW, this.padH, '#ffaa00', 6, 14);
+
+        const b = this.ball;
+        ctx.save();
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = '#ffe14d';
+        ctx.fillStyle = '#fffbe8';
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        if (b.stuck) {
+            ctx.fillStyle = 'rgba(255,255,255,0.55)';
+            ctx.font = '600 13px ' + getComputedStyle(document.body).fontFamily;
+            ctx.textAlign = 'center';
+            ctx.fillText('화면을 눌러 시작 · Tap to launch', this.W / 2, this.H * 0.62);
+        }
+    }
+}
+
+/* ============================================================
+   화면 전환
+   ============================================================ */
+
+const games = {
+    block: new BlockDrop(),
+    shoot: new SpaceShooter(),
+    snake: new Snake(),
+    brick: new BrickBreaker()
+};
+
+let current = null;
+
+function refreshBests() {
+    document.querySelectorAll('[data-best]').forEach(el => {
+        el.textContent = 'BEST ' + store.best(el.getAttribute('data-best'));
+    });
+}
+
+function show(id, isBack = false) {
+    const target = id === 'menu' ? document.getElementById('scr-menu') : games[id].screen;
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.classList.add('hidden');
+    });
+    target.classList.remove('hidden');
+    target.classList.add('active');
+
+    if (current && games[current]) games[current].exit();
+    current = id === 'menu' ? null : id;
+
+    if (current) {
+        // 화면이 보이게 된 뒤에 크기를 재야 getBoundingClientRect 가 0 이 아닙니다.
+        requestAnimationFrame(() => games[current].enter());
+    } else {
+        refreshBests();
+    }
+
+    if (!isBack) history.pushState({ screen: id }, '');
+}
+
+document.querySelectorAll('[data-go]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        sfx.init();
+        show(btn.getAttribute('data-go'));
+    });
+});
+
+document.querySelectorAll('[data-back]').forEach(btn => {
+    btn.addEventListener('click', () => history.back());
+});
+
+window.addEventListener('popstate', (e) => {
+    show(e.state?.screen || 'menu', true);
+});
+
+// 화면 크기가 바뀌면(회전 등) 캔버스를 다시 잡습니다.
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        if (current && games[current]) {
+            games[current].resize();
+            games[current].draw();
+        }
+    }, 150);
+});
+
+// 앱을 백그라운드로 보내면 게임을 멈춥니다 — 안 보이는 곳에서 목숨이 깎이면 안 됩니다.
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && current && games[current]) {
+        const g = games[current];
+        if (g.running && !g.over) {
+            g.running = false;
+            if (g.raf) cancelAnimationFrame(g.raf);
+            g.showOverlay(`
+                <div class="ov-title">PAUSED</div>
+                <div class="ov-kr">일시정지</div>
+                <div class="ov-score">${g.score}</div>
+                <button class="ov-btn">계속하기 · Resume</button>
+            `);
+            // 기본 begin() 은 점수를 0으로 되돌리므로, 여기서는 이어서 하도록 바꿉니다.
+            const btn = g.overlay.querySelector('.ov-btn');
+            btn.onclick = () => {
+                g.hideOverlay();
+                g.running = true;
+                g.last = performance.now();
+                const loop = (t) => {
+                    if (!g.running) return;
+                    const dt = Math.min((t - g.last) / 1000, 0.05);
+                    g.last = t;
+                    g.update(dt);
+                    g.draw();
+                    if (g.running) g.raf = requestAnimationFrame(loop);
+                };
+                g.raf = requestAnimationFrame(loop);
+            };
+        }
+    }
+});
+
+history.replaceState({ screen: 'menu' }, '');
+refreshBests();
+</script>
+</body>
+</html>

@@ -24,6 +24,7 @@ import { PhotoTranslateModal } from './components/PhotoTranslateModal';
 import { PronunciationModal } from './components/PronunciationModal';
 import { ItineraryTab } from './components/ItineraryTab';
 import { PartyGameModal } from './components/PartyGameModal';
+import { ArcadeModal } from './components/ArcadeModal';
 import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
@@ -59,6 +60,7 @@ export default function App() {
   const [micPracticePhrase, setMicPracticePhrase] = useState<Phrase | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
   const [showPartyGame, setShowPartyGame] = useState<boolean>(false);
+  const [showArcade, setShowArcade] = useState<boolean>(false);
 
   // Custom AI-generated Phrases State
   const [customPhrases, setCustomPhrases] = useState<Phrase[]>(() => {
@@ -270,6 +272,7 @@ export default function App() {
           }
         }}
         onOpenPartyGame={() => setShowPartyGame(true)}
+        onOpenArcade={() => setShowArcade(true)}
       />
 
       {/* Main Content Area */}
@@ -604,6 +607,7 @@ export default function App() {
 
       {/* 파티 게임 — 헤더 아이콘에서 탭 갈아타지 않고 바로 뜹니다 */}
       {showPartyGame && <PartyGameModal onClose={() => setShowPartyGame(false)} />}
+      {showArcade && <ArcadeModal onClose={() => setShowArcade(false)} />}
 
     </div>
   );

@@ -181,7 +181,7 @@ h2.neon-text {
 /* 볼드 벤토 — 균등한 6칸 대신 위계를 준다.
    "시간 폭탄"을 대표 칸으로 키우고, 각 칸 색은 그 모드의 실제 게임
    화면 색과 맞췄다(크로커다일→초록 습지, 타이타닉→맥주 호박색,
-   손가락 사다리→보라, 폭탄→빨강/주황 폭발). 메뉴에서 본 색이 게임
+   러브 드링크→보라, 폭탄→빨강/주황 폭발). 메뉴에서 본 색이 게임
    안에서도 이어지도록 하기 위함. JS 의 app.navigate() 호출은
    손대지 않았다 — 클래스만 다시 그렸다. */
 .quad-menu {
@@ -189,13 +189,15 @@ h2.neon-text {
     flex: 1;
     display: grid;
     grid-template-columns: 1.15fr 1fr;
-    /* 손가락 사다리 배너를 auto(내용만큼)로 두니 다른 칸의 1/3에도 못 미쳤습니다.
-       0.62fr 로 명시해 얇은 띠가 아니라 제 몫의 칸으로 보이게 합니다. */
-    grid-template-rows: repeat(3, minmax(0, 1fr)) 0.62fr;
+    /* 러브 드링크 배너를 auto(내용만큼)로 두니 다른 칸의 1/3에도 못 미쳤습니다.
+       0.62fr 로 명시해 얇은 띠가 아니라 제 몫의 칸으로 보이게 합니다.
+       사다리 게임·업 앤 다운이 들어오면서 4행 → 5행이 됐습니다. */
+    grid-template-rows: repeat(4, minmax(0, 1fr)) 0.62fr;
     gap: 6px;
     /* 하단 여백은 footer-copyright(고정, z-index:100)가 배너 칸 위에
-       겹치지 않도록 남겨둔 것입니다. */
-    padding: 0 6px clamp(22px, 5vw, 30px);
+       겹치지 않도록 남겨둔 것입니다. 행이 4행 → 5행으로 늘면서 22px 로는
+       3px 모자라 겹쳤습니다. */
+    padding: 0 6px clamp(34px, 8vw, 42px);
 }
 
 .quad-btn {
@@ -262,6 +264,8 @@ h2.neon-text {
 .quad-2 { grid-column: 2; grid-row: 2; }
 .quad-4 { grid-column: 1; grid-row: 3; }
 .quad-5 { grid-column: 2; grid-row: 3; }
+.quad-7 { grid-column: 1; grid-row: 4; }
+.quad-8 { grid-column: 2; grid-row: 4; }
 
 /* 시간 폭탄 — 두 행을 차지하는 대표 칸 */
 .quad-3 {
@@ -272,11 +276,11 @@ h2.neon-text {
 .quad-3 .quad-icon { font-size: clamp(2.2rem, 8vw, 3rem); }
 .quad-3 .quad-label-en { font-size: clamp(1rem, 4vw, 1.25rem); }
 
-/* 손가락 사다리 — 하단 전체 폭 배너. 얇은 띠로 보이지 않도록
+/* 러브 드링크 — 하단 전체 폭 배너. 얇은 띠로 보이지 않도록
    아이콘·글자를 다른 칸에 준하는 크기로 키웠습니다. */
 .quad-6 {
     grid-column: 1 / 3;
-    grid-row: 4;
+    grid-row: 5;
     flex-direction: row;
     align-items: center;
     gap: 14px;
@@ -293,6 +297,8 @@ h2.neon-text {
 .quad-4::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
 .quad-5::before { background: linear-gradient(120deg, #ffaa00, #ffe14d); }
 .quad-6::before { background: linear-gradient(90deg, #ff4dd8, var(--tertiary-neon)); }
+.quad-7::before { background: linear-gradient(120deg, #6366f1, #a5b4fc); }
+.quad-8::before { background: linear-gradient(120deg, #14b8a6, #5eead4); }
 
 .btn {
     font-family: var(--font-main);
@@ -1501,7 +1507,7 @@ textarea:focus {
     overflow: hidden;
 }
 
-/* 손가락 사다리 노드 — 원 대신 하트 모양(SVG). 색은 div 의 border/background 가
+/* 러브 드링크 노드 — 원 대신 하트 모양(SVG). 색은 div 의 border/background 가
    아니라 안의 .heart-svg 에 fill/stroke 로 준다 — border-radius 를 안 쓰므로. */
 .bridge-player-node,
 .bridge-target-node {
@@ -1740,10 +1746,20 @@ textarea:focus {
                     <span class="quad-label-en">Neon Titanic</span>
                     <span class="quad-label-kr">찰랑찰랑 타이타닉</span>
                 </button>
+                <button class="quad-btn quad-7" onclick="app.navigate('ladder')">
+                    <span class="quad-icon">&#129692;</span>
+                    <span class="quad-label-en">Ladder Game</span>
+                    <span class="quad-label-kr">사다리 게임</span>
+                </button>
+                <button class="quad-btn quad-8" onclick="app.navigate('updown')">
+                    <span class="quad-icon">&#128290;</span>
+                    <span class="quad-label-en">Up &amp; Down</span>
+                    <span class="quad-label-kr">업 앤 다운</span>
+                </button>
                 <button class="quad-btn quad-6" onclick="app.navigate('bridge')">
-                    <span class="quad-icon">&#127983;</span>
-                    <span class="quad-label-en">Finger Bridge</span>
-                    <span class="quad-label-kr">손가락 사다리</span>
+                    <span class="quad-icon">&#128149;</span>
+                    <span class="quad-label-en">Love Drink</span>
+                    <span class="quad-label-kr">러브 드링크</span>
                 </button>
             </div>
         </section>
@@ -1883,7 +1899,7 @@ textarea:focus {
         <!-- Bridge Screen -->
         <section id="screen-bridge" class="screen hidden bridge-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Finger Bridge<br><span class="title-kr">손가락 사다리</span></h2>
+            <h2 class="neon-text">Love Drink<br><span class="title-kr">러브 드링크</span></h2>
             <div class="bridge-instructions" id="bridge-msg">화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span></div>
             <div id="bridge-area" class="bridge-area"></div>
         </section>
@@ -2021,7 +2037,9 @@ const haptics = {
     loser() { this.vibrate([0, 120, 60, 200, 80, 350]); }
 };
 
-// 손가락 사다리의 연결점(플레이어·타겟 노드) 모양 — 24x24 하트 아이콘 path.
+// 러브 드링크의 연결점(플레이어·타겟 노드) 모양 — 24x24 하트 아이콘 path.
+// (내부 식별자는 bridge* 그대로 둡니다 — 화면에 보이는 이름만 바뀐 것이라
+//  id·클래스까지 바꾸면 얻는 것 없이 깨질 위험만 생깁니다.)
 // viewBox 로 요소 크기에 자동으로 맞춰지므로 clamp() 반응형 크기와 그대로 호환된다.
 const BRIDGE_HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 
@@ -3117,7 +3135,7 @@ const app = {
         }, 400);
     },
 
-    // Finger Bridge Logic
+    // Love Drink Logic (내부 식별자는 bridge* 유지)
     bridgeNodes: [],
     bridgeLoserIndex: -1,
     bridgeIsActive: false,

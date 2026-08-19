@@ -162,6 +162,153 @@ html, body {
 .tile-3::before { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); }
 .tile-4::before { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); }
 
+/* ===== 🔥 HOT 테마 — 심야 라운지 분위기 =====
+   기본 테마(사이언/라임/앰버)는 밝고 오락실 느낌입니다. HOT 을 켜면 자홍·보라
+   위주의 어두운 라운지 톤으로 바꿔, 파티 게임의 HOT 모드와 결이 맞게 합니다.
+   토큰만 갈아끼우므로 각 게임의 로직은 건드리지 않습니다. */
+body.hot {
+    --bg-color: #120610;
+    background-color: #120610;
+}
+
+body.hot .menu-title { text-shadow: 0 0 22px #ff2d78; }
+body.hot .menu-sub { color: #b98aa8; }
+
+body.hot .tile { background: #170a14; }
+body.hot .tile-1::before { background: linear-gradient(120deg, #ff2d78, #ff8fb1); }
+body.hot .tile-2::before { background: linear-gradient(120deg, #d926a9, #ff6bcb); }
+body.hot .tile-3::before { background: linear-gradient(120deg, #a020f0, #e879f9); }
+body.hot .tile-4::before { background: linear-gradient(120deg, #ff4d6d, #ffa07a); }
+
+body.hot canvas { background: #0e0410; }
+body.hot .btn-back { color: #ff8fb1; }
+body.hot .overlay { background: rgba(14, 4, 14, 0.88); }
+body.hot .ov-score { color: #ff6bcb !important; }
+body.hot .ov-btn {
+    background: linear-gradient(120deg, #ff2d78, #c026d3) !important;
+    box-shadow: 0 4px 20px rgba(255, 45, 120, 0.5) !important;
+}
+
+/* 게임 오버·신기록에 뜨는 도발 멘트 */
+.ov-taunt {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #ff8fb1;
+    word-break: keep-all;
+    max-width: 28ch;
+    line-height: 1.5;
+}
+
+.ov-taunt .i18n-sub {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+}
+
+/* ===== 클리어 보상 카드 =====
+   판을 깨거나 구간을 넘길 때 잠깐 떴다 사라집니다. 게임을 멈추지 않도록
+   pointer-events 를 꺼두고, 애니메이션이 끝나면 스스로 제거됩니다. */
+.reward-card {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 18px 28px;
+    border-radius: 20px;
+    background: rgba(20, 4, 18, 0.92);
+    border: 1px solid rgba(255, 45, 120, 0.55);
+    box-shadow: 0 0 44px rgba(255, 45, 120, 0.45);
+    z-index: 6;
+    pointer-events: none;
+    text-align: center;
+    animation: reward-pop 0.36s cubic-bezier(.34,1.56,.64,1),
+               reward-out 0.45s ease 1.5s forwards;
+}
+
+@keyframes reward-pop {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes reward-out {
+    to { transform: translate(-50%, -80%) scale(0.95); opacity: 0; }
+}
+
+.reward-icon {
+    font-size: clamp(2.6rem, 12vw, 3.4rem);
+    line-height: 1;
+    filter: drop-shadow(0 0 20px rgba(255, 45, 120, 0.85));
+}
+
+.reward-kr {
+    font-size: clamp(0.95rem, 4vw, 1.1rem);
+    font-weight: 900;
+    color: #fff;
+    word-break: keep-all;
+}
+
+.reward-en {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ===== HOT 토글 스위치 (메뉴) ===== */
+.hot-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.hot-toggle-label {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: #8b8b95;
+    letter-spacing: 0.02em;
+}
+
+body.hot .hot-toggle-label { color: #ff8fb1; }
+
+.hot-sw {
+    width: 46px;
+    height: 26px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.hot-sw span {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.hot-sw.on {
+    background: linear-gradient(120deg, #ff2d78, #c026d3);
+    box-shadow: 0 0 14px rgba(255, 45, 120, 0.55);
+}
+
+.hot-sw.on span { transform: translateX(20px); }
+
 /* ===== 게임 화면 공통 ===== */
 .game-screen {
     padding-top: env(safe-area-inset-top);
@@ -364,7 +511,12 @@ canvas {
     <section id="scr-menu" class="screen active">
         <div class="menu-header">
             <h1 class="menu-title">GIJO Arcade</h1>
-            <p class="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
+            <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
+            <div class="hot-toggle">
+                <span class="hot-toggle-label">🔥 HOT 테마</span>
+                <button id="hot-sw" class="hot-sw" role="switch" aria-checked="false"
+                        aria-label="HOT 테마"><span></span></button>
+            </div>
         </div>
         <div class="tile-grid">
             <button class="tile tile-1" data-go="block">
@@ -470,6 +622,52 @@ canvas {
 /* ============================================================
    공용 유틸
    ============================================================ */
+
+/* ============================================================
+   🔥 HOT 테마
+
+   파티 게임의 HOT 모드와 같은 성격입니다. 기본은 꺼져 있고, 켜면 색이 심야
+   라운지 톤으로 바뀌면서 게임이 끝날 때 도발적인 멘트가 붙습니다.
+   야한 "분위기"까지가 목적이라 표현은 암시·농담 수준으로만 씁니다.
+   ============================================================ */
+
+const HOT = {
+    on: localStorage.getItem('gijoArcade_hot') === '1',
+    /** 캔버스 배경처럼 JS 로 그리는 색을 테마에 맞게 골라줍니다. */
+    pick(normal, hot) { return this.on ? hot : normal; }
+};
+
+/** 졌을 때 — 놀리는 멘트 */
+const HOT_TAUNTS = [
+    { kr: '그 실력이면 오늘 밤 계속 마셔야겠는데? 🍸', en: "At that score, you're drinking all night." },
+    { kr: '벌써 끝? 실망인데 😏', en: 'Over already? Disappointing.' },
+    { kr: '한 잔 마시고 다시 와 🥃', en: 'Take a shot and come back.' },
+    { kr: '집중이 안 되나 봐? 누구 생각하느라 💭', en: "Distracted? Thinking about someone?" },
+    { kr: '이 정도면 오늘 술값은 네가 내야지 💸', en: "At this rate you're buying the drinks." },
+    { kr: '손이 떨렸어? 긴장했네 😘', en: 'Shaky hands? Someone got nervous.' }
+];
+
+/** 신기록 — 치켜세우는 멘트 */
+const HOT_PRAISE = [
+    { kr: '오늘 밤 주인공은 너다 🔥', en: "Tonight's star is you." },
+    { kr: '이 정도면 자랑해도 됨 😏', en: 'Okay, that one you can brag about.' },
+    { kr: '위험한 매력이 있네 💋', en: "Now that's dangerously good." },
+    { kr: '술은 오늘 안 마셔도 되겠어 🍾', en: 'You earned a night off from drinking.' }
+];
+
+/** 판을 깼을 때 뜨는 보상 카드. 네온 사인 느낌의 아이콘 + 도발 멘트. */
+const HOT_REWARDS = [
+    { icon: '💋', kr: '한 잔 받아', en: 'Here, have a drink' },
+    { icon: '🔥', kr: '오늘 밤 뜨겁네', en: 'The night is heating up' },
+    { icon: '🍸', kr: '이건 칭찬이야', en: 'Take that as a compliment' },
+    { icon: '💃', kr: '분위기 좋은데?', en: 'Now we are talking' },
+    { icon: '😘', kr: '계속 그렇게 해봐', en: 'Keep going like that' },
+    { icon: '🌶️', kr: '매운맛 인정', en: 'Spicy. Respect.' },
+    { icon: '🥂', kr: '이건 건배각이지', en: "That deserves a toast" },
+    { icon: '💫', kr: '눈을 못 떼겠는데', en: "Can't take my eyes off that" }
+];
+
+const pickMsg = (pool) => pool[(Math.random() * pool.length) | 0];
 
 /** 최고 점수는 기기에만 남깁니다(서버 없음). 키는 게임별로 나눕니다. */
 const store = {
@@ -585,6 +783,26 @@ class Game {
         this._binds = [];
     }
 
+    /**
+     * 판을 깼을 때 잠깐 뜨는 보상 카드. HOT 테마일 때만 나옵니다.
+     * 게임 루프를 멈추지 않습니다 — 떴다 사라지는 동안에도 계속 플레이됩니다.
+     */
+    showReward() {
+        if (!HOT.on) return;
+        const wrap = this.canvas.parentElement;
+        const r = pickMsg(HOT_REWARDS);
+        const el = document.createElement('div');
+        el.className = 'reward-card';
+        el.innerHTML =
+            `<span class="reward-icon">${r.icon}</span>` +
+            `<span class="reward-kr">${r.kr}</span>` +
+            `<span class="reward-en">${r.en}</span>`;
+        wrap.appendChild(el);
+        sfx.blip(1046, 0.09, 'triangle', 0.05);
+        vibe([0, 30, 40, 30]);
+        setTimeout(() => el.remove(), 2100);
+    }
+
     showOverlay(html) {
         this.overlay.innerHTML = html;
         this.overlay.classList.remove('hidden');
@@ -596,10 +814,14 @@ class Game {
 
     intro() {
         this.setStat('bestval', store.best(this.id));
+        const tease = HOT.on
+            ? '<div class="ov-taunt">자신 있어? 😏<span class="i18n-sub">Feeling confident?</span></div>'
+            : '';
         this.showOverlay(`
             <div class="ov-title">${this.titleEn}</div>
             <div class="ov-kr">${this.titleKr}</div>
             <div class="ov-best">BEST ${store.best(this.id)}</div>
+            ${tease}
             <button class="ov-btn">시작 · Start</button>
             <p class="ov-hint">${this.introHint}</p>
         `);
@@ -613,12 +835,18 @@ class Game {
         vibe([0, 120, 60, 200]);
         const isNew = store.setBest(this.id, this.score);
         this.setStat('bestval', store.best(this.id));
+        let taunt = '';
+        if (HOT.on) {
+            const m = pickMsg(isNew ? HOT_PRAISE : HOT_TAUNTS);
+            taunt = `<div class="ov-taunt">${m.kr}<span class="i18n-sub">${m.en}</span></div>`;
+        }
         this.showOverlay(`
             <div class="ov-title">GAME OVER</div>
             <div class="ov-kr">게임 종료</div>
             <div class="ov-score">${this.score}</div>
             <div class="ov-best">BEST ${store.best(this.id)}</div>
             ${isNew ? '<div class="ov-new">🏆 신기록! · New record!</div>' : ''}
+            ${taunt}
             <button class="ov-btn">다시 하기 · Retry</button>
         `);
     }
@@ -808,6 +1036,8 @@ class BlockDrop extends Game {
         this.setStat('lines', this.lines);
         // 10줄마다 빨라집니다(최소 120ms).
         this.dropMs = Math.max(120, 800 - Math.floor(this.lines / 10) * 70);
+        // 5줄 구간을 넘길 때마다 보상
+        if (Math.floor((this.lines - cleared) / 5) !== Math.floor(this.lines / 5)) this.showReward();
         sfx.good();
         vibe(cleared >= 2 ? [0, 40, 30, 60] : 20);
     }
@@ -871,7 +1101,7 @@ class BlockDrop extends Game {
         ctx.clearRect(0, 0, this.W, this.H);
 
         // 판 배경 + 격자
-        ctx.fillStyle = '#0b0b10';
+        ctx.fillStyle = HOT.pick('#0b0b10', '#180a18');
         ctx.fillRect(ox, oy, cell * COLS, cell * ROWS);
         ctx.strokeStyle = 'rgba(255,255,255,0.045)';
         ctx.lineWidth = 1;
@@ -1126,6 +1356,7 @@ class SpaceShooter extends Game {
             this.setStat('wave', this.wave);
             this.score += 250;
             this.setStat('score', this.score);
+            this.showReward();
             this.spawnWave();
         }
     }
@@ -1133,7 +1364,7 @@ class SpaceShooter extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
-        ctx.fillStyle = '#05050a';
+        ctx.fillStyle = HOT.pick('#05050a', '#12040f');
         ctx.fillRect(0, 0, this.W, this.H);
 
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
@@ -1277,6 +1508,7 @@ class Snake extends Game {
             this.score += 10;
             this.setStat('score', this.score);
             this.stepMs = Math.max(60, this.stepMs - 4);
+            if (this.score % 50 === 0) this.showReward();
             this.placeFood();
             sfx.good();
             vibe(18);
@@ -1288,7 +1520,7 @@ class Snake extends Game {
     draw() {
         const ctx = this.ctx, cell = this.cell, ox = this.offX, oy = this.offY;
         ctx.clearRect(0, 0, this.W, this.H);
-        ctx.fillStyle = '#07100b';
+        ctx.fillStyle = HOT.pick('#07100b', '#160614');
         ctx.fillRect(ox, oy, this.cols * cell, this.rows * cell);
 
         ctx.strokeStyle = 'rgba(196,255,77,0.06)';
@@ -1463,6 +1695,7 @@ class BrickBreaker extends Game {
             this.score += 300;
             this.setStat('score', this.score);
             this.setStat('stage', this.stage);
+            this.showReward();
             this.buildStage();
         }
     }
@@ -1470,7 +1703,7 @@ class BrickBreaker extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
-        ctx.fillStyle = '#0d0a04';
+        ctx.fillStyle = HOT.pick('#0d0a04', '#190812');
         ctx.fillRect(0, 0, this.W, this.H);
 
         this.bricks.forEach(k => {
@@ -1601,6 +1834,33 @@ document.addEventListener('visibilitychange', () => {
         }
     }
 });
+
+/* HOT 테마 토글 — 켜고 끄면 body 클래스만 갈아끼우면 CSS 가 알아서 바뀝니다.
+   지금 게임 중이면 다음 프레임에 캔버스 색도 따라옵니다. */
+const hotSw = document.getElementById('hot-sw');
+const menuSub = document.getElementById('menu-sub');
+
+function paintHot() {
+    document.body.classList.toggle('hot', HOT.on);
+    hotSw.classList.toggle('on', HOT.on);
+    hotSw.setAttribute('aria-checked', HOT.on ? 'true' : 'false');
+    menuSub.innerHTML = HOT.on
+        ? '오늘 밤은 좀 뜨겁게 🔥<br>Turn the night up'
+        : '비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting';
+}
+
+hotSw.addEventListener('click', () => {
+    HOT.on = !HOT.on;
+    localStorage.setItem('gijoArcade_hot', HOT.on ? '1' : '0');
+    paintHot();
+    sfx.init();
+    sfx.blip(HOT.on ? 880 : 420, 0.07);
+    vibe(15);
+    // 메뉴에 있을 때는 다시 그릴 캔버스가 없고, 게임 중이면 루프가 알아서 반영합니다.
+    if (current && games[current] && !games[current].running) games[current].draw();
+});
+
+paintHot();
 
 history.replaceState({ screen: 'menu' }, '');
 refreshBests();

@@ -1,7 +1,7 @@
 // GIJO Tour Service Worker — 오프라인 우선 캐싱
 //
 // 릴리스할 때마다 VERSION 을 올리면 이전 캐시가 자동 정리됩니다.
-const VERSION = 'v24';
+const VERSION = 'v26';
 const SHELL_CACHE = `gijo-shell-${VERSION}`;
 const ASSET_CACHE = `gijo-assets-${VERSION}`;
 const FONT_CACHE = `gijo-fonts-${VERSION}`;

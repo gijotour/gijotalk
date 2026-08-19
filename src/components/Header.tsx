@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2 } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
@@ -9,6 +9,7 @@ interface HeaderProps {
   onOpenAIAssistant: () => void;
   onOpenEmergencyModal: () => void;
   onOpenPartyGame: () => void;
+  onOpenArcade: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAIAssistant,
   onOpenEmergencyModal,
   onOpenPartyGame,
+  onOpenArcade,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -135,6 +137,16 @@ export const Header: React.FC<HeaderProps> = ({
           title="파티 게임 실행"
         >
           <PartyPopper className="w-4 h-4" />
+        </button>
+
+        {/* 오프라인 아케이드 — 비행기·대기 시간용. 파티 게임과 성격이 달라 따로 뒀습니다. */}
+        <button
+          onClick={onOpenArcade}
+          aria-label="오프라인 아케이드 게임 실행"
+          className="p-1.5 bg-ink text-white hover:bg-black rounded-full transition-all active:scale-95 shrink-0"
+          title="오프라인 아케이드 게임 실행"
+        >
+          <Gamepad2 className="w-4 h-4" />
         </button>
 
         {/* Emergency Billboard Direct Launch */}

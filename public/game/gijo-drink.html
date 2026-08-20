@@ -1557,6 +1557,13 @@ textarea:focus {
     filter: drop-shadow(0 0 18px var(--primary-neon));
 }
 
+/* 뽑히지 않은 선 — 결과가 나온 뒤 뒤로 물러나게 합니다. */
+.bridge-line.dimmed {
+    opacity: 0.18;
+    filter: saturate(0.3);
+    transition: opacity 0.4s ease, filter 0.4s ease;
+}
+
 .bridge-line {
     position: absolute;
     height: 4px;
@@ -3149,7 +3156,7 @@ const app = {
 
     // Love Drink Logic (내부 식별자는 bridge* 유지)
     bridgeNodes: [],
-    bridgeLoserIndex: -1,
+    bridgePickedIndexes: [],
     bridgeIsActive: false,
     bridgeJoinTimer: null,
     bridgeCountdownInterval: null,
@@ -3161,7 +3168,7 @@ const app = {
         const area = document.getElementById('bridge-area');
         area.innerHTML = '';
         this.bridgeNodes = [];
-        this.bridgeLoserIndex = -1;
+        this.bridgePickedIndexes = [];
         this.bridgeIsActive = false;
         this.clearBridgeTimers();
         this.showBridgeWaitMessage();
@@ -3310,8 +3317,18 @@ const app = {
         targetNode.innerHTML = bridgeHeartHTML();
         area.appendChild(targetNode);
 
-        // Determine random loser node
-        this.bridgeLoserIndex = Math.floor(Math.random() * this.bridgeNodes.length);
+        // 하트에 도달할 두 명을 뽑습니다.
+        //
+        // 예전에는 한 명만 뽑아 "벌칙"을 줬는데, 이 게임 이름이 러브 드링크이고
+        // 연결점도 하트라 둘이 이어지는 쪽이 맞습니다. 한 명을 벌주는 게 아니라
+        // 커플을 맺어 러브샷을 시키는 것으로 바꿨습니다.
+        // 참가는 항상 2명 이상이라(scheduleBridgeStart 에서 보장) 두 명은 늘 뽑힙니다.
+        const order = this.bridgeNodes.map((_, i) => i);
+        for (let i = order.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [order[i], order[j]] = [order[j], order[i]];
+        }
+        this.bridgePickedIndexes = order.slice(0, 2).sort((a, b) => a - b);
 
         // Animate laser bridges from all nodes to target — each starts on its own
         // stagger, then visually draws over DRAW_MS via the .bridge-line CSS transition.
@@ -3341,13 +3358,19 @@ const app = {
         // Reveal — after the last line finishes drawing, pause a beat, then show the loser.
         const revealAt = START_DELAY + ((this.bridgeNodes.length - 1) * STAGGER_MS) + DRAW_MS + REVEAL_PAUSE_MS;
         setTimeout(() => {
-            const loserNum = this.bridgeLoserIndex + 1;
+            const [a, b] = this.bridgePickedIndexes;
+            const p1 = a + 1, p2 = b + 1;
             targetNode.classList.add('loser');
-            this.bridgeNodes[this.bridgeLoserIndex].el.classList.add('marked');
+            this.bridgePickedIndexes.forEach(i => this.bridgeNodes[i].el.classList.add('marked'));
+            // 뽑힌 두 명의 선만 남기고 나머지는 흐리게 — 누가 걸렸는지 한눈에 보이게.
+            area.querySelectorAll('.bridge-line').forEach((line, i) => {
+                if (!this.bridgePickedIndexes.includes(i)) line.classList.add('dimmed');
+            });
             soundFX.playBigBoom();
             haptics.loser();
             document.getElementById('bridge-msg').innerHTML =
-                `💥 P${loserNum} 벌칙!<span class="i18n-sub">P${loserNum} loses — drink up! 🍻</span>`;
+                `💘 P${p1} ❤️ P${p2} — 러브샷!` +
+                `<span class="i18n-sub">P${p1} &amp; P${p2} — love shot together! 🍻</span>`;
         }, revealAt);
     }
 };

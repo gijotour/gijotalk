@@ -1800,7 +1800,29 @@ body.hot .hot-toggle-btn {
     pointer-events: none;
     z-index: 100;
 }
-    </style>
+    
+.main-banner-img {
+    width: calc(100% - 12px);
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 0, 85, 0.35);
+    margin: 6px auto;
+    display: block;
+    box-shadow: 0 4px 20px rgba(255, 0, 85, 0.4);
+}
+
+.game-art-banner {
+    width: clamp(100px, 28vw, 150px);
+    height: clamp(100px, 28vw, 150px);
+    object-fit: cover;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 0, 85, 0.4);
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
+    margin: 6px auto;
+    display: block;
+}
+</style>
 </head>
 <body>
     <div id="app">
@@ -1820,7 +1842,7 @@ body.hot .hot-toggle-btn {
                     </button>
                 </div>
             </div>
-
+            <img src="assets/drink_spicy_main_banner_1787296777970.jpg" alt="GIJO Drink 19+ HOT" class="main-banner-img" />
             <div class="quad-menu">
                 <button class="quad-btn quad-1" onclick="app.navigate('roulette-input')">
                     <span class="quad-badge">2~10인 · 룰렛</span>

@@ -947,7 +947,28 @@ canvas {
     font-size: 0.72rem;
     pointer-events: none;
 }
-    </style>
+    
+.arcade-main-banner {
+    width: calc(100% - 16px);
+    max-height: 110px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    margin: 4px auto 8px;
+    display: block;
+    box-shadow: 0 4px 20px rgba(0, 243, 255, 0.35);
+}
+
+.ov-art-img {
+    width: clamp(90px, 25vw, 130px);
+    height: clamp(90px, 25vw, 130px);
+    object-fit: cover;
+    border-radius: 14px;
+    border: 2px solid rgba(0, 243, 255, 0.4);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+    margin: 6px auto;
+}
+</style>
 </head>
 <body>
 <div id="app">
@@ -963,6 +984,7 @@ canvas {
                         aria-label="HOT 테마"><span></span></button>
             </div>
         </div>
+        <img src="assets/slot_spicy_777_banner_1787296460666.jpg" alt="GIJO Arcade 19+" class="arcade-main-banner" />
         <div class="tile-grid">
             <button class="tile tile-slots" data-go="slots">
                 <span class="tile-icon">&#127920;</span>

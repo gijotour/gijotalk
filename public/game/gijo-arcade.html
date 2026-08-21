@@ -1176,7 +1176,7 @@ canvas {
     pointer-events: none;
 }
     
-/* 상단 배너 — 실제 광고가 없어서 사진 대신 문의 안내 문구만 놓은 빈 광고란입니다.
+/* 상단 배너 — 자체 홍보 슬롯. GIJO Tour(메인 앱) 로 링크 걸린 광고 형태입니다.
    (gijo-drink.html 과 같은 패턴) */
 .ad-banner {
     position: relative;
@@ -1186,30 +1186,50 @@ canvas {
     height: 64px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+    padding: 0 14px;
     border-radius: 14px;
-    border: 1px dashed rgba(255, 255, 255, 0.22);
-    background: rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    background: linear-gradient(120deg, rgba(0, 243, 255, 0.16), rgba(255, 0, 85, 0.16));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    transition: transform 0.15s ease;
 }
+.ad-banner:active { transform: scale(0.98); }
+
+.ad-banner-icon { font-size: 1.5rem; flex-shrink: 0; }
 
 .ad-banner-text {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
-.ad-banner-tag {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 2px 8px;
+.ad-banner-title {
+    color: #fff;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.ad-banner-sub {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.68rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ad-banner-cta {
+    flex-shrink: 0;
+    padding: 6px 12px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.4);
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.6rem;
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
 .ov-art-img {
@@ -1237,10 +1257,14 @@ canvas {
                         aria-label="HOT 테마"><span></span></button>
             </div>
         </div>
-        <div class="ad-banner">
-            <span class="ad-banner-text">광고 문의는 GIJO에 문의</span>
-            <span class="ad-banner-tag">광고 · AD</span>
-        </div>
+        <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
+            <span class="ad-banner-icon">🗺️</span>
+            <span class="ad-banner-text">
+                <span class="ad-banner-title">GIJO Tour</span>
+                <span class="ad-banner-sub">일정표 · 생활영어 · 오프라인 지원</span>
+            </span>
+            <span class="ad-banner-cta">열기 · Open</span>
+        </a>
         <div class="tile-grid">
             <button class="tile tile-slots" data-go="slots">
                 <span class="tile-icon">&#127920;</span>

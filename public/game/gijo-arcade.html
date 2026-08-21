@@ -2208,17 +2208,64 @@ class Snake extends Game {
         this.acc = 0;
         this.setStat('score', 0);
         this.setStat('bestval', store.best(this.id));
+
+        // 🧱 장애물 — 60점마다 1개씩, 최대 6개까지 늘어납니다.
+        this.obstacles = [];
+        this.nextObstacleAt = 60;
+        // 🌟 보너스 먹이 — 5번째 먹이마다 한 번, 시간 안에 안 먹으면 사라집니다.
+        this.bonusFood = null;
+        this.foodEatenCount = 0;
+        // 🔥 콤보 — 짧은 간격으로 연속으로 먹으면 추가 점수.
+        this.comboCount = 0;
+        this.lastEatAt = 0;
+        this.growPending = 0;
+        // 화면 위에 잠깐 뜨는 점수 팝업(콤보/보너스 알림).
+        this.flash = null;
+
         this.placeFood();
     }
 
-    placeFood() {
+    /** 뱀·먹이·장애물이 이미 차지한 칸을 피해 빈 칸 하나를 고릅니다. */
+    pickEmptyCell(extraTaken) {
         const taken = new Set(this.snake.map(s => s.x + ',' + s.y));
+        this.obstacles.forEach(o => taken.add(o.x + ',' + o.y));
+        if (this.food) taken.add(this.food.x + ',' + this.food.y);
+        if (extraTaken) extraTaken.forEach(p => taken.add(p.x + ',' + p.y));
         let x, y, guard = 0;
         do {
             x = (Math.random() * this.cols) | 0;
             y = (Math.random() * this.rows) | 0;
         } while (taken.has(x + ',' + y) && ++guard < 500);
-        this.food = { x, y };
+        return { x, y };
+    }
+
+    placeFood() {
+        this.food = this.pickEmptyCell();
+    }
+
+    /** 60/120/180... 점을 넘을 때마다 장애물을 하나 더 심습니다(최대 6개). */
+    maybeAddObstacle() {
+        if (this.obstacles.length >= 6 || this.score < this.nextObstacleAt) return;
+        this.nextObstacleAt += 60;
+        // 뱀 머리 바로 앞에 나면 피할 틈도 없이 죽으므로, 머리 근처는 피합니다.
+        const head = this.snake[0];
+        let cell, guard = 0;
+        do {
+            cell = this.pickEmptyCell();
+            guard++;
+        } while (Math.max(Math.abs(cell.x - head.x), Math.abs(cell.y - head.y)) < 4 && guard < 30);
+        this.obstacles.push(cell);
+    }
+
+    /** 5번째 먹이마다 금색 보너스 먹이를 잠깐 띄웁니다 — 못 먹으면 사라집니다. */
+    maybeSpawnBonus() {
+        if (this.foodEatenCount % 5 !== 0 || this.bonusFood) return;
+        this.bonusFood = { ...this.pickEmptyCell([this.food]), bornAt: performance.now(), ttl: 6000 };
+    }
+
+    /** 콤보·보너스를 먹었을 때 잠깐 뜨는 점수 팝업. */
+    showFlash(kr, en) {
+        this.flash = { kr, en, until: performance.now() + 900 };
     }
 
     turn(x, y) {
@@ -2263,17 +2310,44 @@ class Snake extends Game {
         if (head.x < 0 || head.y < 0 || head.x >= this.cols || head.y >= this.rows) return this.gameOver();
         // 꼬리 끝은 이번 턴에 비워지므로 충돌에서 제외합니다.
         if (this.snake.slice(0, -1).some(s => s.x === head.x && s.y === head.y)) return this.gameOver();
+        if (this.obstacles.some(o => o.x === head.x && o.y === head.y)) return this.gameOver();
+
+        // 시간 안에 못 먹은 보너스 먹이는 사라집니다.
+        if (this.bonusFood && performance.now() - this.bonusFood.bornAt > this.bonusFood.ttl) {
+            this.bonusFood = null;
+        }
 
         this.snake.unshift(head);
 
-        if (head.x === this.food.x && head.y === this.food.y) {
-            this.score += 10;
+        const ateBonus = this.bonusFood && head.x === this.bonusFood.x && head.y === this.bonusFood.y;
+        const ateFood = head.x === this.food.x && head.y === this.food.y;
+
+        if (ateBonus) {
+            this.score += 50;
+            this.setStat('score', this.score);
+            this.growPending += 2; // 이번 턴 안 자르는 것까지 합쳐 총 3칸 자랍니다.
+            this.bonusFood = null;
+            this.showFlash('🌟 보너스 +50', 'Bonus +50');
+            sfx.good();
+            vibe([0, 20, 30, 20]);
+        } else if (ateFood) {
+            const now = performance.now();
+            this.comboCount = (now - this.lastEatAt < 1200) ? this.comboCount + 1 : 1;
+            this.lastEatAt = now;
+            const comboBonus = this.comboCount >= 2 ? (this.comboCount - 1) * 5 : 0;
+            this.score += 10 + comboBonus;
             this.setStat('score', this.score);
             this.stepMs = Math.max(60, this.stepMs - 4);
+            this.foodEatenCount++;
+            if (comboBonus > 0) this.showFlash(`🔥 콤보 x${this.comboCount}! +${comboBonus}`, `Combo x${this.comboCount}! +${comboBonus}`);
             if (this.score % 50 === 0) this.showReward();
+            this.maybeAddObstacle();
             this.placeFood();
+            this.maybeSpawnBonus();
             sfx.good();
             vibe(18);
+        } else if (this.growPending > 0) {
+            this.growPending--; // 보너스로 받은 성장분 — 이번 턴은 안 자릅니다.
         } else {
             this.snake.pop();
         }
@@ -2294,9 +2368,33 @@ class Snake extends Game {
             ctx.beginPath(); ctx.moveTo(ox, oy + r * cell + .5); ctx.lineTo(ox + this.cols * cell, oy + r * cell + .5); ctx.stroke();
         }
 
+        // 🧱 장애물 — 위험하다는 게 한눈에 보이게 붉은 줄무늬로.
+        this.obstacles.forEach(o => {
+            ctx.save();
+            ctx.translate(ox + o.x * cell + cell / 2, oy + o.y * cell + cell / 2);
+            neonRect(ctx, -cell / 2 + 1, -cell / 2 + 1, cell - 2, cell - 2, '#ff2d55', 3, 10);
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-cell * 0.22, -cell * 0.22); ctx.lineTo(cell * 0.22, cell * 0.22);
+            ctx.moveTo(cell * 0.22, -cell * 0.22); ctx.lineTo(-cell * 0.22, cell * 0.22);
+            ctx.stroke();
+            ctx.restore();
+        });
+
         if (this.food) {
             neonRect(ctx, ox + this.food.x * cell + cell * 0.2, oy + this.food.y * cell + cell * 0.2,
                 cell * 0.6, cell * 0.6, '#ff0055', cell, 14);
+        }
+
+        // 🌟 보너스 먹이 — 남은 시간에 따라 점점 작아져서 곧 사라진다는 걸 알려줍니다.
+        if (this.bonusFood) {
+            const left = 1 - (performance.now() - this.bonusFood.bornAt) / this.bonusFood.ttl;
+            const size = cell * (0.35 + 0.35 * Math.max(0, left));
+            neonRect(ctx,
+                ox + this.bonusFood.x * cell + (cell - size) / 2,
+                oy + this.bonusFood.y * cell + (cell - size) / 2,
+                size, size, '#ffd700', size, 18);
         }
 
         this.snake.forEach((s, i) => {
@@ -2309,6 +2407,20 @@ class Snake extends Game {
             ctx.font = '600 13px ' + getComputedStyle(document.body).fontFamily;
             ctx.textAlign = 'center';
             ctx.fillText('쓸어서 출발 · Swipe to start', this.W / 2, this.H * 0.5);
+        }
+
+        // 콤보·보너스 팝업 — 짧게 떴다 사라집니다.
+        if (this.flash) {
+            if (performance.now() > this.flash.until) { this.flash = null; }
+            else {
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#ffd700';
+                ctx.font = '900 18px ' + getComputedStyle(document.body).fontFamily;
+                ctx.fillText(this.flash.kr, this.W / 2, this.H * 0.16);
+                ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                ctx.font = '600 11px ' + getComputedStyle(document.body).fontFamily;
+                ctx.fillText(this.flash.en, this.W / 2, this.H * 0.16 + 18);
+            }
         }
     }
 }

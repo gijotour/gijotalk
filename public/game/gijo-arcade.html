@@ -1176,15 +1176,40 @@ canvas {
     pointer-events: none;
 }
     
-.arcade-main-banner {
+/* 상단 배너 — 실제 광고가 없어서 사진 대신 문의 안내 문구만 놓은 빈 광고란입니다.
+   (gijo-drink.html 과 같은 패턴) */
+.ad-banner {
+    position: relative;
     width: calc(100% - 16px);
-    max-height: 110px;
-    object-fit: cover;
-    border-radius: 14px;
-    border: 1px solid rgba(0, 243, 255, 0.4);
     margin: 4px auto 8px;
-    display: block;
-    box-shadow: 0 4px 20px rgba(0, 243, 255, 0.35);
+    flex-shrink: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.ad-banner-text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.ad-banner-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }
 
 .ov-art-img {
@@ -1212,7 +1237,10 @@ canvas {
                         aria-label="HOT 테마"><span></span></button>
             </div>
         </div>
-        <img src="assets/slot_spicy_777_banner_1787296460666.jpg" alt="GIJO Arcade 19+" class="arcade-main-banner" />
+        <div class="ad-banner">
+            <span class="ad-banner-text">광고 문의는 GIJO에 문의</span>
+            <span class="ad-banner-tag">광고 · AD</span>
+        </div>
         <div class="tile-grid">
             <button class="tile tile-slots" data-go="slots">
                 <span class="tile-icon">&#127920;</span>

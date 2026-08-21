@@ -178,23 +178,26 @@ h2.neon-text {
     margin-bottom: 8px;
 }
 
-/* 상단 배너 — 특정 게임과 엮이지 않는 순수 광고란입니다. 이제 같은 사진이
-   메뉴 5칸 배경으로도 쓰이므로, 헷갈리지 않도록 "광고" 딱지를 붙여 구분합니다. */
+/* 상단 배너 — 실제 광고가 없어서 사진 대신 문의 안내 문구만 놓은 빈 광고란입니다. */
 .ad-banner {
     position: relative;
     width: calc(100% - 12px);
     margin: 6px auto;
     flex-shrink: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.03);
 }
 
-.ad-banner-img {
-    width: 100%;
-    max-height: 120px;
-    object-fit: cover;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    display: block;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+.ad-banner-text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .ad-banner-tag {
@@ -203,11 +206,9 @@ h2.neon-text {
     right: 8px;
     padding: 2px 8px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 0.62rem;
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.03em;
 }
@@ -1812,7 +1813,7 @@ body.hot .hot-toggle-btn {
                 </div>
             </div>
             <div class="ad-banner">
-                <img src="assets/drink_spicy_main_banner_1787296777970.jpg" alt="광고" class="ad-banner-img" />
+                <span class="ad-banner-text">광고 문의는 GIJO에 문의</span>
                 <span class="ad-banner-tag">광고 · AD</span>
             </div>
             <div class="quad-menu">

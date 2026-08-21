@@ -356,6 +356,28 @@ h2.neon-text {
 .quad-4::before, .quad-5::before { opacity: 0.55; }
 .quad-6::before { background: linear-gradient(135deg, #ff4dd8, var(--tertiary-neon)); }
 
+/* 나머지 5칸(카드 뒤집기·미션 룰렛·시간 폭탄·크로커다일 룰렛·러브 드링크) —
+   1~3행에 걸친 사진 한 장을 그리드 아이템으로 깔고 그 위에 칸들을 얹어 하나로
+   이어져 보이게 합니다. 색 그라디언트(::before)는 완전히 지워서 사진이 그대로
+   드러나고, 아이콘·배지·글자만 그 위에 남습니다. */
+.quad-shared-bg {
+    grid-column: 1 / 3;
+    grid-row: 1 / 4;
+    background: url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
+    border-radius: 14px;
+    z-index: 0;
+    pointer-events: none;
+}
+.quad-1, .quad-2, .quad-3, .quad-6, .quad-9 {
+    background: rgba(18, 18, 28, 0.12);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    z-index: 1;
+}
+.quad-1::before, .quad-2::before, .quad-3::before, .quad-6::before, .quad-9::before {
+    display: none;
+}
+
 .btn {
     font-family: var(--font-main);
     font-size: clamp(0.95rem, 3vw, 1.15rem);
@@ -1737,6 +1759,7 @@ body.hot .hot-toggle-btn {
                 </div>
             </div>
             <div class="quad-menu">
+                <div class="quad-shared-bg"></div>
                 <button class="quad-btn quad-1" onclick="app.navigate('roulette-input')">
                     <span class="quad-badge">2~10인 · 룰렛</span>
                     <span class="quad-icon">&#127919;</span>

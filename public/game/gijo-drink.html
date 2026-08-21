@@ -356,6 +356,18 @@ h2.neon-text {
 .quad-4::before, .quad-5::before { opacity: 0.55; }
 .quad-6::before { background: linear-gradient(135deg, #ff4dd8, var(--tertiary-neon)); }
 
+/* 나머지 5칸(카드 뒤집기·미션 룰렛·시간 폭탄·크로커다일 룰렛·러브 드링크)에는
+   전용 아트가 없어서 메인 배너 사진을 공통으로 깔았습니다 — 각 칸 그라디언트는
+   그대로 두되 opacity 를 낮춰 사진이 비치게 합니다. */
+.quad-1, .quad-2, .quad-3, .quad-6, .quad-9 {
+    background-image: url('assets/drink_spicy_main_banner_1787296777970.jpg');
+    background-size: cover;
+    background-position: center;
+}
+.quad-1::before, .quad-2::before, .quad-3::before, .quad-6::before, .quad-9::before {
+    opacity: 0.6;
+}
+
 .btn {
     font-family: var(--font-main);
     font-size: clamp(0.95rem, 3vw, 1.15rem);

@@ -121,13 +121,13 @@ body.hot .tile-slots::before {
 .tile {
     position: relative;
     overflow: hidden;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.14);
     outline: none;
     cursor: pointer;
     border-radius: 14px;
-    /* ::before 가 대각선 아래쪽만 채우므로 버튼 자체에도 어두운 배경을 깔아둡니다.
-       (파티 게임 메뉴에서 브라우저 기본 배경이 드러났던 것과 같은 문제) */
-    background: #101014;
+    background: rgba(16, 16, 24, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -136,10 +136,34 @@ body.hot .tile-slots::before {
     padding: clamp(12px, 4vw, 18px);
     text-align: left;
     font-family: var(--font-main);
-    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.tile:hover, .tile:focus-visible {
+    border-color: rgba(0, 243, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 243, 255, 0.3);
 }
 
 .tile:active { transform: scale(0.96); }
+
+.tile-badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    font-size: clamp(0.58rem, 2.1vw, 0.68rem);
+    font-weight: 800;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    margin-bottom: 2px;
+    letter-spacing: 0.02em;
+}
 
 .tile::before {
     content: '';
@@ -943,30 +967,35 @@ canvas {
             <button class="tile tile-slots" data-go="slots">
                 <span class="tile-icon">&#127920;</span>
                 <span class="tile-text">
+                    <span class="tile-badge">🎰 🔥 BEST · 1인용</span>
                     <span class="tile-en">GIJO Slots</span>
                     <span class="tile-kr">네온 슬롯머신</span>
                     <span class="tile-best" data-best="slots">BEST 0</span>
                 </span>
             </button>
             <button class="tile tile-1" data-go="block">
+                <span class="tile-badge">1인용 · 스택</span>
                 <span class="tile-icon">&#129513;</span>
                 <span class="tile-en">Block Drop</span>
                 <span class="tile-kr">블록 쌓기</span>
                 <span class="tile-best" data-best="block">BEST 0</span>
             </button>
             <button class="tile tile-2" data-go="shoot">
+                <span class="tile-badge">1인용 · 슈팅</span>
                 <span class="tile-icon">&#128760;</span>
                 <span class="tile-en">Space Shooter</span>
                 <span class="tile-kr">비행기 슈팅</span>
                 <span class="tile-best" data-best="shoot">BEST 0</span>
             </button>
             <button class="tile tile-3" data-go="snake">
+                <span class="tile-badge">1인용 · 클래식</span>
                 <span class="tile-icon">&#128013;</span>
                 <span class="tile-en">Snake</span>
                 <span class="tile-kr">뱀 키우기</span>
                 <span class="tile-best" data-best="snake">BEST 0</span>
             </button>
             <button class="tile tile-4" data-go="brick">
+                <span class="tile-badge">1인용 · 벽돌깨기</span>
                 <span class="tile-icon">&#127934;</span>
                 <span class="tile-en">Brick Breaker</span>
                 <span class="tile-kr">벽돌 깨기</span>
@@ -1394,7 +1423,7 @@ const PIECES = [
 class BlockDrop extends Game {
     constructor() {
         super('block', 'scr-block', 'cv-block');
-        this.titleEn = 'Block Drop';
+        this.titleEn = 'GIJO Block Drop';
         this.titleKr = '블록 쌓기';
         this.introHint = '좌우로 밀어 옮기고, 탭하면 회전합니다. 아래로 쓸면 바로 떨어집니다.<br>Drag to move, tap to rotate, swipe down to hard-drop.';
     }
@@ -1622,7 +1651,7 @@ class BlockDrop extends Game {
 class SpaceShooter extends Game {
     constructor() {
         super('shoot', 'scr-shoot', 'cv-shoot');
-        this.titleEn = 'Space Shooter';
+        this.titleEn = 'GIJO Space Shooter';
         this.titleKr = '비행기 슈팅';
         this.introHint = '화면을 끌어 비행기를 옮기세요. 총알은 알아서 나갑니다.<br>Drag to move your ship. It fires automatically.';
     }
@@ -1884,7 +1913,7 @@ class SpaceShooter extends Game {
 class Snake extends Game {
     constructor() {
         super('snake', 'scr-snake', 'cv-snake');
-        this.titleEn = 'Snake';
+        this.titleEn = 'GIJO Neon Snake';
         this.titleKr = '뱀 키우기';
         this.introHint = '쓸어서 방향을 바꾸세요. 먹을수록 길어지고 빨라집니다.<br>Swipe to turn. It gets longer and faster as you eat.';
     }
@@ -2026,7 +2055,7 @@ class Snake extends Game {
 class BrickBreaker extends Game {
     constructor() {
         super('brick', 'scr-brick', 'cv-brick');
-        this.titleEn = 'Brick Breaker';
+        this.titleEn = 'GIJO Brick Breaker';
         this.titleKr = '벽돌 깨기';
         this.introHint = '화면을 끌어 받침대를 움직이세요. 공을 놓치면 목숨이 줄어듭니다.<br>Drag to move the paddle. Miss the ball and you lose a life.';
     }
@@ -2222,6 +2251,7 @@ class BrickBreaker extends Game {
    ============================================================ */
 
 const SYMBOLS = [
+    { id: 'seven',   ch: '🎰', weight: 2,  pay: [0, 0, 100, 500, 2000] },
     { id: 'cherry',  ch: '🍒', weight: 22, pay: [0, 0, 5, 15, 40] },
     { id: 'lemon',   ch: '🍋', weight: 20, pay: [0, 0, 5, 20, 50] },
     { id: 'cocktail',ch: '🍸', weight: 16, pay: [0, 0, 10, 30, 80] },
@@ -2230,7 +2260,7 @@ const SYMBOLS = [
     { id: 'dancer',  ch: '💃', weight: 6,  pay: [0, 0, 50, 150, 500] },
     { id: 'bunny',   ch: '👯', weight: 3,  pay: [0, 0, 100, 300, 1000] },
     { id: 'wild',    ch: '🔥', weight: 6,  pay: [0, 0, 20, 60, 150], wild: true },
-    { id: 'chili',   ch: '🌶️', weight: 4, pay: [0, 0, 0, 0, 0], scatter: true }
+    { id: 'chili',   ch: '🌶️', weight: 4,  pay: [0, 0, 0, 0, 0], scatter: true }
 ];
 
 const SYM_BY_ID = Object.fromEntries(SYMBOLS.map(s => [s.id, s]));
@@ -2257,7 +2287,7 @@ const PAYLINES = [
     { rows: [2, 1, 0, 1, 2], color: '#a020f0' }
 ];
 
-const BET_LEVELS = [10, 25, 50, 100];
+const BET_LEVELS = [10, 25, 50, 100, 200];
 
 /* 보너스 라운드 상한 — 없으면 스티키 와일드가 판을 뒤덮고 배수가 금방 최대가 되어
    한 라운드에 베팅의 1000배가 넘게 나옵니다(실제로 그렇게 터졌습니다). */

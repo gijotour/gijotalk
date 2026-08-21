@@ -203,7 +203,7 @@ h2.neon-text {
 }
 
 .quad-btn {
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.14);
     outline: none;
     cursor: pointer;
     display: flex;
@@ -212,20 +212,44 @@ h2.neon-text {
     justify-content: flex-end;
     gap: 3px;
     font-family: var(--font-main);
-    /* ::before 가 대각선 아래쪽만 색을 채우므로, 버튼 자체에도 어두운 배경을
-       깔아둡니다. 안 그러면 브라우저 기본 <button> 배경(밝은 회색)이
-       대각선 위쪽 빈 부분에 그대로 드러납니다. */
-    background: #0d0d10;
+    background: rgba(18, 18, 28, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 14px;
     padding: clamp(10px, 3vw, 16px);
     text-align: left;
-    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.quad-btn:hover, .quad-btn:focus-visible {
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 85, 0.3);
 }
 
 .quad-btn:active {
     transform: scale(0.96);
+}
+
+.quad-badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: clamp(0.6rem, 2.2vw, 0.72rem);
+    font-weight: 800;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    margin-bottom: 3px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
 .quad-btn::before {
@@ -234,6 +258,7 @@ h2.neon-text {
     inset: 0;
     clip-path: polygon(0 100%, 100% 100%, 100% 12%, 0 48%);
     z-index: 0;
+    opacity: 0.85;
 }
 
 .quad-icon, .quad-label-en, .quad-label-kr {
@@ -1705,6 +1730,64 @@ textarea:focus {
 
 .hot-badge.hidden { display: none; }
 
+/* ===== Direct HOT Toggle & Controls Row ===== */
+.header-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.hot-toggle-btn {
+    border: 1.5px solid rgba(255, 0, 85, 0.5);
+    outline: none;
+    cursor: pointer;
+    background: rgba(255, 0, 85, 0.18);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 5px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-main);
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(255, 0, 85, 0.35);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.hot-toggle-btn:active {
+    transform: scale(0.94);
+}
+
+body.hot {
+    --primary-neon: #ff0040;
+    --secondary-neon: #ff007f;
+    --tertiary-neon: #e60000;
+}
+
+body.hot .aurora-bg {
+    background: radial-gradient(circle at 15% 15%, rgba(255, 0, 64, 0.35) 0%, transparent 50%),
+                radial-gradient(circle at 85% 20%, rgba(255, 0, 128, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 85%, rgba(230, 0, 0, 0.35) 0%, transparent 55%);
+}
+
+body.hot .hot-toggle-btn {
+    background: linear-gradient(120deg, #ff0040, #ff007f);
+    border-color: #ff007f;
+    box-shadow: 0 0 22px rgba(255, 0, 64, 0.8);
+    color: #fff;
+    animation: hot-pulse 1.2s infinite alternate;
+}
+
+@keyframes hot-pulse {
+    from { box-shadow: 0 0 14px rgba(255, 0, 64, 0.6); }
+    to { box-shadow: 0 0 28px rgba(255, 0, 64, 1), 0 0 12px #ff007f; }
+}
+
 /* Footer */
 .footer-copyright {
     position: absolute;
@@ -1724,57 +1807,71 @@ textarea:focus {
         <!-- Main Menu -->
         <section id="screen-main" class="screen active main-menu-screen">
             <div class="main-header">
-                <h1 class="neon-text title">GIJO Drink <span id="hot-badge" class="hot-badge hidden">🔥 HOT</span></h1>
-                <div class="player-setup">
-                    <span class="player-label">Players:</span>
-                    <button class="cnt-btn" onclick="app.changePlayerCount(-1)">-</button>
-                    <span id="player-count-display" class="player-count-val">4</span>
-                    <button class="cnt-btn" onclick="app.changePlayerCount(1)">+</button>
+                <h1 class="neon-text title">GIJO Drink <span id="hot-badge" class="hot-badge hidden">🔥 19+ HOT</span></h1>
+                <div class="header-controls-row">
+                    <div class="player-setup">
+                        <span class="player-label">Players:</span>
+                        <button class="cnt-btn" onclick="app.changePlayerCount(-1)">-</button>
+                        <span id="player-count-display" class="player-count-val">4</span>
+                        <button class="cnt-btn" onclick="app.changePlayerCount(1)">+</button>
+                    </div>
+                    <button class="hot-toggle-btn" id="main-hot-btn" onclick="app.toggleHotMode()" title="19+ HOT 선정적/스파이시 모드 토글">
+                        <span class="hot-flame">🔥</span> <span class="hot-txt">19+ HOT 모드</span>
+                    </button>
                 </div>
             </div>
 
             <div class="quad-menu">
                 <button class="quad-btn quad-1" onclick="app.navigate('roulette-input')">
+                    <span class="quad-badge">2~10인 · 룰렛</span>
                     <span class="quad-icon">&#127919;</span>
                     <span class="quad-label-en">Mission Roulette</span>
                     <span class="quad-label-kr">미션 룰렛</span>
                 </button>
                 <button class="quad-btn quad-2" onclick="app.navigate('crocodile')">
+                    <span class="quad-badge">2~8인 · 운 테스트</span>
                     <span class="quad-icon">&#128010;</span>
                     <span class="quad-label-en">Crocodile Roulette</span>
                     <span class="quad-label-kr">크로커다일 룰렛</span>
                 </button>
                 <button class="quad-btn quad-3" onclick="app.navigate('bomb')">
+                    <span class="quad-badge">2~10인 · 순발력</span>
                     <span class="quad-icon">&#128163;</span>
                     <span class="quad-label-en">Time Bomb</span>
                     <span class="quad-label-kr">시간 폭탄</span>
                 </button>
                 <button class="quad-btn quad-4" onclick="app.navigate('finger')">
+                    <span class="quad-badge">🔥 TOP · 2~6인</span>
                     <span class="quad-icon">&#128070;</span>
                     <span class="quad-label-en">Touch Roulette</span>
                     <span class="quad-label-kr">터치 룰렛</span>
                 </button>
                 <button class="quad-btn quad-5" onclick="app.navigate('titanic')">
+                    <span class="quad-badge">2~8인 · 찰랑찰랑</span>
                     <span class="quad-icon">&#9973;</span>
                     <span class="quad-label-en">Neon Titanic</span>
                     <span class="quad-label-kr">찰랑찰랑 타이타닉</span>
                 </button>
                 <button class="quad-btn quad-7" onclick="app.navigate('ladder')">
+                    <span class="quad-badge">2~6인 · 사다리</span>
                     <span class="quad-icon">&#129692;</span>
                     <span class="quad-label-en">Ladder Game</span>
                     <span class="quad-label-kr">사다리 게임</span>
                 </button>
                 <button class="quad-btn quad-8" onclick="app.navigate('updown')">
+                    <span class="quad-badge">2~10인 · 심리전</span>
                     <span class="quad-icon">&#128290;</span>
                     <span class="quad-label-en">Up &amp; Down</span>
                     <span class="quad-label-kr">업 앤 다운</span>
                 </button>
                 <button class="quad-btn quad-6" onclick="app.navigate('bridge')">
+                    <span class="quad-badge">🔥 2인 커플</span>
                     <span class="quad-icon">&#128149;</span>
                     <span class="quad-label-en">Love Drink</span>
                     <span class="quad-label-kr">러브 드링크</span>
                 </button>
                 <button class="quad-btn quad-9" onclick="app.navigate('cards')">
+                    <span class="quad-badge">2~10인 · 미션 카드</span>
                     <span class="quad-icon">&#127183;</span>
                     <span class="quad-label-en">Card Flip</span>
                     <span class="quad-label-kr">카드 뒤집기</span>
@@ -1785,7 +1882,7 @@ textarea:focus {
         <!-- Roulette Input Screen -->
         <section id="screen-roulette-input" class="screen hidden roulette-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Penalty List<br><span class="title-kr">벌칙 입력</span></h2>
+            <h2 class="neon-text">GIJO Penalty List<br><span class="title-kr">벌칙 입력</span></h2>
             <p class="subtitle">쉼표로 구분해서 벌칙을 입력하세요<span class="i18n-sub">Enter penalties, separated by commas</span></p>
             <textarea id="roulette-input-text" rows="6" placeholder="원샷, 양옆 마시기, 다같이 건배, 지목해서 마시기"></textarea>
             <button class="btn neon-btn" style="margin-top:16px;" onclick="app.confirmRouletteMissions()">룰렛 시작! · Start</button>
@@ -1794,7 +1891,7 @@ textarea:focus {
         <!-- Roulette Screen -->
         <section id="screen-roulette" class="screen hidden roulette-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Mission Roulette<br><span class="title-kr">미션 룰렛</span></h2>
+            <h2 class="neon-text">GIJO Mission Roulette<br><span class="title-kr">미션 룰렛</span></h2>
             <div class="roulette-container">
                 <div class="roulette-wheel" id="roulette-wheel"></div>
                 <div class="roulette-pointer"></div>
@@ -1806,7 +1903,7 @@ textarea:focus {
         <!-- Bomb Screen -->
         <section id="screen-bomb" class="screen hidden bomb-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Time Bomb<br><span class="title-kr">시간 폭탄</span></h2>
+            <h2 class="neon-text">GIJO Time Bomb<br><span class="title-kr">시간 폭탄</span></h2>
             <div class="bomb-container" id="bomb-container" onclick="app.passBomb()">
                 <div class="bomb-icon">&#128163;</div>
                 <div class="bomb-touch-label">TOUCH!</div>
@@ -1819,7 +1916,7 @@ textarea:focus {
         <!-- Cards Screen -->
         <section id="screen-cards" class="screen hidden">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Card Flip<br><span class="title-kr">카드 뒤집기</span></h2>
+            <h2 class="neon-text">GIJO Card Flip<br><span class="title-kr">카드 뒤집기</span></h2>
             <div class="cards-grid" id="cards-grid"></div>
             <button class="btn neon-btn" onclick="app.resetCards()">카드 섞기 · Shuffle</button>
         </section>
@@ -1827,7 +1924,7 @@ textarea:focus {
         <!-- Ladder Screen -->
         <section id="screen-ladder" class="screen hidden">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Ladder Game<br><span class="title-kr">사다리 게임</span></h2>
+            <h2 class="neon-text">GIJO Ladder Game<br><span class="title-kr">사다리 게임</span></h2>
             <div class="ladder-container">
                 <div class="ladder-players" id="ladder-players"></div>
                 <canvas id="ladder-canvas" width="300" height="400"></canvas>
@@ -1842,7 +1939,7 @@ textarea:focus {
         <section id="screen-crocodile" class="screen hidden croc-screen">
             <button class="btn-back croc-back-btn" onclick="history.back()">&larr; Back</button>
             <div class="croc-header">
-                <h2 class="neon-text croc-title">Crocodile Roulette<br><span class="title-kr">크로커다일 룰렛</span></h2>
+                <h2 class="neon-text croc-title">GIJO Crocodile Roulette<br><span class="title-kr">크로커다일 룰렛</span></h2>
             </div>
             <div class="croc-wrapper" id="croc-wrapper">
                 <div class="croc-ripple"></div>
@@ -1869,7 +1966,7 @@ textarea:focus {
         <!-- Up & Down Screen -->
         <section id="screen-updown" class="screen hidden">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">UP &amp; DOWN<br><span class="title-kr">업 앤 다운</span></h2>
+            <h2 class="neon-text">GIJO UP &amp; DOWN<br><span class="title-kr">업 앤 다운</span></h2>
             <p class="subtitle">1부터 50 사이의 숫자를 맞혀보세요!<span class="i18n-sub">Guess a number between 1 and 50!</span></p>
             <div class="updown-range">
                 <span id="ud-min">1</span>
@@ -1887,7 +1984,7 @@ textarea:focus {
         <!-- Finger Roulette Screen -->
         <section id="screen-finger" class="screen hidden finger-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Touch Roulette<br><span class="title-kr">터치 룰렛</span></h2>
+            <h2 class="neon-text">GIJO Touch Roulette<br><span class="title-kr">터치 룰렛</span></h2>
             <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen! (Mobile/Tablet only)</span></div>
             <div id="finger-area" class="finger-area"></div>
         </section>
@@ -1895,7 +1992,7 @@ textarea:focus {
         <!-- Titanic Screen -->
         <section id="screen-titanic" class="screen hidden titanic-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Neon Titanic<br><span class="title-kr">찰랑찰랑 타이타닉</span></h2>
+            <h2 class="neon-text">GIJO Neon Titanic<br><span class="title-kr">찰랑찰랑 타이타닉</span></h2>
             <p class="subtitle">터치해서 술을 채우세요. 소주잔이 가라앉으면 벌칙!<span class="i18n-sub">Hold to pour. Whoever sinks the shot glass drinks!</span></p>
             
             <div class="titanic-game-area">
@@ -1917,7 +2014,7 @@ textarea:focus {
         <!-- Bridge Screen -->
         <section id="screen-bridge" class="screen hidden bridge-screen">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Love Drink<br><span class="title-kr">러브 드링크</span></h2>
+            <h2 class="neon-text">GIJO Love Drink<br><span class="title-kr">러브 드링크</span></h2>
             <div class="bridge-instructions" id="bridge-msg">화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span></div>
             <div id="bridge-area" class="bridge-area"></div>
         </section>
@@ -1925,7 +2022,7 @@ textarea:focus {
         <!-- Settings Screen -->
         <section id="screen-settings" class="screen hidden">
             <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">Settings<br><span class="title-kr">설정</span></h2>
+            <h2 class="neon-text">GIJO Settings<br><span class="title-kr">설정</span></h2>
             <div class="settings-container">
                 <div class="hot-row">
                     <div class="hot-text">
@@ -2077,39 +2174,45 @@ function bridgeHeartHTML(labelText) {
    ============================================================ */
 
 const HOT_ROULETTE = [
-    '러브샷 or 2잔',
-    '옆 사람과 3초간 눈 맞추기',
-    '이 자리에서 제일 매력적인 사람 지목',
-    '어깨 마사지 10초 해주기 or 1잔',
-    '작업 멘트 한 마디 날리기',
-    '첫사랑 이야기 30초',
-    '섹시 댄스 5초 or 원샷',
-    '볼 뽀뽀 or 3잔',
-    '이상형 구체적으로 말하기',
-    '가장 최근 썸 이야기 풀기'
+    '💋 러브샷 or 2잔 마시기',
+    '👀 10초간 아이콘택트 & 손깍지 끼기 or 2잔',
+    '🔥 가장 섹시한 사람 지목하고 밀착 러브샷',
+    '💆 어깨 마사지 15초 해주기 or 1잔',
+    '💬 귓속말로 심쿵 19금 칭찬 한마디 하기',
+    '📖 첫 키스 / 가장 아찔했던 썰 45초 풀기',
+    '💃 섹시 댄스 5초 or 2잔 마시기',
+    '💋 볼 뽀뽀 3초 or 손등 뽀뽀 (못하면 3잔)',
+    '🔞 가장 매력적인 신체 부위 솔직히 말하기',
+    '🫂 지정된 사람과 5초간 백허그 or 2잔',
+    '🤫 비밀 19금 질문 1개 받고 귓속말 진실 응답',
+    '🥂 삼각 밀착 러브샷 릴레이!'
 ];
 
 const HOT_CARDS = [
-    'Love shot 러브샷',
-    'Eye contact 3s 눈맞춤 3초',
-    'Pick the hottest 매력적인 사람 지목',
-    'Shoulder massage 어깨 마사지 or 1잔',
-    'Pickup line 작업 멘트',
-    'First love story 첫사랑 썰',
-    'Sexy dance 섹시 댄스 or 원샷',
-    'Cheek kiss or 3 shots 볼뽀뽀 or 3잔',
-    'Your ideal type 이상형 고백'
+    '💋 Love shot 러브샷 or 2잔',
+    '👀 10초 아이콘택트 & 손깍지',
+    '🔥 가장 섹시한 사람 & 밀착 러브샷',
+    '💆 어깨 마사지 15초 or 1잔',
+    '💬 귓속말 심쿵 19금 칭찬',
+    '📖 첫키스/아찔했던 썰 45초',
+    '💃 섹시 댄스 5초 or 2잔',
+    '💋 볼/손등 뽀뽀 3초 or 3잔',
+    '🔞 가장 매력적인 신체 부위 고백',
+    '🫂 5초 백허그 or 2잔',
+    '🤫 귓속말 비밀 진실 응답',
+    '🥂 삼각 밀착 러브샷'
 ];
 
 /** 시간 폭탄의 돌발 미션 — HOT 모드일 때 이 세트를 씁니다. */
 const HOT_PASS_MISSIONS = [
-    { kr: '눈 3초 맞추고 패스! 👀', en: 'Hold eye contact for 3s, then pass!' },
-    { kr: '귓속말로 칭찬하고 패스! 💬', en: 'Whisper a compliment, then pass!' },
-    { kr: '손등에 뽀뽀하고 패스! or 1잔 💋', en: 'Kiss their hand and pass — or take a shot!' },
-    { kr: '섹시하게 패스하기! 🔥', en: 'Pass it as seductively as you can!' },
-    { kr: '작업 멘트 날리고 패스! 😏', en: 'Drop a pickup line, then pass!' },
-    { kr: '백허그 1초 후 패스! or 1잔 🫂', en: 'One-second back hug, then pass — or take a shot!' },
-    { kr: '윙크하면서 패스하기! 😉', en: 'Pass while winking!' }
+    { kr: '눈 5초 맞추고 손깍지 끼며 패스! 👀🔥', en: 'Hold 5s eye contact & hold hands, then pass!' },
+    { kr: '귓속말로 야릇한 심쿵 칭찬하고 패스! 💬💋', en: 'Whisper a spicy compliment, then pass!' },
+    { kr: '손등에 뽀뽀 3초 하고 패스! or 1잔 💋', en: 'Kiss their hand 3s and pass — or take a shot!' },
+    { kr: '가장 섹시한 포즈로 패스하기! 🔥💃', en: 'Pass it as seductively as you can!' },
+    { kr: '작업 멘트 날리며 눈맞추고 패스! 😏💘', en: 'Drop a seductive pickup line, then pass!' },
+    { kr: '백허그 5초 후 패스! or 2잔 🫂🔥', en: '5-second back hug, then pass — or take 2 shots!' },
+    { kr: '윙크하면서 섹시하게 패스하기! 😉✨', en: 'Pass while winking seductively!' },
+    { kr: '러브샷 제안하면서 밀착 패스! 🥂💋', en: 'Propose a love shot and pass!' }
 ];
 
 const app = {

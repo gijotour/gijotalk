@@ -36,12 +36,18 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose }) => {
       panelClassName="w-full h-full bg-[#0a0a0c] flex flex-col"
     >
       <div
-        className="flex items-center gap-2 px-3 py-2 border-b border-white/10 shrink-0"
-        style={{ paddingTop: 'calc(0.5rem + env(safe-area-inset-top))' }}
+        className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#0a0a14] via-[#10172b] to-[#0a0a14] border-b border-cyan-500/20 backdrop-blur-xl shrink-0 shadow-lg"
+        style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
       >
-        <span className="text-xs font-extrabold text-white/80 flex-1 truncate">
-          GIJO Arcade · 오프라인 게임
-        </span>
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+          </span>
+          <span className="text-xs font-black tracking-wider text-white flex-1 truncate uppercase">
+            GIJO Arcade · <span className="text-cyan-400">오프라인 게임</span>
+          </span>
+        </div>
 
         <a
           href={GAME_URL}
@@ -49,14 +55,14 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose }) => {
           rel="noopener noreferrer"
           aria-label="게임을 새 창에서 열기"
           title="새 창에서 열기"
-          className="p-2 text-white/60 hover:text-white rounded-full active:scale-95 transition-all"
+          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-white/70 hover:text-white bg-white/5 hover:bg-white/10 rounded-full active:scale-95 transition-all border border-white/10"
         >
           <ExternalLink className="w-4 h-4" />
         </a>
         <button
           onClick={onClose}
           aria-label="게임 닫기"
-          className="p-2 text-white/60 hover:text-white rounded-full active:scale-95 transition-all"
+          className="min-w-[40px] min-h-[40px] flex items-center justify-center text-white/70 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 rounded-full active:scale-95 transition-all border border-cyan-500/30"
         >
           <X className="w-5 h-5" />
         </button>

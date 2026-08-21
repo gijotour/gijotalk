@@ -200,14 +200,18 @@ h2.neon-text {
     display: grid;
     /* 대표 칸 2개가 위에 나란히 서므로 좌우를 같은 폭으로 둡니다. */
     grid-template-columns: 1fr 1fr;
-    /* 1~2행 = 대표 칸(터치 룰렛·러브 드링크)이 두 행씩 차지,
-       3~5행 = 나머지 6개가 2개씩,
-       마지막 = 카드 뒤집기 배너. 배너를 auto 로 두면 다른 칸의 1/3에도 못 미쳐
-       얇은 띠로 보이므로 0.62fr 로 명시합니다.
+    /* 사다리 게임·업앤다운을 삭제하면서 7개로 줄었습니다.
+       1행 = 카드 뒤집기 배너 — HOT 모드에서 실제로 내용이 바뀌는 3개(카드 뒤집기·
+       미션 룰렛·시간 폭탄)를 맨 위로 올려달라는 요청으로 맨 위에 둡니다. 배너를
+       auto 로 두면 다른 칸의 1/3에도 못 미쳐 얇은 띠로 보이므로 0.62fr 로 명시.
+       2행 = 미션 룰렛·시간 폭탄 (나머지 HOT 2개).
+       3행 = 내용이 안 바뀌는 나머지 게임 2개(크로커다일·러브 드링크).
+       4~5행 = 대표 아트가 있는 터치 룰렛·타이타닉 — 사진이 잘 보이도록 맨 아래에
+       두 행씩 크게 배치합니다.
        각 행에 46px/30px 최소값을 둔 건 — 0 으로 두면 짧은 화면에서 아이콘·영문
        라벨이 overflow:hidden 에 잘려 배지만 남고 다 사라져 보였기 때문입니다.
        이 최소값 밑으로는 grid 가 아니라 위 overflow-y:auto 가 받습니다. */
-    grid-template-rows: repeat(5, minmax(46px, 1fr)) minmax(30px, 0.62fr);
+    grid-template-rows: minmax(30px, 0.62fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr);
     gap: 6px;
     /* 하단 여백은 footer-copyright(고정, z-index:100)가 배너 칸 위에
        겹치지 않도록 남겨둔 것입니다. 행이 4행 → 5행으로 늘면서 22px 로는
@@ -300,30 +304,31 @@ h2.neon-text {
     text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
-.quad-1 { grid-column: 1; grid-row: 3; }
-.quad-2 { grid-column: 2; grid-row: 3; }
-.quad-3 { grid-column: 1; grid-row: 4; }
-.quad-5 { grid-column: 2; grid-row: 4; }
-.quad-7 { grid-column: 1; grid-row: 5; }
-.quad-8 { grid-column: 2; grid-row: 5; }
+/* HOT 모드에서 벌칙·미션 내용이 실제로 바뀌는 미션 룰렛·시간 폭탄 — 배너(카드
+   뒤집기) 바로 아래, 나머지 게임보다 위쪽인 2행에 둡니다. */
+.quad-1 { grid-column: 1; grid-row: 2; }
+.quad-3 { grid-column: 2; grid-row: 2; }
+.quad-2 { grid-column: 1; grid-row: 3; }
+.quad-6 { grid-column: 2; grid-row: 3; }
 
-/* 대표 칸 — 가장 많이 도는 두 게임(터치 룰렛·러브 드링크)을 맨 위에 크게 둡니다.
-   두 행씩 차지해 나머지 칸의 두 배 높이가 됩니다. */
-.quad-4, .quad-6 {
-    grid-row: 1 / 3;
+/* 대표 아트가 있는 두 칸(터치 룰렛·타이타닉) — 사진이 잘 보이도록 맨 아래
+   4~5행에 두 행씩 크게 배치합니다. */
+.quad-4, .quad-5 {
+    grid-row: 4 / 6;
     padding: clamp(14px, 4vw, 20px);
 }
 .quad-4 { grid-column: 1; }
-.quad-6 { grid-column: 2; }
+.quad-5 { grid-column: 2; }
 
-.quad-4 .quad-icon, .quad-6 .quad-icon { font-size: clamp(2.2rem, 8vw, 3rem); }
-.quad-4 .quad-label-en, .quad-6 .quad-label-en { font-size: clamp(1rem, 4vw, 1.25rem); }
+.quad-4 .quad-icon, .quad-5 .quad-icon { font-size: clamp(2.2rem, 8vw, 3rem); }
+.quad-4 .quad-label-en, .quad-5 .quad-label-en { font-size: clamp(1rem, 4vw, 1.25rem); }
 
-/* 카드 뒤집기 — 하단 전체 폭 배너. 얇은 띠로 보이지 않도록
-   아이콘·글자를 다른 칸에 준하는 크기로 키웠습니다. */
+/* 카드 뒤집기 — 전체 폭 배너. 얇은 띠로 보이지 않도록
+   아이콘·글자를 다른 칸에 준하는 크기로 키웠습니다. HOT 모드에서 미션 내용이
+   실제로 바뀌는 3개 중 하나라 맨 위(1행)로 올렸습니다. */
 .quad-9 {
     grid-column: 1 / 3;
-    grid-row: 6;
+    grid-row: 1;
     flex-direction: row;
     align-items: center;
     gap: 14px;
@@ -334,9 +339,13 @@ h2.neon-text {
 .quad-9 .quad-label-en { font-size: clamp(0.95rem, 3.6vw, 1.15rem); }
 .quad-9 .quad-label-kr { font-size: clamp(0.72rem, 2.8vw, 0.86rem); }
 
-.quad-1::before { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); }
+/* HOT 모드에서 내용이 바뀌는 3개(미션 룰렛·시간 폭탄·카드 뒤집기)만 같은
+   색(HOT 배지와 동일한 그라디언트)으로 통일해 "이 셋은 19+ 에서 달라진다"는
+   걸 색으로도 표시합니다. 나머지는 원래 색 그대로 둡니다. */
+.quad-1::before, .quad-3::before, .quad-9::before {
+    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
+}
 .quad-2::before { background: linear-gradient(120deg, #3ed973, #c4ff4d); }
-.quad-3::before { background: linear-gradient(135deg, #ff7b00, var(--primary-neon)); }
 .quad-4::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
 .quad-5::before { background: linear-gradient(120deg, #ffaa00, #ffe14d); }
 
@@ -346,9 +355,6 @@ h2.neon-text {
 .quad-5 { background-image: url('assets/drink_titanic_spicy_art_1787296806150.jpg'); background-size: cover; background-position: center; }
 .quad-4::before, .quad-5::before { opacity: 0.55; }
 .quad-6::before { background: linear-gradient(135deg, #ff4dd8, var(--tertiary-neon)); }
-.quad-7::before { background: linear-gradient(120deg, #6366f1, #a5b4fc); }
-.quad-8::before { background: linear-gradient(120deg, #14b8a6, #5eead4); }
-.quad-9::before { background: linear-gradient(90deg, #4c1d95, #7c3aed); }
 
 .btn {
     font-family: var(--font-main);
@@ -841,65 +847,6 @@ textarea:focus {
     justify-content: center;
 }
 
-/* Ladder Game */
-.ladder-container {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: clamp(180px, 45dvh, 350px);
-    margin: 15px 0;
-}
-
-#ladder-canvas {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.ladder-players, .ladder-results {
-    position: absolute;
-    width: 100%;
-    height: 0;
-    top: -20px;
-    left: 0;
-}
-
-.ladder-results {
-    top: calc(100% + 12px);
-}
-
-.ladder-player-btn {
-    position: absolute;
-    transform: translateX(-50%);
-    background: var(--bg-color);
-    border: 1.5px solid var(--secondary-neon);
-    color: var(--secondary-neon);
-    padding: 3px 6px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    font-family: var(--font-main);
-    z-index: 10;
-    font-size: 0.75rem;
-}
-
-.ladder-result-txt {
-    position: absolute;
-    transform: translateX(-50%);
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    white-space: nowrap;
-    transition: all 0.3s;
-    font-size: 0.75rem;
-}
-
-.ladder-controls {
-    margin-top: 35px;
-}
-
 /* Crocodile */
 .croc-screen {
     padding: 0 !important;
@@ -1246,75 +1193,6 @@ textarea:focus {
     0%, 100% { transform: translate(-50%, -50%) scale(1.4) rotate(0deg); }
     25% { transform: translate(-50%, -50%) scale(1.4) rotate(-10deg); }
     75% { transform: translate(-50%, -50%) scale(1.4) rotate(10deg); }
-}
-
-/* Up & Down */
-.updown-range {
-    font-size: clamp(2rem, 12vw, 3.5rem);
-    font-weight: 900;
-    color: var(--secondary-neon);
-    text-shadow: 0 0 20px var(--secondary-neon);
-    margin-bottom: 12px;
-    display: flex;
-    gap: 12px;
-}
-
-.updown-history {
-    font-size: clamp(1.8rem, 9vw, 2.6rem);
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 20px;
-    /* height 고정이면 내용이 두 줄이 될 때 아래 입력줄을 밀어버립니다. */
-    min-height: 3.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-    word-break: keep-all;
-}
-
-/* "숫자를 입력하세요 · Enter a number" 같은 안내 문구는 결과 숫자용 큰 폰트를
-   그대로 물려받으면 두 줄로 넘칩니다. 안내일 때만 작게 씁니다. */
-.ud-prompt {
-    font-size: clamp(0.95rem, 4vw, 1.15rem);
-    font-weight: 700;
-    color: #bdbdc6;
-}
-
-.ud-arrow {
-    font-size: clamp(2rem, 10vw, 3rem);
-}
-
-.ud-pulse {
-    animation: ud-pop 0.3s ease;
-}
-
-@keyframes ud-pop {
-    0% { transform: scale(0.7); }
-    60% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-}
-
-.updown-input-area {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    justify-content: center;
-}
-
-#ud-input {
-    width: 140px;
-    height: 60px;
-    font-size: 2.2rem;
-    text-align: center;
-    background: rgba(0,0,0,0.6);
-    border: 3px solid var(--tertiary-neon);
-    color: #fff;
-    border-radius: 12px;
-    outline: none;
-    font-family: var(--font-main);
-    box-shadow: 0 0 15px rgba(162, 0, 255, 0.3);
 }
 
 /* Finger Roulette — 라디얼 그라디언트 뒤로 대표 아트가 은은히 비칩니다.
@@ -1900,18 +1778,6 @@ body.hot .hot-toggle-btn {
                     <span class="quad-label-en">Neon Titanic</span>
                     <span class="quad-label-kr">찰랑찰랑 타이타닉</span>
                 </button>
-                <button class="quad-btn quad-7" onclick="app.navigate('ladder')">
-                    <span class="quad-badge">2~6인 · 사다리</span>
-                    <span class="quad-icon">&#129692;</span>
-                    <span class="quad-label-en">Ladder Game</span>
-                    <span class="quad-label-kr">사다리 게임</span>
-                </button>
-                <button class="quad-btn quad-8" onclick="app.navigate('updown')">
-                    <span class="quad-badge">2~10인 · 심리전</span>
-                    <span class="quad-icon">&#128290;</span>
-                    <span class="quad-label-en">Up &amp; Down</span>
-                    <span class="quad-label-kr">업 앤 다운</span>
-                </button>
                 <button class="quad-btn quad-6" onclick="app.navigate('bridge')">
                     <span class="quad-badge">🔥 2인 커플</span>
                     <span class="quad-icon">&#128149;</span>
@@ -1969,20 +1835,6 @@ body.hot .hot-toggle-btn {
             <button class="btn neon-btn" onclick="app.resetCards()">카드 섞기 · Shuffle</button>
         </section>
 
-        <!-- Ladder Screen -->
-        <section id="screen-ladder" class="screen hidden">
-            <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">GIJO Ladder Game<br><span class="title-kr">사다리 게임</span></h2>
-            <div class="ladder-container">
-                <div class="ladder-players" id="ladder-players"></div>
-                <canvas id="ladder-canvas" width="300" height="400"></canvas>
-                <div class="ladder-results" id="ladder-results"></div>
-            </div>
-            <div class="ladder-controls">
-                <button class="btn neon-btn" onclick="app.generateLadder()">사다리 다시 · Regenerate</button>
-            </div>
-        </section>
-
         <!-- Crocodile Screen -->
         <section id="screen-crocodile" class="screen hidden croc-screen">
             <button class="btn-back croc-back-btn" onclick="history.back()">&larr; Back</button>
@@ -2009,24 +1861,6 @@ body.hot .hot-toggle-btn {
                 </div>
             </div>
             <button class="btn neon-btn croc-shuffle-btn" onclick="app.initCrocodile()">&#128260; 다시하기 · Retry</button>
-        </section>
-
-        <!-- Up & Down Screen -->
-        <section id="screen-updown" class="screen hidden">
-            <button class="btn-back" onclick="history.back()">&larr; Back</button>
-            <h2 class="neon-text">GIJO UP &amp; DOWN<br><span class="title-kr">업 앤 다운</span></h2>
-            <p class="subtitle">1부터 50 사이의 숫자를 맞혀보세요!<span class="i18n-sub">Guess a number between 1 and 50!</span></p>
-            <div class="updown-range">
-                <span id="ud-min">1</span>
-                <span>~</span>
-                <span id="ud-max">50</span>
-            </div>
-            <div class="updown-history" id="ud-history"><span class="ud-prompt">숫자를 입력하세요 · Enter a number</span></div>
-            <div class="updown-input-area">
-                <input type="number" id="ud-input" min="1" max="50">
-                <button class="btn neon-btn" onclick="app.submitUpDown()">확인 · Submit</button>
-            </div>
-            <button class="btn neon-btn" onclick="app.initUpDown()" style="margin-top: 30px;">새 게임 · New Game</button>
         </section>
 
         <!-- Finger Roulette Screen -->
@@ -2280,27 +2114,9 @@ const app = {
     bombTimeLeft: 0,
     isBombActive: false,
     
-    // Ladder variables
-    ladder: {
-        lines: 0,
-        rungs: [],
-        ctx: null,
-        canvas: null,
-        width: 300,
-        height: 400,
-        isAnimating: false,
-        results: []
-    },
-
     // Crocodile variables
     crocBombIdx: -1,
     crocIsOver: false,
-
-    // UpDown variables
-    udTarget: 0,
-    udMin: 1,
-    udMax: 50,
-    udIsOver: false,
 
     // Finger variables
     fingerTouches: {},
@@ -2493,12 +2309,8 @@ const app = {
             this.updateRouletteWheel(options);
             document.getElementById('roulette-result').innerText = '';
         }
-        if (screenId === 'ladder') {
-            setTimeout(() => this.initLadder(), 50);
-        }
         if (screenId === 'cards') this.resetCards();
         if (screenId === 'crocodile') this.initCrocodile();
-        if (screenId === 'updown') this.initUpDown();
         if (screenId === 'finger') this.setupFingerRoulette();
         if (screenId === 'titanic') this.initTitanic();
         if (screenId === 'bridge') this.initBridge();
@@ -2534,203 +2346,6 @@ const app = {
         }
         
         wheel.style.background = `conic-gradient(${gradient.join(', ')})`;
-    },
-
-    // Ladder Logic
-    initLadder() {
-        this.ladder.canvas = document.getElementById('ladder-canvas');
-        this.ladder.ctx = this.ladder.canvas.getContext('2d');
-        const containerWidth = Math.min(window.innerWidth - 40, 500);
-        this.ladder.canvas.width = containerWidth;
-        this.ladder.width = containerWidth;
-        this.ladder.canvas.height = 400;
-        this.ladder.height = 400;
-        this.generateLadder();
-    },
-
-    generateLadder() {
-        if (this.ladder.isAnimating) return;
-        
-        this.ladder.lines = this.playerCount;
-        this.ladder.rungs = [];
-        this.ladder.results = Array(this.playerCount).fill('통과 Safe');
-        const loserIdx = Math.floor(Math.random() * this.playerCount);
-        this.ladder.results[loserIdx] = '💥당첨 Drink';
-
-        const rungsPerLine = Math.max(3, Math.floor(Math.random() * 3) + 2); 
-        for (let i = 0; i < this.ladder.lines - 1; i++) {
-            let lastY = 40;
-            for (let j = 0; j < rungsPerLine; j++) {
-                const y = lastY + Math.random() * ((this.ladder.height - 80) / rungsPerLine);
-                if (y < this.ladder.height - 40) {
-                    this.ladder.rungs.push({ col: i, y: y });
-                    lastY = y + 20;
-                }
-            }
-        }
-        
-        const playersDiv = document.getElementById('ladder-players');
-        const resultsDiv = document.getElementById('ladder-results');
-        playersDiv.innerHTML = '';
-        resultsDiv.innerHTML = '';
-        
-        const colWidth = this.ladder.width / this.ladder.lines;
-        
-        for (let i = 0; i < this.ladder.lines; i++) {
-            const pBtn = document.createElement('button');
-            pBtn.className = 'ladder-player-btn';
-            pBtn.innerText = `P${i+1}`;
-            pBtn.style.left = `${(i + 0.5) * colWidth}px`;
-            pBtn.onclick = () => this.playLadder(i);
-            playersDiv.appendChild(pBtn);
-            
-            const rTxt = document.createElement('div');
-            rTxt.className = `ladder-result-txt ${this.ladder.results[i].startsWith('💥') ? 'danger' : ''}`;
-            rTxt.innerText = this.ladder.results[i];
-            rTxt.style.left = `${(i + 0.5) * colWidth}px`;
-            // Ensure no line wrapping ruins alignment
-            rTxt.style.transform = 'translateX(-50%)';
-            resultsDiv.appendChild(rTxt);
-        }
-        
-        this.drawLadder();
-    },
-
-    drawLadder(highlightPath = null, progress = 1) {
-        const ctx = this.ladder.ctx;
-        ctx.clearRect(0, 0, this.ladder.width, this.ladder.height);
-        
-        const colWidth = this.ladder.width / this.ladder.lines;
-        
-        ctx.strokeStyle = '#333';
-        ctx.lineWidth = 4;
-        ctx.lineCap = 'round';
-        
-        ctx.beginPath();
-        for (let i = 0; i < this.ladder.lines; i++) {
-            const x = (i + 0.5) * colWidth;
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, this.ladder.height);
-        }
-        ctx.stroke();
-        
-        ctx.beginPath();
-        for (const rung of this.ladder.rungs) {
-            const x1 = (rung.col + 0.5) * colWidth;
-            const x2 = (rung.col + 1.5) * colWidth;
-            ctx.moveTo(x1, rung.y);
-            ctx.lineTo(x2, rung.y);
-        }
-        ctx.stroke();
-        
-        if (highlightPath) {
-            ctx.strokeStyle = '#00f3ff';
-            ctx.lineWidth = 6;
-            ctx.shadowColor = '#00f3ff';
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            
-            let totalDist = highlightPath.reduce((sum, seg) => sum + seg.len, 0);
-            let currentDist = totalDist * progress;
-            
-            ctx.moveTo(highlightPath[0].x, highlightPath[0].y);
-            
-            for (let i = 0; i < highlightPath.length; i++) {
-                const seg = highlightPath[i];
-                if (currentDist >= seg.len) {
-                    ctx.lineTo(seg.endX, seg.endY);
-                    currentDist -= seg.len;
-                } else {
-                    const ratio = currentDist / seg.len;
-                    const pX = seg.x + (seg.endX - seg.x) * ratio;
-                    const pY = seg.y + (seg.endY - seg.y) * ratio;
-                    ctx.lineTo(pX, pY);
-                    break;
-                }
-            }
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-        }
-    },
-
-    playLadder(startCol) {
-        if (this.ladder.isAnimating) return;
-        this.ladder.isAnimating = true;
-        
-        const colWidth = this.ladder.width / this.ladder.lines;
-        let path = [];
-        
-        let currentCol = startCol;
-        let currentY = 0;
-        let currentX = (currentCol + 0.5) * colWidth;
-        
-        const sortedRungs = [...this.ladder.rungs].sort((a, b) => a.y - b.y);
-        
-        for (const rung of sortedRungs) {
-            if (rung.y > currentY + 1) { // +1 to avoid float precision issues
-                if (rung.col === currentCol) {
-                    path.push({x: currentX, y: currentY, endX: currentX, endY: rung.y, len: rung.y - currentY});
-                    currentY = rung.y;
-                    const nextX = (currentCol + 1.5) * colWidth;
-                    path.push({x: currentX, y: currentY, endX: nextX, endY: rung.y, len: Math.abs(nextX - currentX)});
-                    currentX = nextX;
-                    currentCol++;
-                } else if (rung.col === currentCol - 1) {
-                    path.push({x: currentX, y: currentY, endX: currentX, endY: rung.y, len: rung.y - currentY});
-                    currentY = rung.y;
-                    const nextX = (currentCol - 0.5) * colWidth;
-                    path.push({x: currentX, y: currentY, endX: nextX, endY: rung.y, len: Math.abs(currentX - nextX)});
-                    currentX = nextX;
-                    currentCol--;
-                }
-            }
-        }
-        
-        path.push({x: currentX, y: currentY, endX: currentX, endY: this.ladder.height, len: this.ladder.height - currentY});
-        
-        let startTime = null;
-        const duration = 2500; 
-        
-        const animate = (timestamp) => {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            let progress = Math.min(elapsed / duration, 1);
-            
-            // Smoother easing
-            progress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-            
-            this.drawLadder(path, progress);
-            
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-                if(Math.random() > 0.8) soundFX.playTone(300 + progress * 400, 'sine', 0.02, 0.01);
-            } else {
-                this.ladder.isAnimating = false;
-                if(this.ladder.results[currentCol] === '💥BOOM') soundFX.playFail();
-                else soundFX.playTada();
-                
-                const results = document.querySelectorAll('.ladder-result-txt');
-                results.forEach((r, i) => {
-                    if (i === currentCol) {
-                        r.style.transform = 'translateX(-50%) scale(1.5)';
-                        r.style.color = r.classList.contains('danger') ? '#ff0055' : '#00ffaa';
-                        r.style.textShadow = `0 0 15px ${r.style.color}`;
-                    } else {
-                        r.style.opacity = '0.3';
-                    }
-                });
-            }
-        };
-        
-        const results = document.querySelectorAll('.ladder-result-txt');
-        results.forEach(r => {
-            r.style.transform = 'translateX(-50%) scale(1)';
-            r.style.color = '#fff';
-            r.style.opacity = '1';
-            r.style.textShadow = 'none';
-        });
-        
-        requestAnimationFrame(animate);
     },
 
     // Roulette Logic
@@ -3032,62 +2647,6 @@ const app = {
             soundFX.playTick();
             haptics.tick();
         }
-    },
-
-    // Up&Down Logic
-    initUpDown() {
-        this.udMin = 1;
-        this.udMax = 50;
-        this.udTarget = Math.floor(Math.random() * 50) + 1;
-        this.udIsOver = false;
-        
-        document.getElementById('ud-min').innerText = this.udMin;
-        document.getElementById('ud-max').innerText = this.udMax;
-        document.getElementById('ud-history').innerHTML =
-            '<span class="ud-prompt">숫자를 입력하세요 · Enter a number</span>';
-        document.getElementById('ud-input').value = '';
-        document.getElementById('ud-history').style.color = '#fff';
-    },
-    submitUpDown() {
-        if(this.udIsOver) return;
-        soundFX.init();
-        
-        const inputEl = document.getElementById('ud-input');
-        const val = parseInt(inputEl.value);
-        const historyEl = document.getElementById('ud-history');
-        if(isNaN(val) || val < this.udMin || val > this.udMax) {
-            soundFX.playFail();
-            inputEl.value = '';
-            return;
-        }
-        
-        if (val === this.udTarget) {
-            this.udIsOver = true;
-            historyEl.innerHTML = `<span class="ud-arrow">💥</span><span>${val} 정답! · Correct!</span>`;
-            historyEl.style.color = '#ff0055';
-            soundFX.playBoom();
-            const screen = document.getElementById('screen-updown');
-            screen.classList.remove('shake');
-            void screen.offsetWidth;
-            screen.classList.add('shake');
-        } else {
-            if (val > this.udTarget) {
-                this.udMax = val - 1;
-                historyEl.innerHTML = `<span class="ud-arrow">⬇️</span><span>${val} DOWN!</span>`;
-                historyEl.style.color = '#00f3ff';
-            } else {
-                this.udMin = val + 1;
-                historyEl.innerHTML = `<span class="ud-arrow">⬆️</span><span>${val} UP!</span>`;
-                historyEl.style.color = '#ffaa00';
-            }
-            document.getElementById('ud-min').innerText = this.udMin;
-            document.getElementById('ud-max').innerText = this.udMax;
-            soundFX.playTick(true);
-        }
-        historyEl.classList.remove('ud-pulse');
-        void historyEl.offsetWidth;
-        historyEl.classList.add('ud-pulse');
-        inputEl.value = '';
     },
 
     // Finger Roulette Logic

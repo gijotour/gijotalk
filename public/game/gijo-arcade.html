@@ -199,10 +199,16 @@ html, body {
     justify-content: flex-start;
     gap: 14px;
     padding: 14px 20px;
+    /* 위쪽 배너와 같은 사진 — 다른 4개 타일과 같은 방식(그라디언트 opacity 낮춰서
+       그 밑으로 비치게)으로 이 칸에도 깔았습니다. */
+    background-image: url('assets/slot_spicy_777_banner_1787296460666.jpg');
+    background-size: cover;
+    background-position: center;
 }
 .tile-slots::before {
     clip-path: none;
     background: linear-gradient(90deg, #b8860b, #ffd700 45%, #ff2d78);
+    opacity: 0.6;
 }
 .tile-slots .tile-icon { font-size: clamp(2rem, 8vw, 2.8rem); }
 .tile-slots .tile-text { display: flex; flex-direction: column; gap: 1px; }
@@ -401,7 +407,11 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
     min-height: 0;
     border-radius: 16px;
     padding: 8px;
-    background: linear-gradient(160deg, #1a1206, #0b0a12);
+    /* 각 릴(.reel)이 자체적으로 rgba(0,0,0,0.55) 배경을 깔고 있어 심볼 위에
+       사진이 겹쳐도 안 흐려집니다 — 릴 사이 여백·테두리 쪽에서 더 잘 보입니다. */
+    background:
+        linear-gradient(160deg, rgba(26, 18, 6, 0.82), rgba(11, 10, 18, 0.9)),
+        url('assets/slot_spicy_777_banner_1787296460666.jpg') center/cover;
     border: 2px solid #ffd700;
     box-shadow: 0 0 26px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(0,0,0,0.7);
     overflow: hidden;
@@ -410,7 +420,9 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
 body.hot .reels-frame {
     border-color: #ff2d78;
     box-shadow: 0 0 30px rgba(255, 45, 120, 0.42), inset 0 0 30px rgba(0,0,0,0.7);
-    background: linear-gradient(160deg, #200a1a, #0d0410);
+    background:
+        linear-gradient(160deg, rgba(32, 10, 26, 0.82), rgba(13, 4, 16, 0.9)),
+        url('assets/slot_spicy_777_banner_1787296460666.jpg') center/cover;
 }
 
 .reels {

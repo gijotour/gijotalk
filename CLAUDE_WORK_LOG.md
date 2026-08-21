@@ -5,6 +5,28 @@
 > **일시**: 2026-08-21  
 > **적용 규율**: GIJOSKv1 바이브 코딩 규율 (`시안 1개 → 설계관 → 구현 → 검토관 → 시험 게이트 → 배포 → 게시`)
 
+> **⚠️ 정정 (Claude, 2026-08-21)**: 아래 §2-A의 슬롯 신규 기능 2~6번(Auto Spin·Jackpot Fever·
+> Double Gamble·MAX BET·Coin Shower)은 처음 확인했을 땐 "빌드·테스트 PASS"만 보고 완료로
+> 넘겼는데, 실제 코드에는 없었습니다 — 해당 커밋은 이미지 자산 10개와 CSS 52줄만 추가했을 뿐,
+> 5개 기능 중 4개는 구현되지 않은 채였습니다(777 2000배 심볼만 실존). 자산도 10개 중 2개(슬롯
+> 배너·드링크 메인 배너)만 실제로 화면에 걸려 있었고 나머지 8개는 다운로드만 되고 미사용
+> 상태였습니다. 브라우저로 직접 들어가서 눌러본 뒤에야 드러났습니다 — **"빌드/테스트 통과"는
+> "기능이 실제로 동작한다"의 증거가 아닙니다.**
+>
+> 오늘 세션에서 다음을 실제로 구현·수정하고 매번 브라우저로 직접 확인했습니다:
+> - 위 5개 슬롯 기능을 실제로 구현 (Auto Spin, Jackpot Fever, Double Gamble, MAX BET, Coin Shower)
+> - 미사용이던 이미지 8장을 메뉴 카드 + 실제 게임 화면(캔버스 배경 포함)에 배치
+> - HOT 모드 토글이 배지만 바꾸고 `body.hot` 클래스는 안 붙여 테마 전체가 안 먹던 버그
+> - 슬롯 스핀 중 탭을 백그라운드로 보내면 `showOverlay` 없는 Slots 에서 TypeError 로 죽으며
+>   영구 정지하던 버그 (`document.visibilitychange` 핸들러가 캔버스 게임 전용 인터페이스를
+>   모든 게임에 가정하고 호출)
+> - 드링크 메인 메뉴 `.quad-menu` 가 `flex:1`에 `min-height:0` 이 없어 9개 게임 중 7개가
+>   화면 밖으로 밀려나 있던 버그 (스크롤도 안 걸려 실제 모바일에서 접근 불가였음)
+> - 아케이드 "GIJO Slots" 타일이 CSS 소스 순서 때문에(`.tile-slots`가 `.tile` 보다 앞에 있어
+>   같은 우선순위에서 밀림) column 레이아웃으로 눌려 아이콘이 위로 잘려 보이던 버그
+>
+> 상세는 §4 참조. `gijotalk`/`gijodrink`/`gijoarcade` 3곳 모두 동기화·빌드·테스트(156개) 재확인함.
+
 ---
 
 ## 📌 1. 프로젝트 개요 & 저장소 구조
@@ -59,7 +81,12 @@ graph TD
 
 ## 🖼️ 3. 4K 비주얼 이미지 자산 목록 (Assets)
 
-생성 및 연동된 이미지 자산은 각 저장소의 `public/game/assets/` 및 `assets/` 폴더에 배치되어 있으며, HTML 내에 `<img class="...">` 태그로 렌더링 연동되어 있습니다.
+생성된 이미지 자산은 각 저장소의 `public/game/assets/` 및 `assets/` 폴더에 있습니다. 이 표가 처음
+작성됐을 땐 아래 10개 중 2개(슬롯 배너·드링크 메인 배너)만 실제로 화면에 걸려 있었고 나머지
+8개는 파일만 있고 미사용이었습니다(2026-08-21 Claude 세션에서 확인 후 전부 배치). 연동 방식은
+자산마다 다릅니다 — 메뉴 배너 2개는 `<img>` 태그, 게임 카드·플레이 화면 대부분은 CSS
+`background-image`, Space Shooter·Brick Breaker 는 캔버스가 매 프레임 불투명으로 덮어 CSS로는
+안 보여서 `ctx.drawImage()` 로 직접 그립니다.
 
 | 파일명 | 용도 | 위치 |
 | :--- | :--- | :--- |
@@ -79,14 +106,18 @@ graph TD
 ## 🧪 4. 빌드 및 테스트 상태
 
 ```bash
-# 1. Production Build 상태
-npm run build # PASS (vite v6.4.3 + esbuild server.ts -> dist/ 1.25s)
+# 1. Production Build 상태 (2026-08-21 재실측)
+npm run build # PASS (vite v6.4.3, 1719 modules, built in 1.30s + esbuild server.cjs)
 
-# 2. Vitest Test Suite 상태
-npm test # PASS (156 tests passed, 0 failures)
+# 2. Vitest Test Suite 상태 (2026-08-21 재실측)
+npm test # PASS — 9 test files, 156 tests, 0 failures (21.55s)
 
 # 3. 로컬 데몬 서버
-http://localhost:3000 # Active
+http://localhost:3000 # Active (curl 200 확인, PID 25852)
+
+# 4. gijodrink / gijoarcade 동기화 상태
+diff gijotalk/public/game/gijo-drink.html gijodrink/index.html   # 동일 (diff 없음)
+diff gijotalk/public/game/gijo-arcade.html gijoarcade/index.html # 동일 (diff 없음)
 ```
 
 ---

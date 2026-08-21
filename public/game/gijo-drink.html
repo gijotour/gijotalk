@@ -178,6 +178,40 @@ h2.neon-text {
     margin-bottom: 8px;
 }
 
+/* 상단 배너 — 특정 게임과 엮이지 않는 순수 광고란입니다. 이제 같은 사진이
+   메뉴 5칸 배경으로도 쓰이므로, 헷갈리지 않도록 "광고" 딱지를 붙여 구분합니다. */
+.ad-banner {
+    position: relative;
+    width: calc(100% - 12px);
+    margin: 6px auto;
+    flex-shrink: 0;
+}
+
+.ad-banner-img {
+    width: 100%;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    display: block;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.ad-banner-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
 /* 볼드 벤토 — 균등한 6칸 대신 위계를 준다.
    "시간 폭탄"을 대표 칸으로 키우고, 각 칸 색은 그 모드의 실제 게임
    화면 색과 맞췄다(크로커다일→초록 습지, 타이타닉→맥주 호박색,
@@ -373,10 +407,29 @@ h2.neon-text {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     z-index: 1;
+    /* 사진이 하나로 이어져 칸 경계가 안 보이면 어디를 눌러야 할지 헷갈리므로,
+       테두리를 또렷하게 키워 탭 영역을 구분합니다. */
+    border-color: rgba(255, 255, 255, 0.4);
+}
+.quad-1:active, .quad-2:active, .quad-3:active, .quad-6:active, .quad-9:active {
+    background: rgba(255, 255, 255, 0.1);
 }
 .quad-1::before, .quad-2::before, .quad-3::before, .quad-6::before, .quad-9::before {
     display: none;
 }
+/* 글자가 사진 위에 바로 얹히면 밝은 부분에서 안 읽히므로, 라벨이 앉는
+   아래쪽에만 어두운 스크림을 깔아 배경 사진 자체는 그대로 두면서 가독성만
+   올립니다(선택하기 편하도록). */
+.quad-1::after, .quad-2::after, .quad-3::after, .quad-6::after, .quad-9::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.32) 45%, transparent 75%);
+}
+/* 카드 뒤집기(quad-9)는 가로 배너라 글자가 오른쪽까지 퍼져 있어, 위→아래
+   스크림 대신 전체를 고르게 어둡혀야 어디서든 읽힙니다. */
+.quad-9::after { background: rgba(0, 0, 0, 0.45); }
 
 .btn {
     font-family: var(--font-main);
@@ -1757,6 +1810,10 @@ body.hot .hot-toggle-btn {
                         <span class="hot-flame">🔥</span> <span class="hot-txt">19+ HOT 모드</span>
                     </button>
                 </div>
+            </div>
+            <div class="ad-banner">
+                <img src="assets/drink_spicy_main_banner_1787296777970.jpg" alt="광고" class="ad-banner-img" />
+                <span class="ad-banner-tag">광고 · AD</span>
             </div>
             <div class="quad-menu">
                 <div class="quad-shared-bg"></div>

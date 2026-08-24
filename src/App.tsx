@@ -181,6 +181,7 @@ export default function App() {
     const counts: Record<CategoryId, number> = {
       '10대 기본': 10,
       '전체': countryPhrases.length,
+      '골프': 0,
       '호텔': 0,
       '교통': 0,
       '식당': 0,

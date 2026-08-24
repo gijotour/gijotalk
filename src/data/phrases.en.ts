@@ -15,7 +15,7 @@ export const EN_COUNTRY: Country = {
   flag: '🌐',
   language: 'English',
   langCode: 'en-US',
-  categories: ['전체', '항공', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '미팅/사교', '욕설/은어', '비상'],
+  categories: ['전체', '골프', '호텔', '교통', '식당', '음식', '흥정', '관광', '마사지', '항공', '미팅/사교', '욕설/은어', '비상'],
   description: '필리핀 어디서나 통하는 영어 표현 (공용어)',
 };
 
@@ -550,5 +550,109 @@ export const EN_PHRASES: Phrase[] = [
     pronunciation: '[아임 프롬 코리아. 나이스 투 미츄]',
     toneGuide: '첫인사',
     usageTip: '필리핀은 한국 문화에 호의적이라 대화가 부드럽게 풀리는 경우가 많습니다.',
+  },
+
+  // ==========================================
+  // [골프]
+  // ==========================================
+  {
+    id: 'en-golf-01',
+    countryId: 'en',
+    category: '골프',
+    original: 'How many yards / meters to the pin?',
+    translation: '핀까지 몇 야드(미터) 남았나요?',
+    pronunciation: '[하우 매니 야즈 / 미터즈 투 더 핀?]',
+    toneGuide: 'Golf distance inquiry',
+    usageTip: '세컨드 샷이나 어프로치 전 캐디에게 남은 거리를 확인하세요.'
+  },
+  {
+    id: 'en-golf-02',
+    countryId: 'en',
+    category: '골프',
+    original: 'Give me 7 iron / Driver / Putter, please.',
+    translation: '7번 아이언(드라이버/퍼터) 주세요.',
+    pronunciation: '[기브 미 세븐 아이언 / 드라이버 / 퍼터, 플리즈]',
+    toneGuide: 'Club request',
+    usageTip: '원하는 클럽을 캐디에게 요청할 때 쓰입니다.'
+  },
+  {
+    id: 'en-golf-03',
+    countryId: 'en',
+    category: '골프',
+    original: 'Which way is the wind blowing? Headwind or tailwind?',
+    translation: '바람이 어느 방향으로 부나요? 맞바람인가요?',
+    pronunciation: '[위치 웨이 이즈 더 윈드 블로잉? 헤드윈드 오어 테일윈드?]',
+    toneGuide: 'Wind check',
+    usageTip: '티샷 전 바람 방향과 세기를 캐디에게 질문하세요.'
+  },
+  {
+    id: 'en-golf-04',
+    countryId: 'en',
+    category: '골프',
+    original: 'Is the break to the right or to the left?',
+    translation: '그린 라이가 오른쪽인가요, 왼쪽인가요?',
+    pronunciation: '[이즈 더 브레이크 투 더 라이트 오어 투 더 레프트?]',
+    toneGuide: 'Green reading',
+    usageTip: '퍼팅 전 캐디에게 브레이크(경사) 방향을 물어보세요.'
+  },
+  {
+    id: 'en-golf-05',
+    countryId: 'en',
+    category: '골프',
+    original: 'Is it uphill or downhill?',
+    translation: '오르막 라이인가요, 내리막 라이인가요?',
+    pronunciation: '[이즈 잇 업힐 오어 다운힐?]',
+    toneGuide: 'Slope inquiry',
+    usageTip: '퍼팅 거리감 조절을 위해 오르막/내리막 여부를 체크하세요.'
+  },
+  {
+    id: 'en-golf-06',
+    countryId: 'en',
+    category: '골프',
+    original: 'Please clean my ball and mark it.',
+    translation: '공 좀 닦아주시고 마크해 주세요.',
+    pronunciation: '[플리즈 클린 마이 볼 앤드 마크 잇]',
+    toneGuide: 'Ball mark & clean',
+    usageTip: '온그린 후 캐디에게 볼 마크와 세척을 부탁하세요.'
+  },
+  {
+    id: 'en-golf-07',
+    countryId: 'en',
+    category: '골프',
+    original: 'Did the ball go into the water / bunker / OB?',
+    translation: '공이 해저드(워터/벙커/OB)에 들어갔나요?',
+    pronunciation: '[디드 더 볼 고 인투 더 워터 / 벙커 / 오비?]',
+    toneGuide: 'Ball tracking',
+    usageTip: '공이 빗나갔을 때 낙하 지점을 캐디에게 확인하세요.'
+  },
+  {
+    id: 'en-golf-08',
+    countryId: 'en',
+    category: '골프',
+    original: 'Great shot! Nice birdie / Nice par!',
+    translation: '굿 샷! 나이스 버디 / 나이스 파!',
+    pronunciation: '[그레이트 샷! 나이스 버디 / 나이스 파!]',
+    toneGuide: 'Golf praise',
+    usageTip: '동반자나 캐디의 멋진 샷을 칭찬할 때 외쳐보세요.'
+  },
+  {
+    id: 'en-golf-09',
+    countryId: 'en',
+    category: '골프',
+    original: 'Where is the refreshment / drink cart?',
+    translation: '음료수 카트 / 그늘집 어디 있나요?',
+    pronunciation: '[웨어 이즈 더 리프레시먼트 / 드링크 카트?]',
+    toneGuide: 'Drink break',
+    usageTip: '더운 라운딩 중 시원한 음료를 찾을 때 물어보세요.'
+  },
+  {
+    id: 'en-golf-10',
+    countryId: 'en',
+    category: '골프',
+    original: 'Thank you so much today! Here is your tip.',
+    translation: '오늘 정말 감사했습니다! 캐디 팁 여기 있습니다.',
+    pronunciation: '[땡큐 쏘 머치 투데이! 히어 이즈 유어 팁]',
+    toneGuide: 'Caddie tip & gratitude',
+    usageTip: '18홀 라운딩 종료 후 수고해준 캐디에게 팁을 건네며 감사를 전하세요.'
   },
 ];

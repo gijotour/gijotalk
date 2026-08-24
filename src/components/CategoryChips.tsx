@@ -3,6 +3,7 @@ import { CategoryId } from '../types';
 import {
   Star,
   Layers,
+  Flag,
   Plane,
   Hotel,
   Bus,
@@ -25,6 +26,7 @@ interface CategoryChipsProps {
 const CATEGORIES: { id: CategoryId; icon: React.ReactNode }[] = [
   { id: '10대 기본', icon: <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" /> },
   { id: '전체', icon: <Layers className="w-3.5 h-3.5" /> },
+  { id: '골프', icon: <Flag className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500/20" /> },
   { id: '호텔', icon: <Hotel className="w-3.5 h-3.5" /> },
   { id: '교통', icon: <Bus className="w-3.5 h-3.5" /> },
   { id: '식당', icon: <Utensils className="w-3.5 h-3.5" /> },

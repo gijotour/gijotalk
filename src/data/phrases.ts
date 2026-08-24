@@ -357,6 +357,108 @@ export const PHRASES: Phrase[] = [
     usageTip: '헤어질 때 정감 있게 아쉬움을 표하는 호감 가득한 표현입니다.'
   },
 
+  // [골프]
+  {
+    id: 'ph-golf-01',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Ilang yarda / metro pa ang layo?',
+    translation: '핀까지 몇 야드(미터) 남았나요?',
+    pronunciation: '[일랑 야르다 / 메트로 파 앙 라요?]',
+    toneGuide: 'Golf distance inquiry',
+    usageTip: '세컨드 샷이나 어프로치 전 캐디에게 남은 거리를 물어보세요.'
+  },
+  {
+    id: 'ph-golf-02',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Pahiram po ng 7 iron / Driver / Putter.',
+    translation: '7번 아이언(드라이버/퍼터) 주세요.',
+    pronunciation: '[파히람 포 낭 세븐 아이언 / 드라이버 / 퍼터]',
+    toneGuide: 'Club request',
+    usageTip: '샷하기 전 필요한 클럽 번호를 캐디에게 정중히 요청하세요.'
+  },
+  {
+    id: 'ph-golf-03',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Saan ang hangin? Salubong ba o sunod?',
+    translation: '바람이 어디로 부나요? 맞바람인가요?',
+    pronunciation: '[사안 앙 항인? 살루봉 바 오 수놋?]',
+    toneGuide: 'Wind check',
+    usageTip: '티샷 전 바람 방향(맞바람 Salubong, 뒷바람 Sunod)을 확인하세요.'
+  },
+  {
+    id: 'ph-golf-04',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Kanan o kaliwa ba ang break ng green?',
+    translation: '그린 라이가 우측인가요, 좌측인가요?',
+    pronunciation: '[카난 오 칼리와 바 앙 브레이크 낭 그린?]',
+    toneGuide: 'Green reading',
+    usageTip: '퍼팅 전 캐디에게 브레이크(경사) 방향을 물어보세요.'
+  },
+  {
+    id: 'ph-golf-05',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Paakyat ba o pababa ang putt?',
+    translation: '오르막 라이인가요, 내리막 라이인가요?',
+    pronunciation: '[파악얏 바 오 파바바 앙 팟?]',
+    toneGuide: 'Slope inquiry',
+    usageTip: '퍼팅 거리감 조절을 위해 오르막/내리막 여부를 체크하세요.'
+  },
+  {
+    id: 'ph-golf-06',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Paki-punas po ng bola at paki-mark.',
+    translation: '공 좀 닦아주시고 마크해 주세요.',
+    pronunciation: '[파키푸나스 포 낭 볼라 앗 파키 마크]',
+    toneGuide: 'Ball mark & clean',
+    usageTip: '온그린 후 캐디에게 볼 마크와 세척을 부탁하세요.'
+  },
+  {
+    id: 'ph-golf-07',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Pumasok ba sa tubig / buhangin / OB?',
+    translation: '공이 해저드(물/벙커/OB)에 들어갔나요?',
+    pronunciation: '[푸마속 바 사 투빅 / 부항인 / 오비?]',
+    toneGuide: 'Ball tracking',
+    usageTip: '공이 빗나갔을 때 낙하 지점을 캐디에게 확인하세요.'
+  },
+  {
+    id: 'ph-golf-08',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Ang galing! Nice shot / Nice birdie!',
+    translation: '나이스 샷! 정말 잘 쳤어요 / 나이스 버디!',
+    pronunciation: '[앙 갈링! 나이스 샷 / 나이스 버디!]',
+    toneGuide: 'Golf praise',
+    usageTip: '동반자나 캐디의 멋진 샷을 칭찬할 때 외쳐보세요.'
+  },
+  {
+    id: 'ph-golf-09',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Nasaan po ang refreshment cart / inumin?',
+    translation: '음료수 카트 / 그늘집 어디 있나요?',
+    pronunciation: '[나사안 포 앙 리프레시먼트 카트 / 이누민?]',
+    toneGuide: 'Drink break',
+    usageTip: '더운 라운딩 중 시원한 물이나 맥주, 코코넛을 찾을 때 물어보세요.'
+  },
+  {
+    id: 'ph-golf-10',
+    countryId: 'ph',
+    category: '골프',
+    original: 'Maraming salamat po! Ito po ang tip mo.',
+    translation: '오늘 정말 감사했습니다! 캐디 팁 여기 있습니다.',
+    pronunciation: '[마라밍 살라맛 포! 이토 포 앙 팁 모]',
+    toneGuide: 'Caddie tip & gratitude',
+    usageTip: '18홀 라운딩 종료 후 수고해준 캐디에게 팁을 건네며 감사를 전하세요.'
+  },
+
   // [비상]
   {
     id: 'ph-08',
@@ -689,6 +791,108 @@ export const PHRASES: Phrase[] = [
     pronunciation: '[띠엑 꽈, 마이 또이 파이 디 조이. 헨 갑 라이 냬!]',
     toneGuide: '작별',
     usageTip: '여행 마지막 날 새로 사귄 인연과 나누기 좋은 인사입니다.'
+  },
+
+  // [골프]
+  {
+    id: 'vn-golf-01',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Còn bao nhiêu mét nữa?',
+    translation: '핀까지 몇 미터 남았어요?',
+    pronunciation: '[꼰 바오 니에우 멧 느어?]',
+    toneGuide: 'Golf distance inquiry',
+    usageTip: '세컨드 샷이나 어프로치 전 캐디에게 남은 거리를 질문하세요.'
+  },
+  {
+    id: 'vn-golf-02',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Cho tôi gậy số 7 / Driver / Putter.',
+    translation: '7번 아이언(드라이버/퍼터) 주세요.',
+    pronunciation: '[쪼 또이 가이 쏘 바이 / 드라이버 / 퍼터]',
+    toneGuide: 'Club request',
+    usageTip: '원하는 클럽 번호를 캐디에게 요청할 때 쓰입니다.'
+  },
+  {
+    id: 'vn-golf-03',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Gió thổi hướng nào? Gió ngược hay gió xuôi?',
+    translation: '바람이 어느 방향인가요? 맞바람인가요, 뒷바람인가요?',
+    pronunciation: '[조 토이 흐엉 나오? 조 응억 하이 조 쑤오이?]',
+    toneGuide: 'Wind check',
+    usageTip: '티샷 전 바람 방향과 세기를 캐디에게 확인할 때 물어보세요.'
+  },
+  {
+    id: 'vn-golf-04',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Bóng sang phải hay sang trái?',
+    translation: '그린 라이가 오른쪽인가요, 왼쪽인가요?',
+    pronunciation: '[봉 쌍 파이 하이 쌍 짜이?]',
+    toneGuide: 'Green reading',
+    usageTip: '퍼팅 전 공이 휠 방향(우측 Phải, 좌측 Trái)을 캐디에게 확인하세요.'
+  },
+  {
+    id: 'vn-golf-05',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Lên dốc hay xuống dốc?',
+    translation: '오르막 라이인가요, 내리막 라이인가요?',
+    pronunciation: '[렌 독 하이 수옹 독?]',
+    toneGuide: 'Slope inquiry',
+    usageTip: '퍼팅 세기 조절을 위해 오르막/내리막 경사를 질문하세요.'
+  },
+  {
+    id: 'vn-golf-06',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Lau bóng giúp tôi và đánh dấu bóng.',
+    translation: '공 좀 닦아주시고 마크해 주세요.',
+    pronunciation: '[라우 봉 줍 또이 바 다잉 저우 봉]',
+    toneGuide: 'Ball mark & clean',
+    usageTip: '온그린 후 캐디에게 볼 마크와 세척을 부탁하세요.'
+  },
+  {
+    id: 'vn-golf-07',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Bóng rơi vào nước / cát / OB rồi à?',
+    translation: '공이 해저드(워터/벙커/OB)에 빠졌나요?',
+    pronunciation: '[봉 러이 바오 느억 / 깟 / 오비 조이 아?]',
+    toneGuide: 'Ball tracking',
+    usageTip: '티샷이나 세컨샷 후 공이 빠진 곳을 캐디에게 확인할 때 쓰입니다.'
+  },
+  {
+    id: 'vn-golf-08',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Đánh đẹp quá! Nice shot / Nice birdie!',
+    translation: '굿 샷! 정말 잘 쳤어요 / 나이스 버디!',
+    pronunciation: '[다잉 뎁 꽈! 나이스 샷 / 나이스 버디!]',
+    toneGuide: 'Golf praise',
+    usageTip: '동반자나 캐디의 멋진 샷을 칭찬할 때 외쳐보세요.'
+  },
+  {
+    id: 'vn-golf-09',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Xe nước giải khát ở đâu?',
+    translation: '그늘집 / 음료 카트 어디 있나요?',
+    pronunciation: '[쎄 느억 자이 캇 어 더우?]',
+    toneGuide: 'Drink break',
+    usageTip: '더운 날씨에 시원한 생수나 코코넛, 맥주를 찾을 때 물어보세요.'
+  },
+  {
+    id: 'vn-golf-10',
+    countryId: 'vn',
+    category: '골프',
+    original: 'Hôm nay cảm ơn bạn rất nhiều! Tiền tip của bạn đây.',
+    translation: '오늘 정말 수고하셨습니다! 캐디 팁 여기 있습니다.',
+    pronunciation: '[옴 나이 깜 언 반 젓 니에우! 띠엔 띱 꾸어 반 더이]',
+    toneGuide: 'Caddie tip & gratitude',
+    usageTip: '18홀 라운딩 종료 후 수고해준 캐디에게 팁을 건네며 감사를 전하세요.'
   },
 
   // [비상]

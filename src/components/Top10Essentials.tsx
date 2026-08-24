@@ -7,7 +7,6 @@ import {
   Star,
   ChevronDown,
   ChevronUp,
-  Sparkles,
   Info,
 } from 'lucide-react';
 import { playPhrase, unlockAudioPlayback } from '../utils/speech';
@@ -33,7 +32,7 @@ interface EssentialData {
   audio?: string;
 }
 
-// 100% 무조건 확실하게 나오는 국가별 10대 기본 필수 표현 (오디오 매핑 완비)
+// 🇻🇳 베트남 / 🇵🇭 필리핀 / 🇺🇸 영어 / 🇹🇭 태국 / 🇮🇩 인도네시아 / 🇱🇦 라오스 10대 기본 필수 표현
 const ESSENTIALS_DATA: Record<string, EssentialData[]> = {
   ph: [
     { id: 'ph-soc-01', category: '미팅/사교', meaning: '안녕하세요, 잘 지내세요?', original: 'Kumusta po kayo?', pronunciation: '쿠무스타 포 카요?', tip: 'po는 존칭어입니다.', audio: 'ph/ph-soc-01.m4a' },
@@ -83,7 +82,7 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
   onToggleBookmark,
 }) => {
   const [playingId, setPlayingId] = useState<string | null>(null);
-  // 펼쳐진 항목 ID (기본은 첫 번째 항목이 펼쳐짐)
+  // 펼쳐진 항목 ID (기본적으로 첫 번째 항목 펼침)
   const [expandedId, setExpandedId] = useState<string | null>('0');
 
   const rawList = ESSENTIALS_DATA[country.id] || ESSENTIALS_DATA.en;
@@ -107,28 +106,28 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
   };
 
   return (
-    <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent border-2 border-amber-300/90 p-3.5 sm:p-4 rounded-3xl shadow-xs space-y-3">
-      {/* 헤더 */}
+    <div className="bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-amber-100/30 border-2 border-amber-300 p-3.5 sm:p-4 rounded-3xl shadow-sm space-y-3">
+      {/* 10대 기본표현 섹션 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-amber-500 text-white rounded-2xl shadow-xs">
-            <Star className="w-4 h-4 fill-current" />
+          <div className="p-2 bg-gradient-to-tr from-amber-600 to-orange-500 text-white rounded-2xl shadow-xs">
+            <Star className="w-5 h-5 fill-current" />
           </div>
           <div>
-            <h2 className="text-sm font-black text-slate-900 flex items-center gap-2">
-              <span>{country.name} 초간단 10대 필수 표현</span>
-              <span className="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-900 rounded-full font-bold">
+            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+              <span>{country.name} 여행 필수 10대 기본 표현</span>
+              <span className="text-[10px] px-2.5 py-0.5 bg-amber-500 text-white rounded-full font-black shadow-xs">
                 TOP 10
               </span>
             </h2>
-            <p className="text-[11px] text-slate-600 font-medium">
-              누르면 자세히 펼쳐집니다 (발음 듣기 & 전광판 지원)
+            <p className="text-xs text-slate-700 font-bold mt-0.5">
+              공항·식당·호텔에서 바로 쓰는 생존 표현 (터치 시 카드 형태로 자세히 표시)
             </p>
           </div>
         </div>
       </div>
 
-      {/* 리스트 뷰: 한눈에 많이 보이고 누르면 자세히 펼쳐지는 아코디언 구조 */}
+      {/* 리스트 ➔ 탭하면 카드 형태로 자세히 나오는 아코디언 */}
       <div className="space-y-2">
         {rawList.map((item, idx) => {
           const idxStr = String(idx);
@@ -154,18 +153,20 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
               className={`rounded-2xl border-2 transition-all duration-200 overflow-hidden shadow-xs ${
                 isExpanded
                   ? 'bg-white border-amber-400 shadow-md ring-2 ring-amber-400/20'
-                  : 'bg-white/95 border-slate-200/90 hover:border-amber-300'
+                  : 'bg-white/95 border-amber-200/90 hover:border-amber-400'
               }`}
             >
-              {/* 요약 리스트 헤더 (항상 보임) */}
+              {/* 리스트 한 줄 헤더 */}
               <div
                 onClick={() => toggleExpand(idxStr)}
-                className="p-3 flex items-center justify-between gap-2.5 cursor-pointer select-none active:bg-slate-50"
+                className="p-3.5 flex items-center justify-between gap-2.5 cursor-pointer select-none active:bg-amber-50/50"
               >
                 <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                  <span className={`w-6 h-6 rounded-full text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${
-                    isExpanded ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-800'
-                  }`}>
+                  <span
+                    className={`w-6 h-6 rounded-full text-xs font-black flex items-center justify-center shrink-0 shadow-xs ${
+                      isExpanded ? 'bg-amber-500 text-white' : 'bg-slate-900 text-white'
+                    }`}
+                  >
                     {idx + 1}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -173,11 +174,11 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
                       <span className="text-sm font-black text-slate-900 tracking-tight">
                         {item.original}
                       </span>
-                      <span className="text-[11px] text-rose-600 font-bold">
+                      <span className="text-[11px] text-rose-600 font-extrabold">
                         [{item.pronunciation}]
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 font-bold truncate">
+                    <p className="text-xs text-slate-600 font-bold truncate mt-0.5">
                       {item.meaning}
                     </p>
                   </div>
@@ -190,14 +191,13 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
                     className={`p-2 rounded-xl transition-all active:scale-90 ${
                       isPlaying
                         ? 'bg-amber-400 text-slate-900 animate-pulse'
-                        : 'bg-amber-50 hover:bg-amber-100 text-amber-700'
+                        : 'bg-amber-50 hover:bg-amber-100 text-amber-800'
                     }`}
                     title="원어민 발음 듣기"
                   >
                     <Volume2 className={`w-4 h-4 ${isPlaying ? 'animate-bounce' : ''}`} />
                   </button>
 
-                  {/* 펼치기/접기 화살표 */}
                   <div className="p-1 text-slate-400">
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4 text-amber-600" />
@@ -208,30 +208,29 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
                 </div>
               </div>
 
-              {/* 자세히 보기 (펼쳐진 상태) */}
+              {/* 탭하면 카드 형태로 자세히 나오는 영역 */}
               {isExpanded && (
                 <div className="px-4 pb-4 pt-2 border-t border-amber-100 bg-amber-50/20 space-y-3 animate-in fade-in zoom-in-98 duration-150">
-                  {/* 대형 원문 & 발음 */}
-                  <div className="space-y-1">
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug font-display">
+                  <div className="space-y-1.5">
+                    <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight font-display">
                       {item.original}
                     </h3>
-                    <p className="inline-block bg-amber-200/80 text-slate-900 px-2.5 py-1 rounded-xl text-xs sm:text-sm font-black">
+                    <p className="inline-block bg-accent text-ink px-3 py-1 rounded-xl text-sm font-black tracking-tight">
                       [{item.pronunciation}]
                     </p>
-                    <p className="text-sm font-extrabold text-slate-700 pt-1">
+                    <p className="text-base font-extrabold text-slate-800 pt-0.5">
                       {item.meaning}
                     </p>
                     {item.tip && (
-                      <p className="text-xs text-slate-600 font-medium bg-white p-2.5 rounded-xl border border-amber-200/80 flex items-start gap-1.5 mt-2">
-                        <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                        <span>{item.tip}</span>
-                      </p>
+                      <div className="mt-2 bg-white border border-amber-200/80 rounded-xl p-2.5 flex items-start gap-2 text-xs text-slate-700">
+                        <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <span className="leading-relaxed font-medium">{item.tip}</span>
+                      </div>
                     )}
                   </div>
 
-                  {/* 액션 바: 발음 듣기 + 전광판 + 북마크 */}
-                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-amber-100 flex-wrap">
+                  {/* 액션 컨트롤 바 */}
+                  <div className="pt-3 border-t border-amber-200/60 flex items-center justify-between gap-2 flex-wrap">
                     <button
                       onClick={() => handleSpeak(phraseObj)}
                       disabled={isPlaying}
@@ -246,14 +245,14 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
                     </button>
 
                     {/* 배속 */}
-                    <div className="flex items-center bg-white p-0.5 rounded-xl border border-slate-200 text-xs font-bold shrink-0">
+                    <div className="flex items-center bg-white border border-slate-200 p-0.5 rounded-xl text-xs font-bold shrink-0">
                       {[0.8, 1.0, 1.2].map((s) => (
                         <button
                           key={s}
                           onClick={() => onSetSpeed(s)}
                           className={`px-2 py-1 rounded-lg transition-colors ${
                             speed === s
-                              ? 'bg-amber-500 text-white shadow-xs'
+                              ? 'bg-slate-900 text-white shadow-xs'
                               : 'text-slate-500 hover:text-slate-900'
                           }`}
                         >

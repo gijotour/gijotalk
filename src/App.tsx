@@ -41,7 +41,6 @@ import {
   Camera,
   Languages,
   Plane,
-  Layers,
 } from 'lucide-react';
 
 export default function App() {
@@ -165,7 +164,10 @@ export default function App() {
   const filteredPhrases = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     return countryPhrases.filter((p) => {
-      const matchesCategory = selectedCategory === '전체' || p.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === '전체' ||
+        selectedCategory === '10대 기본' ||
+        p.category === selectedCategory;
       const matchesSearch =
         !query ||
         p.original.toLowerCase().includes(query) ||
@@ -178,6 +180,7 @@ export default function App() {
 
   const categoryCounts = useMemo(() => {
     const counts: Record<CategoryId, number> = {
+      '10대 기본': 10,
       '전체': countryPhrases.length,
       '항공': 0,
       '호텔': 0,
@@ -192,7 +195,9 @@ export default function App() {
       '비상': 0,
     };
     countryPhrases.forEach((p) => {
-      if (p.category !== '전체') counts[p.category] += 1;
+      if (p.category !== '전체' && p.category in counts) {
+        counts[p.category] += 1;
+      }
     });
     return counts;
   }, [countryPhrases]);
@@ -276,7 +281,7 @@ export default function App() {
         {/* TAB 1: 회화 / 번역 메인 뷰 */}
         {activeTab === 'translate' && (
           <div className="space-y-4 animate-in fade-in duration-150">
-            {/* 검색 + 액션 */}
+            {/* 검색 + 액션 바 */}
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
@@ -285,7 +290,7 @@ export default function App() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="회화 검색"
                   placeholder="원문 · 뜻 · 발음 검색"
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs"
+                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs font-bold"
                 />
                 <Search className="w-4 h-4 text-ink-mute absolute left-4 top-4.5" />
                 {searchQuery && (
@@ -331,18 +336,18 @@ export default function App() {
               )}
             </div>
 
-            {/* [상단 이동 완료] 언어 오디오 오프라인 다운로드 카드 */}
+            {/* 언어 오디오 오프라인 다운로드 카드 */}
             <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
 
-            {/* Category Chips */}
+            {/* Category Chips (10대 기본 칩 최상단 노출) */}
             <CategoryChips
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
               categoryCounts={categoryCounts}
             />
 
-            {/* [첫 화면 상단 10대 기본 표현] 검색어 없고 '전체' 카테고리일 때 첫장에 바로 노출 */}
-            {selectedCategory === '전체' && !searchQuery && (
+            {/* 🌟 [10대 필수 기본 표현] 첫 장(전체 뷰) 또는 '10대 기본' 카테고리 선택 시 최상단에 확실하게 노출 */}
+            {(selectedCategory === '전체' || selectedCategory === '10대 기본') && !searchQuery && (
               <Top10Essentials
                 country={selectedCountry}
                 phrases={countryPhrases}
@@ -354,64 +359,69 @@ export default function App() {
               />
             )}
 
-            {/* Phrase Cards Feed */}
-            {filteredPhrases.length > 0 ? (
-              <div className="space-y-3">
-                {/* 카테고리 선택 시 또렷한 리스트 헤더 표시 */}
-                <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-1 bg-brand text-white rounded-xl text-xs font-black">
-                      {selectedCategory}
-                    </span>
-                    <span className="text-xs font-extrabold text-slate-800">
-                      핵심 회화 리스트 ({filteredPhrases.length}개)
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-slate-400 font-bold">1초 전광판 / 발음 듣기 ➔</span>
-                </div>
+            {/* 📋 일반 카테고리(항공, 호텔, 교통, 식당 등) 및 전체 회화 리스트 (10대 기본 전용 탭일 때는 아래 목록 숨김) */}
+            {selectedCategory !== '10대 기본' && (
+              <>
+                {filteredPhrases.length > 0 ? (
+                  <div className="space-y-3">
+                    {/* 카테고리 리스트 헤더 */}
+                    <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-1 bg-brand text-white rounded-xl text-xs font-black">
+                          {selectedCategory}
+                        </span>
+                        <span className="text-xs font-extrabold text-slate-800">
+                          회화 목록 ({filteredPhrases.length}개)
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-slate-500 font-bold">터치 시 카드 형태로 펼쳐짐 ▾</span>
+                    </div>
 
-                {filteredPhrases.map((phrase, idx) => (
-                  <PhraseCard
-                    key={phrase.id}
-                    phrase={phrase}
-                    country={selectedCountry}
-                    speed={speed}
-                    onSetSpeed={setSpeed}
-                    isBookmarked={bookmarkedIds.includes(phrase.id)}
-                    onToggleBookmark={handleToggleBookmark}
-                    onOpenBillboard={setBillboardPhrase}
-                    onOpenMicPractice={setMicPracticePhrase}
-                    onDelete={
-                      isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
-                    }
-                    index={idx}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
-                <Search className="w-10 h-10 text-ink-mute mx-auto mb-2" />
-                <h3 className="text-xs font-bold text-slate-700">
-                  검색 조건에 일치하는 회화 문장이 없습니다.
-                </h3>
-                {IS_STATIC_BUILD ? (
-                  <p className="text-xs text-ink-mute mt-1">
-                    다른 검색어로 찾아보거나 카테고리를 바꿔보세요.
-                  </p>
+                    {filteredPhrases.map((phrase, idx) => (
+                      <PhraseCard
+                        key={phrase.id}
+                        phrase={phrase}
+                        country={selectedCountry}
+                        speed={speed}
+                        onSetSpeed={setSpeed}
+                        isBookmarked={bookmarkedIds.includes(phrase.id)}
+                        onToggleBookmark={handleToggleBookmark}
+                        onOpenBillboard={setBillboardPhrase}
+                        onOpenMicPractice={setMicPracticePhrase}
+                        onDelete={
+                          isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
+                        }
+                        index={idx}
+                        defaultExpanded={idx === 0 && selectedCategory !== '전체'}
+                      />
+                    ))}
+                  </div>
                 ) : (
-                  <>
-                    <p className="text-xs text-ink-mute mt-1 mb-4">
-                      AI 맞춤 질문으로 필요한 문장을 즉시 생성해보세요!
-                    </p>
-                    <button
-                      onClick={() => setShowAIAssistant(true)}
-                      className="px-4 py-2 bg-brand text-white text-xs font-bold rounded-xl shadow-xs"
-                    >
-                      AI 질문으로 생성하기
-                    </button>
-                  </>
+                  <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
+                    <Search className="w-10 h-10 text-ink-mute mx-auto mb-2" />
+                    <h3 className="text-xs font-bold text-slate-700">
+                      검색 조건에 일치하는 회화 문장이 없습니다.
+                    </h3>
+                    {IS_STATIC_BUILD ? (
+                      <p className="text-xs text-ink-mute mt-1">
+                        다른 검색어로 찾아보거나 카테고리를 바꿔보세요.
+                      </p>
+                    ) : (
+                      <>
+                        <p className="text-xs text-ink-mute mt-1 mb-4">
+                          AI 맞춤 질문으로 필요한 문장을 즉시 생성해보세요!
+                        </p>
+                        <button
+                          onClick={() => setShowAIAssistant(true)}
+                          className="px-4 py-2 bg-brand text-white text-xs font-bold rounded-xl shadow-xs"
+                        >
+                          AI 질문으로 생성하기
+                        </button>
+                      </>
+                    )}
+                  </div>
                 )}
-              </div>
+              </>
             )}
 
             {/* 사용 기록 안내 */}
@@ -448,7 +458,7 @@ export default function App() {
             </div>
 
             {bookmarkedPhrases.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {bookmarkedPhrases.map((phrase, idx) => {
                   return (
                     <PhraseCard
@@ -465,6 +475,7 @@ export default function App() {
                         isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
                       }
                       index={idx}
+                      defaultExpanded={true}
                     />
                   );
                 })}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2, Plane, Languages } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2, FileText, Languages } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
@@ -123,15 +123,15 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         )}
 
-        {/* 입국심사 서류 가이드 버튼 */}
+        {/* 입국심사 서류 가이드 버튼 (서류/체크리스트 FileText 아이콘) */}
         <button
           onClick={onOpenEntryGuide}
           aria-label="입국심사 및 필수 서류 가이드"
           className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 rounded-full text-xs font-bold transition-all active:scale-95 shrink-0 whitespace-nowrap"
           title="필리핀·베트남 입국심사 & e-Travel 서류 가이드"
         >
-          <Plane className="w-3.5 h-3.5 text-blue-600" />
-          <span className="hidden sm:inline">입국심사</span>
+          <FileText className="w-3.5 h-3.5 text-blue-600" />
+          <span className="hidden sm:inline">입국서류</span>
         </button>
 
         {/* AI Travel Assistant Trigger — 서버 필요 */}

@@ -40,7 +40,6 @@ import {
   Maximize2,
   Camera,
   Languages,
-  Plane,
 } from 'lucide-react';
 
 export default function App() {
@@ -182,7 +181,6 @@ export default function App() {
     const counts: Record<CategoryId, number> = {
       '10대 기본': 10,
       '전체': countryPhrases.length,
-      '항공': 0,
       '호텔': 0,
       '교통': 0,
       '식당': 0,
@@ -190,6 +188,7 @@ export default function App() {
       '흥정': 0,
       '관광': 0,
       '마사지': 0,
+      '항공': 0,
       '미팅/사교': 0,
       '욕설/은어': 0,
       '비상': 0,
@@ -281,7 +280,7 @@ export default function App() {
         {/* TAB 1: 회화 / 번역 메인 뷰 */}
         {activeTab === 'translate' && (
           <div className="space-y-4 animate-in fade-in duration-150">
-            {/* 검색 + 액션 바 */}
+            {/* 검색 바 (비행기 아이콘 중복 제거 및 깔끔한 와이드 검색창) */}
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
@@ -303,23 +302,13 @@ export default function App() {
                 )}
               </div>
 
-              {/* 입국심사 가이드 퀵버튼 */}
-              <button
-                onClick={() => setShowEntryGuide(true)}
-                aria-label="입국심사 서류 가이드"
-                title="필리핀·베트남 입국심사 가이드"
-                className="w-13 h-13 shrink-0 flex items-center justify-center bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 text-blue-800 rounded-2xl shadow-xs active:scale-95 transition-all"
-              >
-                <Plane className="w-5 h-5 text-blue-600" />
-              </button>
-
               {/* 사진 번역 · AI (서버 필요) */}
               {!IS_STATIC_BUILD && (
                 <button
                   onClick={() => setShowPhotoModal(true)}
                   aria-label="사진 찍어 번역하기"
                   title="사진 번역"
-                  className="w-13 h-13 shrink-0 flex items-center justify-center bg-ink hover:bg-black text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                  className="w-12 h-12 shrink-0 flex items-center justify-center bg-ink hover:bg-black text-white rounded-2xl shadow-xs active:scale-95 transition-all"
                 >
                   <Camera className="w-5 h-5" />
                 </button>
@@ -329,17 +318,17 @@ export default function App() {
                   onClick={() => setShowAIAssistant(true)}
                   aria-label="AI에게 맞춤 표현 질문하기"
                   title="AI 질문"
-                  className="w-13 h-13 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                  className="w-12 h-12 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl shadow-xs active:scale-95 transition-all"
                 >
                   <Sparkles className="w-5 h-5" />
                 </button>
               )}
             </div>
 
-            {/* 언어 오디오 오프라인 다운로드 카드 */}
+            {/* 오프라인 언어 음성 다운로드 배너 */}
             <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
 
-            {/* Category Chips (10대 기본 칩 최상단 노출) */}
+            {/* 카테고리 칩 바 (10대 기본 칩 최우선 배치) */}
             <CategoryChips
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
@@ -360,7 +349,7 @@ export default function App() {
               />
             )}
 
-            {/* 📋 일반 카테고리(항공, 호텔, 교통, 식당 등) 및 전체 회화 리스트 (10대 기본 전용 탭일 때는 아래 목록 숨김) */}
+            {/* 📋 일반 카테고리(호텔, 교통, 식당 등) 및 전체 회화 리스트 */}
             {selectedCategory !== '10대 기본' && (
               <>
                 {filteredPhrases.length > 0 ? (

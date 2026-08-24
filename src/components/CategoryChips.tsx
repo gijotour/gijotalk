@@ -25,7 +25,6 @@ interface CategoryChipsProps {
 const CATEGORIES: { id: CategoryId; icon: React.ReactNode }[] = [
   { id: '10대 기본', icon: <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" /> },
   { id: '전체', icon: <Layers className="w-3.5 h-3.5" /> },
-  { id: '항공', icon: <Plane className="w-3.5 h-3.5" /> },
   { id: '호텔', icon: <Hotel className="w-3.5 h-3.5" /> },
   { id: '교통', icon: <Bus className="w-3.5 h-3.5" /> },
   { id: '식당', icon: <Utensils className="w-3.5 h-3.5" /> },
@@ -33,6 +32,7 @@ const CATEGORIES: { id: CategoryId; icon: React.ReactNode }[] = [
   { id: '흥정', icon: <Tag className="w-3.5 h-3.5" /> },
   { id: '관광', icon: <Camera className="w-3.5 h-3.5" /> },
   { id: '마사지', icon: <Sparkles className="w-3.5 h-3.5" /> },
+  { id: '항공', icon: <Plane className="w-3.5 h-3.5" /> },
   { id: '미팅/사교', icon: <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500/20" /> },
   { id: '욕설/은어', icon: <MessageCircleWarning className="w-3.5 h-3.5" /> },
   { id: '비상', icon: <AlertTriangle className="w-3.5 h-3.5" /> },

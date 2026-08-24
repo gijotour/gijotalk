@@ -27,6 +27,7 @@ import { PartyGameModal } from './components/PartyGameModal';
 import { ArcadeModal } from './components/ArcadeModal';
 import { EntryGuideModal } from './components/EntryGuideModal';
 import { Top10Essentials } from './components/Top10Essentials';
+import { AdBanner } from './components/AdBanner';
 import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
@@ -338,16 +339,20 @@ export default function App() {
 
             {/* 🌟 [10대 필수 기본 표현] 첫 장(전체 뷰) 또는 '10대 기본' 카테고리 선택 시 최상단에 확실하게 노출 */}
             {(selectedCategory === '전체' || selectedCategory === '10대 기본') && !searchQuery && (
-              <Top10Essentials
-                country={selectedCountry}
-                phrases={countryPhrases}
-                onOpenBillboard={setBillboardPhrase}
-                speed={speed}
-                onSetSpeed={setSpeed}
-                isBookmarked={(id) => bookmarkedIds.includes(id)}
-                onToggleBookmark={handleToggleBookmark}
-                onOpenMicPractice={setMicPracticePhrase}
-              />
+              <>
+                <Top10Essentials
+                  country={selectedCountry}
+                  phrases={countryPhrases}
+                  onOpenBillboard={setBillboardPhrase}
+                  speed={speed}
+                  onSetSpeed={setSpeed}
+                  isBookmarked={(id) => bookmarkedIds.includes(id)}
+                  onToggleBookmark={handleToggleBookmark}
+                  onOpenMicPractice={setMicPracticePhrase}
+                />
+                {/* 상단 스폰서 배너 슬롯 */}
+                <AdBanner slotId="ad-slot-top-banner" format="banner" className="my-1" />
+              </>
             )}
 
             {/* 📋 일반 카테고리(호텔, 교통, 식당 등) 및 전체 회화 리스트 */}
@@ -369,22 +374,27 @@ export default function App() {
                     </div>
 
                     {filteredPhrases.map((phrase, idx) => (
-                      <PhraseCard
-                        key={phrase.id}
-                        phrase={phrase}
-                        country={selectedCountry}
-                        speed={speed}
-                        onSetSpeed={setSpeed}
-                        isBookmarked={bookmarkedIds.includes(phrase.id)}
-                        onToggleBookmark={handleToggleBookmark}
-                        onOpenBillboard={setBillboardPhrase}
-                        onOpenMicPractice={setMicPracticePhrase}
-                        onDelete={
-                          isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
-                        }
-                        index={idx}
-                        defaultExpanded={idx === 0 && selectedCategory !== '전체'}
-                      />
+                      <React.Fragment key={phrase.id}>
+                        <PhraseCard
+                          phrase={phrase}
+                          country={selectedCountry}
+                          speed={speed}
+                          onSetSpeed={setSpeed}
+                          isBookmarked={bookmarkedIds.includes(phrase.id)}
+                          onToggleBookmark={handleToggleBookmark}
+                          onOpenBillboard={setBillboardPhrase}
+                          onOpenMicPractice={setMicPracticePhrase}
+                          onDelete={
+                            isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
+                          }
+                          index={idx}
+                          defaultExpanded={idx === 0 && selectedCategory !== '전체'}
+                        />
+                        {/* 8번째 카드 뒤 자연스러운 인피드 배너 */}
+                        {idx === 7 && (
+                          <AdBanner slotId="ad-slot-infeed-middle" format="banner" className="my-2" />
+                        )}
+                      </React.Fragment>
                     ))}
                   </div>
                 ) : (

@@ -37,6 +37,11 @@ html, body {
     width: 100%;
     position: fixed;
     overscroll-behavior: none;
+    background-image: 
+        radial-gradient(ellipse at 15% 15%, rgba(0, 243, 255, 0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 20%, rgba(255, 0, 85, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(162, 0, 255, 0.1) 0%, transparent 55%);
+    background-attachment: fixed;
 }
 
 #app {
@@ -92,7 +97,7 @@ html, body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     /* 슬롯이 대표 칸(가로 전체)이고, 그 아래 기존 4개가 2x2 로 들어갑니다. */
-    grid-template-rows: 0.85fr 1fr 1fr;
+    grid-template-rows: auto; auto-rows: minmax(90px, 1fr); overflow-y: auto;
     gap: 8px;
     padding: 0 8px calc(16px + env(safe-area-inset-bottom));
     min-height: 0;
@@ -101,29 +106,29 @@ html, body {
 .tile {
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
     outline: none;
     cursor: pointer;
-    border-radius: 14px;
-    background: rgba(16, 16, 24, 0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    border-radius: 18px;
+    background: rgba(14, 14, 22, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-end;
-    gap: 2px;
-    padding: clamp(12px, 4vw, 18px);
+    gap: 3px;
+    padding: clamp(14px, 4.2vw, 20px);
     text-align: left;
     font-family: var(--font-main);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .tile:hover, .tile:focus-visible {
-    border-color: rgba(0, 243, 255, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 243, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-3px) scale(1.015);
+    box-shadow: 0 16px 42px 0 rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 243, 255, 0.4);
 }
 
 .tile:active { transform: scale(0.96); }
@@ -193,15 +198,10 @@ html, body {
     grid-row: 1;
     flex-direction: row;
     align-items: center;
-    /* .tile 의 justify-content:flex-end 는 세로였을 때(column) 기준이라
-       "아래쪽 정렬"이었는데, row 로 바꾸면 같은 값이 가로축이 되어 아이콘+글자
-       뭉치가 통째로 오른쪽 끝에 붙어버립니다. 왼쪽부터 채우도록 되돌립니다. */
     justify-content: flex-start;
     gap: 14px;
     padding: 14px 20px;
-    /* 위쪽 배너와 같은 사진 — 다른 4개 타일과 같은 방식(그라디언트 opacity 낮춰서
-       그 밑으로 비치게)으로 이 칸에도 깔았습니다. */
-    background-image: url('assets/slot_spicy_777_banner_1787296460666.jpg');
+    background-image: url('assets/slot_spicy_777_fun_banner.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -221,11 +221,17 @@ html, body {
 
 /* 게임별 대표 아트 — 각 타일의 ::before 대각선 그라디언트는 그대로 두고
    opacity 를 낮춰 그 아래로 사진이 비치게 합니다(색 정체성 + 실사 둘 다). */
-.tile-1 { background-image: url('assets/block_drop_spicy_art_1787296647865.jpg'); background-size: cover; background-position: center; }
-.tile-2 { background-image: url('assets/space_shooter_spicy_art_1787296668125.jpg'); background-size: cover; background-position: center; }
-.tile-3 { background-image: url('assets/neon_snake_spicy_art_1787296695019.jpg'); background-size: cover; background-position: center; }
-.tile-4 { background-image: url('assets/brick_breaker_spicy_art_1787296721614.jpg'); background-size: cover; background-position: center; }
-.tile-1::before, .tile-2::before, .tile-3::before, .tile-4::before { opacity: 0.55; }
+.tile-1 { background-image: url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-2 { background-image: url('assets/space_shooter_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-3 { background-image: url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-4 { background-image: url('assets/brick_breaker_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-5 { background-image: url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-5::before { background: linear-gradient(120deg, #ff007f, #a200ff); }
+.tile-6 { background-image: url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-6::before { background: linear-gradient(120deg, #ff0055, #ffaa00); }
+.tile-1::before, .tile-2::before, .tile-3::before, .tile-4::before, .tile-5::before, .tile-6::before { opacity: 0.55; }
+body.hot .tile-5::before { background: linear-gradient(120deg, #ff2d78, #ffd700); }
+body.hot .tile-6::before { background: linear-gradient(120deg, #ff2d78, #a200ff); }
 
 /* ===== 🔥 HOT 테마 — 심야 라운지 분위기 =====
    기본 테마(사이언/라임/앰버)는 밝고 오락실 느낌입니다. HOT 을 켜면 자홍·보라
@@ -410,19 +416,19 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
     /* 각 릴(.reel)이 자체적으로 rgba(0,0,0,0.55) 배경을 깔고 있어 심볼 위에
        사진이 겹쳐도 안 흐려집니다 — 릴 사이 여백·테두리 쪽에서 더 잘 보입니다. */
     background:
-        linear-gradient(160deg, rgba(26, 18, 6, 0.82), rgba(11, 10, 18, 0.9)),
-        url('assets/slot_spicy_777_banner_1787296460666.jpg') center/cover;
-    border: 2px solid #ffd700;
-    box-shadow: 0 0 26px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(0,0,0,0.7);
+        linear-gradient(160deg, rgba(26, 18, 6, 0.65), rgba(11, 10, 18, 0.82)),
+        url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), inset 0 0 35px rgba(0,0,0,0.85);
     overflow: hidden;
 }
 
 body.hot .reels-frame {
     border-color: #ff2d78;
-    box-shadow: 0 0 30px rgba(255, 45, 120, 0.42), inset 0 0 30px rgba(0,0,0,0.7);
+    box-shadow: 0 0 38px rgba(255, 45, 120, 0.55), inset 0 0 35px rgba(0,0,0,0.85);
     background:
-        linear-gradient(160deg, rgba(32, 10, 26, 0.82), rgba(13, 4, 16, 0.9)),
-        url('assets/slot_spicy_777_banner_1787296460666.jpg') center/cover;
+        linear-gradient(160deg, rgba(32, 10, 26, 0.65), rgba(13, 4, 16, 0.82)),
+        url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
 }
 
 .reels {
@@ -454,22 +460,25 @@ body.hot .reels-frame {
     align-items: center;
     justify-content: center;
     width: 100%;
-    font-size: clamp(1.7rem, 8.5vw, 2.6rem);
+    font-size: clamp(1.8rem, 8.8vw, 2.7rem);
     line-height: 1;
     user-select: none;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .reel.spinning .reel-strip { filter: blur(2px); }
 
 /* 당첨된 심볼만 튀어오르게 */
 .sym.win {
-    animation: sym-win 0.55s ease-in-out infinite alternate;
-    filter: drop-shadow(0 0 12px #ffd700);
+    animation: sym-win 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+    filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+    z-index: 5;
 }
 
 @keyframes sym-win {
-    from { transform: scale(1); }
-    to   { transform: scale(1.22); }
+    from { transform: scale(1) rotate(-3deg); }
+    to   { transform: scale(1.3) rotate(3deg); }
 }
 
 /* 페이라인 표시 */
@@ -550,7 +559,11 @@ body.hot .pt-chip b { color: #ff8fb1; }
     justify-content: center;
     overflow: hidden;
     pointer-events: none;
-    background: radial-gradient(circle, rgba(255,45,120,0.45), rgba(10,0,8,0.94) 72%);
+    background:
+        radial-gradient(circle, rgba(255,45,120,0.35), rgba(10,0,8,0.88) 72%),
+        url('assets/slot_spicy_bonus_ultra.jpg') center/cover;
+    border: 2px solid #ff2d78;
+    box-shadow: 0 0 45px rgba(255, 45, 120, 0.7);
     animation: bi-in 0.4s cubic-bezier(.34,1.56,.64,1);
 }
 
@@ -778,8 +791,10 @@ body.hot .autospin-btn.on {
     /* 라디얼 그라디언트를 앞에 겹쳐 그 뒤로 피버 아트가 은은하게 비치게 합니다
        (여러 배경을 콤마로 나열하면 먼저 쓴 게 위에 옵니다). */
     background:
-        radial-gradient(circle, rgba(255, 215, 0, 0.32), rgba(10, 8, 0, 0.92) 74%),
-        url('assets/slot_jackpot_fever_spicy_1787296479718.jpg') center/cover;
+        radial-gradient(circle, rgba(255, 215, 0, 0.28), rgba(10, 8, 0, 0.88) 74%),
+        url('assets/slot_jackpot_fever_ultra.jpg') center/cover;
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.7);
     animation: fever-in 0.35s cubic-bezier(.34,1.56,.64,1);
 }
 
@@ -801,8 +816,10 @@ body.hot .autospin-btn.on {
 
 body.hot .fever-banner {
     background:
-        radial-gradient(circle, rgba(255, 45, 120, 0.34), rgba(10, 8, 0, 0.92) 74%),
-        url('assets/slot_jackpot_fever_spicy_1787296479718.jpg') center/cover;
+        radial-gradient(circle, rgba(255, 45, 120, 0.28), rgba(10, 8, 0, 0.88) 74%),
+        url('assets/slot_jackpot_fever_ultra.jpg') center/cover;
+    border: 3px solid #ff2d78;
+    box-shadow: 0 0 50px rgba(255, 45, 120, 0.7);
 }
 body.hot .fever-title { color: #ff2d78; text-shadow: 0 0 24px #ff2d78, 0 3px 0 rgba(0,0,0,0.6); }
 
@@ -820,16 +837,15 @@ body.hot .fever-title { color: #ff2d78; text-shadow: 0 0 24px #ff2d78, 0 3px 0 r
 }
 
 .gamble-card {
-    width: min(88%, 320px);
-    padding: 18px 16px;
-    border-radius: 18px;
-    /* 아래 카드 사진이 비치되, 글자가 묻히지 않도록 어두운 레이어를 겹칩니다.
-       처음엔 0.82~0.93 으로 너무 어둡게 잡아서 사진이 거의 안 보였습니다. */
+    width: min(92%, 350px);
+    padding: 20px 18px;
+    border-radius: 20px;
     background:
-        linear-gradient(rgba(20, 16, 26, 0.5), rgba(20, 16, 26, 0.72)),
-        url('assets/slot_double_gamble_cards_1787296496813.jpg') center/cover;
-    border: 1.5px solid rgba(255, 215, 0, 0.4);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.25);
+        linear-gradient(rgba(14, 10, 20, 0.45), rgba(14, 10, 20, 0.75)),
+        url('assets/slot_double_gamble_ultra.jpg') center/cover;
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
     text-align: center;
 }
 
@@ -1040,6 +1056,9 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
     position: relative;
     min-height: 0;
     margin: 0 10px 10px;
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 243, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.12);
 }
 
 canvas {
@@ -1055,8 +1074,10 @@ canvas {
 /* Block Drop·Snake 는 draw() 가 캔버스 전체가 아니라 격자 칸만 fillRect 로
    덮습니다 — 격자 바깥 여백은 매 프레임 clearRect 만 되고 투명하게 남아서,
    여기에 건 배경 사진이 격자를 가리지 않고 테두리처럼 비칩니다. */
-#cv-block { background-image: linear-gradient(rgba(8,8,11,0.5), rgba(8,8,11,0.7)), url('assets/block_drop_spicy_art_1787296647865.jpg'); background-size: cover; background-position: center; }
-#cv-snake { background-image: linear-gradient(rgba(8,8,11,0.5), rgba(8,8,11,0.7)), url('assets/neon_snake_spicy_art_1787296695019.jpg'); background-size: cover; background-position: center; }
+#cv-block { background-image: linear-gradient(rgba(8,8,11,0.4), rgba(8,8,11,0.65)), url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center; }
+#cv-puzzle { background-image: linear-gradient(rgba(8,8,11,0.35), rgba(8,8,11,0.65)), url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center; }
+#cv-flappy { background-image: linear-gradient(rgba(8,8,11,0.3), rgba(8,8,11,0.65)), url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center; }
+#cv-snake { background-image: linear-gradient(rgba(8,8,11,0.4), rgba(8,8,11,0.65)), url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center; }
 
 .hint {
     text-align: center;
@@ -1251,11 +1272,6 @@ canvas {
         <div class="menu-header">
             <h1 class="menu-title">GIJO Arcade</h1>
             <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
-            <div class="hot-toggle">
-                <span class="hot-toggle-label">🔥 HOT 테마</span>
-                <button id="hot-sw" class="hot-sw" role="switch" aria-checked="false"
-                        aria-label="HOT 테마"><span></span></button>
-            </div>
         </div>
         <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
             <span class="ad-banner-icon">🗺️</span>
@@ -1276,32 +1292,46 @@ canvas {
                 </span>
             </button>
             <button class="tile tile-1" data-go="block">
-                <span class="tile-badge">1인용 · 스택</span>
+                <span class="tile-badge">1인용 · Stack</span>
                 <span class="tile-icon">&#129513;</span>
                 <span class="tile-en">Block Drop</span>
                 <span class="tile-kr">블록 쌓기</span>
                 <span class="tile-best" data-best="block">BEST 0</span>
             </button>
             <button class="tile tile-2" data-go="shoot">
-                <span class="tile-badge">1인용 · 슈팅</span>
+                <span class="tile-badge">1인용 · Shoot</span>
                 <span class="tile-icon">&#128760;</span>
                 <span class="tile-en">Space Shooter</span>
                 <span class="tile-kr">비행기 슈팅</span>
                 <span class="tile-best" data-best="shoot">BEST 0</span>
             </button>
             <button class="tile tile-3" data-go="snake">
-                <span class="tile-badge">1인용 · 클래식</span>
+                <span class="tile-badge">1인용 · Classic</span>
                 <span class="tile-icon">&#128013;</span>
                 <span class="tile-en">Snake</span>
                 <span class="tile-kr">뱀 키우기</span>
                 <span class="tile-best" data-best="snake">BEST 0</span>
             </button>
             <button class="tile tile-4" data-go="brick">
-                <span class="tile-badge">1인용 · 벽돌깨기</span>
+                <span class="tile-badge">1인용 · Bricks</span>
                 <span class="tile-icon">&#127934;</span>
                 <span class="tile-en">Brick Breaker</span>
                 <span class="tile-kr">벽돌 깨기</span>
                 <span class="tile-best" data-best="brick">BEST 0</span>
+            </button>
+            <button class="tile tile-5" data-go="puzzle">
+                <span class="tile-badge">🔥 깃허브 1위 · 2048</span>
+                <span class="tile-icon">&#128293;</span>
+                <span class="tile-en">Neon 2048</span>
+                <span class="tile-kr">네온 2048</span>
+                <span class="tile-best" data-best="puzzle">BEST 0</span>
+            </button>
+            <button class="tile tile-6" data-go="flappy">
+                <span class="tile-badge">💀 극악 난이도 · Hard</span>
+                <span class="tile-icon">&#128080;</span>
+                <span class="tile-en">Flappy Neon</span>
+                <span class="tile-kr">플래피 네온</span>
+                <span class="tile-best" data-best="flappy">BEST 0</span>
             </button>
         </div>
         <div class="footer-note">&copy; GIJO Labs</div>
@@ -1332,16 +1362,16 @@ canvas {
 
             <div class="slots-controls">
                 <div class="bet-box">
-                    <button class="bet-btn" id="bet-down" aria-label="배팅 줄이기">-</button>
+                    <button class="bet-btn" id="bet-down" aria-label="배팅 줄이기 · Decrease bet">-</button>
                     <div>
                         <span class="bet-label">Bet</span>
                         <span class="bet-val" id="bet-val">10</span>
                     </div>
-                    <button class="bet-btn" id="bet-up" aria-label="배팅 늘리기">+</button>
+                    <button class="bet-btn" id="bet-up" aria-label="배팅 늘리기 · Increase bet">+</button>
                 </div>
-                <button class="maxbet-btn" id="maxbet-btn" aria-label="최고 배팅으로 즉시 스핀">MAX BET</button>
+                <button class="maxbet-btn" id="maxbet-btn" aria-label="최고 배팅으로 즉시 스핀 · Max bet spin">MAX BET</button>
                 <button class="spin-btn" id="spin-btn">SPIN · 돌리기</button>
-                <button class="autospin-btn" id="autospin-btn" aria-label="자동 연속 스핀">AUTO</button>
+                <button class="autospin-btn" id="autospin-btn" aria-label="자동 연속 스핀 · Auto spin">AUTO</button>
             </div>
         </div>
 
@@ -1413,6 +1443,38 @@ canvas {
             <div class="overlay" data-overlay></div>
         </div>
         <p class="hint">화면을 끌어서 받침대 이동<br>Drag to move the paddle</p>
+    </section>
+
+    <!-- ===== 네온 2048 ===== -->
+    <section id="scr-puzzle" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-puzzle"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">상하좌우 쓸기 = 숫자 합치기 · Swipe to move & merge tiles</p>
+    </section>
+
+    <!-- ===== 플래피 네온 ===== -->
+    <section id="scr-flappy" class="screen hidden game-screen">
+        <div class="hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+        <div class="canvas-wrap">
+            <canvas id="cv-flappy"></canvas>
+            <div class="overlay" data-overlay></div>
+        </div>
+        <p class="hint">화면 탭 / 스페이스 = 날아오르기 · Tap or Space to flap</p>
     </section>
 
 </div>
@@ -1585,6 +1647,75 @@ class Game {
         this.over = false;
         this.score = 0;
         this._binds = [];
+        this.particles = [];
+        this.shakeTime = 0;
+        this.shakeMag = 0;
+    }
+
+    addSpark(x, y, color = '#00f3ff', count = 12, speed = 3) {
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const spd = (0.5 + Math.random()) * speed;
+            this.particles.push({
+                x, y,
+                vx: Math.cos(angle) * spd,
+                vy: Math.sin(angle) * spd,
+                size: 2 + Math.random() * 3,
+                color,
+                alpha: 1,
+                decay: 0.025 + Math.random() * 0.02
+            });
+        }
+    }
+
+    addPopupText(text, x, y, color = '#ffd700') {
+        this.particles.push({
+            text, x, y,
+            vx: 0, vy: -1.2,
+            alpha: 1,
+            decay: 0.018,
+            color
+        });
+    }
+
+    triggerShake(mag = 6, duration = 0.25) {
+        this.shakeMag = mag;
+        this.shakeTime = duration;
+        vibe(20);
+    }
+
+    updateFx(dt) {
+        if (this.shakeTime > 0) this.shakeTime -= dt;
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += (p.vx || 0);
+            p.y += (p.vy || 0);
+            p.alpha -= p.decay;
+            if (p.alpha <= 0) this.particles.splice(i, 1);
+        }
+    }
+
+    drawFx(ctx) {
+        ctx.save();
+        for (const p of this.particles) {
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            if (p.text) {
+                ctx.font = 'bold 16px Outfit, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 8;
+                ctx.fillText(p.text, p.x, p.y);
+            } else {
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 6;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        ctx.restore();
     }
 
     setStat(name, value) {
@@ -1662,7 +1793,7 @@ class Game {
         }
         this.showOverlay(`
             <div class="ov-title">GAME OVER</div>
-            <div class="ov-kr">게임 종료</div>
+            <div class="ov-kr">게임 종료 · Game Over</div>
             <div class="ov-score">${this.score}</div>
             <div class="ov-best">BEST ${store.best(this.id)}</div>
             ${isNew ? '<div class="ov-new">🏆 신기록! · New record!</div>' : ''}
@@ -1824,6 +1955,11 @@ class BlockDrop extends Game {
 
     hardDrop() {
         while (!this.collides(this.piece.cells, this.piece.x, this.piece.y + 1)) this.piece.y++;
+        this.triggerShake(7, 0.2);
+        const dropX = this.offX + (this.piece.x + this.piece.cells[0].length / 2) * this.cell;
+        const dropY = this.offY + (this.piece.y + this.piece.cells.length) * this.cell;
+        this.addSpark(dropX, dropY, this.piece.color, 16, 4);
+        sfx.blip(180, 0.08, 'triangle', 0.08);
         this.lock();
     }
 
@@ -1850,8 +1986,20 @@ class BlockDrop extends Game {
         }
         if (!cleared) return;
         this.lines += cleared;
-        // 한 번에 여러 줄을 지울수록 크게 줍니다.
-        this.score += [0, 100, 300, 500, 800][cleared];
+        this.score += [0, 100, 300, 500, 1000][cleared];
+        const midX = this.offX + (COLS * this.cell) / 2;
+        const midY = this.offY + (ROWS * this.cell) / 2;
+        if (cleared === 4) {
+            this.addPopupText('🌟 TETRIS! +1000', midX, midY, '#ffd700');
+            this.addSpark(midX, midY, '#00f3ff', 30, 6);
+            this.addSpark(midX, midY, '#ff0055', 30, 6);
+            this.triggerShake(10, 0.35);
+            sfx.good();
+        } else if (cleared > 1) {
+            this.addPopupText(`🔥 COMBO x${cleared}!`, midX, midY, '#ffaa00');
+            this.addSpark(midX, midY, '#ffaa00', 15, 4);
+            this.triggerShake(4, 0.15);
+        }
         this.setStat('score', this.score);
         this.setStat('lines', this.lines);
         // 10줄마다 빨라집니다(최소 120ms).
@@ -1901,14 +2049,15 @@ class BlockDrop extends Game {
         // 데스크톱에서도 해볼 수 있게 키보드도 받습니다.
         this.on(window, 'keydown', (e) => {
             if (!this.running) return;
-            if (e.key === 'ArrowLeft') this.move(-1);
-            else if (e.key === 'ArrowRight') this.move(1);
-            else if (e.key === 'ArrowDown') this.stepDown();
+            if (e.key === 'ArrowLeft') { e.preventDefault(); this.move(-1); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); this.move(1); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); this.stepDown(); }
             else if (e.key === 'ArrowUp' || e.key === ' ') { e.preventDefault(); this.rotate(); }
         });
     }
 
     update(dt) {
+        this.updateFx(dt);
         this.acc += dt * 1000;
         if (this.acc >= this.dropMs) {
             this.acc = 0;
@@ -1938,29 +2087,78 @@ class BlockDrop extends Game {
             ctx.stroke();
         }
 
+        // 귀여운 젤리 블록 드로잉 헬퍼
+        const drawJellyBlock = (x, y, color, isGhost = false) => {
+            const bx = ox + x * cell + 1;
+            const by = oy + y * cell + 1;
+            const bw = cell - 2;
+            const bh = cell - 2;
+            
+            if (isGhost) {
+                ctx.save();
+                ctx.globalAlpha = 0.25;
+                neonRect(ctx, bx, by, bw, bh, color, 4, 0);
+                ctx.restore();
+                return;
+            }
+
+            // 젤리 3D 라운드 큐브
+            ctx.save();
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.roundRect(bx, by, bw, bh, 5);
+            ctx.fill();
+
+            // 젤리 반사광 하이라이트
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.roundRect(bx + 2, by + 2, bw - 4, bh * 0.35, 3);
+            ctx.fill();
+
+            // 귀여운 표정 (눈 & 입)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            const eyeSize = Math.max(1.5, bw * 0.1);
+            const eyeY = by + bh * 0.52;
+            // 왼쪽 눈
+            ctx.beginPath();
+            ctx.arc(bx + bw * 0.32, eyeY, eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+            // 오른쪽 눈
+            ctx.beginPath();
+            ctx.arc(bx + bw * 0.68, eyeY, eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+            // 미소 입
+            ctx.lineWidth = Math.max(1, bw * 0.07);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.beginPath();
+            ctx.arc(bx + bw * 0.5, eyeY + 1, bw * 0.15, 0.1 * Math.PI, 0.9 * Math.PI);
+            ctx.stroke();
+
+            ctx.restore();
+        };
+
         // 쌓인 블록
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (this.grid[r][c]) {
-                    neonRect(ctx, ox + c * cell + 1, oy + r * cell + 1, cell - 2, cell - 2, this.grid[r][c], 3, 6);
+                    drawJellyBlock(c, r, this.grid[r][c]);
                 }
             }
         }
 
-        // 떨어질 자리 미리보기 — 어디에 놓일지 모르면 조작이 답답합니다.
+        // 떨어질 자리 미리보기
         if (this.piece && !this.over) {
             let gy = this.piece.y;
             while (!this.collides(this.piece.cells, this.piece.x, gy + 1)) gy++;
-            ctx.save();
-            ctx.globalAlpha = 0.22;
             this.piece.cells.forEach((row, r) => row.forEach((v, c) => {
-                if (v) neonRect(ctx, ox + (this.piece.x + c) * cell + 1, oy + (gy + r) * cell + 1, cell - 2, cell - 2, this.piece.color, 3, 0);
+                if (v) drawJellyBlock(this.piece.x + c, gy + r, this.piece.color, true);
             }));
-            ctx.restore();
 
             this.piece.cells.forEach((row, r) => row.forEach((v, c) => {
                 if (v && this.piece.y + r >= 0) {
-                    neonRect(ctx, ox + (this.piece.x + c) * cell + 1, oy + (this.piece.y + r) * cell + 1, cell - 2, cell - 2, this.piece.color, 3, 10);
+                    drawJellyBlock(this.piece.x + c, this.piece.y + r, this.piece.color);
                 }
             }));
         }
@@ -1977,7 +2175,7 @@ class SpaceShooter extends Game {
         this.titleEn = 'GIJO Space Shooter';
         this.titleKr = '비행기 슈팅';
         this.introHint = '화면을 끌어 비행기를 옮기세요. 총알은 알아서 나갑니다.<br>Drag to move your ship. It fires automatically.';
-        this.bgImg = loadImg('assets/space_shooter_spicy_art_1787296668125.jpg');
+        this.bgImg = loadImg('assets/space_shooter_fun_art.jpg');
     }
 
     reset() {
@@ -1985,6 +2183,7 @@ class SpaceShooter extends Game {
         this.bullets = [];
         this.enemyShots = [];
         this.enemies = [];
+        this.powerups = []; // ⚡ 파워업 아이템 드랍
         this.stars = Array.from({ length: 46 }, () => ({
             x: Math.random() * this.W, y: Math.random() * this.H,
             s: 0.4 + Math.random() * 1.4, v: 14 + Math.random() * 46
@@ -1993,6 +2192,10 @@ class SpaceShooter extends Game {
         this.lives = 3;
         this.fireAcc = 0;
         this.invuln = 0;
+        this.tripleShotTimer = 0; // ⚡ 트리플 레이저
+        this.shieldTimer = 0;     // 🛡️ 플라즈마 실드
+        this.killStreak = 0;      // 🔥 멀티킬 콤보
+        this.lastKillTime = 0;
         this.setStat('score', 0);
         this.setStat('wave', 1);
         this.setStat('life', 3);
@@ -2060,17 +2263,74 @@ class SpaceShooter extends Game {
 
         if (this.invuln > 0) this.invuln -= dt;
 
-        // 자동 발사
+        this.updateFx(dt);
+        // 엔진 부스터 불꽃 파티클
+        if (Math.random() < 0.6) {
+            this.particles.push({
+                x: this.ship.x + (Math.random() - 0.5) * 6,
+                y: this.ship.y + 16,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: 2 + Math.random() * 2,
+                size: 2 + Math.random() * 2,
+                color: Math.random() < 0.5 ? '#00f3ff' : '#ff0055',
+                alpha: 0.8,
+                decay: 0.06
+            });
+        }
+        // 파워업 타이머 갱신
+        if (this.tripleShotTimer > 0) this.tripleShotTimer -= dt;
+        if (this.shieldTimer > 0) this.shieldTimer -= dt;
+
+        // 자동 발사 (트리플샷 지원)
         this.fireAcc += dt;
-        const fireRate = 0.22;
+        const fireRate = this.tripleShotTimer > 0 ? 0.14 : 0.20;
         if (this.fireAcc >= fireRate) {
             this.fireAcc = 0;
-            this.bullets.push({ x: this.ship.x, y: this.ship.y - 16, v: -430 });
-            sfx.blip(1200, 0.02, 'square', 0.02);
+            if (this.tripleShotTimer > 0) {
+                this.bullets.push({ x: this.ship.x, y: this.ship.y - 16, v: -520, vx: 0 });
+                this.bullets.push({ x: this.ship.x - 10, y: this.ship.y - 14, v: -500, vx: -90 });
+                this.bullets.push({ x: this.ship.x + 10, y: this.ship.y - 14, v: -500, vx: 90 });
+                sfx.blip(1400, 0.03, 'triangle', 0.03);
+            } else {
+                this.bullets.push({ x: this.ship.x, y: this.ship.y - 16, v: -460, vx: 0 });
+                sfx.blip(1200, 0.02, 'square', 0.02);
+            }
         }
 
-        this.bullets.forEach(b => b.y += b.v * dt);
-        this.bullets = this.bullets.filter(b => b.y > -10);
+        this.bullets.forEach(b => {
+            b.y += b.v * dt;
+            if (b.vx) b.x += b.vx * dt;
+        });
+        this.bullets = this.bullets.filter(b => b.y > -10 && b.x > 0 && b.x < this.W);
+
+        // 파워업 아이템 이동 및 수집
+        for (let i = this.powerups.length - 1; i >= 0; i--) {
+            const p = this.powerups[i];
+            p.y += p.vy * dt;
+            if (Math.hypot(p.x - this.ship.x, p.y - this.ship.y) < this.ship.r + p.r) {
+                if (p.type === 'triple') {
+                    this.tripleShotTimer = 8;
+                    this.addPopupText('⚡ TRIPLE LASER!', this.ship.x, this.ship.y - 30, '#00f3ff');
+                } else if (p.type === 'shield') {
+                    this.shieldTimer = 10;
+                    this.addPopupText('🛡️ PLASMA SHIELD!', this.ship.x, this.ship.y - 30, '#ffd700');
+                } else if (p.type === 'bomb') {
+                    this.enemies.forEach(e => {
+                        this.addSpark(e.x, e.y, '#ff0055', 20, 5);
+                    });
+                    this.enemies = [];
+                    this.triggerShake(12, 0.35);
+                    this.addPopupText('💥 SCREEN BOMB!', this.W / 2, this.H / 2, '#ff0055');
+                    sfx.good();
+                }
+                this.addSpark(p.x, p.y, p.color, 24, 6);
+                sfx.good();
+                vibe([0, 30, 40, 50]);
+                this.powerups.splice(i, 1);
+            } else if (p.y > this.H + 20) {
+                this.powerups.splice(i, 1);
+            }
+        }
 
         this.enemyShots.forEach(b => b.y += b.v * dt);
         this.enemyShots = this.enemyShots.filter(b => b.y < this.H + 10);
@@ -2132,10 +2392,39 @@ class SpaceShooter extends Game {
                     en.hp--;
                     if (en.hp <= 0) {
                         this.enemies.splice(j, 1);
-                        this.score += en.diving ? 150 : 100;
+                        const now = performance.now();
+                        if (now - this.lastKillTime < 900) {
+                            this.killStreak++;
+                            const streakBonus = this.killStreak * 50;
+                            this.score += (en.diving ? 150 : 100) + streakBonus;
+                            if (this.killStreak >= 3) {
+                                this.addPopupText(`🔥 COMBO x${this.killStreak}! +${streakBonus}`, en.x, ey - 15, '#ffaa00');
+                            }
+                        } else {
+                            this.killStreak = 1;
+                            this.score += en.diving ? 150 : 100;
+                        }
+                        this.lastKillTime = now;
+
+                        // 18% 확률로 파워업 아이템 드랍
+                        if (Math.random() < 0.18) {
+                            const pTypes = ['triple', 'shield', 'bomb'];
+                            const pIcons = { triple: '⚡', shield: '🛡️', bomb: '💣' };
+                            const pColors = { triple: '#00f3ff', shield: '#ffd700', bomb: '#ff0055' };
+                            const type = pTypes[Math.floor(Math.random() * pTypes.length)];
+                            this.powerups.push({
+                                x: en.x, y: ey, vy: 80, r: 14,
+                                type: type, icon: pIcons[type], color: pColors[type]
+                            });
+                        }
+
                         this.setStat('score', this.score);
+                        this.addSpark(en.x, ey, en.color, 22, 5);
+                        this.addPopupText(en.diving ? '+150' : '+100', en.x, ey, '#ffd700');
+                        this.triggerShake(5, 0.18);
                         sfx.good();
                     } else {
+                        this.addSpark(en.x, ey, '#ffffff', 5, 2);
                         sfx.blip(300, 0.04);
                     }
                     break;
@@ -2146,6 +2435,16 @@ class SpaceShooter extends Game {
         // 적 총알 / 적 본체 ↔ 나
         const hitMe = () => {
             if (this.invuln > 0) return;
+            if (this.shieldTimer > 0) {
+                // 🛡️ 플라즈마 실드가 피해를 완전히 막아줌!
+                this.shieldTimer = 0;
+                this.invuln = 1.2;
+                this.addSpark(this.ship.x, this.ship.y, '#ffd700', 30, 6);
+                this.addPopupText('🛡️ SHIELD BLOCKED!', this.ship.x, this.ship.y - 25, '#ffd700');
+                sfx.good();
+                this.triggerShake(6, 0.2);
+                return;
+            }
             this.lives--;
             this.setStat('life', Math.max(0, this.lives));
             this.invuln = 1.6;
@@ -2196,40 +2495,75 @@ class SpaceShooter extends Game {
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
         this.stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
 
-        this.enemies.forEach(en => {
+        // 재미있는 외계인 침략자 이모지 스프라이트
+        const alienIcons = ['👾', '🛸', '🐙', '👿', '🤖'];
+        this.enemies.forEach((en, idx) => {
             const ey = en.diving ? en.y : en.y + this.descend;
             ctx.save();
-            ctx.shadowBlur = 12;
+            ctx.shadowBlur = 14;
             ctx.shadowColor = en.color;
+            
+            // 외계인 본체 글로우 링
             ctx.fillStyle = en.color;
-            // 아래를 향한 삼각형 = 적기
             ctx.beginPath();
-            ctx.moveTo(en.x, ey + en.r);
-            ctx.lineTo(en.x - en.r, ey - en.r * 0.7);
-            ctx.lineTo(en.x + en.r, ey - en.r * 0.7);
-            ctx.closePath();
+            ctx.arc(en.x, ey, en.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 외계인 캐릭터 이모지
+            ctx.font = `${en.r * 1.5}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const icon = alienIcons[idx % alienIcons.length];
+            ctx.fillText(icon, en.x, ey);
+            
+            // 다이빙 중인 적은 위험 불꽃 효과
+            if (en.diving) {
+                ctx.fillStyle = '#ffaa00';
+                ctx.beginPath();
+                ctx.arc(en.x, ey - en.r * 1.2, en.r * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        });
+
+        // 플레이어 총알 (듀얼 네온 레이저)
+        this.bullets.forEach(b => {
+            neonRect(ctx, b.x - 4, b.y - 10, 3, 14, '#00f3ff', 2, 10);
+            neonRect(ctx, b.x + 1, b.y - 10, 3, 14, '#00f3ff', 2, 10);
+        });
+
+        // 적 총알 (플라즈마 에너지 볼)
+        this.enemyShots.forEach(b => {
+            ctx.save();
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff0055';
+            ctx.fillStyle = '#ffe14d';
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, 4.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
         });
 
-        ctx.fillStyle = '#fff';
-        this.bullets.forEach(b => neonRect(ctx, b.x - 1.5, b.y - 8, 3, 12, '#00f3ff', 2, 8));
-        this.enemyShots.forEach(b => neonRect(ctx, b.x - 2, b.y - 5, 4, 10, '#ffe14d', 2, 8));
-
-        // 무적 시간에는 깜빡입니다.
+        // 플레이어 기체 (사이버 제트기 🚀)
         if (this.invuln <= 0 || Math.floor(this.invuln * 12) % 2 === 0) {
             const s = this.ship;
             ctx.save();
-            ctx.shadowBlur = 16;
+            ctx.shadowBlur = 20;
             ctx.shadowColor = '#00f3ff';
-            ctx.fillStyle = '#e8feff';
+            
+            // 제트기 본체
+            ctx.font = `${s.r * 2.3}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🚀', s.x, s.y);
+
+            // 좌우 에너지 윙 글로우
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.7)';
             ctx.beginPath();
-            ctx.moveTo(s.x, s.y - s.r);
-            ctx.lineTo(s.x - s.r, s.y + s.r * 0.8);
-            ctx.lineTo(s.x, s.y + s.r * 0.35);
-            ctx.lineTo(s.x + s.r, s.y + s.r * 0.8);
-            ctx.closePath();
+            ctx.arc(s.x - s.r * 0.9, s.y + s.r * 0.5, 3.5, 0, Math.PI * 2);
+            ctx.arc(s.x + s.r * 0.9, s.y + s.r * 0.5, 3.5, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.restore();
         }
     }
@@ -2305,6 +2639,8 @@ class Snake extends Game {
 
     placeFood() {
         this.food = this.pickEmptyCell();
+        if (!this.foodIcons) this.foodIcons = ['🍕', '🍔', '🍰', '🍟', '🍩', '🍺', '💎', '👑', '🍓', '🌮'];
+        this.currentFoodIcon = this.foodIcons[Math.floor(Math.random() * this.foodIcons.length)];
     }
 
     /** 60/120/180... 점을 넘을 때마다 장애물을 하나 더 심습니다(최대 6개). */
@@ -2339,6 +2675,10 @@ class Snake extends Game {
         this.awaitingFirstMove = false;
     }
 
+    setBoost(active) {
+        this.isBoosting = active;
+    }
+
     bindInput() {
         let sx = 0, sy = 0;
         this.on(this.canvas, 'touchstart', (e) => {
@@ -2363,9 +2703,16 @@ class Snake extends Game {
     update(dt) {
         if (this.awaitingFirstMove) return;
 
+        const currentStep = this.isBoosting ? Math.max(35, this.stepMs * 0.45) : this.stepMs;
         this.acc += dt * 1000;
-        if (this.acc < this.stepMs) return;
+        if (this.acc < currentStep) return;
         this.acc = 0;
+
+        // 부스트 질주 시 불꽃 파티클 트레일
+        if (this.isBoosting && this.snake.length > 0) {
+            const tail = this.snake[this.snake.length - 1];
+            this.addSpark(this.offX + tail.x * this.cell + this.cell / 2, this.offY + tail.y * this.cell + this.cell / 2, '#ffaa00', 4, 2);
+        }
 
         if (this.pendingDir) { this.dir = this.pendingDir; this.pendingDir = null; }
 
@@ -2432,38 +2779,89 @@ class Snake extends Game {
             ctx.beginPath(); ctx.moveTo(ox, oy + r * cell + .5); ctx.lineTo(ox + this.cols * cell, oy + r * cell + .5); ctx.stroke();
         }
 
-        // 🧱 장애물 — 위험하다는 게 한눈에 보이게 붉은 줄무늬로.
+        // 💣 장애물 (해골 폭탄)
         this.obstacles.forEach(o => {
             ctx.save();
-            ctx.translate(ox + o.x * cell + cell / 2, oy + o.y * cell + cell / 2);
-            neonRect(ctx, -cell / 2 + 1, -cell / 2 + 1, cell - 2, cell - 2, '#ff2d55', 3, 10);
-            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(-cell * 0.22, -cell * 0.22); ctx.lineTo(cell * 0.22, cell * 0.22);
-            ctx.moveTo(cell * 0.22, -cell * 0.22); ctx.lineTo(-cell * 0.22, cell * 0.22);
-            ctx.stroke();
+            const cx = ox + o.x * cell + cell / 2;
+            const cy = oy + o.y * cell + cell / 2;
+            neonRect(ctx, cx - cell / 2 + 1, cy - cell / 2 + 1, cell - 2, cell - 2, '#ff2d55', 6, 12);
+            ctx.font = `${cell * 0.72}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('💣', cx, cy);
             ctx.restore();
         });
 
+        // 🍕 맛있는 음식 먹이
         if (this.food) {
-            neonRect(ctx, ox + this.food.x * cell + cell * 0.2, oy + this.food.y * cell + cell * 0.2,
-                cell * 0.6, cell * 0.6, '#ff0055', cell, 14);
+            ctx.save();
+            const fx = ox + this.food.x * cell + cell / 2;
+            const fy = oy + this.food.y * cell + cell / 2;
+            ctx.shadowColor = '#ff0055';
+            ctx.shadowBlur = 14;
+            ctx.font = `${cell * 0.85}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(this.currentFoodIcon || '🍕', fx, fy);
+            ctx.restore();
         }
 
-        // 🌟 보너스 먹이 — 남은 시간에 따라 점점 작아져서 곧 사라진다는 걸 알려줍니다.
+        // 🌟 황금 다이아몬드 보너스 먹이
         if (this.bonusFood) {
-            const left = 1 - (performance.now() - this.bonusFood.bornAt) / this.bonusFood.ttl;
-            const size = cell * (0.35 + 0.35 * Math.max(0, left));
-            neonRect(ctx,
-                ox + this.bonusFood.x * cell + (cell - size) / 2,
-                oy + this.bonusFood.y * cell + (cell - size) / 2,
-                size, size, '#ffd700', size, 18);
+            ctx.save();
+            const bx = ox + this.bonusFood.x * cell + cell / 2;
+            const by = oy + this.bonusFood.y * cell + cell / 2;
+            const pulse = 1 + 0.15 * Math.sin(performance.now() * 0.008);
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 20;
+            ctx.font = `${cell * 0.9 * pulse}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('💎', bx, by);
+            ctx.restore();
         }
 
+        // 🐍 귀여운 뱀 몸통 & 머리 (눈동자 & 표정)
         this.snake.forEach((s, i) => {
-            const color = i === 0 ? '#eaffb0' : '#3ed973';
-            neonRect(ctx, ox + s.x * cell + 1, oy + s.y * cell + 1, cell - 2, cell - 2, color, 4, i === 0 ? 14 : 6);
+            const bx = ox + s.x * cell + 1;
+            const by = oy + s.y * cell + 1;
+            const bw = cell - 2;
+            const bh = cell - 2;
+            
+            if (i === 0) {
+                // 뱀 머리 (초록 네온 드래곤)
+                neonRect(ctx, bx, by, bw, bh, '#3ed973', 8, 16);
+                ctx.save();
+                // 귀여운 눈 2개
+                ctx.fillStyle = '#ffffff';
+                let lx = bx + bw * 0.3, ly = by + bh * 0.3;
+                let rx = bx + bw * 0.7, ry = by + bh * 0.3;
+                if (this.dir.x === 1) { lx = bx + bw * 0.65; ly = by + bh * 0.25; rx = bx + bw * 0.65; ry = by + bh * 0.75; }
+                else if (this.dir.x === -1) { lx = bx + bw * 0.35; ly = by + bh * 0.25; rx = bx + bw * 0.35; ry = by + bh * 0.75; }
+                else if (this.dir.y === 1) { lx = bx + bw * 0.25; ly = by + bh * 0.65; rx = bx + bw * 0.75; ry = by + bh * 0.65; }
+                
+                ctx.beginPath();
+                ctx.arc(lx, ly, bw * 0.16, 0, Math.PI * 2);
+                ctx.arc(rx, ry, bw * 0.16, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 검은 눈동자
+                ctx.fillStyle = '#000000';
+                ctx.beginPath();
+                ctx.arc(lx + this.dir.x * 1, ly + this.dir.y * 1, bw * 0.08, 0, Math.PI * 2);
+                ctx.arc(rx + this.dir.x * 1, ry + this.dir.y * 1, bw * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            } else {
+                // 몸통 비늘 그라디언트
+                const bodyColor = i % 2 === 0 ? '#3ed973' : '#2bb85c';
+                neonRect(ctx, bx, by, bw, bh, bodyColor, 5, 6);
+                // 비늘 하이라이트 점
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(bx + bw / 2, by + bh / 2, bw * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+            }
         });
 
         if (this.awaitingFirstMove && this.running) {
@@ -2499,7 +2897,7 @@ class BrickBreaker extends Game {
         this.titleEn = 'GIJO Brick Breaker';
         this.titleKr = '벽돌 깨기';
         this.introHint = '화면을 끌어 받침대를 움직이세요. 공을 놓치면 목숨이 줄어듭니다.<br>Drag to move the paddle. Miss the ball and you lose a life.';
-        this.bgImg = loadImg('assets/brick_breaker_spicy_art_1787296721614.jpg');
+        this.bgImg = loadImg('assets/brick_breaker_fun_art.jpg');
     }
 
     reset() {
@@ -2616,6 +3014,12 @@ class BrickBreaker extends Game {
             const overlapY = Math.min(b.y + b.r - k.y, k.y + k.h - (b.y - b.r));
             if (overlapX < overlapY) b.vx = -b.vx;
             else b.vy = -b.vy;
+            // 공이 수평에 가까워져 영원히 벽돌에 안 닿는 것을 방지합니다.
+            const speed = Math.hypot(b.vx, b.vy);
+            if (Math.abs(b.vy) < speed * 0.15) {
+                b.vy = (b.vy >= 0 ? 1 : -1) * speed * 0.2;
+                b.vx = (b.vx >= 0 ? 1 : -1) * Math.sqrt(speed * speed - b.vy * b.vy);
+            }
 
             k.hp--;
             if (k.hp <= 0) {
@@ -2648,22 +3052,61 @@ class BrickBreaker extends Game {
         ctx.fillRect(0, 0, this.W, this.H);
         ctx.globalAlpha = 1;
 
+        // 💎 크리스털 보석 벽돌 렌더링
         this.bricks.forEach(k => {
             ctx.save();
-            if (k.hp > 1) ctx.globalAlpha = 1;
-            neonRect(ctx, k.x, k.y, k.w, k.h, k.color, 4, k.hp > 1 ? 14 : 7);
+            ctx.shadowColor = k.color;
+            ctx.shadowBlur = k.hp > 1 ? 14 : 8;
+            ctx.fillStyle = k.color;
+            ctx.beginPath();
+            ctx.roundRect(k.x, k.y, k.w, k.h, 4);
+            ctx.fill();
+
+            // 크리스털 상단 반사광
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.roundRect(k.x + 2, k.y + 2, k.w - 4, k.h * 0.38, 2);
+            ctx.fill();
+
+            // 하드 브릭(HP>1)은 금색 테두리 림
+            if (k.hp > 1) {
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(k.x + 1, k.y + 1, k.w - 2, k.h - 2);
+            }
             ctx.restore();
         });
 
-        neonRect(ctx, this.pad.x - this.padW / 2, this.pad.y, this.padW, this.padH, '#ffaa00', 6, 14);
+        // 🏓 사이버 네온 레이저 패들
+        ctx.save();
+        const px = this.pad.x - this.padW / 2;
+        const py = this.pad.y;
+        ctx.shadowColor = '#ffaa00';
+        ctx.shadowBlur = 16;
+        ctx.fillStyle = 'linear-gradient(90deg, #ff5500, #ffaa00, #ffe14d, #ffaa00, #ff5500)';
+        neonRect(ctx, px, py, this.padW, this.padH, '#ffaa00', 6, 16);
 
+        // 패들 센터 코어 라이트
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(this.pad.x - this.padW * 0.2, py + 2, this.padW * 0.4, this.padH - 4, 3);
+        ctx.fill();
+        ctx.restore();
+
+        // ⚡ 플라즈마 에너지 파이어볼
         const b = this.ball;
         ctx.save();
-        ctx.shadowBlur = 16;
+        ctx.shadowBlur = 22;
         ctx.shadowColor = '#ffe14d';
         ctx.fillStyle = '#fffbe8';
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 파이어볼 센터 코어
+        ctx.fillStyle = '#ffaa00';
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r * 0.55, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
@@ -2829,7 +3272,7 @@ class Slots {
             .join('');
         document.getElementById('paytable').innerHTML =
             `<div class="pt-row">${rows}</div>` +
-            `<div class="pt-note">5개 맞췄을 때 · 베팅 10 기준 &nbsp;|&nbsp; 🔥 모든 심볼 대체 &nbsp;|&nbsp; 🌶️ 3개 = 스파이시 보너스!` +
+            `<div class="pt-note">5개 일치 · 베팅 10 기준 &nbsp;|&nbsp; 🔥 모든 심볼 대체 &nbsp;|&nbsp; 🌶️ 3개 = 스파이시 보너스!` +
             `<br>5-of-a-kind at bet 10 · 🔥 wild · 🌶️ x3 = SPICY BONUS</div>`;
     }
 
@@ -3182,14 +3625,14 @@ class Slots {
             if (dancers > 0) {
                 const tip = dancers * this.bet * 3;
                 total += tip;
-                bonusNotes.push(`💃 호스티스 팁 +${tip}`);
+                bonusNotes.push(`💃 팁 · Tip +${tip}`);
             }
 
             // 🌶️ 3개 이상이면 스핀 추가 (리트리거). 2개로 두면 거의 매번 걸려
             // 라운드가 끝나지 않습니다. 남은 스핀에도 상한을 둡니다.
             if (scatterCount >= 3 && this.freeSpins < BONUS_MAX_SPINS) {
                 this.freeSpins = Math.min(BONUS_MAX_SPINS, this.freeSpins + 5);
-                bonusNotes.push('🌶️ 스핀 +5 추가!');
+                bonusNotes.push('🌶️ 스핀 +5 · 5 more spins!');
             }
 
             this.bonusTotal += total;
@@ -3297,7 +3740,7 @@ class Slots {
         el.innerHTML =
             `<div class="fever-core">` +
             `<div class="fever-title">🎰 JACKPOT FEVER 🎰</div>` +
-            `<div class="fever-kr">777 확률 3배! 다음 ${this.feverSpinsLeft}스핀</div>` +
+            `<div class="fever-kr">777 확률 3배! · Triple odds for ${this.feverSpinsLeft} spins</div>` +
             `<div class="fever-en">777 &amp; Wild odds x3 — next ${this.feverSpinsLeft} spins</div>` +
             `</div>`;
         frame.appendChild(el);
@@ -3315,12 +3758,12 @@ class Slots {
         el.innerHTML =
             `<div class="gamble-card">` +
             `<div class="gamble-title">DOUBLE OR NOTHING</div>` +
-            `<div class="gamble-kr">+${total} 크레딧을 2배로? 색을 맞혀보세요!</div>` +
+            `<div class="gamble-kr">+${total} 크레딧 2배 도전! · Double or nothing!</div>` +
             `<div class="gamble-choices">` +
             `<button class="gamble-btn gamble-red" data-pick="red">🔴 RED</button>` +
             `<button class="gamble-btn gamble-black" data-pick="black">⚫ BLACK</button>` +
             `</div>` +
-            `<button class="gamble-skip" data-skip>수령하기 · Collect +${total}</button>` +
+            `<button class="gamble-skip" data-skip>수령 · Collect +${total}</button>` +
             `</div>`;
         frame.appendChild(el);
         sfx.blip(500, 0.05);
@@ -3332,7 +3775,7 @@ class Slots {
                 this.saveCredits();
                 this.setStat('credit', this.credits);
                 this.setStat('win', total * 2);
-                this.setMsg(`🎲 더블 성공! +${total * 2}`, `Doubled! +${total * 2}`);
+                this.setMsg(`🎲 더블 성공! +${total * 2}`, `Doubled! +${total * 2} credits`);
                 this.spawnCoinShower(16);
                 sfx.good();
             } else if (won === false) {
@@ -3340,7 +3783,7 @@ class Slots {
                 this.saveCredits();
                 this.setStat('credit', this.credits);
                 this.setStat('win', 0);
-                this.setMsg('🎲 아쉽지만 다음 기회에!', 'No luck this time!');
+                this.setMsg('🎲 아쉽! 다음 기회에!', 'No luck this time!');
                 sfx.blip(160, 0.12, 'sawtooth', 0.05);
             }
             onDone();
@@ -3417,7 +3860,7 @@ class Slots {
             `<div class="bi-core">` +
             `<div class="bi-chilis">🌶️🌶️🌶️</div>` +
             `<div class="bi-title">SPICY BONUS</div>` +
-            `<div class="bi-kr">스파이시 보너스!</div>` +
+            `<div class="bi-kr">스파이시 보너스! · Spicy Bonus!</div>` +
             `<div class="bi-sub">프리스핀 10회 · 배수 x2 시작<br>10 free spins · starts at x2</div>` +
             `</div>`;
         frame.appendChild(el);
@@ -3432,7 +3875,7 @@ class Slots {
         el.innerHTML =
             `<div class="bigwin-title">BONUS OVER</div>` +
             `<div class="bigwin-amount">+${won}</div>` +
-            `<div class="bigwin-kr">보너스에서 ${won} 크레딧 획득!</div>`;
+            `<div class="bigwin-kr">보너스 총 +${won} · Bonus Total +${won}</div>`;
         frame.appendChild(el);
         sfx.good();
         vibe([0, 80, 60, 140]);
@@ -3444,7 +3887,9 @@ class Slots {
             this.clearWinVisuals();
             this.updateFreeBadge();
             this.setSpinLock(false);
+            document.getElementById('spin-btn').textContent = 'SPIN · 돌리기';
             if (this.credits < this.bet) this.offerRefill();
+            else this.continueAutoSpin();
         }, 2600);
     }
 
@@ -3493,7 +3938,7 @@ class Slots {
         el.innerHTML =
             `<div class="bigwin-title">${mega ? 'MEGA WIN' : 'BIG WIN'}</div>` +
             `<div class="bigwin-amount">+${amount}</div>` +
-            `<div class="bigwin-kr">${mega ? '대박이 터졌습니다!' : '크게 터졌습니다!'}</div>`;
+            `<div class="bigwin-kr">${mega ? '대박이 터졌습니다! · MEGA WIN!' : '크게 터졌습니다! · BIG WIN!'}</div>`;
         frame.appendChild(el);
         sfx.good();
         setTimeout(() => sfx.good(), 180);
@@ -3519,26 +3964,572 @@ class Slots {
         this.setMsg('크레딧이 떨어졌어요. 무료로 충전하세요.', 'Out of credits — refill for free.');
         const btn = document.getElementById('spin-btn');
         btn.disabled = false;
-        btn.textContent = '무료 충전 · Free refill';
-        const refill = () => {
+        btn.textContent = '무료 충전 · Free Refill';
+        const refill = (e) => {
+            e.stopImmediatePropagation();
             this.credits = 1000;
             this.saveCredits();
             this.setStat('credit', this.credits);
             btn.textContent = 'SPIN · 돌리기';
-            btn.removeEventListener('click', refill);
-            this.setMsg('충전 완료! 행운을 빌어요.', 'Refilled. Good luck!');
+            this.setMsg('충전 완료! 행운을 빌어요.', 'Refilled! Good luck!');
             sfx.good();
         };
         btn.addEventListener('click', refill, { once: true });
     }
 }
 
+
+/* ============================================================
+   5) Neon 2048 — 깃허브 전세계 1위 전설의 숫자 머지 퍼즐
+   ============================================================ */
+
+const P_GRID_SIZE = 4;
+const TILE_COLORS = {
+    2:    { bg: '#102a3a', text: '#00f3ff', border: '#00f3ff' },
+    4:    { bg: '#10244a', text: '#4d8cff', border: '#4d8cff' },
+    8:    { bg: '#0e3424', text: '#3ed973', border: '#3ed973' },
+    16:   { bg: '#3a3410', text: '#ffe14d', border: '#ffe14d' },
+    32:   { bg: '#3a240e', text: '#ffaa00', border: '#ffaa00' },
+    64:   { bg: '#3a1408', text: '#ff5500', border: '#ff5500' },
+    128:  { bg: '#3a081a', text: '#ff0055', border: '#ff0055' },
+    256:  { bg: '#3a0828', text: '#ff00aa', border: '#ff00aa' },
+    512:  { bg: '#28083a', text: '#a200ff', border: '#a200ff' },
+    1024: { bg: '#083a2e', text: '#00ffaa', border: '#00ffaa' },
+    2048: { bg: '#3a3000', text: '#ffd700', border: '#ffd700' }
+};
+
+class Neon2048 extends Game {
+    constructor() {
+        super('puzzle', 'scr-puzzle', 'cv-puzzle');
+        this.titleEn = 'GIJO Neon 2048';
+        this.titleKr = '네온 2048 머지';
+        this.introHint = '상하좌우로 쓸어 같은 숫자를 합치세요. 2048을 완성하면 승리!<br>Swipe in 4 directions to merge matching numbers. Reach 2048 to win!';
+    }
+
+    onResize() {
+        const minDim = Math.min(this.W, this.H);
+        this.boardSize = Math.floor(minDim * 0.88);
+        this.cellSize = Math.floor((this.boardSize - 20) / P_GRID_SIZE);
+        this.gap = 4;
+        this.offX = Math.floor((this.W - (this.cellSize * P_GRID_SIZE + this.gap * (P_GRID_SIZE - 1))) / 2);
+        this.offY = Math.floor((this.H - (this.cellSize * P_GRID_SIZE + this.gap * (P_GRID_SIZE - 1))) / 2);
+    }
+
+    reset() {
+        this.onResize();
+        this.grid = Array.from({ length: P_GRID_SIZE }, () => Array(P_GRID_SIZE).fill(0));
+        this.score = 0;
+        this.won = false;
+        this.setStat('score', 0);
+        this.setStat('bestval', store.best(this.id));
+        this.addRandomTile();
+        this.addRandomTile();
+    }
+
+    addRandomTile() {
+        const emptyCells = [];
+        for (let r = 0; r < P_GRID_SIZE; r++) {
+            for (let c = 0; c < P_GRID_SIZE; c++) {
+                if (this.grid[r][c] === 0) emptyCells.push({ r, c });
+            }
+        }
+        if (emptyCells.length === 0) return false;
+        const cell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        this.grid[cell.r][cell.c] = Math.random() < 0.9 ? 2 : 4;
+        const tx = this.offX + cell.c * (this.cellSize + this.gap) + this.cellSize / 2;
+        const ty = this.offY + cell.r * (this.cellSize + this.gap) + this.cellSize / 2;
+        this.addSpark(tx, ty, '#00f3ff', 8, 3);
+        return true;
+    }
+
+    move(dir) {
+        if (this.over) return;
+        let moved = false;
+        let mergedScore = 0;
+        const size = P_GRID_SIZE;
+
+        const rotateGrid = (times) => {
+            for (let t = 0; t < times; t++) {
+                const temp = Array.from({ length: size }, () => Array(size).fill(0));
+                for (let r = 0; r < size; r++) {
+                    for (let c = 0; c < size; c++) {
+                        temp[c][size - 1 - r] = this.grid[r][c];
+                    }
+                }
+                this.grid = temp;
+            }
+        };
+
+        // dir: 0=Left, 1=Up, 2=Right, 3=Down
+        const rotations = { left: 0, up: 3, right: 2, down: 1 }[dir];
+        rotateGrid(rotations);
+
+        // Slide & Merge to left
+        for (let r = 0; r < size; r++) {
+            let row = this.grid[r].filter(val => val !== 0);
+            for (let i = 0; i < row.length - 1; i++) {
+                if (row[i] === row[i + 1]) {
+                    row[i] *= 2;
+                    mergedScore += row[i];
+                    row.splice(i + 1, 1);
+                    const tx = this.offX + i * (this.cellSize + this.gap) + this.cellSize / 2;
+                    const ty = this.offY + r * (this.cellSize + this.gap) + this.cellSize / 2;
+                    this.addSpark(tx, ty, '#ffd700', 16, 5);
+                    this.addPopupText('+' + row[i], tx, ty, '#ffd700');
+                    this.triggerShake(4, 0.12);
+                    if (row[i] === 2048 && !this.won) {
+                        this.won = true;
+                        this.showReward();
+                        sfx.good();
+                    }
+                }
+            }
+            while (row.length < size) row.push(0);
+            for (let c = 0; c < size; c++) {
+                if (this.grid[r][c] !== row[c]) moved = true;
+                this.grid[r][c] = row[c];
+            }
+        }
+
+        // Rotate back
+        rotateGrid((4 - rotations) % 4);
+
+        if (moved) {
+            this.score += mergedScore;
+            this.setStat('score', this.score);
+            this.addRandomTile();
+            sfx.blip(520 + Math.min(mergedScore, 500), 0.05, 'triangle', 0.04);
+            vibe(15);
+            if (this.checkGameOver()) {
+                this.gameOver();
+            }
+        }
+    }
+
+    checkGameOver() {
+        for (let r = 0; r < P_GRID_SIZE; r++) {
+            for (let c = 0; c < P_GRID_SIZE; c++) {
+                if (this.grid[r][c] === 0) return false;
+                if (c < P_GRID_SIZE - 1 && this.grid[r][c] === this.grid[r][c + 1]) return false;
+                if (r < P_GRID_SIZE - 1 && this.grid[r][c] === this.grid[r + 1][c]) return false;
+            }
+        }
+        return true;
+    }
+
+    bindInput() {
+        let sx = 0, sy = 0;
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault(); sfx.init();
+            sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+        }, { passive: false });
+
+        this.on(this.canvas, 'touchend', (e) => {
+            e.preventDefault();
+            const t = e.changedTouches[0];
+            const dx = t.clientX - sx, dy = t.clientY - sy;
+            if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                this.move(dx > 0 ? 'right' : 'left');
+            } else {
+                this.move(dy > 0 ? 'down' : 'up');
+            }
+        }, { passive: false });
+
+        this.on(window, 'keydown', (e) => {
+            if (!this.running) return;
+            const map = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };
+            if (map[e.key]) { e.preventDefault(); this.move(map[e.key]); }
+        });
+    }
+
+    update(dt) {
+        this.updateFx(dt);
+    }
+
+    draw() {
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.W, this.H);
+
+        // 보드 배경 (사이버펑크 네온 글래스 박스)
+        const bw = this.cellSize * P_GRID_SIZE + this.gap * (P_GRID_SIZE - 1);
+        const bh = bw;
+        ctx.save();
+        ctx.fillStyle = 'rgba(10, 8, 18, 0.78)';
+        ctx.shadowColor = '#00f3ff';
+        ctx.shadowBlur = 18;
+        ctx.beginPath();
+        ctx.roundRect(this.offX - 8, this.offY - 8, bw + 16, bh + 16, 16);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 243, 255, 0.45)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        // 4x4 타일 그리기
+        for (let r = 0; r < P_GRID_SIZE; r++) {
+            for (let c = 0; c < P_GRID_SIZE; c++) {
+                const val = this.grid[r][c];
+                const x = this.offX + c * (this.cellSize + this.gap);
+                const y = this.offY + r * (this.cellSize + this.gap);
+                const size = this.cellSize;
+
+                // 빈 슬롯
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.beginPath();
+                ctx.roundRect(x, y, size, size, 10);
+                ctx.fill();
+                ctx.restore();
+
+                if (val > 0) {
+                    const style = TILE_COLORS[val] || { bg: '#3a3000', text: '#ffd700', border: '#ffd700' };
+                    ctx.save();
+                    ctx.shadowColor = style.border;
+                    ctx.shadowBlur = val >= 128 ? 18 : 8;
+                    ctx.fillStyle = style.bg;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, size, size, 10);
+                    ctx.fill();
+
+                    // 타일 테두리 글로우
+                    ctx.strokeStyle = style.border;
+                    ctx.lineWidth = val >= 64 ? 2.5 : 1.5;
+                    ctx.stroke();
+
+                    // 상단 하이라이트
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.roundRect(x + 2, y + 2, size - 4, size * 0.35, 6);
+                    ctx.fill();
+
+                    // 숫자 렌더링
+                    ctx.fillStyle = style.text;
+                    ctx.shadowColor = style.border;
+                    ctx.shadowBlur = 10;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const fontSize = val >= 1024 ? size * 0.32 : (val >= 128 ? size * 0.38 : size * 0.46);
+                    ctx.font = `900 ${fontSize}px "Outfit", sans-serif`;
+                    ctx.fillText(String(val), x + size / 2, y + size / 2);
+                    ctx.restore();
+                }
+            }
+        }
+
+        this.drawFx(ctx);
+    }
+}
+
+
+
+/* ============================================================
+   6) Flappy Neon — 전세계가 열광한 극악 난이도의 중독성 1위
+   ============================================================ */
+
+class FlappyNeon extends Game {
+    constructor() {
+        super('flappy', 'scr-flappy', 'cv-flappy');
+        this.titleEn = 'GIJO Flappy Neon';
+        this.titleKr = '플래피 네온';
+        this.introHint = '화면을 탭해서 날아오르세요. 레이저 파이프를 피하세요!<br>Tap to flap your wings. Avoid the electric laser pipes!';
+    }
+
+    reset() {
+        this.bird = {
+            x: Math.floor(this.W * 0.28),
+            y: Math.floor(this.H * 0.45),
+            vy: 0,
+            r: 14,
+            angle: 0
+        };
+        this.gravity = 880;
+        this.jumpV = -290;
+        this.pipes = [];
+        this.spawnTimer = 0;
+        this.spawnInterval = 1.65;
+        this.pipeWidth = 52;
+        this.pipeGap = Math.max(125, Math.floor(this.H * 0.26));
+        this.speed = 135;
+        this.score = 0;
+        this.waitingFirstTap = true;
+        this.setStat('score', 0);
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    onResize() {
+        if (this.bird) {
+            this.bird.x = Math.floor(this.W * 0.28);
+            this.pipeGap = Math.max(125, Math.floor(this.H * 0.26));
+        }
+    }
+
+    flap() {
+        if (this.over) return;
+        this.waitingFirstTap = false;
+        this.bird.vy = this.jumpV;
+        this.flapTime = performance.now();
+        sfx.blip(880, 0.05, 'triangle', 0.04);
+        vibe(15);
+
+        // 화려한 트윈 플라즈마 제트 불꽃 파티클
+        for (let i = 0; i < 10; i++) {
+            this.particles.push({
+                x: this.bird.x - 18,
+                y: this.bird.y + 4 + (Math.random() - 0.5) * 12,
+                vx: -120 - Math.random() * 140,
+                vy: 20 + (Math.random() - 0.5) * 80,
+                size: 4 + Math.random() * 4,
+                color: ['#00f3ff', '#ffd700', '#ff0055', '#a200ff'][Math.floor(Math.random() * 4)],
+                alpha: 1,
+                decay: 0.055
+            });
+        }
+    }
+
+    spawnPipe() {
+        const minTop = 60;
+        const maxTop = this.H - this.pipeGap - 60;
+        const topH = Math.floor(minTop + Math.random() * (maxTop - minTop));
+        const color = ['#ff0055', '#00f3ff', '#a200ff', '#ffe14d', '#3ed973'][Math.floor(Math.random() * 5)];
+        
+        this.pipes.push({
+            x: this.W + 10,
+            topH: topH,
+            bottomY: topH + this.pipeGap,
+            color: color,
+            passed: false
+        });
+    }
+
+    bindInput() {
+        this.on(this.canvas, 'touchstart', (e) => {
+            e.preventDefault();
+            sfx.init();
+            this.flap();
+        }, { passive: false });
+
+        this.on(this.canvas, 'mousedown', (e) => {
+            sfx.init();
+            this.flap();
+        });
+
+        this.on(window, 'keydown', (e) => {
+            if (!this.running) return;
+            if (e.key === ' ' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                sfx.init();
+                this.flap();
+            }
+        });
+    }
+
+    update(dt) {
+        this.updateFx(dt);
+        if (this.waitingFirstTap) return;
+
+        // 버드 물리
+        this.bird.vy += this.gravity * dt;
+        this.bird.y += this.bird.vy * dt;
+        this.bird.angle = Math.max(-0.45, Math.min(1.1, this.bird.vy * 0.0025));
+
+        // 천장 & 바닥 충돌
+        if (this.bird.y - this.bird.r < 0) {
+            this.bird.y = this.bird.r;
+            this.bird.vy = 0;
+        }
+        if (this.bird.y + this.bird.r > this.H) {
+            this.bird.y = this.H - this.bird.r;
+            sfx.hit();
+            vibe(90);
+            return this.gameOver();
+        }
+
+        // 파이프 스폰 & 이동
+        this.spawnTimer += dt;
+        if (this.spawnTimer >= this.spawnInterval) {
+            this.spawnTimer = 0;
+            this.spawnPipe();
+        }
+
+        for (let i = this.pipes.length - 1; i >= 0; i--) {
+            const p = this.pipes[i];
+            p.x -= this.speed * dt;
+
+            // 통과 점수 & 아슬아슬 Near Miss 콤보 보너스!
+            if (!p.passed && p.x + this.pipeWidth < this.bird.x) {
+                p.passed = true;
+                const distToTop = Math.abs(this.bird.y - this.bird.r - p.topH);
+                const distToBottom = Math.abs(this.bird.y + this.bird.r - p.bottomY);
+                const isNearMiss = distToTop < 18 || distToBottom < 18;
+
+                if (isNearMiss) {
+                    this.score += 2;
+                    this.setStat('score', this.score);
+                    this.addPopupText('⚡ NEAR MISS! +2', this.bird.x, this.bird.y - 28, '#ff0055');
+                    this.addSpark(this.bird.x, this.bird.y, '#ffd700', 20, 5);
+                    this.triggerShake(4, 0.15);
+                    sfx.blip(1200, 0.08, 'triangle', 0.06);
+                    vibe([0, 30, 30, 40]);
+                } else {
+                    this.score += 1;
+                    this.setStat('score', this.score);
+                    this.addPopupText('+1', this.bird.x, this.bird.y - 20, '#00f3ff');
+                    this.addSpark(this.bird.x, this.bird.y, '#00f3ff', 12, 4);
+                    sfx.good();
+                    vibe(18);
+                }
+
+                if (this.score % 5 === 0) {
+                    this.showReward();
+                }
+            }
+
+            // 충돌 검사 (AABB + Circle)
+            const bx = this.bird.x;
+            const by = this.bird.y;
+            const br = this.bird.r - 2;
+
+            const inX = bx + br > p.x && bx - br < p.x + this.pipeWidth;
+            const hitTop = inX && by - br < p.topH;
+            const hitBottom = inX && by + br > p.bottomY;
+
+            if (hitTop || hitBottom) {
+                this.triggerShake(8, 0.25);
+                this.addSpark(bx, by, '#ff0055', 25, 5);
+                sfx.hit();
+                vibe(90);
+                return this.gameOver();
+            }
+
+            if (p.x < -this.pipeWidth - 10) {
+                this.pipes.splice(i, 1);
+            }
+        }
+    }
+
+    draw() {
+        const ctx = this.ctx;
+        ctx.clearRect(0, 0, this.W, this.H);
+
+        // 파이프 렌더링 (일렉트릭 네온 레이저 기둥)
+        this.pipes.forEach(p => {
+            ctx.save();
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 16;
+            ctx.fillStyle = p.color;
+
+            // 상단 파이프
+            neonRect(ctx, p.x, 0, this.pipeWidth, p.topH, p.color, 4, 14);
+            // 상단 파이프 캡
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(p.x - 3, p.topH - 12, this.pipeWidth + 6, 12);
+
+            // 하단 파이프
+            neonRect(ctx, p.x, p.bottomY, this.pipeWidth, this.H - p.bottomY, p.color, 4, 14);
+            // 하단 파이프 캡
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(p.x - 3, p.bottomY, this.pipeWidth + 6, 12);
+
+            // 레이저 빔 글로우 이펙트 (위아래 파이프 사이)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 6]);
+            ctx.beginPath();
+            ctx.moveTo(p.x + this.pipeWidth / 2, p.topH);
+            ctx.lineTo(p.x + this.pipeWidth / 2, p.bottomY);
+            ctx.stroke();
+
+            ctx.restore();
+        });
+
+        // 🦅 네온 사이버 피닉스 렌더링 (오른쪽 진행 방향을 똑바로 바라보게 좌우 반전 & 3D 엠보싱)
+        const b = this.bird;
+        ctx.save();
+        ctx.translate(b.x, b.y);
+
+        // 진행 방향(오른쪽)에 맞추어 각도 회전
+        ctx.rotate(b.angle * 0.85);
+
+        // 🌟 피닉스 에너지 오라 링
+        const pulse = 1 + 0.12 * Math.sin(performance.now() * 0.012);
+        ctx.save();
+        ctx.shadowColor = this.score >= 10 ? '#ffd700' : '#00f3ff';
+        ctx.shadowBlur = 24;
+        ctx.strokeStyle = this.score >= 10 ? 'rgba(255, 215, 0, 0.7)' : 'rgba(0, 243, 255, 0.6)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, b.r * 1.5 * pulse, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        // 🚀 제트 부스터 꼬리 불꽃 (플라즈마 화염)
+        ctx.save();
+        const flameLength = (performance.now() - (this.flapTime || 0) < 250) ? 22 : 12;
+        const flamePulse = Math.sin(performance.now() * 0.03) * 3;
+        ctx.shadowColor = '#ff5500';
+        ctx.shadowBlur = 16;
+        ctx.fillStyle = '#ffaa00';
+        ctx.beginPath();
+        ctx.moveTo(-b.r * 0.8, -2);
+        ctx.lineTo(-b.r * 0.8 - flameLength - flamePulse, 2);
+        ctx.lineTo(-b.r * 0.8, 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.moveTo(-b.r * 0.8, 0);
+        ctx.lineTo(-b.r * 0.8 - flameLength * 0.6, 2);
+        ctx.lineTo(-b.r * 0.8, 4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        // 🦅 사이버 피닉스 이모지를 오른쪽으로 바라보도록 좌우 반전(scale(-1, 1))
+        ctx.scale(-1, 1);
+        ctx.shadowColor = this.score >= 10 ? '#ffd700' : '#00f3ff';
+        ctx.shadowBlur = 28;
+
+        // 크기를 시원하게 키우고 날갯짓 바운스 적용
+        const flapBounce = (performance.now() - (this.flapTime || 0) < 180) ? 1.15 : 1.0;
+        ctx.font = `${b.r * 3.4 * flapBounce}px "Outfit", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🦅', 0, 0);
+
+        // 5점 이상 달성 시 골드 크라운 👑 추가
+        if (this.score >= 5) {
+            ctx.font = `${b.r * 1.5}px "Outfit", sans-serif`;
+            ctx.fillText('👑', 4, -b.r * 1.5);
+        }
+
+        ctx.restore();
+
+        // 첫 시작 안내
+        if (this.waitingFirstTap && this.running) {
+            ctx.save();
+            ctx.fillStyle = '#ffd700';
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 12;
+            ctx.font = '900 15px ' + getComputedStyle(document.body).fontFamily;
+            ctx.textAlign = 'center';
+            ctx.fillText('화면을 탭하여 비상! · Tap to Flap', this.W / 2, this.H * 0.62);
+            ctx.restore();
+        }
+
+        this.drawFx(ctx);
+    }
+}
+
+
 const games = {
     slots: new Slots(),
     block: new BlockDrop(),
     shoot: new SpaceShooter(),
     snake: new Snake(),
-    brick: new BrickBreaker()
+    brick: new BrickBreaker(),
+    puzzle: new Neon2048(),
+    flappy: new FlappyNeon()
 };
 
 let current = null;
@@ -3612,7 +4603,7 @@ document.addEventListener('visibilitychange', () => {
             if (g.raf) cancelAnimationFrame(g.raf);
             g.showOverlay(`
                 <div class="ov-title">PAUSED</div>
-                <div class="ov-kr">일시정지</div>
+                <div class="ov-kr">일시정지 · Paused</div>
                 <div class="ov-score">${g.score}</div>
                 <button class="ov-btn">계속하기 · Resume</button>
             `);
@@ -3638,28 +4629,11 @@ document.addEventListener('visibilitychange', () => {
 
 /* HOT 테마 토글 — 켜고 끄면 body 클래스만 갈아끼우면 CSS 가 알아서 바뀝니다.
    지금 게임 중이면 다음 프레임에 캔버스 색도 따라옵니다. */
-const hotSw = document.getElementById('hot-sw');
 const menuSub = document.getElementById('menu-sub');
 
 function paintHot() {
     document.body.classList.toggle('hot', HOT.on);
-    hotSw.classList.toggle('on', HOT.on);
-    hotSw.setAttribute('aria-checked', HOT.on ? 'true' : 'false');
-    menuSub.innerHTML = HOT.on
-        ? '오늘 밤은 좀 뜨겁게 🔥<br>Turn the night up'
-        : '비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting';
 }
-
-hotSw.addEventListener('click', () => {
-    HOT.on = !HOT.on;
-    localStorage.setItem('gijoArcade_hot', HOT.on ? '1' : '0');
-    paintHot();
-    sfx.init();
-    sfx.blip(HOT.on ? 880 : 420, 0.07);
-    vibe(15);
-    // 메뉴에 있을 때는 다시 그릴 캔버스가 없고, 게임 중이면 루프가 알아서 반영합니다.
-    if (current && games[current] && !games[current].running) games[current].draw();
-});
 
 paintHot();
 

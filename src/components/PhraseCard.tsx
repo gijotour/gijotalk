@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { Phrase, Country } from '../types';
 import { playPhrase, unlockAudioPlayback, hasRecordedAudio } from '../utils/speech';
 import { track } from '../utils/analytics';
-import { Volume2, Mic, Maximize2, Bookmark, Info, Trash2, Sparkles } from 'lucide-react';
+import {
+  Volume2,
+  Mic,
+  Maximize2,
+  Bookmark,
+  Info,
+  Trash2,
+  Sparkles,
+} from 'lucide-react';
 
 interface PhraseCardProps {
   phrase: Phrase;

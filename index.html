@@ -42,5 +42,16 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          const swUrl = '%BASE_URL%sw.js';
+          navigator.serviceWorker
+            .register(swUrl)
+            .then((reg) => console.log('[GIJO Tour] Service Worker Registered:', reg.scope))
+            .catch((err) => console.warn('[GIJO Tour] Service Worker Registration Notice:', err));
+        });
+      }
+    </script>
   </body>
 </html>

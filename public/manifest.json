@@ -1,12 +1,12 @@
 {
-  "id": ".",
+  "id": "./",
   "name": "GIJO Tour — 지아이조 투어에서 제공하는 일정표 및 생활영어",
   "short_name": "GIJO Tour",
   "description": "지아이조 투어에서 제공하는 일정표 및 생활영어. 인터넷 없이 오늘 일정 확인, 발음 재생, 3초 긴급 전광판을 사용하세요.",
   "lang": "ko",
   "dir": "ltr",
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#FDFBF7",
   "theme_color": "#FF6B4A",
@@ -33,6 +33,22 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./assets/screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "GIJO Tour 모바일 회화 및 일정표 화면"
+    },
+    {
+      "src": "./assets/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "GIJO Tour 태블릿 및 데스크톱 뷰"
     }
   ],
   "shortcuts": [

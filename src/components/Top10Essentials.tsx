@@ -1,6 +1,6 @@
 import React from 'react';
 import { Country, Phrase } from '../types';
-import { Sparkles, Volume2, Maximize2, Star } from 'lucide-react';
+import { Volume2, Maximize2, Star } from 'lucide-react';
 import { playPhrase, unlockAudioPlayback } from '../utils/speech';
 
 interface Top10EssentialsProps {
@@ -10,67 +10,90 @@ interface Top10EssentialsProps {
   speed: number;
 }
 
+interface CorePhraseItem {
+  meaning: string;
+  original: string;
+  pronunciation: string;
+  category: Phrase['category'];
+}
+
+// 각 국가별 가장 기본적이고 쉬운 10대 필수 표현
+const SIMPLE_TOP_10: Record<string, CorePhraseItem[]> = {
+  ph: [
+    { meaning: '안녕하세요', original: 'Kumusta', pronunciation: '쿠무스타', category: '미팅/사교' },
+    { meaning: '감사합니다', original: 'Salamat', pronunciation: '살라맛', category: '미팅/사교' },
+    { meaning: '죄송합니다 / 실례합니다', original: 'Pasensya na / Excuse me', pronunciation: '파센샤 나 / 익스큐즈미', category: '미팅/사교' },
+    { meaning: '네 (예)', original: 'Opo', pronunciation: '오포', category: '미팅/사교' },
+    { meaning: '아니요', original: 'Hindi po', pronunciation: '힌디 포', category: '미팅/사교' },
+    { meaning: '얼마예요?', original: 'Magkano po ito?', pronunciation: '막카노 포 이토?', category: '흥정' },
+    { meaning: '깎아주세요', original: 'Discount naman po', pronunciation: '디스카운트 나만 포', category: '흥정' },
+    { meaning: '화장실 어디예요?', original: 'Nasaan ang CR?', pronunciation: '나사안 앙 시알?', category: '관광' },
+    { meaning: '도와주세요!', original: 'Tulong po!', pronunciation: '툴롱 포!', category: '비상' },
+    { meaning: '안녕히 계세요 / 잘 가요', original: 'Paalam / Bye', pronunciation: '파알람 / 바이', category: '미팅/사교' },
+  ],
+  vn: [
+    { meaning: '안녕하세요', original: 'Xin chào', pronunciation: '씬 짜오', category: '미팅/사교' },
+    { meaning: '감사합니다', original: 'Cảm ơn', pronunciation: '깜 언', category: '미팅/사교' },
+    { meaning: '죄송합니다 / 실례합니다', original: 'Xin lỗi', pronunciation: '씬 로이', category: '미팅/사교' },
+    { meaning: '네 (예)', original: 'Vâng / Dạ', pronunciation: '벙 / 야', category: '미팅/사교' },
+    { meaning: '아니요', original: 'Không', pronunciation: '콩', category: '미팅/사교' },
+    { meaning: '얼마예요?', original: 'Bao nhiêu tiền?', pronunciation: '바오 니에우 띠엔?', category: '흥정' },
+    { meaning: '깎아주세요', original: 'Bớt đi', pronunciation: '벗 디', category: '흥정' },
+    { meaning: '화장실 어디예요?', original: 'Nhà vệ sinh ở đâu?', pronunciation: '냐 베 신 어 더우?', category: '관광' },
+    { meaning: '도와주세요!', original: 'Cứu tôi với!', pronunciation: '끄우 또이 버이!', category: '비상' },
+    { meaning: '안녕히 계세요 / 잘 가요', original: 'Tạm biệt', pronunciation: '땀 비엣', category: '미팅/사교' },
+  ],
+  en: [
+    { meaning: '안녕하세요', original: 'Hello! / Hi', pronunciation: '헬로우 / 하이', category: '미팅/사교' },
+    { meaning: '감사합니다', original: 'Thank you!', pronunciation: '땡큐!', category: '미팅/사교' },
+    { meaning: '죄송합니다 / 실례합니다', original: 'Excuse me / Sorry', pronunciation: '익스큐즈미 / 쏘리', category: '미팅/사교' },
+    { meaning: '네 (예)', original: 'Yes, please', pronunciation: '예스, 플리즈', category: '미팅/사교' },
+    { meaning: '아니요', original: 'No, thank you', pronunciation: '노, 땡큐', category: '미팅/사교' },
+    { meaning: '얼마예요?', original: 'How much is this?', pronunciation: '하우 머치 이즈 디스?', category: '흥정' },
+    { meaning: '깎아주세요', original: 'Discount, please', pronunciation: '디스카운트, 플리즈', category: '흥정' },
+    { meaning: '화장실 어디예요?', original: 'Where is the restroom?', pronunciation: '웨어 이즈 더 레스트룸?', category: '관광' },
+    { meaning: '도와주세요!', original: 'Help me, please!', pronunciation: '헬프 미, 플리즈!', category: '비상' },
+    { meaning: '안녕히 계세요 / 잘 가요', original: 'Goodbye! / Bye', pronunciation: '굿바이 / 바이', category: '미팅/사교' },
+  ],
+};
+
 export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
   country,
   phrases,
   onOpenBillboard,
   speed,
 }) => {
-  // Find or match the 10 core expressions for current country
-  const top10List = React.useMemo(() => {
-    const list: Phrase[] = [];
-    const usedIds = new Set<string>();
+  const items = React.useMemo(() => {
+    const rawList = SIMPLE_TOP_10[country.id] || SIMPLE_TOP_10.en;
 
-    const targetKeywords = [
-      ['안녕', '반갑'],
-      ['감사', '고맙'],
-      ['실례', '죄송', '미안'],
-      ['얼마', '가격'],
-      ['깎아', '할인', '싸게'],
-      ['화장실'],
-      ['체크인', '예약'],
-      ['계산', '영수증', '계산서'],
-      ['도와', '살려', '도움'],
-      ['물', '생수', '얼음물'],
-    ];
-
-    targetKeywords.forEach((keys) => {
-      const found = phrases.find(
+    return rawList.map((item, idx) => {
+      // Find matching existing phrase in dataset for recorded audio if available
+      const matched = phrases.find(
         (p) =>
-          !usedIds.has(p.id) &&
-          keys.some(
-            (k) =>
-              p.translation.includes(k) ||
-              p.original.toLowerCase().includes(k) ||
-              (p.usageTip && p.usageTip.includes(k))
-          )
+          p.translation.includes(item.meaning) ||
+          p.original.toLowerCase().includes(item.original.toLowerCase().split('/')[0].trim())
       );
-      if (found) {
-        usedIds.add(found.id);
-        list.push(found);
-      }
+
+      const phraseObj: Phrase = {
+        id: matched?.id || `simple-top10-${country.id}-${idx}`,
+        countryId: country.id,
+        category: item.category,
+        original: item.original,
+        translation: item.meaning,
+        pronunciation: item.pronunciation,
+        audio: matched?.audio,
+        isEmergency: item.category === '비상',
+      };
+
+      return phraseObj;
     });
-
-    // If less than 10 found by keywords, fill up with top phrases
-    if (list.length < 10) {
-      phrases.forEach((p) => {
-        if (list.length < 10 && !usedIds.has(p.id)) {
-          usedIds.add(p.id);
-          list.push(p);
-        }
-      });
-    }
-
-    return list.slice(0, 10);
-  }, [phrases, country.id]);
+  }, [country.id, phrases]);
 
   const handlePlay = (e: React.MouseEvent, phrase: Phrase) => {
     e.stopPropagation();
     unlockAudioPlayback();
     void playPhrase(phrase, country, speed);
   };
-
-  if (top10List.length === 0) return null;
 
   return (
     <div className="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent border-2 border-amber-300/80 p-4 rounded-3xl shadow-xs space-y-3">
@@ -81,22 +104,22 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
           </div>
           <div>
             <h2 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
-              <span>{country.name} 여행 필수 10대 기본 표현</span>
-              <span className="text-[11px] px-2 py-0.5 bg-amber-100 text-amber-900 rounded-full font-bold">
-                TOP 10
+              <span>{country.name} 초간단 10대 기본 표현</span>
+              <span className="text-[10px] px-2 py-0.5 bg-amber-100 text-amber-900 rounded-full font-bold">
+                초기본 10
               </span>
             </h2>
             <p className="text-[11px] text-slate-600 font-medium">
-              도착하자마자 공항·택시·식당에서 가장 많이 쓰는 1초 생존 표현
+              안녕하세요·감사합니다 등 현지에서 1초 만에 바로 쓰는 가장 쉬운 표현
             </p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        {top10List.map((phrase, idx) => (
+        {items.map((phrase, idx) => (
           <div
-            key={`top10-${phrase.id}`}
+            key={phrase.id}
             onClick={() => onOpenBillboard(phrase)}
             className="bg-white hover:border-amber-400 p-3 rounded-2xl border-2 border-amber-100/80 flex items-center justify-between gap-2.5 cursor-pointer active:scale-95 transition-all shadow-xs group"
           >

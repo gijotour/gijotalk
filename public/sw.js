@@ -1,7 +1,7 @@
 // GIJO Tour Service Worker — 오프라인 우선 캐싱
 //
 // 릴리스할 때마다 VERSION 을 올리면 이전 캐시가 자동 정리됩니다.
-const VERSION = 'v33';
+const VERSION = 'v34';
 const SHELL_CACHE = `gijo-shell-${VERSION}`;
 const ASSET_CACHE = `gijo-assets-${VERSION}`;
 const FONT_CACHE = `gijo-fonts-${VERSION}`;
@@ -110,26 +110,22 @@ self.addEventListener('fetch', (event) => {
   if (url.hostname.endsWith('googleapis.com') && !isFontRequest(url)) return;
   if (url.hostname.endsWith('firebaseapp.com')) return;
 
-  // 0) 파티 게임: 캐시 우선. 한 번 열어두면 인터넷 없이도 실행됩니다.
-  //    HTML 한 장 + 그림 두 장이 1.8MB 라 설치 때 미리 받지 않습니다. 여행 첫날
-  //    데이터로 받게 하는 대신, 열어본 사람에게만 저장해 둡니다.
-  //    게임을 새 판으로 갈 때는 맨 위 VERSION 을 올리면 캐시가 통째로 정리됩니다.
+  // 0) 파티 게임: 네트워크 우선(최신 버전 즉시 반영), 오프라인 시 캐시 실행
   if (isGamePage(url)) {
     event.respondWith(
-      caches.match(request).then(async (hit) => {
-        if (hit) return hit;
-        try {
-          const response = await fetch(request);
+      fetch(request)
+        .then((response) => {
           if (response && response.ok && response.type === 'basic') {
             const copy = response.clone();
             caches.open(ASSET_CACHE).then((cache) => cache.put(request, copy));
           }
           return response;
-        } catch {
-          // 그림 하나가 안 받아졌다고 안내문을 그릴 수는 없습니다. 페이지일 때만.
+        })
+        .catch(async () => {
+          const hit = await caches.match(request);
+          if (hit) return hit;
           return request.mode === 'navigate' ? gameOfflineNotice() : Response.error();
-        }
-      })
+        })
     );
     return;
   }

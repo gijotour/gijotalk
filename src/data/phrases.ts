@@ -402,7 +402,7 @@ export const PHRASES: Phrase[] = [
     category: '항공',
     original: 'Cho tôi chỗ ngồi cạnh cửa sổ.',
     translation: '창가 쪽 좌석으로 주세요.',
-    pronunciation: '[찌어 토이 쪼 응오이 까인 꺼 소]',
+    pronunciation: '[쪼 또이 쪼 응오이 까잉 끄어 쏘]',
     toneGuide: 'Seat selection',
     usageTip: '베트남항공 / 비엣젯 체크인 시 시원한 바깥 풍경을 보고 싶다면 요청하세요.'
   },
@@ -422,7 +422,7 @@ export const PHRASES: Phrase[] = [
     category: '항공',
     original: 'Hành lý của tôi bị thất lạc.',
     translation: '제 수하물이 나오지 않았어요 / 분실되었습니다.',
-    pronunciation: '[행 리 꿔 토이 비 텃 락]',
+    pronunciation: '[행 리 꾸어 또이 비 텃 락]',
     toneGuide: 'Lost baggage alert',
     usageTip: '가방이 분실되었을 때 공항 안내소나 항공사 카운터에 빠르게 보여주세요.',
     isEmergency: true
@@ -433,7 +433,7 @@ export const PHRASES: Phrase[] = [
     category: '항공',
     original: 'Tôi đến đây để du lịch.',
     translation: '관광/여행 목적으로 왔습니다.',
-    pronunciation: '[토i 덴 데이 데 두 릭]',
+    pronunciation: '[또이 덴 데이 데 두 릭]',
     toneGuide: 'Immigration query',
     usageTip: '베트남 입국 심사관이 방문 목적을 물어볼 때 미소 지으며 대답하세요.'
   },
@@ -443,7 +443,7 @@ export const PHRASES: Phrase[] = [
     category: '항공',
     original: 'Cho tôi xin một cốc nước.',
     translation: '물 한 잔만 부탁드립니다.',
-    pronunciation: '[찌어 토이 신 못 꼭 믁]',
+    pronunciation: '[쪼 또이 신 못 꼭 느억]',
     toneGuide: 'Water order',
     usageTip: '기내나 공항 라운지에서 물을 요청할 때 유용합니다.'
   },
@@ -455,7 +455,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Tôi muốn nhận phòng / Check-in.',
     translation: '체크인 하려고 합니다.',
-    pronunciation: '[토이 무온 녛 퐁 / 체크인]',
+    pronunciation: '[또이 무온 년 퐁 / 체크인]',
     toneGuide: 'Hotel check-in',
     usageTip: '호텔 리셉션에서 예약 바우처와 여권을 제출하며 건네세요.'
   },
@@ -465,7 +465,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Tôi có thể gửi hành lý ở đây không?',
     translation: '짐을 잠시 맡길 수 있을까요?',
-    pronunciation: '[토이 까 테 구이 행 리 어 데이 콤?]',
+    pronunciation: '[또이 꼬 테 구이 행 리 어 데이 콤?]',
     toneGuide: 'Luggage storage',
     usageTip: '체크인 전이나 체크아웃 후 여행을 즐기기 위해 짐을 맡길 때 요청하세요.'
   },
@@ -475,7 +475,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Mật khẩu Wi-Fi là gì?',
     translation: '와이파이 비밀번호가 무엇인가요?',
-    pronunciation: '[멋 껍 와이파이 라 지?]',
+    pronunciation: '[맛 커우 와이파이 라 지?]',
     toneGuide: 'Wi-Fi request',
     usageTip: '객실 입실 후 또는 호텔 로비 카페 이용 시 물어보세요.'
   },
@@ -485,7 +485,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Cho tôi xin thêm khăn tắm.',
     translation: '수건 좀 더 주실 수 있나요?',
-    pronunciation: '[찌어 토이 신 템 깐 탐]',
+    pronunciation: '[쪼 또이 신 템 칸 땀]',
     toneGuide: 'Towel request',
     usageTip: '물놀이 후 타월이 더 필요할 때 룸서비스로 요청해보세요.'
   },
@@ -495,7 +495,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Máy lạnh / Nước nóng bị hỏng.',
     translation: '에어컨/온수가 작동하지 않아요.',
-    pronunciation: '[마이 라잉 / 믁 농 비 홍]',
+    pronunciation: '[마이 라잉 / 느억 농 비 홍]',
     toneGuide: 'Room issue alert',
     usageTip: '덥거나 샤워 시 온수가 나오지 않을 때 프런트에 고장을 알리세요.',
     isEmergency: true
@@ -506,7 +506,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Mấy giờ có ăn sáng?',
     translation: '조식 식사 시간이 몇 시인가요?',
-    pronunciation: '[메이 지어 까 안 상?]',
+    pronunciation: '[메이 지어 꼬 안 상?]',
     toneGuide: 'Breakfast hours',
     usageTip: '아침 조식 뷔페 시작/마감 시간을 확인할 때 질문하세요.'
   },
@@ -516,7 +516,7 @@ export const PHRASES: Phrase[] = [
     category: '호텔',
     original: 'Giúp tôi gọi taxi được không?',
     translation: '택시 좀 불러주실 수 있나요?',
-    pronunciation: '[줍 토이 고이 택시 뛐 콤?]',
+    pronunciation: '[줍 또이 고이 택시 드억 콤?]',
     toneGuide: 'Taxi dispatch',
     usageTip: '공항으로 출발할 때 호텔 로비 직원에게 정중히 도움을 청하세요.'
   },
@@ -528,7 +528,7 @@ export const PHRASES: Phrase[] = [
     category: '교통',
     original: 'Cho tôi dừng ở đây!',
     translation: '여기 세워주세요!',
-    pronunciation: '[찌어 토이 쯩 어 데이!]',
+    pronunciation: '[쪼 또이 등 어 데이!]',
     toneGuide: 'Clear & Direct',
     usageTip: '그랩(Grab) 차 안이나 시클로, 오토바이 탈 때 내릴 곳에 외치세요.',
     isEmergency: true
@@ -539,7 +539,7 @@ export const PHRASES: Phrase[] = [
     category: '교통',
     original: 'Bật đồng hồ mét lên!',
     translation: '미터기 켜주세요!',
-    pronunciation: '[밧 똥 호 메트 렌!]',
+    pronunciation: '[밧 동 호 멧 렌!]',
     toneGuide: 'Firm direction',
     usageTip: '일반 마이린(Mai Linh) 택시 승차 시 바가지 예방에 쓰입니다.'
   },
@@ -561,7 +561,7 @@ export const PHRASES: Phrase[] = [
     category: '식당',
     original: 'Không cho rau mùi / Ngò rí!',
     translation: '고수(라우 무이) 넣지 마세요!',
-    pronunciation: '[콤 찌어 라우 무이!]',
+    pronunciation: '[콩 쪼 라우 무이!]',
     toneGuide: 'Important restriction',
     usageTip: '쌀국수(Pho)나 반미(Banh Mi) 주문 시 필수 표현입니다.',
     isEmergency: true
@@ -591,8 +591,8 @@ export const PHRASES: Phrase[] = [
     countryId: 'vn',
     category: '식당',
     original: 'Cho tôi nước đá!',
-    translation: '얼음물 주세용!',
-    pronunciation: '[찌어 토이 믁 다!]',
+    translation: '얼음물 주세요!',
+    pronunciation: '[쪼 또이 느억 다!]',
     toneGuide: 'Beverage order',
     usageTip: '베트남 더운 날씨에 시원한 얼음물을 요청할 때 쓰입니다.'
   },
@@ -604,7 +604,7 @@ export const PHRASES: Phrase[] = [
     category: '흥정',
     original: 'Bao nhiêu tiền?',
     translation: '얼마예요?',
-    pronunciation: '[바오 뇨 띠엔?]',
+    pronunciation: '[바오 니에우 띠엔?]',
     toneGuide: 'Inquiry',
     usageTip: '벤탄 시장이나 하노이 야시장에서 물건 가리키며 질문하세요.'
   },
@@ -614,7 +614,7 @@ export const PHRASES: Phrase[] = [
     category: '흥정',
     original: 'Đắt quá, giảm giá đi!',
     translation: '너무 비싸요, 깎아주세요!',
-    pronunciation: '[닥 까, 믐 자 디!]',
+    pronunciation: '[닷 꽈, 잠 자 디!]',
     toneGuide: 'Playful bargaining',
     usageTip: '처음 상인이 부른 값의 30~50% 정도 낮춰 부르기 전 사용해 보세요.'
   },
@@ -624,17 +624,12 @@ export const PHRASES: Phrase[] = [
     category: '흥정',
     original: 'Cảm ơn nhiều!',
     translation: '정말 감사합니다!',
-    pronunciation: '[깝 으엉 뇨!]',
+    pronunciation: '[깜 언 니에우!]',
     toneGuide: 'Polite thanks',
     usageTip: '친절한 현지인이나 가이드에게 진심 어린 감사를 전해보세요.'
   },
 
   // [미팅/사교]
-  //
-  // ⚠️ 원래 이 6개는 "Em đẹp lắm!(너무 예뻐요)" 처럼 헌팅에 가까운 톤이었습니다.
-  //    phrases.vn.social.ts 를 필리핀판과 같은 인사·스몰토크·정중한 거절 축으로
-  //    새로 채우면서, 기존 카테고리와 톤이 어긋나지 않도록 이 6개도 같은 축—
-  //    친구되기·연락처·가벼운 제안·호의·작별 — 으로 다시 썼습니다.
   {
     id: 'vn-13',
     countryId: 'vn',
@@ -703,7 +698,7 @@ export const PHRASES: Phrase[] = [
     category: '비상',
     original: 'Nhà vệ sinh ở đâu?',
     translation: '화장실이 어디예요?',
-    pronunciation: '[냐 웨 싱 어 더우?]',
+    pronunciation: '[냐 베 신 어 더우?]',
     toneGuide: 'Urgent',
     usageTip: '카페나 식당에서 긴급할 때 물어보세요.',
     isEmergency: true
@@ -714,7 +709,7 @@ export const PHRASES: Phrase[] = [
     category: '비상',
     original: 'Cứu tôi với!',
     translation: '도와주세요! 살려주세요!',
-    pronunciation: '[끼우 토이 워이!]',
+    pronunciation: '[끄우 또이 버이!]',
     toneGuide: 'Critical emergency',
     usageTip: '긴급한 상황 발생 시 화면 전광판 모드로 큰 소리로 내보내세요.',
     isEmergency: true

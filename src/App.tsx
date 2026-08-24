@@ -25,24 +25,33 @@ import { PronunciationModal } from './components/PronunciationModal';
 import { ItineraryTab } from './components/ItineraryTab';
 import { PartyGameModal } from './components/PartyGameModal';
 import { ArcadeModal } from './components/ArcadeModal';
+import { EntryGuideModal } from './components/EntryGuideModal';
+import { Top10Essentials } from './components/Top10Essentials';
 import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
 import { BottomNav, TabType } from './components/BottomNav';
 
-import { Search, Sparkles, Bookmark, ShieldAlert, Maximize2, Camera } from 'lucide-react';
+import {
+  Search,
+  Sparkles,
+  Bookmark,
+  ShieldAlert,
+  Maximize2,
+  Camera,
+  Languages,
+  Plane,
+  CheckCircle2,
+} from 'lucide-react';
 
 export default function App() {
   // 잠금. 풀리기 전에는 앱의 어떤 화면도 그리지 않습니다.
-  // 주소에 실린 일정표(#sheet=·#itin=)는 해시에 그대로 남아 있으므로,
-  // 잠금을 푼 뒤 일정 탭이 열리면서 정상적으로 반영됩니다.
   const [unlocked, setUnlocked] = useState(() => isUnlocked());
 
   // Country & Filter States
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('전체');
   const [searchQuery, setSearchQuery] = useState('');
-  // 카톡방의 일정표 링크를 누르고 들어온 사람은 회화가 아니라 일정을 보러 온 것입니다.
   const [activeTab, setActiveTab] = useState<TabType>(() =>
     hasItineraryLink() ? 'itinerary' : 'translate'
   );
@@ -61,6 +70,17 @@ export default function App() {
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
   const [showPartyGame, setShowPartyGame] = useState<boolean>(false);
   const [showArcade, setShowArcade] = useState<boolean>(false);
+  const [showEntryGuide, setShowEntryGuide] = useState<boolean>(false);
+
+  // 언어 변경 안내 토스트
+  const [languageNotice, setLanguageNotice] = useState<string | null>(null);
+
+  const handleSelectCountry = (country: typeof COUNTRIES[0]) => {
+    setSelectedCountry(country);
+    setSelectedCategory('전체');
+    setLanguageNotice(`${country.flag} ${country.name} (${country.language}) 회화로 전환되었습니다.`);
+    setTimeout(() => setLanguageNotice(null), 3500);
+  };
 
   // Custom AI-generated Phrases State
   const [customPhrases, setCustomPhrases] = useState<Phrase[]>(() => {
@@ -83,8 +103,6 @@ export default function App() {
 
   const handleAddCustomPhrase = (newPhrase: Phrase) => {
     setCustomPhrases((prev) => {
-      // 같은 질문을 반복하면 내용이 같은 문장이 계속 쌓입니다.
-      // id 는 생성 시각이라 매번 다르므로 원문 기준으로 중복을 막습니다.
       const isDuplicate = prev.some(
         (p) =>
           p.id === newPhrase.id ||
@@ -111,7 +129,6 @@ export default function App() {
       persistCustomPhrases(updated);
       return updated;
     });
-    // 지운 문장이 보관함에 남아 유령 항목이 되지 않게 함께 정리합니다.
     setBookmarkedIds((prev) => {
       if (!prev.includes(phraseId)) return prev;
       const updated = prev.filter((id) => id !== phraseId);
@@ -120,12 +137,9 @@ export default function App() {
     });
   }, []);
 
-
   // Register PWA Service Worker & Load Bookmarks on Mount
   useEffect(() => {
     registerServiceWorker();
-    // 오디오가 바뀌었으면 저장해 둔 것을 새 판으로 갈아둡니다.
-    // 새것을 다 받은 뒤에 옛것을 지우므로, 도중에 끊겨도 음성이 사라지지 않습니다.
     void syncAudioCache();
     setBookmarkedIds(getSavedBookmarkIds());
 
@@ -142,14 +156,10 @@ export default function App() {
   }, []);
 
   // Bookmark Toggle Handler
-  // localStorage 를 다시 읽지 않고 현재 상태를 넘깁니다.
-  // 저장소를 재조회하면 화면 상태와 어긋난 값 위에 덮어쓰게 됩니다.
   const handleToggleBookmark = useCallback((id: string) => {
     setBookmarkedIds((prev) => toggleBookmarkId(id, prev));
   }, []);
 
-  // 아래 파생값들은 매 렌더마다 새 배열을 만듭니다.
-  // 메모이제이션하지 않으면 목록이 바뀔 때마다 카드가 전부 다시 그려집니다.
   const allPhrases = useMemo(() => [...PHRASES, ...customPhrases], [customPhrases]);
 
   const countryPhrases = useMemo(
@@ -171,7 +181,7 @@ export default function App() {
     });
   }, [countryPhrases, selectedCategory, searchQuery]);
 
-  // Calculate category item counts for current country (한 번만 순회)
+  // Calculate category item counts for current country
   const categoryCounts = useMemo(() => {
     const counts: Record<CategoryId, number> = {
       '전체': countryPhrases.length,
@@ -198,19 +208,11 @@ export default function App() {
     [allPhrases, bookmarkedIds]
   );
 
-  // 긴급 전광판용 목록.
-  // 예전에는 '교통' 카테고리 전체를 넣어 긴급하지 않은 문장까지 섞였습니다.
-  // 이제 명시적으로 긴급 표시된 문장과 '비상' 카테고리만 봅니다.
   const emergencyPhrases = useMemo(
     () => countryPhrases.filter((p) => p.isEmergency || p.category === '비상'),
     [countryPhrases]
   );
 
-  // 긴급 목록을 두 덩어리로 나눕니다.
-  //
-  //   회화가 늘면서 긴급 탭이 26개가 됐습니다. "3초 긴급" 이 컨셉인데 도난·부상·미아
-  //   같은 진짜 급한 것과 "아파요(마사지)" "구명조끼" 가 한 줄에 섞여 있으면
-  //   정작 급할 때 못 찾습니다. 진짜 비상을 위로 올리고 나머지는 아래로 내립니다.
   const criticalPhrases = useMemo(
     () => emergencyPhrases.filter((p) => p.category === '비상'),
     [emergencyPhrases]
@@ -220,17 +222,11 @@ export default function App() {
     [emergencyPhrases]
   );
 
-  // 북마크한 문장은 다른 나라 것일 수 있으므로 문장 자신의 국가를 씁니다.
   const countryForPhrase = useCallback(
     (p: Phrase) => COUNTRIES.find((c) => c.id === p.countryId) || selectedCountry,
     [selectedCountry]
   );
 
-  // "검색했는데 결과가 없었다" 기록.
-  // 이 앱에서 가장 값진 데이터입니다 — 다음에 어떤 문장을 추가해야 하는지
-  // 사용자가 직접 알려주는 셈이기 때문입니다.
-  //
-  // 타이핑 도중(ㄱ, 경, 경차…)마다 찍으면 노이즈가 되므로 멈춘 뒤에만 기록합니다.
   useEffect(() => {
     const query = searchQuery.trim();
     if (query.length < 2 || filteredPhrases.length > 0) return;
@@ -246,11 +242,9 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [searchQuery, filteredPhrases.length, selectedCountry.id, selectedCategory]);
 
-
   if (!unlocked) return <LockScreen onUnlock={() => setUnlocked(true)} />;
 
   return (
-    // 하단 여백은 고정 네비게이션 높이 + safe-area 만큼 확보합니다.
     <div
       className="min-h-screen bg-canvas text-ink flex flex-col font-['Inter']"
       style={{ paddingBottom: 'calc(5.5rem + env(safe-area-inset-bottom))' }}
@@ -261,10 +255,7 @@ export default function App() {
       {/* Top App Header */}
       <Header
         selectedCountry={selectedCountry}
-        onSelectCountry={(c) => {
-          setSelectedCountry(c);
-          setSelectedCategory('전체');
-        }}
+        onSelectCountry={handleSelectCountry}
         onOpenAIAssistant={() => setShowAIAssistant(true)}
         onOpenEmergencyModal={() => {
           if (emergencyPhrases.length > 0) {
@@ -273,16 +264,25 @@ export default function App() {
         }}
         onOpenPartyGame={() => setShowPartyGame(true)}
         onOpenArcade={() => setShowArcade(true)}
+        onOpenEntryGuide={() => setShowEntryGuide(true)}
       />
+
+      {/* 언어 변경 가이드 플로팅 알림 */}
+      {languageNotice && (
+        <div className="fixed top-14 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="bg-slate-900/95 text-white backdrop-blur-md px-4 py-2 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold border border-white/20">
+            <Languages className="w-4 h-4 text-brand" />
+            <span>{languageNotice}</span>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main className="flex-grow w-full max-w-screen-md mx-auto px-3 sm:px-6 py-4 space-y-4">
         {/* TAB 1: 회화 / 번역 메인 뷰 */}
         {activeTab === 'translate' && (
           <div className="space-y-4 animate-in fade-in duration-150">
-            {/* 검색 + 액션.
-                예전에는 검색줄 아래로 프로모 배너 2개가 화면을 채워서, 정작 회화 카드가
-                첫 화면 아래로 밀려나 있었습니다. 배너를 아이콘 버튼으로 접었습니다. */}
+            {/* 검색 + 액션 */}
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
@@ -304,8 +304,17 @@ export default function App() {
                 )}
               </div>
 
+              {/* 입국심사 가이드 퀵버튼 */}
+              <button
+                onClick={() => setShowEntryGuide(true)}
+                aria-label="입국심사 서류 가이드"
+                title="필리핀·베트남 입국심사 가이드"
+                className="w-13 h-13 shrink-0 flex items-center justify-center bg-blue-50 hover:bg-blue-100 border-2 border-blue-200 text-blue-800 rounded-2xl shadow-xs active:scale-95 transition-all"
+              >
+                <Plane className="w-5 h-5 text-blue-600" />
+              </button>
 
-              {/* 사진 번역 · AI 모두 서버가 필요합니다. 정적 배포에서는 숨깁니다. */}
+              {/* 사진 번역 · AI (서버 필요) */}
               {!IS_STATIC_BUILD && (
                 <button
                   onClick={() => setShowPhotoModal(true)}
@@ -328,6 +337,9 @@ export default function App() {
               )}
             </div>
 
+            {/* [상단 이동 완료] 언어 오디오 오프라인 다운로드 카드 */}
+            <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
+
             {/* Category Chips */}
             <CategoryChips
               selectedCategory={selectedCategory}
@@ -335,9 +347,23 @@ export default function App() {
               categoryCounts={categoryCounts}
             />
 
+            {/* [첫 화면 상단 10대 기본 표현] 검색어 없고 '전체' 카테고리일 때 첫장에 바로 노출 */}
+            {selectedCategory === '전체' && !searchQuery && (
+              <Top10Essentials
+                country={selectedCountry}
+                phrases={countryPhrases}
+                onOpenBillboard={setBillboardPhrase}
+                speed={speed}
+              />
+            )}
+
             {/* Phrase Cards Feed */}
             {filteredPhrases.length > 0 ? (
               <div className="space-y-3">
+                <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-500">
+                  <span>{selectedCategory} 회화 목록 ({filteredPhrases.length})</span>
+                  <span>터치 시 전광판 ➔</span>
+                </div>
                 {filteredPhrases.map((phrase) => (
                   <PhraseCard
                     key={phrase.id}
@@ -381,16 +407,12 @@ export default function App() {
               </div>
             )}
 
-            {/* 오프라인 저장 — 목록 아래에 두어 먼저 회화가 보이게 합니다. */}
-            <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
-
-            {/* 사용 기록 첫 안내 — 정적 배포에서는 수집 자체를 하지 않습니다. */}
+            {/* 사용 기록 안내 */}
             {!IS_STATIC_BUILD && <PrivacyNotice />}
           </div>
         )}
 
-
-        {/* TAB 2: 일정표 — 가이드가 보낸 .txt 파일을 올려서 오프라인으로 봅니다 */}
+        {/* TAB 2: 일정표 */}
         {activeTab === 'itinerary' && (
           <ItineraryTab
             country={selectedCountry}
@@ -561,7 +583,6 @@ export default function App() {
       </main>
 
       {/* Bottom Fixed Navigation Bar */}
-
       <BottomNav
         activeTab={activeTab}
         onChangeTab={setActiveTab}
@@ -599,16 +620,22 @@ export default function App() {
         />
       )}
 
+      {/* MODAL 4: 입국심사 및 필수 서류 가이드 */}
+      {showEntryGuide && (
+        <EntryGuideModal
+          country={selectedCountry}
+          onClose={() => setShowEntryGuide(false)}
+        />
+      )}
 
-      {/* 사진 번역 — 메뉴판·표지판·약봉투 */}
+      {/* 사진 번역 */}
       {showPhotoModal && (
         <PhotoTranslateModal country={selectedCountry} onClose={() => setShowPhotoModal(false)} />
       )}
 
-      {/* 파티 게임 — 헤더 아이콘에서 탭 갈아타지 않고 바로 뜹니다 */}
+      {/* 파티 게임 & 아케이드 */}
       {showPartyGame && <PartyGameModal onClose={() => setShowPartyGame(false)} />}
       {showArcade && <ArcadeModal onClose={() => setShowArcade(false)} />}
-
     </div>
   );
 }

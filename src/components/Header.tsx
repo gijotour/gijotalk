@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2 } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2, Plane, Languages } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
@@ -10,6 +10,7 @@ interface HeaderProps {
   onOpenEmergencyModal: () => void;
   onOpenPartyGame: () => void;
   onOpenArcade: () => void;
+  onOpenEntryGuide: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenEmergencyModal,
   onOpenPartyGame,
   onOpenArcade,
+  onOpenEntryGuide,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -42,9 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-md px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 border-b border-orange-100 shadow-xs">
-      {/* 브랜드.
-          min-w-0 + whitespace-nowrap 이 없으면 좁은 화면에서 우측 버튼에 밀려
-          제목이 글자 단위로 세로로 쪼개집니다. */}
+      {/* 브랜드 */}
       <div className="flex items-center gap-2 min-w-0">
         <div className="bg-brand p-1.5 rounded-xl text-white shrink-0">
           <Globe className="w-4 h-4" />
@@ -53,7 +53,6 @@ export const Header: React.FC<HeaderProps> = ({
           <h1 className="text-base sm:text-lg font-black tracking-tight text-ink font-display whitespace-nowrap">
             GIJO Tour
           </h1>
-          {/* 좁은 화면에서는 숨깁니다 — 이 줄이 제목을 밀어내던 주범입니다. */}
           <p className="text-xs text-ink-mute font-medium whitespace-nowrap hidden md:block">
             지아이조 투어에서 제공하는 일정표 및 생활영어
           </p>
@@ -62,8 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Country Selector & Action Buttons */}
       <div className="flex items-center gap-1.5 shrink-0">
-        {/* Country Selector — 국가가 하나뿐이면 고정 배지로 표시합니다.
-            config.ts 의 ENABLED_COUNTRY_IDS 에 나라를 추가하면 자동으로 드롭다운이 됩니다. */}
+        {/* Country & Language Selector */}
         {IS_SINGLE_COUNTRY ? (
           <div className="flex items-center gap-1.5 bg-white border-2 border-accent text-ink px-2.5 py-1 rounded-full font-bold shadow-xs text-xs whitespace-nowrap">
             <span className="text-base leading-none">{selectedCountry.flag}</span>
@@ -76,16 +74,22 @@ export const Header: React.FC<HeaderProps> = ({
             aria-haspopup="listbox"
             aria-expanded={dropdownOpen}
             className="flex items-center gap-1.5 bg-white hover:bg-orange-50/50 border-2 border-accent text-ink px-2.5 py-1 rounded-full transition-all active:scale-95 font-bold shadow-xs text-xs whitespace-nowrap"
+            title="언어 및 여행 국가 변경"
           >
+            <Languages className="w-3.5 h-3.5 text-brand" />
             <span className="text-base leading-none">{selectedCountry.flag}</span>
             <span>{selectedCountry.name}</span>
             <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-52 bg-white border-2 border-orange-100 rounded-2xl shadow-2xl overflow-hidden z-[100] animate-in fade-in zoom-in-95 duration-150">
-              <div className="p-2.5 bg-canvas border-b border-orange-100 text-xs font-bold text-ink-mute px-3 uppercase tracking-wider">
-                여행 국가 선택
+            <div className="absolute right-0 mt-2 w-56 bg-white border-2 border-orange-100 rounded-2xl shadow-2xl overflow-hidden z-[100] animate-in fade-in zoom-in-95 duration-150">
+              <div className="p-2.5 bg-canvas border-b border-orange-100 flex items-center justify-between text-xs font-bold text-ink-mute px-3 tracking-wider">
+                <span className="flex items-center gap-1">
+                  <Languages className="w-3.5 h-3.5 text-brand" />
+                  <span>언어 및 국가 변경</span>
+                </span>
+                <span className="text-[10px] text-brand bg-orange-100/60 px-1.5 py-0.5 rounded-md">선택</span>
               </div>
               <div className="py-1 max-h-64 overflow-y-auto">
                 {COUNTRIES.map((c) => (
@@ -103,9 +107,14 @@ export const Header: React.FC<HeaderProps> = ({
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-lg">{c.flag}</span>
-                      <span className="font-bold">{c.name}</span>
+                      <div>
+                        <div className="font-bold">{c.name}</div>
+                        <div className="text-[11px] text-ink-mute">{c.language}</div>
+                      </div>
                     </div>
-                    <span className="text-xs text-ink-mute font-medium">{c.language}</span>
+                    {c.id === selectedCountry.id && (
+                      <span className="w-2 h-2 rounded-full bg-brand"></span>
+                    )}
                   </button>
                 ))}
               </div>
@@ -113,6 +122,17 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
         )}
+
+        {/* 입국심사 서류 가이드 버튼 */}
+        <button
+          onClick={onOpenEntryGuide}
+          aria-label="입국심사 및 필수 서류 가이드"
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 rounded-full text-xs font-bold transition-all active:scale-95 shrink-0 whitespace-nowrap"
+          title="필리핀·베트남 입국심사 & e-Travel 서류 가이드"
+        >
+          <Plane className="w-3.5 h-3.5 text-blue-600" />
+          <span className="hidden sm:inline">입국심사</span>
+        </button>
 
         {/* AI Travel Assistant Trigger — 서버 필요 */}
         {!IS_STATIC_BUILD && (
@@ -123,13 +143,11 @@ export const Header: React.FC<HeaderProps> = ({
           title="AI 상황별 맞춤 회화 질문"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-200" />
-          {/* 'xs' 는 Tailwind 기본 브레이크포인트가 아니라 이 라벨이 항상 숨어 있었습니다. */}
           <span className="hidden sm:inline">AI 질문</span>
         </button>
         )}
 
-
-        {/* 파티 게임 직행 — 긴급 버튼 바로 옆. 둘 다 "탭 갈아타지 않고 바로 뜨는" 같은 성격입니다. */}
+        {/* 파티 게임 직행 */}
         <button
           onClick={onOpenPartyGame}
           aria-label="파티 게임 실행"
@@ -139,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({
           <PartyPopper className="w-4 h-4" />
         </button>
 
-        {/* 오프라인 아케이드 — 비행기·대기 시간용. 파티 게임과 성격이 달라 따로 뒀습니다. */}
+        {/* 오프라인 아케이드 */}
         <button
           onClick={onOpenArcade}
           aria-label="오프라인 아케이드 게임 실행"

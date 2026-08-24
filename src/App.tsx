@@ -356,6 +356,7 @@ export default function App() {
                 onSetSpeed={setSpeed}
                 isBookmarked={(id) => bookmarkedIds.includes(id)}
                 onToggleBookmark={handleToggleBookmark}
+                onOpenMicPractice={setMicPracticePhrase}
               />
             )}
 

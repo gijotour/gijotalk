@@ -14,7 +14,7 @@ import {
   ChevronUp,
 } from 'lucide-react';
 
-interface PhraseCardProps {
+export interface PhraseCardProps {
   phrase: Phrase;
   country: Country;
   speed: number;
@@ -70,13 +70,13 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
       className={`rounded-2xl border-2 transition-all duration-200 overflow-hidden shadow-xs ${
         isExpanded
           ? 'bg-white border-brand-vivid shadow-md ring-2 ring-brand-vivid/20'
-          : 'bg-white border-slate-200/90 hover:border-brand-vivid/50'
+          : 'bg-white border-slate-200/90 hover:border-brand-vivid/60'
       }`}
     >
-      {/* 1. 컴팩트 리스트 헤더 (터치 시 카드 형태로 펼쳐짐 + 빠른 액션 바) */}
+      {/* 1. 컴팩트 리스트 헤더 (터치 시 카드 형태로 펼쳐짐) */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="p-3.5 flex items-center justify-between gap-2.5 cursor-pointer select-none active:bg-slate-50"
+        className="p-3.5 flex items-center justify-between gap-2.5 cursor-pointer select-none active:bg-orange-50/30"
       >
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
           {index !== undefined && (
@@ -103,7 +103,7 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
           </div>
         </div>
 
-        {/* 오른쪽 빠른 원터치 액션 버튼들 */}
+        {/* 우측 빠른 액션 그룹 */}
         <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
           {/* 전광판 */}
           <button
@@ -159,7 +159,7 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
 
       {/* 2. 탭하면 카드 형태로 자세히 나오는 영역 (Expandable Detailed Card) */}
       {isExpanded && (
-        <div className="px-4 pb-4 pt-2 border-t border-slate-100 bg-orange-50/20 space-y-3 animate-in fade-in zoom-in-98 duration-150">
+        <div className="px-4 pb-4 pt-2.5 border-t border-slate-100 bg-orange-50/20 space-y-3 animate-in fade-in zoom-in-98 duration-150">
           {/* 상단 태그 & 북마크 */}
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2 flex-wrap">

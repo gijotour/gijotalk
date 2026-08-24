@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "GIJO Tour — 지아이조 투어에서 제공하는 일정표 및 생활영어",
+  "name": "GIJO Tour",
   "short_name": "GIJO Tour",
-  "description": "지아이조 투어에서 제공하는 일정표 및 생활영어. 인터넷 없이 오늘 일정 확인, 발음 재생, 3초 긴급 전광판을 사용하세요.",
+  "description": "지아이조 투어에서 제공하는 일정표 및 베트남·필리핀 여행 생활 회화 사전",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./",
@@ -10,10 +10,13 @@
   "display": "standalone",
   "background_color": "#FDFBF7",
   "theme_color": "#FF6B4A",
-  "orientation": "portrait",
+  "orientation": "any",
+  "prefer_related_applications": false,
+  "related_applications": [],
   "categories": [
     "travel",
-    "education"
+    "lifestyle",
+    "utilities"
   ],
   "icons": [
     {
@@ -48,7 +51,7 @@
       "sizes": "1920x1080",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "GIJO Tour 태블릿 및 데스크톱 뷰"
+      "label": "GIJO Tour 데스크톱 화면"
     }
   ],
   "shortcuts": [

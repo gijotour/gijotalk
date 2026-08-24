@@ -34,10 +34,19 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,900;1,700;1,900&display=swap"
-      rel="stylesheet"
-    />
+    <!-- PWA: Service Worker 즉시 등록 (PWABuilder & Store 심사용) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('%BASE_URL%sw.js', { scope: '%BASE_URL%' })
+          .then(function (reg) {
+            console.log('[GIJO Tour] PWA Service Worker Ready:', reg.scope);
+          })
+          .catch(function (err) {
+            console.warn('[GIJO Tour] SW Notice:', err);
+          });
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

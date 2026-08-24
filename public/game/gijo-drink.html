@@ -2771,12 +2771,7 @@ body.hot .hot-toggle-btn {
         <section id="screen-finger" class="screen hidden finger-screen">
             <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
             <h2 class="neon-text">GIJO Touch Roulette<br><span class="title-kr">터치 룰렛</span></h2>
-            <div class="mode-selector-bar">
-                <button class="mode-tab-btn active" id="finger-tab-solo" onclick="app.setFingerMode('solo')">🎯 1명 · Solo</button>
-                <button class="mode-tab-btn" id="finger-tab-duo" onclick="app.setFingerMode('duo')">👥 2명 · Duo</button>
-                <button class="mode-tab-btn" id="finger-tab-team" onclick="app.setFingerMode('team')">⚔️ 팀 · Team</button>
-            </div>
-            <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen! (Mobile/Tablet only)</span></div>
+            <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen! (Mobile/Tablet)</span></div>
             <div id="finger-area" class="finger-area"></div>
         </section>
 
@@ -3825,9 +3820,8 @@ const app = {
         clearTimeout(this.fingerTimer);
         clearInterval(this.fingerCountdownInterval);
         const count = Object.keys(this.fingerTouches).length;
-        const minPlayers = this.fingerMode === 'team' ? 2 : (this.fingerMode === 'duo' ? 3 : 2);
         
-        if(count >= minPlayers) {
+        if(count >= 2) {
             let secondsLeft = 3;
             document.getElementById('finger-msg').innerHTML = `<span class="finger-countdown">${secondsLeft}</span>`;
             soundFX.playSiren();
@@ -3854,45 +3848,24 @@ const app = {
         const keys = Object.keys(this.fingerTouches);
         if(keys.length < 2) return;
         
-        if (this.fingerMode === 'team') {
-            const shuffled = [...keys].sort(() => Math.random() - 0.5);
-            shuffled.forEach((k, idx) => {
+        const shuffled = [...keys].sort(() => Math.random() - 0.5);
+        const loserKey = shuffled[0];
+        
+        keys.forEach(k => {
+            if (k !== loserKey) {
+                this.fingerTouches[k].el.remove();
+            } else {
                 const el = this.fingerTouches[k].el;
-                const isRed = idx % 2 === 0;
-                el.className = `finger-circle ${isRed ? 'team-red' : 'team-blue'}`;
-                el.innerText = isRed ? '🔴 RED' : '🔵 BLUE';
-                el.style.display = 'flex';
-                el.style.alignItems = 'center';
-                el.style.justifyContent = 'center';
-                el.style.fontWeight = '900';
-                el.style.fontSize = '0.85rem';
-            });
-            document.getElementById('finger-msg').innerHTML = '⚔️ 팀 분할 완료! RED vs BLUE ⚔️<span class="i18n-sub">Teams assigned!</span>';
-            soundFX.playTada();
-            fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 60);
-        } else {
-            const targetCount = this.fingerMode === 'duo' ? 2 : 1;
-            const shuffled = [...keys].sort(() => Math.random() - 0.5);
-            const losers = shuffled.slice(0, targetCount);
-            
-            keys.forEach(k => {
-                if (!losers.includes(k)) {
-                    this.fingerTouches[k].el.remove();
-                } else {
-                    const el = this.fingerTouches[k].el;
-                    el.className = 'finger-circle loser';
-                    const rect = el.getBoundingClientRect();
-                    fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 50, '#ff0055');
-                }
-            });
-            
-            document.getElementById('finger-msg').innerHTML =
-                targetCount === 1
-                    ? '💥 당첨! 원샷 마셔라! 💥<span class="i18n-sub">You\'re chosen! Bottoms up!</span>'
-                    : '🥂 2명 당첨! 러브샷 마셔라! 🥂<span class="i18n-sub">2 chosen! Time for a love shot!</span>';
-            soundFX.playBigBoom();
-            haptics.loser();
-        }
+                el.className = 'finger-circle loser';
+                const rect = el.getBoundingClientRect();
+                fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 60, '#ff0055');
+            }
+        });
+        
+        document.getElementById('finger-msg').innerHTML =
+            '💥 당첨! 원샷 마셔라! 💥<span class="i18n-sub">You\'re chosen! Bottoms up!</span>';
+        soundFX.playBigBoom();
+        haptics.loser();
 
         const screen = document.getElementById('screen-finger');
         screen.classList.remove('shake', 'flash');

@@ -92,6 +92,90 @@ html, body {
     word-break: keep-all;
 }
 
+/* GIJO VIP 아케이드 상단 네온 롤링 전광판 */
+.ad-banner {
+    position: relative;
+    width: calc(100% - 16px);
+    margin: 6px auto 10px auto;
+    flex-shrink: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 10px;
+    border-radius: 14px;
+    text-decoration: none;
+    background: linear-gradient(120deg, rgba(0, 243, 255, 0.2), rgba(255, 215, 0, 0.2)), rgba(14, 14, 22, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(0, 243, 255, 0.5);
+    box-shadow: 0 0 16px rgba(0, 243, 255, 0.3), inset 0 0 8px rgba(0, 243, 255, 0.15);
+    transition: transform 0.15s ease;
+}
+.ad-banner:active { transform: scale(0.98); }
+
+.ad-badge-tag {
+    background: linear-gradient(135deg, #00f3ff, #0066ff);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 3px 7px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-right: 8px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+}
+
+.ad-marquee-wrapper {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.ad-marquee-content {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: gijoArcadeMarquee 24s linear infinite;
+}
+
+.ad-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 40px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.ad-marquee-item em {
+    color: #ffd700;
+    font-style: normal;
+    font-weight: 800;
+}
+
+@keyframes gijoArcadeMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ad-banner-cta {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    white-space: nowrap;
+    margin-left: 6px;
+}
+
 .tile-grid {
     flex: 1;
     display: grid;
@@ -1273,13 +1357,21 @@ canvas {
             <h1 class="menu-title">GIJO Arcade</h1>
             <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
         </div>
+        <!-- GIJO VIP 아케이드 네온 롤링 전광판 (자체 광고판) -->
         <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
-            <span class="ad-banner-icon">🗺️</span>
-            <span class="ad-banner-text">
-                <span class="ad-banner-title">GIJO Tour</span>
-                <span class="ad-banner-sub">일정표 · 생활영어 · 오프라인 지원</span>
-            </span>
-            <span class="ad-banner-cta">열기 · Open</span>
+            <span class="ad-badge-tag">GIJO VIP</span>
+            <div class="ad-marquee-wrapper">
+                <div class="ad-marquee-content">
+                    <span class="ad-marquee-item">🎰 <em>[GIJO VIP LOUNGE]</em> 동남아 골프·호텔 최저가 보장 &amp; 럭셔리 단독 픽업!</span>
+                    <span class="ad-marquee-item">🌴 <em>[여행자 혜택]</em> 지아이조 투어 고객 전용 현지 액티비티 VIP 패스권!</span>
+                    <span class="ad-marquee-item">✈️ <em>[실시간 상담]</em> 24시간 카카오톡 전담 가이드 연결 ➔</span>
+                    <!-- 롤링 반복용 복제본 -->
+                    <span class="ad-marquee-item">🎰 <em>[GIJO VIP LOUNGE]</em> 동남아 골프·호텔 최저가 보장 &amp; 럭셔리 단독 픽업!</span>
+                    <span class="ad-marquee-item">🌴 <em>[여행자 혜택]</em> 지아이조 투어 고객 전용 현지 액티비티 VIP 패스권!</span>
+                    <span class="ad-marquee-item">✈️ <em>[실시간 상담]</em> 24시간 카카오톡 전담 가이드 연결 ➔</span>
+                </div>
+            </div>
+            <span class="ad-banner-cta">VIP 혜택 ➔</span>
         </a>
         <div class="tile-grid">
             <button class="tile tile-slots" data-go="slots">

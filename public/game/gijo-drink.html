@@ -192,68 +192,88 @@ h2.neon-text {
     margin-bottom: 8px;
 }
 
-/* 상단 배너 — 자체 홍보 슬롯. GIJO Tour(메인 앱) 로 링크 걸린 광고 형태입니다. */
+/* 상단 배너 — 자체 홍보 슬롯 (GIJO TOUR VIP 네온 롤링 전광판) */
 .ad-banner {
     position: relative;
     width: calc(100% - 12px);
     margin: 6px auto;
     flex-shrink: 0;
-    height: 64px;
+    height: 52px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 0 14px;
-    border-radius: 16px;
+    overflow: hidden;
+    padding: 0 10px;
+    border-radius: 14px;
     text-decoration: none;
-    /* 배경을 조금 더 어둡게 하여 글씨가 잘 보이게 변경 */
-    background: linear-gradient(120deg, rgba(0, 243, 255, 0.25), rgba(255, 0, 85, 0.25)), rgba(0, 0, 0, 0.6);
+    background: linear-gradient(120deg, rgba(255, 107, 74, 0.25), rgba(255, 0, 85, 0.25)), rgba(10, 15, 30, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    /* 테두리를 진하게 변경 */
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    border: 1px solid rgba(255, 107, 74, 0.5);
+    box-shadow: 0 0 15px rgba(255, 107, 74, 0.3), inset 0 0 10px rgba(255, 107, 74, 0.15);
+    transition: transform 0.15s ease;
 }
 .ad-banner:active { transform: scale(0.98); }
 
-.ad-banner-icon { font-size: 1.5rem; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
-
-.ad-banner-text {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-
-.ad-banner-title {
+.ad-badge-tag {
+    background: linear-gradient(135deg, #FF6B4A, #FF0055);
     color: #fff;
-    font-size: 0.86rem;
-    font-weight: 800;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 3px 7px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-right: 8px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 8px rgba(255, 107, 74, 0.6);
 }
 
-.ad-banner-sub {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.68rem;
-    font-weight: 600;
-    white-space: nowrap;
+.ad-marquee-wrapper {
+    flex: 1;
     overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
+}
+
+.ad-marquee-content {
+    display: inline-flex;
+    white-space: nowrap;
+    animation: gijoMarquee 24s linear infinite;
+}
+
+.ad-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 40px;
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.ad-marquee-item em {
+    color: #FFD700;
+    font-style: normal;
+    font-weight: 800;
+}
+
+@keyframes gijoMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .ad-banner-cta {
     flex-shrink: 0;
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     color: #fff;
     font-size: 0.68rem;
-    font-weight: 700;
+    font-weight: 800;
     white-space: nowrap;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    margin-left: 6px;
 }
 
 /* 볼드 벤토 — 균등한 6칸 대신 위계를 준다.
@@ -2614,13 +2634,21 @@ body.hot .hot-toggle-btn {
                     </div>
                 </div>
             </div>
+            <!-- GIJO TOUR VIP 네온 롤링 전광판 (자체 광고판) -->
             <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
-                <span class="ad-banner-icon">🗺️</span>
-                <span class="ad-banner-text">
-                    <span class="ad-banner-title">GIJO Tour</span>
-                    <span class="ad-banner-sub">일정표 · 생활영어 · 오프라인 지원</span>
-                </span>
-                <span class="ad-banner-cta">열기 · Open</span>
+                <span class="ad-badge-tag">GIJO VIP</span>
+                <div class="ad-marquee-wrapper">
+                    <div class="ad-marquee-content">
+                        <span class="ad-marquee-item">🌴 <em>[GIJO TOUR 특가]</em> 베트남·필리핀 단독 최저가 골프 부킹 & 픽업 샌딩 투어!</span>
+                        <span class="ad-marquee-item">💆‍♂️ <em>[술자리 벌칙 혜택]</em> 지아이조 힐링 스파 마사지 패키지 10% 단독 할인 예약!</span>
+                        <span class="ad-marquee-item">✈️ <em>[실시간 케어]</em> 24시간 카카오톡 여행 컨시어지 서비스 즉시 연결 ➔</span>
+                        <!-- 롤링 반복용 복제본 -->
+                        <span class="ad-marquee-item">🌴 <em>[GIJO TOUR 특가]</em> 베트남·필리핀 단독 최저가 골프 부킹 & 픽업 샌딩 투어!</span>
+                        <span class="ad-marquee-item">💆‍♂️ <em>[술자리 벌칙 혜택]</em> 지아이조 힐링 스파 마사지 패키지 10% 단독 할인 예약!</span>
+                        <span class="ad-marquee-item">✈️ <em>[실시간 케어]</em> 24시간 카카오톡 여행 컨시어지 서비스 즉시 연결 ➔</span>
+                    </div>
+                </div>
+                <span class="ad-banner-cta">혜택보기 ➔</span>
             </a>
             <div class="quad-menu">
                 <div class="quad-shared-bg"></div>

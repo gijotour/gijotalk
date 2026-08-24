@@ -41,11 +41,10 @@ import {
   Camera,
   Languages,
   Plane,
-  CheckCircle2,
+  Layers,
 } from 'lucide-react';
 
 export default function App() {
-  // 잠금. 풀리기 전에는 앱의 어떤 화면도 그리지 않습니다.
   const [unlocked, setUnlocked] = useState(() => isUnlocked());
 
   // Country & Filter States
@@ -116,13 +115,11 @@ export default function App() {
     });
   };
 
-  /** AI 가 만든 문장인지 — 삭제 버튼 노출 여부를 결정합니다. */
   const isCustomPhrase = useCallback(
     (id: string) => customPhrases.some((p) => p.id === id),
     [customPhrases]
   );
 
-  /** AI 가 만든 문장 삭제. 기본 제공 문장은 지울 수 없습니다. */
   const handleDeleteCustomPhrase = useCallback((phraseId: string) => {
     setCustomPhrases((prev) => {
       const updated = prev.filter((p) => p.id !== phraseId);
@@ -137,7 +134,6 @@ export default function App() {
     });
   }, []);
 
-  // Register PWA Service Worker & Load Bookmarks on Mount
   useEffect(() => {
     registerServiceWorker();
     void syncAudioCache();
@@ -155,7 +151,6 @@ export default function App() {
     };
   }, []);
 
-  // Bookmark Toggle Handler
   const handleToggleBookmark = useCallback((id: string) => {
     setBookmarkedIds((prev) => toggleBookmarkId(id, prev));
   }, []);
@@ -181,7 +176,6 @@ export default function App() {
     });
   }, [countryPhrases, selectedCategory, searchQuery]);
 
-  // Calculate category item counts for current country
   const categoryCounts = useMemo(() => {
     const counts: Record<CategoryId, number> = {
       '전체': countryPhrases.length,
@@ -354,17 +348,29 @@ export default function App() {
                 phrases={countryPhrases}
                 onOpenBillboard={setBillboardPhrase}
                 speed={speed}
+                onSetSpeed={setSpeed}
+                isBookmarked={(id) => bookmarkedIds.includes(id)}
+                onToggleBookmark={handleToggleBookmark}
               />
             )}
 
             {/* Phrase Cards Feed */}
             {filteredPhrases.length > 0 ? (
               <div className="space-y-3">
-                <div className="flex items-center justify-between px-1 text-xs font-bold text-slate-500">
-                  <span>{selectedCategory} 회화 목록 ({filteredPhrases.length})</span>
-                  <span>터치 시 전광판 ➔</span>
+                {/* 카테고리 선택 시 또렷한 리스트 헤더 표시 */}
+                <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 bg-brand text-white rounded-xl text-xs font-black">
+                      {selectedCategory}
+                    </span>
+                    <span className="text-xs font-extrabold text-slate-800">
+                      핵심 회화 리스트 ({filteredPhrases.length}개)
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-bold">1초 전광판 / 발음 듣기 ➔</span>
                 </div>
-                {filteredPhrases.map((phrase) => (
+
+                {filteredPhrases.map((phrase, idx) => (
                   <PhraseCard
                     key={phrase.id}
                     phrase={phrase}
@@ -378,6 +384,7 @@ export default function App() {
                     onDelete={
                       isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
                     }
+                    index={idx}
                   />
                 ))}
               </div>
@@ -442,7 +449,7 @@ export default function App() {
 
             {bookmarkedPhrases.length > 0 ? (
               <div className="space-y-4">
-                {bookmarkedPhrases.map((phrase) => {
+                {bookmarkedPhrases.map((phrase, idx) => {
                   return (
                     <PhraseCard
                       key={`bm-${phrase.id}`}
@@ -457,6 +464,7 @@ export default function App() {
                       onDelete={
                         isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
                       }
+                      index={idx}
                     />
                   );
                 })}

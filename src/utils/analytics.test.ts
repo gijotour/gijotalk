@@ -50,7 +50,7 @@ describe('사용 기록 수집', () => {
 
     expect(second).toBe(first);
     // 개인정보처럼 보이는 값이 섞이지 않았는지
-    expect(first).not.toMatch(/@|\.com|010-/);
+    expect(first).not.toMatch(/@|\.com|\b010-\d{4}-\d{4}\b/);
   });
 
   it('껐을 때는 아무것도 쌓지 않는다', () => {

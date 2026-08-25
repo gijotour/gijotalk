@@ -88,6 +88,14 @@ export function csvUrl(ref: SheetRef): string {
     : `https://docs.google.com/spreadsheets/d/${ref.id}/export?format=csv${gid}`;
 }
 
+/** gviz CSV 백업 엔드포인트 주소 (CORS 우회 2차 시도용) */
+export function gvizCsvUrl(ref: SheetRef): string {
+  const gid = ref.gid ? `&gid=${ref.gid}` : '';
+  return ref.kind === 'pub'
+    ? `https://docs.google.com/spreadsheets/d/e/${ref.id}/pub?output=csv${gid}`
+    : `https://docs.google.com/spreadsheets/d/${ref.id}/gviz/tq?tqx=out:csv${gid}`;
+}
+
 /* ------------------------------------------------------------------ */
 /* CSV 해석                                                            */
 /* ------------------------------------------------------------------ */
@@ -105,7 +113,7 @@ export function parseCsv(text: string): Grid {
   let cell = '';
   let quoted = false;
 
-  const clean = text.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+  const clean = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
 
   for (let i = 0; i < clean.length; i++) {
     const ch = clean[i];
@@ -144,27 +152,47 @@ export function parseCsv(text: string): Grid {
 /* 가져오기                                                            */
 /* ------------------------------------------------------------------ */
 
-async function fetchCsv(url: string, signal?: AbortSignal): Promise<Grid | null> {
-  // 오프라인에서 실패하면 "공유 설정을 확인하세요" 라는 엉뚱한 안내가 나갑니다.
-  // 원인이 인터넷인데 시트를 뒤지게 만들면 안 됩니다.
-  if (typeof navigator !== 'undefined' && !navigator.onLine) {
-    throw new Error('인터넷에 연결되어 있지 않습니다. 시트는 온라인일 때만 불러올 수 있습니다.');
-  }
-
+async function fetchCsvWithUrl(url: string, signal?: AbortSignal): Promise<Grid | null> {
   const res = await fetch(url, { signal, redirect: 'follow' });
   if (!res.ok) return null;
 
   const text = await res.text();
-  if (text.length > MAX_CSV_BYTES) throw new Error('시트가 너무 큽니다.');
+  if (text.length > MAX_CSV_BYTES) throw new Error('시트 용량이 너무 큽니다.');
 
-  // 권한이 없으면 구글은 CSV 대신 로그인 HTML 을 200 으로 돌려줍니다.
-  // 그대로 파싱하면 "일정 표를 찾지 못했습니다" 라는 엉뚱한 안내가 나갑니다.
+  // 권한이 없으면 구글은 CSV 대신 로그인 HTML 을 돌려줍니다.
   if (/^\s*<(!doctype|html)/i.test(text)) {
     throw new Error(
       '시트를 열 수 없습니다. 구글시트에서 [공유] → "링크가 있는 모든 사용자" 로 바꿔주세요.'
     );
   }
   return parseCsv(text);
+}
+
+async function fetchCsv(ref: SheetRef, signal?: AbortSignal): Promise<Grid | null> {
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    throw new Error('인터넷에 연결되어 있지 않습니다. 시트는 온라인일 때만 불러올 수 있습니다.');
+  }
+
+  // 1차 시도: export 엔드포인트
+  try {
+    const grid = await fetchCsvWithUrl(csvUrl(ref), signal);
+    if (grid && grid.length > 0) return grid;
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === 'AbortError') throw err;
+    // 1차 실패 시 2차 gviz 폴백으로 계속 진행
+  }
+
+  // 2차 시도: gviz 엔드포인트 (CORS 우회 폴백)
+  try {
+    const grid = await fetchCsvWithUrl(gvizCsvUrl(ref), signal);
+    if (grid && grid.length > 0) return grid;
+  } catch (err: unknown) {
+    if (err instanceof Error && err.name === 'AbortError') throw err;
+  }
+
+  throw new Error(
+    '구글 시트를 불러오지 못했습니다. 구글 시트 우측 상단 [공유] → "링크가 있는 모든 사용자 (뷰어)"로 설정되어 있는지 확인해 주세요.'
+  );
 }
 
 /**
@@ -175,17 +203,12 @@ export async function sheetToItineraryText(
   ref: SheetRef,
   signal?: AbortSignal
 ): Promise<string> {
-  const grid = await fetchCsv(csvUrl(ref), signal);
+  const grid = await fetchCsv(ref, signal);
   if (!grid) {
     throw new Error(
       '시트를 읽지 못했습니다. [공유] → "링크가 있는 모든 사용자" 로 열려 있는지 확인해 주세요.'
     );
   }
 
-  // 같은 시트를 일정표와 안내 양쪽으로 읽습니다.
-  //
-  //   구글시트는 탭 하나로 쓰는 경우가 대부분입니다. 제목·기간·연락처·특이사항을
-  //   표 위쪽에 적어두면 그대로 읽히고, 없으면 일정만 읽힙니다. 안내 블록의 줄들은
-  //   일정 표 쪽에서 머리글로도 항목으로도 잡히지 않으므로 서로 방해하지 않습니다.
   return gridsToItineraryText(grid, grid);
 }

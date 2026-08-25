@@ -2732,9 +2732,23 @@ body.hot .hot-toggle-btn {
                 <button class="mode-tab-btn" id="roulette-tab-truth" onclick="app.setRoulettePreset('truth')">🤫 진실 · Truth</button>
                 <button class="mode-tab-btn" id="roulette-tab-balance" onclick="app.setRoulettePreset('balance')">⚖️ 밸런스 · Balance</button>
             </div>
-            <div class="roulette-container">
-                <div class="roulette-wheel" id="roulette-wheel"></div>
+            <div class="roulette-container" onclick="app.spinRoulette()">
+                <div class="roulette-wheel-wrapper">
+                    <div class="roulette-wheel" id="roulette-wheel"></div>
+                </div>
                 <div class="roulette-pointer" id="roulette-pointer"></div>
+                <!-- 룰렛 중앙 SPIN 버튼 -->
+                <button class="roulette-center-hub" id="roulette-center-btn" onclick="event.stopPropagation(); app.spinRoulette()" title="룰렛 돌리기">
+                    <span class="roulette-center-hub-icon">🎯</span>
+                    <span class="roulette-center-hub-text">SPIN</span>
+                </button>
+            </div>
+            <!-- 하단 룰렛 돌리기 메인 버튼 및 결과창 -->
+            <button class="btn neon-btn" id="roulette-spin-btn" style="margin-top: 14px; width: 100%; font-size: 1.05rem;" onclick="app.spinRoulette()">
+                🎰 룰렛 돌리기 · SPIN!
+            </button>
+            <div id="roulette-result-card" class="roulette-result-container" style="margin-top: 10px; min-height: 48px; text-align: center;">
+                <div id="roulette-result" class="result-text font-black" style="font-size: 1.15rem; color: #00f3ff; text-shadow: 0 0 15px rgba(0,243,255,0.7);"></div>
             </div>
         </section>
 
@@ -3537,17 +3551,21 @@ const app = {
         }, 130);
         
         setTimeout(() => {
+            clearInterval(spinTicks);
             this.isSpinning = false;
+            if (spinBtn) spinBtn.disabled = false;
             
             const normalizedDegrees = this.rouletteRotation % 360;
             const segmentAngle = 360 / optionsToUse.length;
             const segmentIndex = Math.floor(((360 - normalizedDegrees) % 360) / segmentAngle);
             const winner = optionsToUse[segmentIndex] || '당첨! Winner!';
-            resultText.innerHTML = `🎉 결과: ${winner}<span class="i18n-sub">Result</span>`;
+            if (resultText) resultText.innerHTML = `🎉 결과: ${winner}<span class="i18n-sub">Result</span>`;
+            if (resultCard) resultCard.classList.add('has-result');
+            soundFX.playTada();
             
             const rect = wheel.getBoundingClientRect();
             fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 80);
-        }, 4000);
+        }, 4200);
     },
 
     /* ============================================================

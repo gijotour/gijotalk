@@ -3868,31 +3868,51 @@ const app = {
     },
 
     checkFingerStart() {
-        clearTimeout(this.fingerTimer);
-        clearInterval(this.fingerCountdownInterval);
         const count = Object.keys(this.fingerTouches).length;
         
-        if(count >= 2) {
-            let secondsLeft = 3;
-            document.getElementById('finger-msg').innerHTML = `<span class="finger-countdown">${secondsLeft}</span>`;
-            soundFX.playSiren();
-            haptics.buildUp();
-            this.fingerCountdownInterval = setInterval(() => {
-                secondsLeft -= 1;
-                if (secondsLeft > 0) {
-                    document.getElementById('finger-msg').innerHTML = `<span class="finger-countdown">${secondsLeft}</span>`;
-                    soundFX.playTick(true);
-                    haptics.tick();
-                }
-            }, 1000);
-            this.fingerTimer = setTimeout(() => {
-                clearInterval(this.fingerCountdownInterval);
-                this.finishFingerRoulette();
-            }, 3000);
-        } else {
+        if (count < 2) {
+            clearTimeout(this.fingerTimer);
+            clearInterval(this.fingerCountdownInterval);
+            this.fingerTimer = null;
+            this.fingerCountdownInterval = null;
             document.getElementById('finger-msg').innerHTML =
-                '다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen!</span>';
+                count === 1
+                    ? '손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 fingers!</span>'
+                    : '다같이 화면을 누르고 계세요! (2~10인)<span class="i18n-sub">Everyone touch and hold the screen!</span>';
+            return;
         }
+
+        // 이미 타이머가 동작 중이면 손가락 수만 실시간 갱신하고 카운트다운 유지
+        if (this.fingerTimer) {
+            const cdEl = document.querySelector('#finger-msg .finger-countdown');
+            const sec = cdEl ? cdEl.innerText : '3';
+            document.getElementById('finger-msg').innerHTML =
+                `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${sec}</span>`;
+            return;
+        }
+
+        let secondsLeft = 3;
+        document.getElementById('finger-msg').innerHTML =
+            `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`;
+        soundFX.playSiren();
+        haptics.buildUp();
+
+        this.fingerCountdownInterval = setInterval(() => {
+            secondsLeft -= 1;
+            const currentCount = Object.keys(this.fingerTouches).length;
+            if (secondsLeft > 0) {
+                document.getElementById('finger-msg').innerHTML =
+                    `👉 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`;
+                soundFX.playTick(true);
+                haptics.tick();
+            }
+        }, 1000);
+
+        this.fingerTimer = setTimeout(() => {
+            clearInterval(this.fingerCountdownInterval);
+            this.fingerTimer = null;
+            this.finishFingerRoulette();
+        }, 3000);
     },
 
     finishFingerRoulette() {
@@ -4044,25 +4064,27 @@ const app = {
     },
 
     /* ============================================================
-       6. LOVE DRINK LOGIC
+       6. LOVE DRINK LOGIC (2~10인 완벽 멀티터치 지원)
        ============================================================ */
     initBridge() {
         const area = document.getElementById('bridge-area');
         area.innerHTML = '';
-        this.bridgeNodes = [];
+        this.bridgeTouches = {};
         this.bridgeIsActive = false;
         this.clearBridgeTimers();
         document.getElementById('bridge-msg').innerHTML =
-            '화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span>';
+            '화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!</span>';
 
         this.teardownBridgeEvents();
 
         this.handleBridgeStart = this.handleBridgeStart.bind(this);
+        this.handleBridgeMove = this.handleBridgeMove.bind(this);
         this.handleBridgeEnd = this.handleBridgeEnd.bind(this);
 
         area.addEventListener('touchstart', this.handleBridgeStart, {passive: false});
-        area.addEventListener('touchend', this.handleBridgeEnd);
-        area.addEventListener('touchcancel', this.handleBridgeEnd);
+        area.addEventListener('touchmove', this.handleBridgeMove, {passive: false});
+        area.addEventListener('touchend', this.handleBridgeEnd, {passive: false});
+        area.addEventListener('touchcancel', this.handleBridgeEnd, {passive: false});
     },
 
     teardownBridgeEvents() {
@@ -4070,6 +4092,7 @@ const app = {
         const area = document.getElementById('bridge-area');
         if (!area) return;
         area.removeEventListener('touchstart', this.handleBridgeStart);
+        area.removeEventListener('touchmove', this.handleBridgeMove);
         area.removeEventListener('touchend', this.handleBridgeEnd);
         area.removeEventListener('touchcancel', this.handleBridgeEnd);
     },
@@ -4081,76 +4104,139 @@ const app = {
         this.bridgeCountdownInterval = null;
     },
 
-    renderBridgeNodes(touchList) {
-        const area = document.getElementById('bridge-area');
-        const rect = area.getBoundingClientRect();
-
-        area.innerHTML = '';
-        this.bridgeNodes = [];
-
-        for (let i = 0; i < touchList.length; i++) {
-            const touch = touchList[i];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-
-            const node = document.createElement('div');
-            node.className = 'bridge-player-node';
-            node.style.left = `${x}px`;
-            node.style.top = `${y}px`;
-            node.innerHTML = bridgeHeartHTML(`P${i + 1}`);
-            area.appendChild(node);
-
-            this.bridgeNodes.push({ x, y, el: node });
-        }
-    },
-
     handleBridgeStart(e) {
         e.preventDefault();
         if (this.bridgeIsActive) return;
         soundFX.init();
-        this.renderBridgeNodes(e.touches);
-        soundFX.playSpark();
 
-        if (e.touches.length >= 2) {
-            let left = 3;
-            document.getElementById('bridge-msg').innerHTML = `💘 커플 매칭 중 · Matching... <span class="finger-countdown">${left}</span>`;
-            soundFX.playSiren();
-            haptics.buildUp();
-            this.clearBridgeTimers();
-            this.bridgeCountdownInterval = setInterval(() => {
-                left--;
-                if (left > 0) {
-                    document.getElementById('bridge-msg').innerHTML = `💘 커플 매칭 중... <span class="finger-countdown">${left}</span>`;
-                    soundFX.playTick(true);
-                    haptics.tick();
-                }
-            }, 1000);
-            this.bridgeJoinTimer = setTimeout(() => {
-                clearInterval(this.bridgeCountdownInterval);
-                this.runBridgeMatch();
-            }, 3000);
+        const area = document.getElementById('bridge-area');
+        const rect = area.getBoundingClientRect();
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            // 중복 방지
+            if (this.bridgeTouches[touch.identifier]) continue;
+
+            const playerNum = Object.keys(this.bridgeTouches).length + 1;
+            const node = document.createElement('div');
+            node.className = 'bridge-player-node';
+            node.style.left = `${x}px`;
+            node.style.top = `${y}px`;
+            node.innerHTML = bridgeHeartHTML(`P${playerNum}`);
+            area.appendChild(node);
+
+            this.bridgeTouches[touch.identifier] = { x, y, el: node, id: touch.identifier };
+            soundFX.playSpark();
+            fxEngine.sparks(touch.clientX, touch.clientY, 8, '#ff007f');
+        }
+
+        this.checkBridgeStart();
+    },
+
+    handleBridgeMove(e) {
+        e.preventDefault();
+        if (this.bridgeIsActive) return;
+
+        const area = document.getElementById('bridge-area');
+        const rect = area.getBoundingClientRect();
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            const tracked = this.bridgeTouches[touch.identifier];
+            if (tracked) {
+                tracked.x = touch.clientX - rect.left;
+                tracked.y = touch.clientY - rect.top;
+                tracked.el.style.left = `${tracked.x}px`;
+                tracked.el.style.top = `${tracked.y}px`;
+            }
         }
     },
 
     handleBridgeEnd(e) {
+        e.preventDefault();
         if (this.bridgeIsActive) return;
-        if (e.touches.length < 2) {
-            this.clearBridgeTimers();
-            this.renderBridgeNodes(e.touches);
-            document.getElementById('bridge-msg').innerHTML =
-                '화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span>';
-        } else {
-            this.renderBridgeNodes(e.touches);
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            const tracked = this.bridgeTouches[touch.identifier];
+            if (tracked) {
+                tracked.el.remove();
+                delete this.bridgeTouches[touch.identifier];
+            }
         }
+
+        this.checkBridgeStart();
+    },
+
+    checkBridgeStart() {
+        const count = Object.keys(this.bridgeTouches).length;
+
+        if (count < 2) {
+            this.clearBridgeTimers();
+            document.getElementById('bridge-msg').innerHTML =
+                count === 1
+                    ? '손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 players!</span>'
+                    : '화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!</span>';
+            return;
+        }
+
+        // 이미 타이머가 돌고 있으면 손가락 수 메시지만 갱신하고 카운트다운은 유지
+        if (this.bridgeJoinTimer) {
+            const countBadge = `<span style="color:#00f3ff;font-weight:900;">${count}명</span>`;
+            const cdEl = document.querySelector('#bridge-msg .finger-countdown');
+            const sec = cdEl ? cdEl.innerText : '3';
+            document.getElementById('bridge-msg').innerHTML =
+                `💘 참가자 ${countBadge} 감지! 매칭 중... <span class="finger-countdown">${sec}</span>`;
+            return;
+        }
+
+        // 2명 이상 감지 시 3초 카운트다운 시작
+        let left = 3;
+        document.getElementById('bridge-msg').innerHTML =
+            `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`;
+        soundFX.playSiren();
+        haptics.buildUp();
+
+        this.bridgeCountdownInterval = setInterval(() => {
+            left--;
+            const currentCount = Object.keys(this.bridgeTouches).length;
+            if (left > 0) {
+                document.getElementById('bridge-msg').innerHTML =
+                    `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`;
+                soundFX.playTick(true);
+                haptics.tick();
+            }
+        }, 1000);
+
+        this.bridgeJoinTimer = setTimeout(() => {
+            clearInterval(this.bridgeCountdownInterval);
+            this.runBridgeMatch();
+        }, 3000);
     },
 
     runBridgeMatch() {
-        if (this.bridgeNodes.length < 2) return;
+        const nodes = Object.values(this.bridgeTouches);
+        if (nodes.length < 2) {
+            this.bridgeIsActive = false;
+            this.checkBridgeStart();
+            return;
+        }
         this.bridgeIsActive = true;
 
-        const shuffled = [...this.bridgeNodes].sort(() => Math.random() - 0.5);
+        const shuffled = [...nodes].sort(() => Math.random() - 0.5);
         const p1 = shuffled[0];
         const p2 = shuffled[1];
+
+        // 매칭되지 않은 나머지 손가락 노드는 반투명 처리
+        nodes.forEach(n => {
+            if (n !== p1 && n !== p2) {
+                n.el.style.opacity = '0.25';
+                n.el.style.transform = 'scale(0.85)';
+            }
+        });
 
         const area = document.getElementById('bridge-area');
         

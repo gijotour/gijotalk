@@ -1,8 +1,23 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.gijotour.twa",
-        "sha256_cert_fingerprints": ["04:47:91:6F:66:DD:B7:B2:52:4D:29:5C:E6:2E:C6:10:4A:F5:B5:B2:07:B7:4E:FB:62:DD:45:9F:ED:AE:E7:7C"]
-      }
-    }]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gijotour.app",
+      "sha256_cert_fingerprints": [
+        "6A:F9:F4:1B:40:B8:19:9C:EA:E8:CE:B4:E4:4A:4C:44:43:82:8B:54:64:FB:77:CB:5D:98:F9:06:D3:01:F2:CE"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.gijotour.twa",
+      "sha256_cert_fingerprints": [
+        "04:47:91:6F:66:DD:B7:B2:52:4D:29:5C:E6:2E:C6:10:4A:F5:B5:B2:07:B7:4E:FB:62:DD:45:9F:ED:AE:E7:7C"
+      ]
+    }
+  }
+]
+

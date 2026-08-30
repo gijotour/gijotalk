@@ -5,6 +5,7 @@
       "namespace": "android_app",
       "package_name": "com.gijotour.app",
       "sha256_cert_fingerprints": [
+        "FA:E3:9D:63:67:D2:D1:78:8D:D7:EC:05:99:FE:16:9F:64:D5:B9:43:47:9E:D3:27:5F:36:AB:42:68:6C:7D:41",
         "6A:F9:F4:1B:40:B8:19:9C:EA:E8:CE:B4:E4:4A:4C:44:43:82:8B:54:64:FB:77:CB:5D:98:F9:06:D3:01:F2:CE"
       ]
     }
@@ -20,4 +21,5 @@
     }
   }
 ]
+
 

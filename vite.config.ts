@@ -16,6 +16,21 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    build: {
+      // 한 덩어리(593KB)였던 번들을 셋으로 나눕니다. 문장 데이터(src/data)만 고쳐도
+      // react 벤더 청크는 해시가 안 바뀌어 사용자가 다시 받지 않습니다.
+      chunkSizeWarningLimit: 600,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules/react') || id.includes('node_modules/scheduler')) return 'vendor-react';
+            if (id.includes('node_modules/lucide-react')) return 'vendor-icons';
+            if (id.includes('/src/data/')) return 'phrases';
+            return undefined;
+          },
+        },
+      },
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.

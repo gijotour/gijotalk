@@ -51,16 +51,6 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          const swUrl = '%BASE_URL%sw.js';
-          navigator.serviceWorker
-            .register(swUrl)
-            .then((reg) => console.log('[GIJO Tour] Service Worker Registered:', reg.scope))
-            .catch((err) => console.warn('[GIJO Tour] Service Worker Registration Notice:', err));
-        });
-      }
-    </script>
+    <!-- 서비스워커 등록은 <head> 에서 한 번만 합니다(예전엔 여기서 한 번 더 등록해 로그가 두 줄씩 찍혔습니다). -->
   </body>
 </html>

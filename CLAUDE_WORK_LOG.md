@@ -126,3 +126,38 @@ diff gijotalk/public/game/gijo-arcade.html gijoarcade/index.html # 동일 (diff 
 
 1. **GIJOSKv1 규율 유지**: 스킬 폴더 `~/.claude/skills/GIJOSKv1` 내의 `SKILL.md` 및 `agents/` 원칙을 참고하여, UI/기능 변경 시 시안 1개 수사고 제시 후 진행.
 2. **독립 저장소 동시 갱신**: `gijotalk` 내 `public/game/gijo-drink.html` 및 `gijo-arcade.html`을 수정할 경우, `gijodrink` (`/Users/t/깃허브/gijodrink/index.html`) 및 `gijoarcade` (`/Users/t/깃허브/gijoarcade/index.html`) 저장소에도 동일하게 복사 후 `git push` 진행.
+
+---
+
+## 🛠️ 6. 2026-09-02 세션 — 전체 이미지 배치·코드·게임 점검 및 업그레이드 (Claude)
+
+브라우저(로컬 서버)에서 게임 6종·슬롯의 새 코드 경로를 전부 직접 실행해 확인했습니다. `npm run lint` 오류 0, 빌드 PASS, 테스트 156개 PASS.
+
+### 아케이드 (`public/game/gijo-arcade.html`) — 버그
+- **파티클·점수 팝업이 6개 게임 중 4개(Block Drop·Space Shooter·Snake·Brick Breaker)에서 안 그려짐**: `drawFx()` 를 부르지 않았음. `triggerShake()` 도 값만 줄고 캔버스를 옮기는 코드가 없어 흔들림이 전혀 없었음 → `Game.beginFrame()/endFrame()` 도입, 6개 게임 모두 적용.
+- **Space Shooter 파워업(⚡🛡️💣)이 보이지 않는 채로 떨어지고 먹힘**: 그리는 코드 자체가 없었음 → 렌더링 추가, 실드 활성 시 기체 둘레 링 표시.
+- **Space Shooter 편대가 바닥에 닿으면 1.6초마다 목숨이 계속 빠짐**: 편대가 복귀하지 않았음 → 목숨 1개 차감 후 `descend` 를 0으로 되돌려 편대를 위로 올림.
+- **슬롯 무료 충전 후 다음 스핀에 크레딧이 1000으로 되돌아가는 공짜 충전 버그**: SPIN 버튼에 once 리스너를 덧붙이는 구조라 리스너가 한 겹씩 쌓였음 → `refillArmed` 플래그로 `spin()` 이 스스로 분기.
+- **더블 도전 창을 띄운 채 메뉴로 나갔다 오면 창이 그대로 남아 릴을 가림** → `clearOverlays()` 를 enter/exit 양쪽에서 호출, 슬롯 타이머는 `after()` 로 등록해 exit 때 일괄 취소.
+- **타일을 누르고 다음 프레임 전에 뒤로 가면 `games[null].enter()` TypeError** (숨김 탭에선 rAF 가 밀려 실제로 재현됨) → 콜백이 id 를 캡처하도록 수정, 모르는 화면 id 는 메뉴로.
+- **HOT 테마를 켤 방법이 없었음**: CSS(`.hot-sw`)와 `HOT` 객체는 있었지만 스위치 마크업·핸들러가 빠져 있었음 → 메뉴 헤더에 토글 추가(localStorage 유지, aria-checked).
+- **Snake `setBoost()` 가 어떤 입력에도 연결돼 있지 않았음** → 길게 누르기(0.22초)/Shift 로 질주, 화면에 `⚡ BOOST` 표시.
+- **두 번째 `.ad-banner` CSS 블록(옛 마크업용)이 마키 배너 규칙을 덮어씀**(높이 64→50 등), `.ov-art-img` 등 죽은 CSS → 제거.
+- 기타: iOS 에서 suspended 된 AudioContext 재개, 매 프레임 `getComputedStyle` 호출 제거, Brick Breaker 의 무효한 `fillStyle = 'linear-gradient(...)'` 제거, 2048·Flappy 화면에도 게임별 액센트, `prefers-reduced-motion` 존중.
+
+### 이미지 배치
+- 메뉴 타일 아트(469x840 세로형)는 가로 타일에서 가운데 띠만 남아 피사체가 잘렸음 → `background-position: center 35%`, 색 덮개 0.55→0.42, 글자 뒤에 아래쪽 어두운 띠(`::after`) 추가.
+- `public/game/assets/*.jpg` 15장을 품질 82 로 재인코딩: **3,225KB → 1,947KB (-40%)**. 해상도는 그대로.
+
+### React 앱
+- `Top10Essentials.tsx` 의 `Phrase` 에 없는 `audio` 필드로 `tsc` 가 실패하던 것 수정(음성은 `audioManifest` 가 id 로 찾으므로 불필요).
+- `index.html` 서비스워커 이중 등록 제거(head 한 곳만).
+- `vite.config.ts` 청크 분리: 단일 593KB → `vendor-react` 194KB · `phrases` 221KB · `index` 150KB · `vendor-icons` 29KB. 문장 데이터만 고쳐도 react 청크 캐시가 유지됨.
+- `sw.js` VERSION v44 → v45.
+
+### 드링크 (`public/game/gijo-drink.html`)
+- 별도 에이전트가 감사·수정한 내역은 이 세션 보고에 첨부.
+
+### 참고
+- 이 Windows 작업 트리에는 `gijodrink`/`gijoarcade` 독립 저장소가 없어 §5-2 의 동기화(복사 후 push)는 하지 못했습니다. Mac 쪽에서 두 HTML 을 그대로 복사해 주세요.
+

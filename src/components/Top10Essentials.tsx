@@ -109,7 +109,7 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
             translation: item.meaning,
             pronunciation: item.pronunciation,
             usageTip: item.tip,
-            audio: item.audio,
+            // 음성은 audioManifest 가 phrase.id 로 찾습니다 — Phrase 타입에 없는 audio 필드를 넣으면 tsc 가 막습니다.
             isEmergency: item.category === '비상',
           };
 

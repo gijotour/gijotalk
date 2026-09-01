@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>GIJO Arcade</title>
+    <meta name="theme-color" content="#0a0a0c">
     <!-- 파티 게임(gijo-drink.html)과 같은 이유로 폰트를 렌더링 차단 없이 받습니다.
          현지 데이터가 느려 폰트 요청이 걸려도 게임은 그대로 실행돼야 합니다. -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"
@@ -305,15 +306,27 @@ html, body {
 
 /* 게임별 대표 아트 — 각 타일의 ::before 대각선 그라디언트는 그대로 두고
    opacity 를 낮춰 그 아래로 사진이 비치게 합니다(색 정체성 + 실사 둘 다). */
-.tile-1 { background-image: url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center; }
-.tile-2 { background-image: url('assets/space_shooter_fun_art.jpg'); background-size: cover; background-position: center; }
-.tile-3 { background-image: url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center; }
-.tile-4 { background-image: url('assets/brick_breaker_fun_art.jpg'); background-size: cover; background-position: center; }
-.tile-5 { background-image: url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center; }
+/* 아트는 469x840 세로형이라 가로 타일에선 가운데 띠만 남습니다. 피사체(캐릭터·기기)가
+   위쪽 1/3 에 몰려 있어 center 35% 로 잘라야 얼굴이 보입니다. */
+.tile-1 { background-image: url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center 35%; }
+.tile-2 { background-image: url('assets/space_shooter_fun_art.jpg'); background-size: cover; background-position: center 35%; }
+.tile-3 { background-image: url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center 35%; }
+.tile-4 { background-image: url('assets/brick_breaker_fun_art.jpg'); background-size: cover; background-position: center 35%; }
+.tile-5 { background-image: url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center 35%; }
 .tile-5::before { background: linear-gradient(120deg, #ff007f, #a200ff); }
-.tile-6 { background-image: url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center; }
+.tile-6 { background-image: url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center 35%; }
 .tile-6::before { background: linear-gradient(120deg, #ff0055, #ffaa00); }
-.tile-1::before, .tile-2::before, .tile-3::before, .tile-4::before, .tile-5::before, .tile-6::before { opacity: 0.55; }
+/* 색 덮개는 0.42 — 0.55 에선 사진이 거의 안 보였습니다. 글자는 아래쪽 어두운 띠(::after)가 받쳐줍니다. */
+.tile-1::before, .tile-2::before, .tile-3::before, .tile-4::before, .tile-5::before, .tile-6::before { opacity: 0.42; }
+.tile::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 62%;
+    background: linear-gradient(to top, rgba(6, 6, 10, 0.78), rgba(6, 6, 10, 0));
+    pointer-events: none;
+}
+.tile-slots::after { height: 100%; background: linear-gradient(90deg, rgba(6,6,10,0.55), rgba(6,6,10,0.05)); }
 body.hot .tile-5::before { background: linear-gradient(120deg, #ff2d78, #ffd700); }
 body.hot .tile-6::before { background: linear-gradient(120deg, #ff2d78, #a200ff); }
 
@@ -1265,10 +1278,20 @@ canvas {
 #scr-snake .ov-btn { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); box-shadow: 0 4px 18px rgba(62,217,115,0.4); }
 #scr-brick .ov-btn { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); box-shadow: 0 4px 18px rgba(255,170,0,0.4); }
 
+#scr-puzzle .ov-btn { background: linear-gradient(120deg, #ff007f, #a200ff); box-shadow: 0 4px 18px rgba(162,0,255,0.45); }
+#scr-flappy .ov-btn { background: linear-gradient(120deg, var(--primary-neon), var(--amber-neon)); box-shadow: 0 4px 18px rgba(255,120,0,0.45); }
+
 #scr-block .ov-score { color: var(--secondary-neon); }
 #scr-shoot .ov-score { color: var(--primary-neon); }
 #scr-snake .ov-score { color: var(--lime-neon); }
 #scr-brick .ov-score { color: var(--amber-neon); }
+#scr-puzzle .ov-score { color: #ff7ab8; }
+#scr-flappy .ov-score { color: var(--amber-neon); }
+
+/* 화면 흔들림·파티클을 줄여달라는 기기 설정을 존중합니다(멀미 방지). */
+@media (prefers-reduced-motion: reduce) {
+    .ad-marquee-content, .sym.win, .bi-chilis, .fever-title, .autospin-btn.on { animation: none !important; }
+}
 
 .footer-note {
     position: absolute;
@@ -1281,71 +1304,6 @@ canvas {
     pointer-events: none;
 }
     
-/* 상단 배너 — 자체 홍보 슬롯. GIJO Tour(메인 앱) 로 링크 걸린 광고 형태입니다.
-   (gijo-drink.html 과 같은 패턴) */
-.ad-banner {
-    position: relative;
-    width: calc(100% - 16px);
-    margin: 4px auto 8px;
-    flex-shrink: 0;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 14px;
-    border-radius: 14px;
-    text-decoration: none;
-    background: linear-gradient(120deg, rgba(0, 243, 255, 0.16), rgba(255, 0, 85, 0.16));
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    transition: transform 0.15s ease;
-}
-.ad-banner:active { transform: scale(0.98); }
-
-.ad-banner-icon { font-size: 1.5rem; flex-shrink: 0; }
-
-.ad-banner-text {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-
-.ad-banner-title {
-    color: #fff;
-    font-size: 0.86rem;
-    font-weight: 800;
-}
-
-.ad-banner-sub {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.68rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.ad-banner-cta {
-    flex-shrink: 0;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.ov-art-img {
-    width: clamp(90px, 25vw, 130px);
-    height: clamp(90px, 25vw, 130px);
-    object-fit: cover;
-    border-radius: 14px;
-    border: 2px solid rgba(0, 243, 255, 0.4);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-    margin: 6px auto;
-}
 </style>
 </head>
 <body>
@@ -1356,6 +1314,11 @@ canvas {
         <div class="menu-header">
             <h1 class="menu-title">GIJO Arcade</h1>
             <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
+            <div class="hot-toggle">
+                <span class="hot-toggle-label" id="hot-label">🔥 HOT 테마 · 심야 라운지</span>
+                <button class="hot-sw" id="hot-sw" type="button" role="switch" aria-checked="false"
+                        aria-label="HOT 테마 켜기/끄기 · Toggle HOT theme"><span></span></button>
+            </div>
         </div>
         <!-- GIJO VIP 아케이드 네온 롤링 전광판 (자체 광고판) -->
         <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
@@ -1517,7 +1480,7 @@ canvas {
             <canvas id="cv-snake"></canvas>
             <div class="overlay" data-overlay></div>
         </div>
-        <p class="hint">쓸어서 방향 전환 · 벽과 몸에 닿으면 끝<br>Swipe to turn · Avoid walls and yourself</p>
+        <p class="hint">쓸어서 방향 전환 · 길게 누르면 질주 · 벽과 몸에 닿으면 끝<br>Swipe to turn · Hold to boost · Avoid walls and yourself</p>
     </section>
 
     <!-- ===== 벽돌 깨기 ===== -->
@@ -1648,6 +1611,8 @@ const sfx = {
             const AC = window.AudioContext || window.webkitAudioContext;
             if (AC) this.ctx = new AC();
         } catch { /* 소리는 없어도 게임은 됩니다 */ }
+        // iOS 는 백그라운드에 다녀오면 컨텍스트가 suspended 로 바뀝니다. 다음 입력 때 다시 엽니다.
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
     },
     blip(freq = 440, dur = 0.06, type = 'square', gain = 0.05) {
         if (!this.ctx || this.ctx.state === 'suspended') return;
@@ -1704,6 +1669,9 @@ function drawBgImage(ctx, img, w, h) {
     else { sw = img.naturalWidth; sh = sw / cr; sx = 0; sy = (img.naturalHeight - sh) / 2; }
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
 }
+
+/** 캔버스 안내 문구용 글꼴. 예전엔 매 프레임 getComputedStyle 을 불러 레이아웃을 강제했습니다. */
+const UI_FONT = "'Outfit', system-ui, sans-serif";
 
 /** 네온 느낌의 사각형 하나. 게임 4개가 전부 이걸로 그립니다. */
 function neonRect(ctx, x, y, w, h, color, radius = 3, glow = 8) {
@@ -1785,6 +1753,26 @@ class Game {
             p.alpha -= p.decay;
             if (p.alpha <= 0) this.particles.splice(i, 1);
         }
+    }
+
+    /**
+     * 프레임 시작 — 흔들림(triggerShake)을 여기서 실제로 적용합니다.
+     * 🔴 예전엔 shakeTime 만 줄어들 뿐 캔버스를 옮기는 코드가 없어 흔들림이 전혀
+     *    보이지 않았고, 파티클·점수 팝업도 6개 중 2개 게임만 drawFx 를 불러
+     *    나머지 4개에선 만들어놓고 그리지 않았습니다. endFrame() 과 짝입니다.
+     */
+    beginFrame(ctx) {
+        ctx.save();
+        if (this.shakeTime > 0) {
+            const k = this.shakeMag * Math.min(1, this.shakeTime / 0.25);
+            ctx.translate((Math.random() - 0.5) * 2 * k, (Math.random() - 0.5) * 2 * k);
+        }
+    }
+
+    /** 프레임 끝 — 파티클·팝업을 맨 위에 그리고 흔들림 변환을 되돌립니다. */
+    endFrame(ctx) {
+        this.drawFx(ctx);
+        ctx.restore();
     }
 
     drawFx(ctx) {
@@ -2160,6 +2148,7 @@ class BlockDrop extends Game {
     draw() {
         const ctx = this.ctx, cell = this.cell, ox = this.offX, oy = this.offY;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
 
         // 판 배경 + 격자
         ctx.fillStyle = HOT.pick('#0b0b10', '#180a18');
@@ -2254,6 +2243,8 @@ class BlockDrop extends Game {
                 }
             }));
         }
+
+        this.endFrame(ctx);
     }
 }
 
@@ -2552,14 +2543,23 @@ class SpaceShooter extends Game {
                 hitMe();
             }
         }
+        let breached = false;
         for (const en of this.enemies) {
             const ey = enemyY(en);
             if (Math.hypot(en.x - this.ship.x, ey - this.ship.y) < en.r + this.ship.r - 4) {
                 en.diving = false; en.y = -30;
                 hitMe();
             }
-            // 편대가 바닥까지 내려오면 실패
-            if (ey > this.H - 24 && !en.diving) hitMe();
+            if (ey > this.H - 24 && !en.diving) breached = true;
+        }
+        // 편대가 바닥까지 내려오면 목숨 하나를 잃고 편대를 위로 되돌립니다.
+        // 🔴 예전엔 매 프레임 hitMe() 만 불러 무적 시간(1.6초)마다 목숨이 하나씩
+        //    빠졌고, 편대는 그대로 바닥에 남아 회복할 방법이 없었습니다.
+        if (breached) {
+            hitMe();
+            this.descend = 0;
+            this.triggerShake(8, 0.3);
+            this.addPopupText('⚠️ 편대 돌파! · Breach!', this.W / 2, this.H * 0.5, '#ff0055');
         }
 
         // 다음 웨이브
@@ -2576,6 +2576,7 @@ class SpaceShooter extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
         drawBgImage(ctx, this.bgImg, this.W, this.H);
         // 원래는 완전 불투명으로 덮었는데, 사진이 비치도록 알파를 낮췄습니다
         // — 그래도 조종석·총알 등 스프라이트가 묻히지 않을 만큼은 어둡게 남깁니다.
@@ -2636,6 +2637,41 @@ class SpaceShooter extends Game {
             ctx.restore();
         });
 
+        // ⚡🛡️💣 파워업 아이템 — 🔴 예전엔 update() 에서 떨어뜨리고 먹기까지 하면서
+        //    그리는 코드가 없어, 보이지도 않는 걸 우연히 먹는 상태였습니다.
+        this.powerups.forEach(p => {
+            ctx.save();
+            const pulse = 1 + 0.12 * Math.sin(performance.now() * 0.01);
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 16;
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * pulse, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = 'rgba(0,0,0,0.45)';
+            ctx.fill();
+            ctx.font = `${p.r * 1.3}px "Outfit", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#fff';
+            ctx.fillText(p.icon, p.x, p.y + 1);
+            ctx.restore();
+        });
+
+        // 🛡️ 실드가 켜져 있으면 기체 둘레에 방어막 링
+        if (this.shieldTimer > 0) {
+            ctx.save();
+            ctx.strokeStyle = `rgba(255, 215, 0, ${0.45 + 0.3 * Math.sin(performance.now() * 0.012)})`;
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 14;
+            ctx.beginPath();
+            ctx.arc(this.ship.x, this.ship.y, this.ship.r * 1.9, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
         // 플레이어 기체 (사이버 제트기 🚀)
         if (this.invuln <= 0 || Math.floor(this.invuln * 12) % 2 === 0) {
             const s = this.ship;
@@ -2655,9 +2691,11 @@ class SpaceShooter extends Game {
             ctx.arc(s.x - s.r * 0.9, s.y + s.r * 0.5, 3.5, 0, Math.PI * 2);
             ctx.arc(s.x + s.r * 0.9, s.y + s.r * 0.5, 3.5, 0, Math.PI * 2);
             ctx.fill();
-            
+
             ctx.restore();
         }
+
+        this.endFrame(ctx);
     }
 }
 
@@ -2670,7 +2708,7 @@ class Snake extends Game {
         super('snake', 'scr-snake', 'cv-snake');
         this.titleEn = 'GIJO Neon Snake';
         this.titleKr = '뱀 키우기';
-        this.introHint = '쓸어서 방향을 바꾸세요. 먹을수록 길어지고 빨라집니다.<br>Swipe to turn. It gets longer and faster as you eat.';
+        this.introHint = '쓸어서 방향을 바꾸세요. 길게 누르면 질주합니다. 먹을수록 길어지고 빨라집니다.<br>Swipe to turn, hold to boost. It gets longer and faster as you eat.';
     }
 
     onResize() {
@@ -2709,6 +2747,7 @@ class Snake extends Game {
         this.comboCount = 0;
         this.lastEatAt = 0;
         this.growPending = 0;
+        this.isBoosting = false;
         // 화면 위에 잠깐 뜨는 점수 팝업(콤보/보너스 알림).
         this.flash = null;
 
@@ -2772,24 +2811,34 @@ class Snake extends Game {
     }
 
     bindInput() {
-        let sx = 0, sy = 0;
+        let sx = 0, sy = 0, holdTimer = null;
+        // 🔴 setBoost() 는 있었지만 아무 입력에도 연결돼 있지 않았습니다.
+        //    손가락을 0.22초 넘게 누르고 있으면 질주, 떼면 원래 속도로 돌아옵니다.
+        //    쓸기는 보통 0.2초 안에 끝나므로 서로 겹치지 않습니다.
+        const stopBoost = () => { clearTimeout(holdTimer); holdTimer = null; this.setBoost(false); };
         this.on(this.canvas, 'touchstart', (e) => {
             e.preventDefault(); sfx.init();
             sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+            clearTimeout(holdTimer);
+            holdTimer = setTimeout(() => { if (this.running && !this.awaitingFirstMove) this.setBoost(true); }, 220);
         }, { passive: false });
         this.on(this.canvas, 'touchend', (e) => {
             e.preventDefault();
+            stopBoost();
             const t = e.changedTouches[0];
             const dx = t.clientX - sx, dy = t.clientY - sy;
             if (Math.max(Math.abs(dx), Math.abs(dy)) < 18) return; // 그냥 탭
             if (Math.abs(dx) > Math.abs(dy)) this.turn(dx > 0 ? 1 : -1, 0);
             else this.turn(0, dy > 0 ? 1 : -1);
         }, { passive: false });
+        this.on(this.canvas, 'touchcancel', () => stopBoost(), { passive: true });
         this.on(window, 'keydown', (e) => {
             if (!this.running) return;
+            if (e.key === 'Shift') { this.setBoost(true); return; }
             const map = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
             if (map[e.key]) { e.preventDefault(); this.turn(...map[e.key]); }
         });
+        this.on(window, 'keyup', (e) => { if (e.key === 'Shift') this.setBoost(false); });
     }
 
     update(dt) {
@@ -2859,6 +2908,7 @@ class Snake extends Game {
     draw() {
         const ctx = this.ctx, cell = this.cell, ox = this.offX, oy = this.offY;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
         ctx.fillStyle = HOT.pick('#07100b', '#160614');
         ctx.fillRect(ox, oy, this.cols * cell, this.rows * cell);
 
@@ -2958,7 +3008,7 @@ class Snake extends Game {
 
         if (this.awaitingFirstMove && this.running) {
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
-            ctx.font = '600 13px ' + getComputedStyle(document.body).fontFamily;
+            ctx.font = '600 13px ' + UI_FONT;
             ctx.textAlign = 'center';
             ctx.fillText('쓸어서 출발 · Swipe to start', this.W / 2, this.H * 0.5);
         }
@@ -2969,13 +3019,23 @@ class Snake extends Game {
             else {
                 ctx.textAlign = 'center';
                 ctx.fillStyle = '#ffd700';
-                ctx.font = '900 18px ' + getComputedStyle(document.body).fontFamily;
+                ctx.font = '900 18px ' + UI_FONT;
                 ctx.fillText(this.flash.kr, this.W / 2, this.H * 0.16);
                 ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.font = '600 11px ' + getComputedStyle(document.body).fontFamily;
+                ctx.font = '600 11px ' + UI_FONT;
                 ctx.fillText(this.flash.en, this.W / 2, this.H * 0.16 + 18);
             }
         }
+
+        // 질주 중 표시
+        if (this.isBoosting && this.running) {
+            ctx.fillStyle = '#ffaa00';
+            ctx.font = '900 12px ' + UI_FONT;
+            ctx.textAlign = 'right';
+            ctx.fillText('⚡ BOOST', this.W - 10, this.H - 10);
+        }
+
+        this.endFrame(ctx);
     }
 }
 
@@ -3117,8 +3177,11 @@ class BrickBreaker extends Game {
             if (k.hp <= 0) {
                 this.bricks.splice(i, 1);
                 this.score += 50;
+                this.addSpark(k.x + k.w / 2, k.y + k.h / 2, k.color, 10, 3);
+                if (this.bricks.length % 10 === 0) this.triggerShake(3, 0.12);
             } else {
                 this.score += 10;
+                this.addSpark(b.x, b.y, '#ffffff', 4, 2);
             }
             this.setStat('score', this.score);
             sfx.good();
@@ -3138,6 +3201,7 @@ class BrickBreaker extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
         drawBgImage(ctx, this.bgImg, this.W, this.H);
         ctx.fillStyle = HOT.pick('#0d0a04', '#190812');
         ctx.globalAlpha = 0.6;
@@ -3175,7 +3239,6 @@ class BrickBreaker extends Game {
         const py = this.pad.y;
         ctx.shadowColor = '#ffaa00';
         ctx.shadowBlur = 16;
-        ctx.fillStyle = 'linear-gradient(90deg, #ff5500, #ffaa00, #ffe14d, #ffaa00, #ff5500)';
         neonRect(ctx, px, py, this.padW, this.padH, '#ffaa00', 6, 16);
 
         // 패들 센터 코어 라이트
@@ -3204,10 +3267,12 @@ class BrickBreaker extends Game {
 
         if (b.stuck) {
             ctx.fillStyle = 'rgba(255,255,255,0.55)';
-            ctx.font = '600 13px ' + getComputedStyle(document.body).fontFamily;
+            ctx.font = '600 13px ' + UI_FONT;
             ctx.textAlign = 'center';
             ctx.fillText('화면을 눌러 시작 · Tap to launch', this.W / 2, this.H * 0.62);
         }
+
+        this.endFrame(ctx);
     }
 }
 
@@ -3340,8 +3405,11 @@ class Slots {
         this.feverActive = false;
         this.feverSpinsLeft = 0;
         this.strips = Array.from({ length: REEL_COUNT }, () => buildStrip(false));
+        this.refillArmed = false;
+        this._timers = [];
 
         this.offAll();
+        this.clearOverlays();
         this.buildReels();
         this.bindInput();
 
@@ -3349,10 +3417,36 @@ class Slots {
         this.setStat('win', 0);
         this.setStat('bestval', store.best(this.id));
         document.getElementById('bet-val').textContent = this.bet;
+        document.getElementById('spin-btn').textContent = 'SPIN · 돌리기';
+        this.setSpinLock(false);
         this.setMsg('행운을 빌어요!', 'Good luck!');
         this.updateFreeBadge();
         this.updateAutoSpinLabel();
         this.renderPaytable();
+        // 지난번에 빈털터리로 나갔으면 들어오자마자 충전 버튼을 보여줍니다.
+        if (this.credits < this.bet) this.offerRefill();
+    }
+
+    /**
+     * 더블 도전 창·빅윈·피버 배너·보너스 인트로·코인 샤워 등 떠 있던 것을 전부 걷어냅니다.
+     * 🔴 예전엔 더블 도전 창이 떠 있는 채로 메뉴로 나갔다 오면 그 창이 그대로 남아
+     *    릴을 가렸고(buildReels 는 #reels 안만 비웁니다), 닫을 방법도 없었습니다.
+     */
+    clearOverlays() {
+        this.screen.querySelectorAll('.gamble-modal, .bigwin, .fever-banner, .bonus-intro, .coin-shower')
+            .forEach(el => el.remove());
+        const layer = document.getElementById('payline-layer');
+        if (layer) layer.innerHTML = '';
+    }
+
+    /** setTimeout 을 기억해뒀다가 exit() 에서 한꺼번에 취소합니다. 화면을 떠난 뒤 스핀이 도는 걸 막습니다. */
+    after(fn, ms) {
+        const id = setTimeout(() => {
+            this._timers = this._timers.filter(t => t !== id);
+            if (this.running) fn();
+        }, ms);
+        this._timers.push(id);
+        return id;
     }
 
     /** 5개 맞췄을 때 받는 금액(베팅 10 기준)을 큰 것부터 보여줍니다. */
@@ -3374,7 +3468,10 @@ class Slots {
         this.autoSpinning = false;
         if (this.raf) cancelAnimationFrame(this.raf);
         this.raf = null;
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
         this.offAll();
+        this.clearOverlays();
         this.saveCredits();
     }
 
@@ -3543,13 +3640,15 @@ class Slots {
             if (this.autoSpinsLeft <= 0) { this.stopAutoSpin(); return; }
         }
         this.updateAutoSpinLabel();
-        setTimeout(() => { if (this.running && this.autoSpinning) this.spin(); }, 700);
+        this.after(() => { if (this.autoSpinning) this.spin(); }, 700);
     }
 
     /* ---------- 스핀 ---------- */
 
     async spin() {
         if (this.spinning) return;
+        // 충전 버튼 상태면 SPIN 버튼이 곧 충전 버튼입니다.
+        if (this.refillArmed) { this.doRefill(); return; }
 
         const paying = this.freeSpins === 0;
         if (paying && this.credits < this.bet) {
@@ -3779,7 +3878,7 @@ class Slots {
 
         // 보너스 중이면 자동으로 다음 스핀
         if (this.bonusActive && this.freeSpins > 0) {
-            setTimeout(() => { if (this.running && this.bonusActive) this.spin(); }, 1400);
+            this.after(() => { if (this.bonusActive) this.spin(); }, 1400);
             return;
         }
 
@@ -3929,8 +4028,7 @@ class Slots {
         setTimeout(() => sfx.good(), 480);
         vibe([0, 90, 60, 90, 60, 90, 60, 160]);
 
-        setTimeout(() => {
-            if (!this.running) return;
+        this.after(() => {
             this.screen.querySelector('.bonus-intro')?.remove();
             this.spin();
         }, 2600);
@@ -3973,7 +4071,7 @@ class Slots {
         vibe([0, 80, 60, 140]);
         this.setMsg(`🌶️ 보너스 종료 · 총 +${won}`, `Bonus over — you won ${won} credits`);
 
-        setTimeout(() => {
+        this.after(() => {
             el.remove();
             this.resetBonus();
             this.clearWinVisuals();
@@ -4050,23 +4148,32 @@ class Slots {
         if (as) as.disabled = locked;
     }
 
-    /** 크레딧이 떨어지면 무료로 다시 채웁니다 — 결제는 없습니다. */
+    /**
+     * 크레딧이 떨어지면 무료로 다시 채웁니다 — 결제는 없습니다.
+     *
+     * 🔴 예전엔 SPIN 버튼에 once 리스너를 하나 더 붙였는데, 클릭하면 원래 spin 리스너가
+     *    먼저 돌아 offerRefill() 을 또 부르면서 리스너가 한 겹 더 쌓였습니다. 그 여분이
+     *    다음 스핀 클릭 때 터져서 "충전 완료" 가 뜨고 크레딧이 1000 으로 되돌아갔습니다
+     *    (베팅한 뒤에 공짜 충전). 이제 spin() 이 refillArmed 를 보고 스스로 분기합니다.
+     */
     offerRefill() {
         this.stopAutoSpin();
+        this.refillArmed = true;
         this.setMsg('크레딧이 떨어졌어요. 무료로 충전하세요.', 'Out of credits — refill for free.');
         const btn = document.getElementById('spin-btn');
         btn.disabled = false;
         btn.textContent = '무료 충전 · Free Refill';
-        const refill = (e) => {
-            e.stopImmediatePropagation();
-            this.credits = 1000;
-            this.saveCredits();
-            this.setStat('credit', this.credits);
-            btn.textContent = 'SPIN · 돌리기';
-            this.setMsg('충전 완료! 행운을 빌어요.', 'Refilled! Good luck!');
-            sfx.good();
-        };
-        btn.addEventListener('click', refill, { once: true });
+    }
+
+    doRefill() {
+        this.refillArmed = false;
+        this.credits = 1000;
+        this.saveCredits();
+        this.setStat('credit', this.credits);
+        document.getElementById('spin-btn').textContent = 'SPIN · 돌리기';
+        this.setMsg('충전 완료! 행운을 빌어요.', 'Refilled! Good luck!');
+        this.spawnCoinShower(10);
+        sfx.good();
     }
 }
 
@@ -4242,6 +4349,7 @@ class Neon2048 extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
 
         // 보드 배경 (사이버펑크 네온 글래스 박스)
         const bw = this.cellSize * P_GRID_SIZE + this.gap * (P_GRID_SIZE - 1);
@@ -4309,7 +4417,7 @@ class Neon2048 extends Game {
             }
         }
 
-        this.drawFx(ctx);
+        this.endFrame(ctx);
     }
 }
 
@@ -4503,6 +4611,7 @@ class FlappyNeon extends Game {
     draw() {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
+        this.beginFrame(ctx);
 
         // 파이프 렌더링 (일렉트릭 네온 레이저 기둥)
         this.pipes.forEach(p => {
@@ -4603,13 +4712,13 @@ class FlappyNeon extends Game {
             ctx.fillStyle = '#ffd700';
             ctx.shadowColor = '#ffd700';
             ctx.shadowBlur = 12;
-            ctx.font = '900 15px ' + getComputedStyle(document.body).fontFamily;
+            ctx.font = '900 15px ' + UI_FONT;
             ctx.textAlign = 'center';
             ctx.fillText('화면을 탭하여 비상! · Tap to Flap', this.W / 2, this.H * 0.62);
             ctx.restore();
         }
 
-        this.drawFx(ctx);
+        this.endFrame(ctx);
     }
 }
 
@@ -4633,6 +4742,8 @@ function refreshBests() {
 }
 
 function show(id, isBack = false) {
+    // 예전 버전이 남긴 history state 처럼 모르는 id 가 오면 메뉴로 보냅니다(TypeError 방지).
+    if (id !== 'menu' && !games[id]) id = 'menu';
     const target = id === 'menu' ? document.getElementById('scr-menu') : games[id].screen;
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
@@ -4646,7 +4757,11 @@ function show(id, isBack = false) {
 
     if (current) {
         // 화면이 보이게 된 뒤에 크기를 재야 getBoundingClientRect 가 0 이 아닙니다.
-        requestAnimationFrame(() => games[current].enter());
+        // 🔴 콜백 안에서 current 를 다시 읽으면 안 됩니다 — 타일을 누르고 다음 프레임이
+        //    오기 전에 뒤로 가면 current 가 null 이 되어 games[null].enter() 로 죽었습니다.
+        //    (탭이 숨겨진 동안은 rAF 가 밀리므로 실제로 자주 일어납니다.)
+        const game = games[current];
+        requestAnimationFrame(() => { if (current === id) game.enter(); });
     } else {
         refreshBests();
     }
@@ -4720,11 +4835,28 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* HOT 테마 토글 — 켜고 끄면 body 클래스만 갈아끼우면 CSS 가 알아서 바뀝니다.
-   지금 게임 중이면 다음 프레임에 캔버스 색도 따라옵니다. */
-const menuSub = document.getElementById('menu-sub');
+   지금 게임 중이면 다음 프레임에 캔버스 색도 따라옵니다.
+   🔴 CSS(.hot-sw) 와 HOT 객체는 있었지만 스위치 마크업·핸들러가 빠져 있어
+      localStorage 를 손으로 바꾸지 않는 한 켤 방법이 없었습니다. */
+const hotSw = document.getElementById('hot-sw');
 
 function paintHot() {
     document.body.classList.toggle('hot', HOT.on);
+    if (hotSw) {
+        hotSw.classList.toggle('on', HOT.on);
+        hotSw.setAttribute('aria-checked', HOT.on ? 'true' : 'false');
+    }
+}
+
+if (hotSw) {
+    hotSw.addEventListener('click', () => {
+        sfx.init();
+        HOT.on = !HOT.on;
+        localStorage.setItem('gijoArcade_hot', HOT.on ? '1' : '0');
+        paintHot();
+        sfx.blip(HOT.on ? 660 : 440, 0.06, 'triangle', 0.05);
+        vibe(HOT.on ? [0, 20, 30, 20] : 15);
+    });
 }
 
 paintHot();

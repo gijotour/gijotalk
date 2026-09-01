@@ -48,16 +48,8 @@ html, body {
     z-index: 1;
 }
 
-#party-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
+/* 메인 로비 뒤에 깔리는 오로라 배경 — 마크업(#app 첫 자식)과 짝입니다.
+   HOT 모드에선 body.hot .aurora-bg 가 붉게 바꿉니다. */
 .aurora-bg {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -143,33 +135,6 @@ h2.neon-text {
     font-size: 0.9rem;
     margin-bottom: 28px;
     text-align: center;
-}
-
-.menu-buttons {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(10px, 2.5vw, 18px);
-    width: 100%;
-    max-width: 600px;
-    flex: 1;
-    align-content: center;
-}
-
-.menu-buttons .btn {
-    height: 100%;
-    min-height: clamp(80px, 12dvh, 120px);
-    font-size: clamp(0.9rem, 3vw, 1.1rem);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    white-space: normal;
-    line-height: 1.2;
-}
-
-.menu-buttons .btn .menu-icon {
-    font-size: clamp(1.6rem, 5vw, 2.2rem);
 }
 
 /* ===== Main Quad Menu ===== */
@@ -311,10 +276,11 @@ h2.neon-text {
        이 최소값 밑으로는 grid 가 아니라 위 overflow-y:auto 가 받습니다. */
     grid-template-rows: minmax(30px, 0.62fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr);
     gap: 6px;
-    /* 하단 여백은 footer-copyright(고정, z-index:100)가 배너 칸 위에
-       겹치지 않도록 남겨둔 것입니다. 행이 4행 → 5행으로 늘면서 22px 로는
-       3px 모자라 겹쳤습니다. */
-    padding: 0 6px clamp(34px, 8vw, 42px);
+    /* 예전엔 footer-copyright 가 마지막 행에 겹치지 않도록 여기에 34~42px
+       를 남겼지만, 지금은 그리드 아래에 AD 슬롯 칸이 따로 들어와 있어서
+       실제로 footer 와 겹치는 건 그 AD 칸이었습니다. 여백을 AD 칸 쪽
+       (margin-bottom)으로 옮기고 여기는 최소만 둡니다. */
+    padding: 0 6px 6px;
 }
 
 .quad-btn {
@@ -611,11 +577,16 @@ h2.neon-text {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Roulette Screen & Elements */
+/* Roulette Screen & Elements
+   배경은 아케이드 슬롯 쪽 'JACKPOT FEVER 777' 카지노 아트가 깔려 있었는데,
+   술자리 미션 룰렛과는 결이 안 맞는 슬롯머신 홍보 이미지라(카지노 간판·슬롯
+   기계) 파티 게임용 대표 아트(DRINKING GAME NIGHT 배너)로 바꿨습니다. 그리고
+   덮는 그라디언트가 0.85~0.95 라 사진이 거의 안 비쳤던 것을 터치 룰렛·타이타닉
+   화면과 같은 0.55~0.88 로 낮춰 실제로 보이게 했습니다. */
 .roulette-screen {
     background:
-        radial-gradient(ellipse at center, rgba(42, 0, 30, 0.85) 0%, rgba(13, 0, 15, 0.95) 80%),
-        url('assets/slot_jackpot_fever_spicy_1787296479718.jpg') center/cover;
+        radial-gradient(ellipse at center, rgba(42, 0, 30, 0.58) 0%, rgba(13, 0, 15, 0.9) 80%),
+        url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
     overflow-y: auto;
     overflow-x: hidden;
     padding-top: clamp(14px, 3vh, 24px);
@@ -624,14 +595,18 @@ h2.neon-text {
 
 body.hot .roulette-screen {
     background:
-        radial-gradient(ellipse at center, rgba(60, 0, 20, 0.85) 0%, rgba(15, 0, 5, 0.98) 80%),
+        radial-gradient(ellipse at center, rgba(60, 0, 20, 0.62) 0%, rgba(15, 0, 5, 0.92) 80%),
         url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
 }
 
 .roulette-container {
     position: relative;
-    width: min(82vw, 400px);
-    height: min(82vw, 400px);
+    /* 세로가 짧은 화면(가로 모드·데스크톱 창)에서 flex 열이 높이만 눌러 휠이 타원으로
+       찌그러졌습니다. 가로·세로를 같은 식으로 묶고(높이 48vh 도 상한에 포함)
+       flex-shrink 를 꺼서 항상 정원으로 둡니다 — 넘치면 .roulette-screen 이 스크롤합니다. */
+    width: min(82vw, 400px, 48vh);
+    height: min(82vw, 400px, 48vh);
+    flex-shrink: 0;
     margin-bottom: clamp(12px, 2.5vh, 20px);
     display: flex;
     align-items: center;
@@ -686,40 +661,37 @@ body.hot .roulette-wheel-wrapper {
     box-sizing: border-box;
 }
 
-/* Center Hub with Neon GIJO Emblem */
+/* Center Hub — 중앙 SPIN 버튼.
+   원래는 휠 안의 ::after 가상요소(휠과 함께 돌아가는 장식 원판)와 38px 짜리
+   실제 <button> 이 겹쳐 있었는데, 38px 안에 🎯 아이콘과 SPIN 글자가 세로로
+   안 들어가 삐져나왔습니다. 가상요소를 없애고 그 크기·flex 배치를 버튼에
+   그대로 옮겼습니다 — 버튼은 휠 밖(컨테이너)에 있어 회전하지 않습니다. */
 .roulette-center-hub {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 38px;
-    height: 38px;
+    width: clamp(52px, 14vw, 66px);
+    height: clamp(52px, 14vw, 66px);
+    padding: 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ffffff, #ff0055 60%, #55001d);
+    background: radial-gradient(circle at 35% 35%, #ff7aa6, #ff0055 55%, #55001d);
     transform: translate(-50%, -50%);
     box-shadow: 0 0 20px #ff0055, 0 4px 10px rgba(0,0,0,0.6);
-    border: 2px solid #ffffff;
-    z-index: 10;
-}
-
-.roulette-wheel::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: clamp(48px, 13vw, 62px);
-    height: clamp(48px, 13vw, 62px);
-    background: radial-gradient(circle at 35% 35%, #2a2a3e 0%, #0c0c16 100%);
-    border-radius: 50%;
-    border: 3px solid var(--secondary-neon);
-    box-shadow: 0 0 18px rgba(0, 243, 255, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.4);
+    border: 3px solid #ffffff;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 1px;
     cursor: pointer;
     user-select: none;
+    font-family: var(--font-main);
+    transition: transform 0.12s ease;
+}
+
+.roulette-center-hub:active {
+    transform: translate(-50%, -50%) scale(0.92);
 }
 
 body.hot .roulette-center-hub {
@@ -787,16 +759,6 @@ body.hot .roulette-center-hub {
     background: #ffffff;
     border-radius: 50%;
     box-shadow: 0 0 10px #fff;
-}
-
-.roulette-pointer.twitch {
-    animation: pointer-twitch 0.08s ease-in-out;
-}
-
-@keyframes pointer-twitch {
-    0% { transform: translateX(-50%) rotate(0deg); }
-    50% { transform: translateX(-50%) rotate(-16deg); }
-    100% { transform: translateX(-50%) rotate(0deg); }
 }
 
 /* Quick Presets on Input Screen */
@@ -875,161 +837,6 @@ body.hot .roulette-center-hub {
 @keyframes result-card-pop {
     0% { transform: scale(0.9); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
-}
-
-/* Roulette Winner Modal (대형 당첨 결과 팝업) */
-.roulette-winner-modal {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-}
-
-.roulette-winner-modal.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.roulette-winner-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-}
-
-.roulette-winner-content {
-    position: relative;
-    z-index: 2;
-    width: 90%;
-    max-width: 380px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    transform: scale(0.7) translateY(20px);
-    transition: transform 0.4s cubic-bezier(0.34, 1.45, 0.64, 1);
-}
-
-.roulette-winner-modal.active .roulette-winner-content {
-    transform: scale(1) translateY(0);
-}
-
-.roulette-winner-card {
-    width: 100%;
-    border-radius: 24px;
-    padding: 28px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    text-align: center;
-    background: radial-gradient(circle at center, #260f38 0%, #0c0414 100%);
-    border: 3px solid var(--secondary-neon);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(0, 243, 255, 0.5);
-    box-sizing: border-box;
-}
-
-body.hot .roulette-winner-card {
-    background: radial-gradient(circle at center, #45001c 0%, #150007 100%);
-    border-color: var(--primary-neon);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 50px rgba(255, 0, 85, 0.65);
-}
-
-.roulette-winner-badge {
-    font-size: 0.95rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    padding: 4px 18px;
-    border-radius: 20px;
-    background: rgba(0, 243, 255, 0.2);
-    border: 2px solid var(--secondary-neon);
-    color: var(--secondary-neon);
-    box-shadow: 0 0 15px var(--secondary-neon);
-}
-
-body.hot .roulette-winner-badge {
-    background: rgba(255, 0, 85, 0.25);
-    border-color: var(--primary-neon);
-    color: #ff5588;
-    box-shadow: 0 0 15px var(--primary-neon);
-}
-
-.roulette-winner-icon {
-    font-size: 4.2rem;
-    line-height: 1;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.8));
-    animation: winner-icon-pop 1.5s infinite alternate ease-in-out;
-}
-
-@keyframes winner-icon-pop {
-    0% { transform: scale(1) rotate(0deg); }
-    100% { transform: scale(1.15) rotate(6deg); }
-}
-
-.roulette-winner-title {
-    font-size: clamp(1.45rem, 6.5vw, 2.1rem);
-    font-weight: 900;
-    line-height: 1.25;
-    word-break: keep-all;
-    color: #ffffff;
-    text-shadow: 0 0 20px var(--secondary-neon), 0 4px 10px #000;
-}
-
-body.hot .roulette-winner-title {
-    text-shadow: 0 0 20px var(--primary-neon), 0 4px 10px #000;
-}
-
-.roulette-winner-sub {
-    font-size: clamp(0.9rem, 3.8vw, 1.05rem);
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.35;
-    word-break: keep-all;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 8px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    width: 90%;
-}
-
-.roulette-winner-actions {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    max-width: 320px;
-}
-
-.roulette-spin-again-btn {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 900;
-    padding: 10px 16px;
-}
-
-.roulette-winner-close-btn {
-    flex: 1;
-    font-size: 1rem;
-    font-weight: 900;
-    padding: 10px 16px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    color: #fff;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.roulette-winner-close-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
 }
 
 .result-text {
@@ -1162,14 +969,24 @@ body.hot .roulette-winner-title {
     100% { box-shadow: inset 0 0 80px rgba(255, 0, 85, 0.45); }
 }
 
-.timer {
-    display: none;
+/* 폭탄 카운트다운 — 예전 .timer{display:none} 이 이 숫자를 통째로 숨겨서
+   위의 '타이머 / 블라인드' 탭이 아무 차이가 없었습니다. 타이머 모드에선 남은
+   초를 보여주고, 블라인드 모드(.blind)에선 blur 로 가립니다. */
+.bomb-timer {
+    font-size: clamp(1.05rem, 5vw, 1.4rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    color: #ffe0b0;
+    text-shadow: 0 0 10px rgba(255, 123, 0, 0.8), 0 1px 2px #000;
+    font-variant-numeric: tabular-nums;
+    transition: filter 0.2s ease;
 }
 
-/* Cards Screen & Elements */
+/* Cards Screen & Elements — 배경 아트는 네온 에이스 카드(슬롯 번들의 카드 아트)라
+   카드 뒤집기와 결이 맞아 그대로 둡니다. 덮는 그라디언트만 룰렛과 같은 이유로 낮췄습니다. */
 .cards-screen {
     background:
-        radial-gradient(ellipse at center, rgba(30, 8, 45, 0.75) 0%, rgba(10, 5, 18, 0.95) 80%),
+        radial-gradient(ellipse at center, rgba(30, 8, 45, 0.58) 0%, rgba(10, 5, 18, 0.9) 80%),
         url('assets/slot_double_gamble_cards_1787296496813.jpg') center/cover;
     overflow-y: auto;
     overflow-x: hidden;
@@ -1180,37 +997,8 @@ body.hot .roulette-winner-title {
 
 body.hot .cards-screen {
     background:
-        radial-gradient(ellipse at center, rgba(55, 0, 20, 0.82) 0%, rgba(15, 0, 5, 0.98) 80%),
+        radial-gradient(ellipse at center, rgba(55, 0, 20, 0.62) 0%, rgba(15, 0, 5, 0.92) 80%),
         url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
-}
-
-.cards-header {
-    text-align: center;
-    margin-bottom: clamp(8px, 1.5vh, 16px);
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.cards-suit-deco {
-    font-size: clamp(0.9rem, 2.5vw, 1.15rem);
-    letter-spacing: 0.35em;
-    color: var(--secondary-neon);
-    text-shadow: 0 0 10px var(--secondary-neon);
-    animation: suit-glow 3s infinite alternate ease-in-out;
-}
-
-body.hot .cards-suit-deco {
-    color: var(--primary-neon);
-    text-shadow: 0 0 12px var(--primary-neon);
-}
-
-@keyframes suit-glow {
-    0% { opacity: 0.6; transform: translateY(0); }
-    100% { opacity: 1; transform: translateY(-2px); }
 }
 
 .cards-status-bar {
@@ -1219,7 +1007,7 @@ body.hot .cards-suit-deco {
     justify-content: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 2px;
+    margin: 2px 0 10px;
 }
 
 .cards-badge-counter {
@@ -1249,17 +1037,6 @@ body.hot .cards-badge-counter {
 @keyframes hint-pulse {
     0% { opacity: 0.7; }
     100% { opacity: 1; }
-}
-
-.cards-grid-wrapper {
-    width: 100%;
-    max-width: 540px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto 0;
-    padding: 6px 0;
-    z-index: 2;
 }
 
 .cards-grid {
@@ -1343,25 +1120,9 @@ body.hot .cards-badge-counter {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 243, 255, 0.4);
 }
 
-/* Card Tiers Deluxe Glow Effects */
-.card.card-rare-gold .card-back {
-    border-color: #ffd700;
-    background: linear-gradient(145deg, #2b1f06, #120c02);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 215, 0, 0.6);
-    color: #fff9d6;
-}
-.card.card-rare-hot .card-back {
-    border-color: #ff007f;
-    background: linear-gradient(145deg, #2d0418, #110109);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 0, 127, 0.6);
-    color: #ffe6f3;
-}
-.card.card-rare-bomb .card-back {
-    border-color: #ff5500;
-    background: linear-gradient(145deg, #301004, #140400);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 85, 0, 0.6);
-    color: #fff0e8;
-}
+/* 등급별 카드 뒷면 색은 파일 끝의 .card.flipped.card-rare-* 블록이 담당합니다.
+   (예전엔 여기에도 어두운 버전이 있었지만 등급 클래스는 항상 flipped 와 함께
+   붙어서 뒤 블록의 !important 에 전부 덮였습니다 — 소리 없이 지던 중복이라 지움) */
 
 /* Settings */
 .settings-container {
@@ -2050,17 +1811,6 @@ textarea:focus {
     letter-spacing: 0.5px;
 }
 
-/* 참가 모집 카운트다운 숫자 — 손가락을 더 올릴 시간이 남았다는 걸 크게 보여준다. */
-.bridge-count {
-    display: inline-block;
-    min-width: 1.2em;
-    font-size: 1.5em;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 14px var(--tertiary-neon);
-    animation: countdown-pop 0.35s ease;
-}
-
 .bridge-area {
     width: 100%;
     flex: 1;
@@ -2096,10 +1846,16 @@ textarea:focus {
     100% { border-color: rgba(162, 0, 255, 0.8); box-shadow: inset 0 0 80px rgba(162, 0, 255, 0.35), 0 0 40px rgba(162, 0, 255, 0.25); }
 }
 
+/* 위 :empty::before 안내문이 쓰는 둥실 애니메이션 — 이름만 참조되고 정의가
+   없어서 안내문이 가만히 서 있었습니다. */
+@keyframes float {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+    50% { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
 /* 러브 드링크 노드 — 원 대신 하트 모양(SVG). 색은 div 의 border/background 가
    아니라 안의 .heart-svg 에 fill/stroke 로 준다 — border-radius 를 안 쓰므로. */
-.bridge-player-node,
-.bridge-target-node {
+.bridge-player-node {
     position: absolute;
     display: flex;
     align-items: center;
@@ -2212,63 +1968,6 @@ textarea:focus {
     border: 1px solid #fff;
     box-shadow: 0 0 12px #ff0055;
     letter-spacing: 0.5px;
-}
-
-/* 뽑히지 않은 선 — 결과가 나온 뒤 뒤로 물러나게 합니다. */
-.bridge-line.dimmed {
-    opacity: 0.18;
-    filter: saturate(0.3);
-    transition: opacity 0.4s ease, filter 0.4s ease;
-}
-
-.bridge-line {
-    position: absolute;
-    height: 4px;
-    width: 0;
-    background: linear-gradient(90deg, var(--tertiary-neon), var(--primary-neon));
-    transform-origin: 0 50%;
-    box-shadow: 0 0 8px var(--tertiary-neon);
-    z-index: 1;
-    /* 즉시 나타나지 않고 실제로 "그어지는" 느낌을 준다 — 아미다쿠지류 앱들이
-       공통으로 쓰는 트레이싱 연출. */
-    transition: width var(--bridge-draw-ms, 0.75s) cubic-bezier(0.3, 0.1, 0.2, 1);
-}
-
-.bridge-target-node {
-    bottom: clamp(30px, 8vh, 60px);
-    width: clamp(64px, 14vw, 86px);
-    height: clamp(64px, 14vw, 86px);
-    transform: translateX(-50%);
-}
-
-.bridge-target-node .heart-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: rgba(255, 0, 85, 0.12);
-    stroke: var(--primary-neon);
-    stroke-width: 1;
-    filter: drop-shadow(0 0 14px rgba(255, 0, 85, 0.4));
-    transition: fill 0.25s, filter 0.25s;
-}
-
-.bridge-target-node .node-label {
-    position: relative;
-    z-index: 1;
-    margin-top: 10%;
-    font-size: clamp(1.3rem, 6vw, 1.7rem);
-}
-
-.bridge-target-node.loser .heart-svg {
-    fill: rgba(255, 0, 85, 0.75);
-    filter: drop-shadow(0 0 30px var(--primary-neon));
-    animation: node-pulse 0.4s infinite alternate;
-}
-
-@keyframes node-pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.12); }
 }
 
 /* ===== HOT 모드 (19금 벌칙 세트) ===== */
@@ -2432,17 +2131,43 @@ body.hot .hot-toggle-btn {
     pointer-events: none;
     z-index: 100;
 }
-    
 
-.game-art-banner {
-    width: clamp(100px, 28vw, 150px);
-    height: clamp(100px, 28vw, 150px);
-    object-fit: cover;
-    border-radius: 16px;
-    border: 2px solid rgba(255, 0, 85, 0.4);
-    box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
-    margin: 6px auto;
-    display: block;
+/* 메인 헤더의 ⚙️ 설정 버튼 — HOT 토글 옆에 같은 알약 모양으로 두되 색은
+   중립. (.hot-toggle-btn 을 같이 쓰면 body.hot 의 붉은 펄스가 여기도 붙어서
+   별도 클래스로 뺐습니다) */
+.gear-btn {
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    outline: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 999px;
+    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-main);
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.85);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.gear-btn:active { transform: scale(0.94); }
+.gear-btn:hover { background: rgba(255, 255, 255, 0.16); }
+
+/* 애니메이션 최소화 설정 — 상시 도는 배경 효과(오로라·거품·룰렛 후광·전광판)
+   를 멈춥니다. 파티클 개수는 fxEngine 쪽에서 같은 미디어쿼리로 줄입니다. */
+@media (prefers-reduced-motion: reduce) {
+    .aurora-bg,
+    .croc-bubbles span,
+    .croc-ripple,
+    .roulette-container::before,
+    .ad-marquee-content,
+    .bridge-area,
+    .bridge-area:empty::before,
+    .couple-emblem-ring {
+        animation: none !important;
+    }
 }
 
 /* ===== GIJO Upgrade UI Styles ===== */
@@ -2519,15 +2244,6 @@ body.hot .hot-toggle-btn {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
-.finger-circle.team-red {
-    border-color: #ff0055 !important;
-    box-shadow: 0 0 25px #ff0055, inset 0 0 15px #ff0055 !important;
-}
-.finger-circle.team-blue {
-    border-color: #00f3ff !important;
-    box-shadow: 0 0 25px #00f3ff, inset 0 0 15px #00f3ff !important;
-}
-
 .titanic-btn-row {
     display: flex;
     gap: 8px;
@@ -2621,17 +2337,26 @@ body.hot .hot-toggle-btn {
 </head>
 <body>
     <div id="app">
+        <!-- 오로라 배경 — CSS(.aurora-bg / body.hot .aurora-bg)만 있고 요소가 없어서
+             메인 로비가 맨 검정이었습니다. 화면(z-index:1) 아래에 깔립니다. -->
+        <div class="aurora-bg" aria-hidden="true"></div>
         <!-- Main Menu -->
         <section id="screen-main" class="screen active main-menu-screen">
             <div class="main-header">
-                <h1 class="neon-text title">GIJO Drink</h1>
+                <h1 class="neon-text title">GIJO Drink<span id="hot-badge" class="hot-badge hidden">19+</span></h1>
                 <div class="header-controls-row" style="justify-content:center;">
                     <div class="player-setup">
                         <span class="player-label">인원수 · Players:</span>
-                        <button class="cnt-btn" onclick="app.changePlayerCount(-1)">-</button>
+                        <button class="cnt-btn" onclick="app.changePlayerCount(-1)" aria-label="인원 줄이기">-</button>
                         <span id="player-count-display" class="player-count-val">4</span>
-                        <button class="cnt-btn" onclick="app.changePlayerCount(1)">+</button>
+                        <button class="cnt-btn" onclick="app.changePlayerCount(1)" aria-label="인원 늘리기">+</button>
                     </div>
+                    <!-- HOT 모드 토글 — 설정 화면의 스위치와 같은 app.toggleHotMode() 를 씁니다.
+                         예전엔 설정 화면으로 가는 길 자체가 없어서 HOT 모드를 켤 방법이 없었습니다. -->
+                    <button class="hot-toggle-btn" id="hot-toggle-btn" onclick="app.toggleHotMode()" aria-pressed="false">
+                        🔥 HOT 19+ <span id="hot-toggle-state">OFF</span>
+                    </button>
+                    <button class="gear-btn" onclick="app.navigate('settings')" aria-label="설정 · Settings">⚙️ 설정</button>
                 </div>
             </div>
             <!-- GIJO TOUR VIP 네온 롤링 전광판 (자체 광고판) -->
@@ -2695,8 +2420,9 @@ body.hot .hot-toggle-btn {
                     <span class="quad-label-kr">카드 뒤집기</span>
                 </button>
             </div>
-            <!-- Ad Banner Container -->
-            <div style="margin-top: 14px; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; text-align: center; font-size: 0.75rem; color: #8899ac;">
+            <!-- Ad Banner Container — margin-bottom 은 절대 배치된 footer-copyright(bottom:10px)
+                 가 이 칸 위로 겹쳐 찍히지 않도록 남긴 자리입니다. -->
+            <div style="margin: 10px 6px 30px; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; text-align: center; font-size: 0.75rem; color: #8899ac;">
                 <span style="background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 0.65rem; margin-right: 6px;">AD</span>
                 <span>🌴 동남아 현지 투어 & 액티비티 특별 제휴 할인</span>
             </div>
@@ -2711,10 +2437,10 @@ body.hot .hot-toggle-btn {
             <div class="roulette-presets-container">
                 <div class="roulette-presets-title">⚡ 빠른 프리셋 선택 · Quick Presets</div>
                 <div class="roulette-preset-chips">
-                    <button class="roulette-chip-btn" onclick="app.loadRoulettePreset('classic')">🍹 기본 파티</button>
-                    <button class="roulette-chip-btn" onclick="app.loadRoulettePreset('spicy')">🔥 19+ 스파이시</button>
-                    <button class="roulette-chip-btn" onclick="app.loadRoulettePreset('king')">👑 왕게임 벌칙</button>
-                    <button class="roulette-chip-btn" onclick="app.loadRoulettePreset('players')">👥 참가자 지목</button>
+                    <button class="roulette-chip-btn" data-preset="classic" onclick="app.loadRoulettePreset('classic')">🍹 기본 파티</button>
+                    <button class="roulette-chip-btn" data-preset="spicy" onclick="app.loadRoulettePreset('spicy')">🔥 19+ 스파이시</button>
+                    <button class="roulette-chip-btn" data-preset="king" onclick="app.loadRoulettePreset('king')">👑 왕게임 벌칙</button>
+                    <button class="roulette-chip-btn" data-preset="players" onclick="app.loadRoulettePreset('players')">👥 참가자 지목</button>
                 </div>
             </div>
 
@@ -2747,7 +2473,9 @@ body.hot .hot-toggle-btn {
             <button class="btn neon-btn" id="roulette-spin-btn" style="margin-top: 14px; width: 100%; font-size: 1.05rem;" onclick="app.spinRoulette()">
                 🎰 룰렛 돌리기 · SPIN!
             </button>
-            <div id="roulette-result-card" class="roulette-result-container" style="margin-top: 10px; min-height: 48px; text-align: center;">
+            <!-- CSS 는 .roulette-result-card(.has-result 팝 애니메이션) 인데 요소엔
+                 .roulette-result-container 가 붙어 있어 결과 카드 테두리·팝이 안 나왔습니다. -->
+            <div id="roulette-result-card" class="roulette-result-card" style="margin-top: 10px; min-height: 48px; text-align: center;" aria-live="polite">
                 <div id="roulette-result" class="result-text font-black" style="font-size: 1.15rem; color: #00f3ff; text-shadow: 0 0 15px rgba(0,243,255,0.7);"></div>
             </div>
         </section>
@@ -2770,12 +2498,18 @@ body.hot .hot-toggle-btn {
         </section>
 
         <!-- Cards Screen -->
-        <section id="screen-cards" class="screen hidden">
+        <!-- cards-screen 클래스가 빠져 있어 배경 아트·세로 스크롤 CSS 가 통째로 놀고
+             있었습니다 (20인 카드는 스크롤이 없어 아래 카드에 손이 안 닿았음). -->
+        <section id="screen-cards" class="screen hidden cards-screen">
             <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
             <h2 class="neon-text">GIJO Card Flip<br><span class="title-kr">카드 뒤집기</span></h2>
             <div class="mode-selector-bar">
                 <button class="mode-tab-btn active" id="card-tab-normal" onclick="app.setCardDeckMode('normal')">🍹 일반 파티 · Party</button>
                 <button class="mode-tab-btn" id="card-tab-hot" onclick="app.setCardDeckMode('hot')">🔥 19+ 스파이시 · Spicy 19+</button>
+            </div>
+            <div class="cards-status-bar">
+                <span class="cards-badge-counter" id="cards-counter" aria-live="polite">0 / 4 뒤집음 · Flipped</span>
+                <span class="cards-hint">카드를 눌러 뒤집기 · Tap a card to flip</span>
             </div>
             <div class="cards-grid" id="cards-grid"></div>
             <button class="btn neon-btn" onclick="app.resetCards()">카드 섞기 · Shuffle Cards</button>
@@ -2797,7 +2531,10 @@ body.hot .hot-toggle-btn {
                 <div class="croc-bubbles">
                     <span></span><span></span><span></span><span></span><span></span><span></span>
                 </div>
-                <img class="croc-img" id="croc-img" src="assets/croc_mascot.png" alt="Crocodile Mascot" loading="lazy" alt="Crocodile Roulette">
+                <!-- 이 화면은 display:none 으로 숨어 있어 lazy 면 처음 들어올 때 이빨 판만 먼저
+                     뜨고 악어가 뒤늦게 찍힙니다(눌러야 할 자리가 안 보임). 190KB 한 장이라
+                     eager 로 미리 받고 decoding 만 비동기로 둡니다. -->
+                <img class="croc-img" id="croc-img" src="assets/croc_mascot.png" alt="크로커다일 룰렛 악어 마스코트 · Crocodile mascot" decoding="async" draggable="false">
                 <div class="croc-container">
                     <div class="croc-tooth-grid" id="croc-grid"></div>
                 </div>
@@ -3020,9 +2757,10 @@ const soundFX = {
 
 const haptics = {
     vibrate(pattern) {
-        if (navigator.vibrate) {
-            navigator.vibrate(pattern);
-        }
+        // iframe 안(권한 정책)이나 일부 브라우저에선 vibrate 가 예외를 던집니다 — 게임이 멈추면 안 됩니다.
+        try {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        } catch (e) {}
     },
     tick() { this.vibrate(15); },
     heartbeat() { this.vibrate([40, 60, 40]); },
@@ -3037,21 +2775,40 @@ const fxEngine = {
     particles: [],
     width: 0,
     height: 0,
+    running: false,
+    reduced: false,
     init() {
         this.canvas = document.getElementById('gijo-fx-canvas');
         if (!this.canvas) return;
         this.ctx = this.canvas.getContext('2d');
+        // 애니메이션 최소화 설정이면 파티클 개수를 1/3 로 줄입니다(끄지는 않음 — 결과 신호는 남겨야 하므로).
+        try {
+            const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+            this.reduced = mq.matches;
+            if (mq.addEventListener) mq.addEventListener('change', (e) => { this.reduced = e.matches; });
+        } catch (e) {}
         this.resize();
         window.addEventListener('resize', () => this.resize());
-        this.loop();
     },
     resize() {
         if (!this.canvas) return;
         this.width = this.canvas.width = window.innerWidth;
         this.height = this.canvas.height = window.innerHeight;
     },
+    scaled(count) {
+        return this.reduced ? Math.max(3, Math.ceil(count / 3)) : count;
+    },
+    // 파티클이 있을 때만 rAF 를 돌립니다 — 예전엔 빈 캔버스를 매 프레임 지우며 영원히 돌았습니다.
+    kick() {
+        // 창이 가려져 rAF 가 멈춘 동안 파티클만 계속 쌓이지 않도록 상한을 둡니다(오래된 것부터 버림).
+        if (this.particles.length > 600) this.particles.splice(0, this.particles.length - 600);
+        if (this.running || !this.ctx) return;
+        this.running = true;
+        requestAnimationFrame(() => this.loop());
+    },
     confetti(x = this.width / 2, y = this.height / 2, count = 70) {
         const colors = ['#ff0055', '#00f3ff', '#a200ff', '#ffaa00', '#00ffaa', '#ffffff', '#ff007f'];
+        count = this.scaled(count);
         for (let i = 0; i < count; i++) {
             const angle = Math.random() * Math.PI * 2;
             const speed = 4 + Math.random() * 9;
@@ -3069,8 +2826,10 @@ const fxEngine = {
                 gravity: 0.22
             });
         }
+        this.kick();
     },
     sparks(x, y, count = 25, color = '#ff0055') {
+        count = this.scaled(count);
         for (let i = 0; i < count; i++) {
             const angle = Math.random() * Math.PI * 2;
             const speed = 2 + Math.random() * 6;
@@ -3086,8 +2845,10 @@ const fxEngine = {
                 gravity: 0.1
             });
         }
+        this.kick();
     },
     heartBurst(x, y, count = 15) {
+        count = this.scaled(count);
         for (let i = 0; i < count; i++) {
             const angle = Math.random() * Math.PI * 2;
             const speed = 2 + Math.random() * 5;
@@ -3102,8 +2863,10 @@ const fxEngine = {
                 gravity: 0.08
             });
         }
+        this.kick();
     },
     splash(x, y, count = 20) {
+        count = this.scaled(count);
         for (let i = 0; i < count; i++) {
             const angle = Math.PI * 1.2 + Math.random() * Math.PI * 0.6;
             const speed = 3 + Math.random() * 7;
@@ -3119,10 +2882,15 @@ const fxEngine = {
                 gravity: 0.3
             });
         }
+        this.kick();
     },
     loop() {
         if (this.ctx) {
             this.ctx.clearRect(0, 0, this.width, this.height);
+            if (this.particles.length === 0) {
+                this.running = false;
+                return;
+            }
             for (let i = this.particles.length - 1; i >= 0; i--) {
                 const p = this.particles[i];
                 p.x += p.vx;
@@ -3209,6 +2977,17 @@ const ROULETTE_PRESETS = {
     ]
 };
 
+/* 벌칙 입력 화면의 '👑 왕게임 벌칙' 프리셋 칩 전용 — 룰렛 칸 라벨은 8자에서 잘리므로
+   앞머리에 핵심을 둡니다. 쉼표는 구분자라 문장 안에 쓰지 않습니다. */
+const KING_GAME_PENALTIES = [
+    '왕이 고른 둘 러브샷 💕 (King picks 2 for a love shot)',
+    '왕에게 애교 3초 🥰 (3s aegyo for the King)',
+    '왕 대신 벌주 원샷 🍺 (Drink the King\'s shot)',
+    '왕이 시킨 성대모사 🎤 (Do an impression the King picks)',
+    '왕과 눈싸움 5초 👀 (5s staring contest vs the King)',
+    '왕이 고른 노래 한 소절 🎶 (Sing a line the King picks)'
+];
+
 const HOT_PASS_MISSIONS = [
     { kr: '눈 5초 맞추고 손깍지 끼며 패스! 👀🔥', en: 'Hold 5s eye contact & hold hands, then pass!' },
     { kr: '귓속말로 야릇한 심쿵 칭찬하고 패스! 💬💋', en: 'Whisper a spicy compliment, then pass!' },
@@ -3282,12 +3061,18 @@ const app = {
     // Roulette variables
     currentRoulettePreset: 'classic',
     currentMissionRouletteOptions: [],
+    customRouletteOptions: null,   // 벌칙 입력 화면에서 직접 적은 목록 (없으면 null → 프리셋 사용)
     isSpinning: false,
     rouletteRotation: 0,
-    
-    // Bomb variables
+    rouletteSpinTimer: null,
+    rouletteTickInterval: null,
+
+    // Bomb variables — 남은 시간은 틱을 세지 않고 마감 시각(bombDeadline)으로 계산합니다.
+    // 탭이 뒤로 가면 setInterval 이 늦어져 틱 세기로는 시간이 어긋났습니다.
     bombInterval: null,
     bombTimeLeft: 0,
+    bombDeadline: 0,
+    bombPausedRemaining: null,
     isBombActive: false,
     isBombBlind: false,
     
@@ -3306,7 +3091,8 @@ const app = {
     // Finger variables
     fingerTouches: {},
     fingerTimer: null,
-    fingerMode: 'solo', // 'solo' | 'duo' | 'team'
+    fingerCountdownInterval: null,
+    fingerResultTimer: null,
     fingerColors: ['#ff0055', '#00f3ff', '#a200ff', '#ffaa00', '#00ffaa'],
 
     // Titanic variables
@@ -3316,39 +3102,121 @@ const app = {
     titanicIsOver: false,
 
     // Bridge / Love Drink
-    bridgeNodes: [],
+    bridgeTouches: {},
     bridgeIsActive: false,
     bridgeJoinTimer: null,
     bridgeCountdownInterval: null,
+    bridgeMatchTimers: [],
     BRIDGE_JOIN_SECONDS: 3,
 
     // Cards variables
     cardDeck: [],
     cardDeckMode: 'normal',
-    bombSpicyMode: false,
-    
+
+    // Settings (설정 화면 텍스트영역) — localStorage 에 저장되는 사용자 벌칙 목록
+    customRouletteText: '',
+    customCardText: '',
+
+    /* localStorage 는 사파리 사생활 보호 모드·저장 공간 차단 시 접근 자체가 예외를
+       던집니다. 게임이 그걸로 죽으면 안 되므로 전부 이 두 함수를 거칩니다. */
+    storeGet(key) {
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+    storeSet(key, value) {
+        try { localStorage.setItem(key, value); } catch (e) {}
+    },
+
     setCardDeckMode(mode) {
         this.cardDeckMode = mode;
-        const btnNorm = document.getElementById('card-tab-normal');
-        const btnHot = document.getElementById('card-tab-hot');
-        if (btnNorm) btnNorm.classList.toggle('active', mode === 'normal');
-        if (btnHot) btnHot.classList.toggle('active', mode === 'hot');
+        this.syncCardDeckTabs();
         soundFX.playTick();
         this.resetCards();
     },
 
-    toggleBombSpicyMode() {
-        this.bombSpicyMode = !this.bombSpicyMode;
-        const btn = document.getElementById('bomb-tab-spicy');
-        if (btn) btn.classList.toggle('active', this.bombSpicyMode);
-        soundFX.playTick();
+    syncCardDeckTabs() {
+        const btnNorm = document.getElementById('card-tab-normal');
+        const btnHot = document.getElementById('card-tab-hot');
+        if (btnNorm) btnNorm.classList.toggle('active', this.cardDeckMode === 'normal');
+        if (btnHot) btnHot.classList.toggle('active', this.cardDeckMode === 'hot');
     },
 
     init() {
         this.loadSettings();
         this.setupCards();
         this.setupHistoryHandler();
+        this.setupKeyboard();
+        this.setupVisibilityHandler();
         fxEngine.init();
+    },
+
+    /* 데스크톱 키보드 폴백 — Space 한 키만 씁니다.
+       룰렛: 돌리기 / 폭탄: 시작·패스 / 타이타닉: 누르는 동안 붓기.
+       버튼·입력칸에 포커스가 있으면 브라우저 기본 동작(버튼 클릭)에 맡깁니다 —
+       안 그러면 같은 동작이 두 번 나갑니다. */
+    setupKeyboard() {
+        window.addEventListener('keydown', (e) => {
+            if (e.code !== 'Space' || e.repeat) return;
+            const tag = e.target && e.target.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON') return;
+            if (this.currentScreen === 'roulette') {
+                e.preventDefault();
+                this.spinRoulette();
+            } else if (this.currentScreen === 'bomb') {
+                e.preventDefault();
+                if (this.isBombActive) this.passBomb(); else this.startBomb();
+            } else if (this.currentScreen === 'titanic') {
+                e.preventDefault();
+                this.startPour();
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'Space' && this.currentScreen === 'titanic') this.stopPour();
+        });
+    },
+
+    /* 탭이 뒤로 가거나 화면이 꺼지면 — 폭탄은 멈추고(돌아오면 남은 시간 그대로 재개),
+       붓는 중이던 타이타닉은 손을 뗀 것으로 칩니다(touchend 가 안 오는 경우가 있음). */
+    setupVisibilityHandler() {
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pauseBomb();
+                this.stopPour();
+            } else {
+                this.resumeBomb();
+            }
+        });
+    },
+
+    /* 터치 포인트가 아예 없는 기기(데스크톱 마우스)인지 — 터치 룰렛·러브 드링크의
+       클릭 폴백을 켤지 결정합니다. 터치스크린 노트북은 터치를 그대로 씁니다. */
+    isMouseOnlyDevice() {
+        return !(navigator.maxTouchPoints > 0 || 'ontouchstart' in window);
+    },
+
+    /* 마우스 폴백: 클릭하면 그 자리에 가상 손가락을 놓고, 놓인 자리를 다시 클릭하면 뗍니다.
+       area 마다 바운드 핸들러를 this[key] 에 보관해 재진입 시 중복으로 안 쌓이게 합니다. */
+    bindMouseFingerFallback(area, key, onAdd, onRemoveNear) {
+        if (this[key]) {
+            area.removeEventListener('mousedown', this[key]);
+            this[key] = null;
+        }
+        if (!this.isMouseOnlyDevice()) return;
+        let seq = 0;
+        this[key] = (e) => {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            if (onRemoveNear(e.clientX, e.clientY)) return;
+            onAdd('m' + (seq++), e.clientX, e.clientY);
+        };
+        area.addEventListener('mousedown', this[key]);
+    },
+
+    findTouchNear(map, x, y, radius = 44) {
+        for (const id in map) {
+            const t = map[id];
+            if (Math.hypot(t.clientX - x, t.clientY - y) <= radius) return id;
+        }
+        return null;
     },
 
     setupHistoryHandler() {
@@ -3363,46 +3231,60 @@ const app = {
     },
 
     loadSettings() {
-        this.hotMode = localStorage.getItem('neonDrinks_hot') === '1';
+        this.hotMode = this.storeGet('neonDrinks_hot') === '1';
+        // HOT 이 켜진 채 다시 열면 카드 덱도 19+ 로 맞춥니다(토글할 때와 같은 규칙).
+        this.cardDeckMode = this.hotMode ? 'hot' : 'normal';
+        this.syncCardDeckTabs();
         this.applyHotModeVisuals();
-        const savedCount = localStorage.getItem('neonDrinks_players');
-        if (savedCount) this.playerCount = Math.max(2, parseInt(savedCount, 10));
+        const savedCount = parseInt(this.storeGet('neonDrinks_players'), 10);
+        // 예전엔 parseInt 가 NaN 이면 Math.max(2, NaN) = NaN 이 인원수가 돼 카드가 0장 나왔습니다.
+        if (!isNaN(savedCount)) this.playerCount = Math.max(2, Math.min(20, savedCount));
         this.updatePlayerDisplay();
+
+        this.customRouletteText = this.storeGet('neonDrinks_customRoulette') || '';
+        this.customCardText = this.storeGet('neonDrinks_customCards') || '';
+        const sr = document.getElementById('setting-roulette');
+        const sc = document.getElementById('setting-cards');
+        if (sr) sr.value = this.customRouletteText;
+        if (sc) sc.value = this.customCardText;
+        const ri = document.getElementById('roulette-input-text');
+        if (ri && !ri.value && this.customRouletteText) ri.value = this.customRouletteText;
     },
 
     applyHotModeVisuals() {
-        if (this.hotMode) {
-            document.body.classList.add('hot');
-            const badge = document.getElementById('hot-badge');
-            if (badge) badge.classList.remove('hidden');
-            const sw = document.getElementById('hot-switch');
-            if (sw) sw.setAttribute('aria-checked', 'true');
-        } else {
-            document.body.classList.remove('hot');
-            const badge = document.getElementById('hot-badge');
-            if (badge) badge.classList.add('hidden');
-            const sw = document.getElementById('hot-switch');
-            if (sw) sw.setAttribute('aria-checked', 'false');
+        const on = this.hotMode;
+        document.body.classList.toggle('hot', on);
+        const badge = document.getElementById('hot-badge');
+        if (badge) badge.classList.toggle('hidden', !on);
+        const sw = document.getElementById('hot-switch');
+        if (sw) {
+            sw.setAttribute('aria-checked', on ? 'true' : 'false');
+            sw.classList.toggle('on', on);   // .hot-switch.on 이 손잡이 위치·색을 바꿉니다 — 예전엔 안 붙었음
         }
+        const tb = document.getElementById('hot-toggle-btn');
+        if (tb) tb.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const ts = document.getElementById('hot-toggle-state');
+        if (ts) ts.innerText = on ? 'ON' : 'OFF';
     },
 
     toggleHotMode() {
         this.hotMode = !this.hotMode;
-        localStorage.setItem('neonDrinks_hot', this.hotMode ? '1' : '0');
+        this.storeSet('neonDrinks_hot', this.hotMode ? '1' : '0');
         this.applyHotModeVisuals();
         soundFX.init();
         soundFX.playTada();
+        haptics.buildUp();
         fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 40);
-        if (this.hotMode) {
-            this.setRoulettePreset('hot');
-        } else {
-            this.setRoulettePreset('classic');
-        }
+        // HOT 이 실제로 내용을 바꾸는 세 게임을 같이 맞춥니다: 룰렛 프리셋·카드 덱·(폭탄은 passBomb 이 hotMode 를 직접 봄)
+        this.setRoulettePreset(this.hotMode ? 'hot' : 'classic');
+        this.cardDeckMode = this.hotMode ? 'hot' : 'normal';
+        this.syncCardDeckTabs();
+        this.setupCards();
     },
 
     changePlayerCount(delta) {
         this.playerCount = Math.max(2, Math.min(20, this.playerCount + delta));
-        localStorage.setItem('neonDrinks_players', this.playerCount);
+        this.storeSet('neonDrinks_players', this.playerCount);
         this.updatePlayerDisplay();
         this.setupCards();
         soundFX.playTick();
@@ -3414,21 +3296,72 @@ const app = {
         if (el) el.innerText = this.playerCount;
     },
 
+    /* 벌칙 입력 화면의 프리셋 칩 — 예전엔 onclick 이 이 함수를 불렀는데 정의가 없어서
+       칩을 누르면 TypeError 만 났습니다. 텍스트영역에 목록을 채워 넣기만 하고,
+       실제 적용은 '룰렛 시작' 버튼(confirmRouletteMissions)이 합니다. */
+    loadRoulettePreset(name) {
+        const el = document.getElementById('roulette-input-text');
+        if (!el) return;
+        let list;
+        if (name === 'spicy') list = ROULETTE_PRESETS.hot;
+        else if (name === 'king') list = KING_GAME_PENALTIES;
+        else if (name === 'players') list = Array.from({ length: this.playerCount }, (_, i) => `${i + 1}번 마셔라! 🍺 (Player ${i + 1})`);
+        else list = ROULETTE_PRESETS.classic;
+        el.value = list.join(', ');
+        document.querySelectorAll('.roulette-chip-btn').forEach(b => b.classList.toggle('active', b.dataset.preset === name));
+        soundFX.playTick();
+        haptics.tick();
+    },
+
     confirmRouletteMissions() {
         const el = document.getElementById('roulette-input-text');
         const text = (el && el.value ? el.value : '').trim();
-        if (text) {
-            this.currentMissionRouletteOptions = text.split(',').map(s => s.trim()).filter(s => s);
-        } else {
-            this.currentMissionRouletteOptions = [...ROULETTE_PRESETS.classic];
-        }
+        const parsed = text ? text.split(',').map(s => s.trim()).filter(s => s) : [];
+        // 칸이 하나뿐이면 룰렛이 성립하지 않으므로 프리셋으로 돌립니다.
+        this.customRouletteOptions = parsed.length >= 2 ? parsed : null;
         this.navigate('roulette');
+    },
+
+    /* 직접 입력한 목록을 휠에 얹습니다. 예전엔 navigate('roulette') 의 진입 훅이
+       무조건 setRoulettePreset(...) 을 불러 방금 입력한 목록을 프리셋으로 덮어썼습니다. */
+    applyCustomRoulette() {
+        this.currentRoulettePreset = 'custom';
+        document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
+        this.currentMissionRouletteOptions = [...this.customRouletteOptions];
+        this.updateRouletteWheel(this.currentMissionRouletteOptions);
+        this.clearRouletteResult();
+    },
+
+    clearRouletteResult() {
+        const resultText = document.getElementById('roulette-result');
+        const resultCard = document.getElementById('roulette-result-card');
+        if (resultText) resultText.innerText = '';
+        if (resultCard) resultCard.classList.remove('has-result');
+    },
+
+    /* 화면을 떠날 때 돌던 룰렛 타이머를 끊습니다 — 안 끊으면 4.2초 뒤 숨은 화면에
+       결과가 찍히고 isSpinning 이 그동안 true 로 남아 재진입 직후 SPIN 이 먹지 않았습니다. */
+    cancelRouletteSpin() {
+        clearInterval(this.rouletteTickInterval);
+        clearTimeout(this.rouletteSpinTimer);
+        this.rouletteTickInterval = null;
+        this.rouletteSpinTimer = null;
+        if (this.isSpinning) {
+            this.isSpinning = false;
+            const spinBtn = document.getElementById('roulette-spin-btn');
+            if (spinBtn) spinBtn.disabled = false;
+            this.clearRouletteResult();
+        }
     },
 
     navigate(screenId, isPopState = false) {
         soundFX.init();
         soundFX.playTick();
 
+        // 떠나는 화면의 뒷정리 — 타이머·rAF·겹침 요소가 다음 진입까지 남지 않게 합니다.
+        if (this.currentScreen === 'roulette') {
+            this.cancelRouletteSpin();
+        }
         if (this.currentScreen === 'bomb') {
             this.resetBomb();
         }
@@ -3436,11 +3369,13 @@ const app = {
             this.stopPour();
         }
         if (this.currentScreen === 'finger') {
-            clearTimeout(this.fingerTimer);
-            clearInterval(this.fingerCountdownInterval);
+            this.clearFingerTimers();
         }
         if (this.currentScreen === 'bridge') {
             this.clearBridgeTimers();
+        }
+        if (this.currentScreen === 'crocodile') {
+            clearTimeout(this.crocOverlayTimeout);
         }
 
         const activeScreens = document.querySelectorAll('.screen.active');
@@ -3463,7 +3398,11 @@ const app = {
 
         // Screen Lifecycle Hooks
         if (screenId === 'roulette') {
-            this.setRoulettePreset(this.hotMode ? 'hot' : this.currentRoulettePreset);
+            if (this.customRouletteOptions) {
+                this.applyCustomRoulette();
+            } else {
+                this.setRoulettePreset(this.hotMode ? 'hot' : this.currentRoulettePreset);
+            }
         }
         if (screenId === 'cards') this.setupCards();
         if (screenId === 'crocodile') this.initCrocodile();
@@ -3476,14 +3415,17 @@ const app = {
        1. MISSION ROULETTE LOGIC
        ============================================================ */
     setRoulettePreset(presetName) {
+        // 'custom' 등 프리셋에 없는 이름이 오면 [...undefined] 로 TypeError 가 났습니다.
+        if (!ROULETTE_PRESETS[presetName]) presetName = 'classic';
         this.currentRoulettePreset = presetName;
+        this.customRouletteOptions = null;   // 탭을 고르면 직접 입력 목록은 내려놓습니다
         document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
         const activeTab = document.getElementById(`roulette-tab-${presetName}`);
         if (activeTab) activeTab.classList.add('active');
 
         this.currentMissionRouletteOptions = [...ROULETTE_PRESETS[presetName]];
         this.updateRouletteWheel(this.currentMissionRouletteOptions);
-        document.getElementById('roulette-result').innerText = '';
+        this.clearRouletteResult();
         soundFX.playTick();
     },
 
@@ -3518,9 +3460,11 @@ const app = {
 
     spinRoulette() {
         if (this.isSpinning) return;
-        this.isSpinning = true;
-        
         const wheel = document.getElementById('roulette-wheel');
+        const optionsToUse = this.currentMissionRouletteOptions;
+        if (!wheel || !optionsToUse || optionsToUse.length === 0) return;
+        this.isSpinning = true;
+
         const pointer = document.getElementById('roulette-pointer');
         const resultText = document.getElementById('roulette-result');
         const resultCard = document.getElementById('roulette-result-card');
@@ -3529,17 +3473,16 @@ const app = {
         if (resultCard) resultCard.classList.remove('has-result');
         if (spinBtn) spinBtn.disabled = true;
 
-        const optionsToUse = this.currentMissionRouletteOptions;
         soundFX.init();
-        
+        haptics.tick();
+
         const spins = 6 + Math.random() * 5;
         const extraDegrees = Math.random() * 360;
         this.rouletteRotation += (spins * 360) + extraDegrees;
-        
+
         wheel.style.transform = `rotate(${this.rouletteRotation}deg)`;
-        
-        let tickCount = 0;
-        let spinTicks = setInterval(() => {
+
+        this.rouletteTickInterval = setInterval(() => {
             soundFX.playTick();
             haptics.tick();
             if (pointer) {
@@ -3547,14 +3490,15 @@ const app = {
                 void pointer.offsetWidth;
                 pointer.classList.add('tick-bounce');
             }
-            tickCount++;
         }, 130);
-        
-        setTimeout(() => {
-            clearInterval(spinTicks);
+
+        this.rouletteSpinTimer = setTimeout(() => {
+            clearInterval(this.rouletteTickInterval);
+            this.rouletteTickInterval = null;
+            this.rouletteSpinTimer = null;
             this.isSpinning = false;
             if (spinBtn) spinBtn.disabled = false;
-            
+
             const normalizedDegrees = this.rouletteRotation % 360;
             const segmentAngle = 360 / optionsToUse.length;
             const segmentIndex = Math.floor(((360 - normalizedDegrees) % 360) / segmentAngle);
@@ -3562,7 +3506,8 @@ const app = {
             if (resultText) resultText.innerHTML = `🎉 결과: ${winner}<span class="i18n-sub">Result</span>`;
             if (resultCard) resultCard.classList.add('has-result');
             soundFX.playTada();
-            
+            haptics.buildUp();
+
             const rect = wheel.getBoundingClientRect();
             fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 80);
         }, 4200);
@@ -3573,71 +3518,120 @@ const app = {
        ============================================================ */
     setBombBlindMode(isBlind) {
         this.isBombBlind = isBlind;
-        document.getElementById('bomb-tab-timer').classList.toggle('active', !isBlind);
-        document.getElementById('bomb-tab-blind').classList.toggle('active', isBlind);
+        const tabTimer = document.getElementById('bomb-tab-timer');
+        const tabBlind = document.getElementById('bomb-tab-blind');
+        if (tabTimer) tabTimer.classList.toggle('active', !isBlind);
+        if (tabBlind) tabBlind.classList.toggle('active', isBlind);
         const timerEl = document.getElementById('bomb-timer');
         if (timerEl) timerEl.classList.toggle('blind', isBlind);
         soundFX.playTick();
+        if (this.isBombActive) this.updateBombDisplay();
     },
 
     resetBomb() {
         clearInterval(this.bombInterval);
+        clearTimeout(this.bombRestartTimer);
+        this.bombInterval = null;
         this.isBombActive = false;
+        this.bombPausedRemaining = null;
         const container = document.getElementById('bomb-container');
-        if (container) container.classList.remove('active', 'exploded');
+        if (container) {
+            container.classList.remove('active', 'exploded');
+            container.style.animationDuration = '';
+            container.style.transform = '';
+        }
         const screen = document.getElementById('screen-bomb');
         if (screen) screen.classList.remove('bomb-screen-panic');
-        document.getElementById('bomb-timer').innerText = '00:00';
-        document.getElementById('bomb-result').innerHTML = '';
-        document.getElementById('start-bomb-btn').style.display = 'block';
-        document.getElementById('start-bomb-btn').innerText = '게임 시작 · Start Game';
+        const timerEl = document.getElementById('bomb-timer');
+        if (timerEl) timerEl.innerText = '00:00';
+        const result = document.getElementById('bomb-result');
+        if (result) result.innerHTML = '';
+        const startBtn = document.getElementById('start-bomb-btn');
+        if (startBtn) {
+            startBtn.style.display = 'block';
+            startBtn.innerText = '게임 시작 · Start Game';
+        }
     },
 
     startBomb() {
         if (this.isBombActive) return;
         this.resetBomb();
-        document.getElementById('start-bomb-btn').style.display = 'none';
-        
+        const startBtn = document.getElementById('start-bomb-btn');
+        if (startBtn) startBtn.style.display = 'none';
         const container = document.getElementById('bomb-container');
-        container.classList.add('active');
-        
-        this.bombTimeLeft = 14 + Math.floor(Math.random() * 16); // 14 ~ 30s
+        if (container) container.classList.add('active');
+
+        const seconds = 14 + Math.floor(Math.random() * 16); // 14 ~ 30s
+        this.bombTimeLeft = seconds;
+        this.bombDeadline = Date.now() + seconds * 1000;
+        this.bombPausedRemaining = null;
         this.isBombActive = true;
-        document.getElementById('bomb-result').innerHTML =
+        const result = document.getElementById('bomb-result');
+        if (result) result.innerHTML =
             '화면의 폭탄을 터치해서 넘기세요!<span class="i18n-sub">Touch the bomb to pass it on!</span>';
-        
+
         this.updateBombDisplay();
         soundFX.init();
+        haptics.buildUp();
+        this.startBombTicker();
+    },
 
-        this.bombInterval = setInterval(() => {
-            this.bombTimeLeft--;
-            this.updateBombDisplay();
-            
-            if (this.bombTimeLeft > 0) {
-                if (this.bombTimeLeft <= 5) {
-                    soundFX.playTick(true);
-                    haptics.tick();
-                    const screen = document.getElementById('screen-bomb');
-                    if (screen) screen.classList.add('bomb-screen-panic');
-                } else {
-                    soundFX.playHeartbeat();
-                    haptics.heartbeat();
-                }
-                const rect = container.getBoundingClientRect();
-                fxEngine.sparks(rect.left + rect.width * 0.7, rect.top + 20, 4, '#ffaa00');
-            }
-            
-            if (this.bombTimeLeft <= 0) {
-                this.explodeBomb();
-            }
-        }, 1000);
+    /* 200ms 마다 마감 시각과 비교해 '초가 바뀐 순간'에만 심장박동·틱을 냅니다.
+       인터벌이 밀려도(백그라운드·저사양) 남은 시간 자체는 어긋나지 않습니다. */
+    startBombTicker() {
+        clearInterval(this.bombInterval);
+        this.bombInterval = setInterval(() => this.tickBomb(), 200);
+    },
+
+    tickBomb() {
+        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
+        const remaining = Math.max(0, Math.ceil((this.bombDeadline - Date.now()) / 1000));
+        if (remaining === this.bombTimeLeft) return;
+        this.bombTimeLeft = remaining;
+        this.updateBombDisplay();
+
+        if (remaining <= 0) {
+            this.explodeBomb();
+            return;
+        }
+        if (remaining <= 5) {
+            soundFX.playTick(true);
+            haptics.tick();
+            const screen = document.getElementById('screen-bomb');
+            if (screen) screen.classList.add('bomb-screen-panic');
+        } else {
+            soundFX.playHeartbeat();
+            haptics.heartbeat();
+        }
+        const container = document.getElementById('bomb-container');
+        if (container) {
+            const rect = container.getBoundingClientRect();
+            fxEngine.sparks(rect.left + rect.width * 0.7, rect.top + 20, 4, '#ffaa00');
+        }
+    },
+
+    // 탭이 뒤로 갈 때 — 남은 시간을 붙들어 두고 인터벌을 끊습니다(visibilitychange 에서 호출).
+    pauseBomb() {
+        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
+        this.bombPausedRemaining = Math.max(1000, this.bombDeadline - Date.now());
+        clearInterval(this.bombInterval);
+        this.bombInterval = null;
+    },
+
+    resumeBomb() {
+        if (!this.isBombActive || this.bombPausedRemaining === null) return;
+        this.bombDeadline = Date.now() + this.bombPausedRemaining;
+        this.bombPausedRemaining = null;
+        this.startBombTicker();
     },
 
     updateBombDisplay() {
         const timerEl = document.getElementById('bomb-timer');
-        timerEl.innerText = this.isBombBlind ? '??:??' : `00:${this.bombTimeLeft.toString().padStart(2, '0')}`;
-        
+        const shown = Math.max(0, this.bombTimeLeft);
+        if (timerEl) timerEl.innerText = this.isBombBlind ? '??:??' : `00:${shown.toString().padStart(2, '0')}`;
+
         const container = document.getElementById('bomb-container');
+        if (!container) return;
         if (this.bombTimeLeft < 5) {
             container.style.animationDuration = '0.12s';
         } else if (this.bombTimeLeft < 10) {
@@ -3648,28 +3642,35 @@ const app = {
     },
 
     passBomb() {
-        if (!this.isBombActive) return;
-        
+        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
+
+        // 패스할 때마다 ±1초 흔들림. 마감은 최소 '지금+1초' 로 묶어 패스 직후 터지는 일은 없게.
         const timeChange = Math.floor(Math.random() * 3) - 1;
-        this.bombTimeLeft = Math.max(1, this.bombTimeLeft + timeChange);
+        this.bombDeadline = Math.max(Date.now() + 1000, this.bombDeadline + timeChange * 1000);
+        this.bombTimeLeft = Math.max(1, Math.ceil((this.bombDeadline - Date.now()) / 1000));
         this.updateBombDisplay();
 
         const container = document.getElementById('bomb-container');
-        container.style.transform = 'scale(0.85) rotate(' + (Math.random() * 10 - 5) + 'deg)';
-        setTimeout(() => container.style.transform = '', 120);
+        if (container) {
+            container.style.transform = 'scale(0.85) rotate(' + (Math.random() * 10 - 5) + 'deg)';
+            setTimeout(() => { container.style.transform = ''; }, 120);
+        }
 
         soundFX.playTick(true);
         haptics.tick();
 
-        const passMissions = this.bombSpicyMode ? HOT_PASS_MISSIONS : NORMAL_PASS_MISSIONS;
+        // HOT 모드(19+)를 켜면 돌발 미션도 19+ 세트로 — 예전엔 어디서도 안 켜지는 별도 플래그(bombSpicyMode)를 봤습니다.
+        const passMissions = this.hotMode ? HOT_PASS_MISSIONS : NORMAL_PASS_MISSIONS;
+        const result = document.getElementById('bomb-result');
+        if (!result) return;
 
         if (Math.random() < 0.4 && this.bombTimeLeft > 4) {
             const mission = passMissions[Math.floor(Math.random() * passMissions.length)];
-            document.getElementById('bomb-result').innerHTML =
+            result.innerHTML =
                 `🚨 돌발 미션: ${mission.kr}<span class="i18n-sub">🚨 Surprise mission: ${mission.en}</span>`;
             haptics.buildUp();
         } else {
-            document.getElementById('bomb-result').innerHTML =
+            result.innerHTML =
                 '폭탄이 옆 사람에게 패스되었습니다! 💣<span class="i18n-sub">Passed to the next player! 💣</span>';
         }
     },
@@ -3677,23 +3678,35 @@ const app = {
     explodeBomb() {
         soundFX.playBigBoom();
         clearInterval(this.bombInterval);
+        this.bombInterval = null;
         this.isBombActive = false;
+        this.bombPausedRemaining = null;
         const container = document.getElementById('bomb-container');
-        container.classList.remove('active');
-        container.classList.add('exploded');
+        if (container) {
+            container.classList.remove('active');
+            container.classList.add('exploded');
+        }
         const screen = document.getElementById('screen-bomb');
         if (screen) screen.classList.remove('bomb-screen-panic');
-        document.getElementById('bomb-timer').innerText = '💥 BOOM! 💥';
-        document.getElementById('bomb-result').innerHTML =
+        const timerEl = document.getElementById('bomb-timer');
+        if (timerEl) timerEl.innerText = '💥 BOOM! 💥';
+        const result = document.getElementById('bomb-result');
+        if (result) result.innerHTML =
             '💥 펑! 당신 차례에 터졌습니다! 마셔라! 💥<span class="i18n-sub">It exploded on your turn — drink up! 🍻</span>';
         haptics.loser();
 
-        const rect = container.getBoundingClientRect();
-        fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 80, '#ff0055');
+        if (container) {
+            const rect = container.getBoundingClientRect();
+            fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 80, '#ff0055');
+        }
 
-        setTimeout(() => {
-            document.getElementById('start-bomb-btn').style.display = 'block';
-            document.getElementById('start-bomb-btn').innerText = '다시 시작 · Play Again';
+        // 화면을 떠나면 resetBomb 이 이 타이머도 끊습니다(안 끊으면 숨은 화면의 버튼 글자만 바뀜 — 무해하지만 정리).
+        this.bombRestartTimer = setTimeout(() => {
+            const startBtn = document.getElementById('start-bomb-btn');
+            if (startBtn) {
+                startBtn.style.display = 'block';
+                startBtn.innerText = '다시 시작 · Play Again';
+            }
         }, 2000);
     },
 
@@ -3776,22 +3789,35 @@ const app = {
     /* ============================================================
        4. TOUCH ROULETTE LOGIC
        ============================================================ */
-    setFingerMode(mode) {
-        this.fingerMode = mode;
-        document.getElementById('finger-tab-solo').classList.toggle('active', mode === 'solo');
-        document.getElementById('finger-tab-duo').classList.toggle('active', mode === 'duo');
-        document.getElementById('finger-tab-team').classList.toggle('active', mode === 'team');
-        soundFX.playTick();
+    fingerIdleMessage() {
+        const pcHint = this.isMouseOnlyDevice() ? ' · PC: click to place a finger, click it again to lift' : '';
+        return `다같이 화면을 누르고 계세요! (2~10인)<span class="i18n-sub">Everyone touch and hold the screen!${pcHint}</span>`;
+    },
+
+    setFingerMessage(html) {
+        const msg = document.getElementById('finger-msg');
+        if (msg) msg.innerHTML = html;
+    },
+
+    // 모집 카운트다운·결과 표시 타이머를 한 번에 정리 — 화면을 떠날 때도 여기로.
+    clearFingerTimers() {
+        clearTimeout(this.fingerTimer);
+        clearInterval(this.fingerCountdownInterval);
+        clearTimeout(this.fingerResultTimer);
+        this.fingerTimer = null;
+        this.fingerCountdownInterval = null;
+        this.fingerResultTimer = null;
     },
 
     setupFingerRoulette() {
         const area = document.getElementById('finger-area');
+        if (!area) return;
         this.fingerTouches = {};
-        clearTimeout(this.fingerTimer);
-        clearInterval(this.fingerCountdownInterval);
-        document.getElementById('finger-msg').innerHTML =
-            '다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen!</span>';
-        
+        this.clearFingerTimers();
+        this.setFingerMessage(this.fingerIdleMessage());
+        const screen = document.getElementById('screen-finger');
+        if (screen) screen.classList.remove('shake', 'flash');
+
         // 이전 리스너를 안전하게 제거하기 위해 저장된 바운드 참조를 사용합니다.
         if (this._boundTouchStart) {
             area.removeEventListener('touchstart', this._boundTouchStart);
@@ -3799,86 +3825,108 @@ const app = {
             area.removeEventListener('touchend', this._boundTouchEnd);
             area.removeEventListener('touchcancel', this._boundTouchEnd);
         }
-        
+
         this._boundTouchStart = this.handleTouchStart.bind(this);
         this._boundTouchMove = this.handleTouchMove.bind(this);
         this._boundTouchEnd = this.handleTouchEnd.bind(this);
-        
+
         area.addEventListener('touchstart', this._boundTouchStart, {passive: false});
         area.addEventListener('touchmove', this._boundTouchMove, {passive: false});
         area.addEventListener('touchend', this._boundTouchEnd);
         area.addEventListener('touchcancel', this._boundTouchEnd);
-        
-        area.innerHTML = ''; 
+
+        area.innerHTML = '';
+
+        // 데스크톱 마우스 폴백 (터치 포인트가 없는 기기에서만 붙습니다)
+        this.bindMouseFingerFallback(area, '_fingerMouseHandler',
+            (id, x, y) => { this.addFingerTouch(id, x, y); this.checkFingerStart(); },
+            (x, y) => {
+                if (document.querySelector('.finger-circle.loser')) return true;
+                const id = this.findTouchNear(this.fingerTouches, x, y);
+                if (id === null) return false;
+                this.removeFingerTouch(id);
+                this.checkFingerStart();
+                return true;
+            });
+    },
+
+    // 손가락 하나를 등록 — 터치(changedTouches 의 identifier)와 마우스 폴백이 같이 씁니다.
+    addFingerTouch(id, clientX, clientY) {
+        const area = document.getElementById('finger-area');
+        if (!area || this.fingerTouches[id]) return;
+        const colorIndex = Math.abs(typeof id === 'number' ? id : Object.keys(this.fingerTouches).length);
+        const color = this.fingerColors[colorIndex % this.fingerColors.length];
+
+        const circle = document.createElement('div');
+        circle.className = 'finger-circle';
+        circle.style.left = clientX + 'px';
+        circle.style.top = clientY + 'px';
+        circle.style.borderColor = color;
+        circle.style.boxShadow = `0 0 20px ${color}, inset 0 0 20px ${color}`;
+        area.appendChild(circle);
+
+        this.fingerTouches[id] = { el: circle, clientX, clientY };
+        soundFX.playSpark();
+        haptics.tick();
+        fxEngine.sparks(clientX, clientY, 10, color);
+    },
+
+    removeFingerTouch(id) {
+        const t = this.fingerTouches[id];
+        if (!t) return;
+        t.el.remove();
+        delete this.fingerTouches[id];
     },
 
     handleTouchStart(e) {
         e.preventDefault();
         soundFX.init();
-        if(Object.keys(this.fingerTouches).length >= 10 || document.querySelector('.finger-circle.loser')) return;
-        
-        for(let i=0; i<e.changedTouches.length; i++) {
+        if (document.querySelector('.finger-circle.loser')) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (Object.keys(this.fingerTouches).length >= 10) break;
             const touch = e.changedTouches[i];
-            const color = this.fingerColors[touch.identifier % this.fingerColors.length];
-            
-            const circle = document.createElement('div');
-            circle.className = 'finger-circle';
-            circle.style.left = touch.clientX + 'px';
-            circle.style.top = touch.clientY + 'px';
-            circle.style.borderColor = color;
-            circle.style.boxShadow = `0 0 20px ${color}, inset 0 0 20px ${color}`;
-            
-            document.getElementById('finger-area').appendChild(circle);
-            
-            this.fingerTouches[touch.identifier] = {
-                el: circle,
-                x: touch.clientX,
-                y: touch.clientY
-            };
-            soundFX.playSpark();
-            fxEngine.sparks(touch.clientX, touch.clientY, 10, color);
+            this.addFingerTouch(touch.identifier, touch.clientX, touch.clientY);
         }
         this.checkFingerStart();
     },
 
     handleTouchMove(e) {
         e.preventDefault();
-        for(let i=0; i<e.changedTouches.length; i++) {
+        for (let i = 0; i < e.changedTouches.length; i++) {
             const touch = e.changedTouches[i];
-            if(this.fingerTouches[touch.identifier]) {
-                const circle = this.fingerTouches[touch.identifier].el;
-                circle.style.left = touch.clientX + 'px';
-                circle.style.top = touch.clientY + 'px';
+            const t = this.fingerTouches[touch.identifier];
+            if (t) {
+                t.clientX = touch.clientX;
+                t.clientY = touch.clientY;
+                t.el.style.left = touch.clientX + 'px';
+                t.el.style.top = touch.clientY + 'px';
             }
         }
     },
 
     handleTouchEnd(e) {
         e.preventDefault();
-        if(document.querySelector('.finger-circle.loser')) return; 
-        
-        for(let i=0; i<e.changedTouches.length; i++) {
-            const touch = e.changedTouches[i];
-            if(this.fingerTouches[touch.identifier]) {
-                this.fingerTouches[touch.identifier].el.remove();
-                delete this.fingerTouches[touch.identifier];
-            }
+        if (document.querySelector('.finger-circle.loser')) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            this.removeFingerTouch(e.changedTouches[i].identifier);
         }
         this.checkFingerStart();
     },
 
     checkFingerStart() {
         const count = Object.keys(this.fingerTouches).length;
-        
+
         if (count < 2) {
             clearTimeout(this.fingerTimer);
             clearInterval(this.fingerCountdownInterval);
             this.fingerTimer = null;
             this.fingerCountdownInterval = null;
-            document.getElementById('finger-msg').innerHTML =
+            this.setFingerMessage(
                 count === 1
                     ? '손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 fingers!</span>'
-                    : '다같이 화면을 누르고 계세요! (2~10인)<span class="i18n-sub">Everyone touch and hold the screen!</span>';
+                    : this.fingerIdleMessage());
             return;
         }
 
@@ -3886,14 +3934,14 @@ const app = {
         if (this.fingerTimer) {
             const cdEl = document.querySelector('#finger-msg .finger-countdown');
             const sec = cdEl ? cdEl.innerText : '3';
-            document.getElementById('finger-msg').innerHTML =
-                `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${sec}</span>`;
+            this.setFingerMessage(
+                `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${sec}</span>`);
             return;
         }
 
         let secondsLeft = 3;
-        document.getElementById('finger-msg').innerHTML =
-            `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`;
+        this.setFingerMessage(
+            `👉 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`);
         soundFX.playSiren();
         haptics.buildUp();
 
@@ -3901,8 +3949,8 @@ const app = {
             secondsLeft -= 1;
             const currentCount = Object.keys(this.fingerTouches).length;
             if (secondsLeft > 0) {
-                document.getElementById('finger-msg').innerHTML =
-                    `👉 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`;
+                this.setFingerMessage(
+                    `👉 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 유지하세요... <span class="finger-countdown">${secondsLeft}</span>`);
                 soundFX.playTick(true);
                 haptics.tick();
             }
@@ -3910,6 +3958,7 @@ const app = {
 
         this.fingerTimer = setTimeout(() => {
             clearInterval(this.fingerCountdownInterval);
+            this.fingerCountdownInterval = null;
             this.fingerTimer = null;
             this.finishFingerRoulette();
         }, 3000);
@@ -3917,11 +3966,11 @@ const app = {
 
     finishFingerRoulette() {
         const keys = Object.keys(this.fingerTouches);
-        if(keys.length < 2) return;
-        
+        if (keys.length < 2) return;
+
         const shuffled = [...keys].sort(() => Math.random() - 0.5);
         const loserKey = shuffled[0];
-        
+
         keys.forEach(k => {
             if (k !== loserKey) {
                 this.fingerTouches[k].el.remove();
@@ -3932,23 +3981,26 @@ const app = {
                 fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 60, '#ff0055');
             }
         });
-        
-        document.getElementById('finger-msg').innerHTML =
-            '💥 당첨! 원샷 마셔라! 💥<span class="i18n-sub">You\'re chosen! Bottoms up!</span>';
+
+        this.setFingerMessage('💥 당첨! 원샷 마셔라! 💥<span class="i18n-sub">You\'re chosen! Bottoms up!</span>');
         soundFX.playBigBoom();
         haptics.loser();
 
         const screen = document.getElementById('screen-finger');
-        screen.classList.remove('shake', 'flash');
-        void screen.offsetWidth;
-        screen.classList.add('shake', 'flash');
-        
-        setTimeout(() => {
-            screen.classList.remove('flash');
-            document.getElementById('finger-area').innerHTML = ''; 
+        if (screen) {
+            screen.classList.remove('shake', 'flash');
+            void screen.offsetWidth;
+            screen.classList.add('shake', 'flash');
+        }
+
+        // 화면을 떠나면 clearFingerTimers 가 끊습니다 — 재진입 시 setupFingerRoulette 이 처음부터 다시 그립니다.
+        this.fingerResultTimer = setTimeout(() => {
+            this.fingerResultTimer = null;
+            if (screen) screen.classList.remove('flash');
+            const area = document.getElementById('finger-area');
+            if (area) area.innerHTML = '';
             this.fingerTouches = {};
-            document.getElementById('finger-msg').innerHTML =
-                '다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen!</span>';
+            this.setFingerMessage(this.fingerIdleMessage());
         }, 3600);
     },
 
@@ -4066,14 +4118,24 @@ const app = {
     /* ============================================================
        6. LOVE DRINK LOGIC (2~10인 완벽 멀티터치 지원)
        ============================================================ */
+    bridgeIdleMessage() {
+        const pcHint = this.isMouseOnlyDevice() ? ' · PC: click to place a finger, click it again to lift' : '';
+        return `화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!${pcHint}</span>`;
+    },
+
+    setBridgeMessage(html) {
+        const msg = document.getElementById('bridge-msg');
+        if (msg) msg.innerHTML = html;
+    },
+
     initBridge() {
         const area = document.getElementById('bridge-area');
+        if (!area) return;
         area.innerHTML = '';
         this.bridgeTouches = {};
         this.bridgeIsActive = false;
         this.clearBridgeTimers();
-        document.getElementById('bridge-msg').innerHTML =
-            '화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!</span>';
+        this.setBridgeMessage(this.bridgeIdleMessage());
 
         this.teardownBridgeEvents();
 
@@ -4085,6 +4147,18 @@ const app = {
         area.addEventListener('touchmove', this.handleBridgeMove, {passive: false});
         area.addEventListener('touchend', this.handleBridgeEnd, {passive: false});
         area.addEventListener('touchcancel', this.handleBridgeEnd, {passive: false});
+
+        // 데스크톱 마우스 폴백 (터치 포인트가 없는 기기에서만 붙습니다)
+        this.bindMouseFingerFallback(area, '_bridgeMouseHandler',
+            (id, x, y) => { if (!this.bridgeIsActive) { this.addBridgeTouch(id, x, y); this.checkBridgeStart(); } },
+            (x, y) => {
+                if (this.bridgeIsActive) return true;
+                const id = this.findTouchNear(this.bridgeTouches, x, y);
+                if (id === null) return false;
+                this.removeBridgeTouch(id);
+                this.checkBridgeStart();
+                return true;
+            });
     },
 
     teardownBridgeEvents() {
@@ -4097,11 +4171,46 @@ const app = {
         area.removeEventListener('touchcancel', this.handleBridgeEnd);
     },
 
+    /* 모집 카운트다운뿐 아니라 매칭 연출 타이머(폭죽·미션 팝업)와 미션 모달까지 함께 정리합니다.
+       예전엔 매칭 직후 뒤로가기를 누르면 1.6초 뒤 숨은 화면에서 모달이 .show 로 켜졌고,
+       다시 들어오면 그 모달이 그대로 떠 있었습니다. */
     clearBridgeTimers() {
         clearTimeout(this.bridgeJoinTimer);
         clearInterval(this.bridgeCountdownInterval);
         this.bridgeJoinTimer = null;
         this.bridgeCountdownInterval = null;
+        (this.bridgeMatchTimers || []).forEach(t => clearTimeout(t));
+        this.bridgeMatchTimers = [];
+        const modal = document.getElementById('love-mission-modal');
+        if (modal) modal.classList.remove('show');
+    },
+
+    addBridgeTouch(id, clientX, clientY) {
+        const area = document.getElementById('bridge-area');
+        if (!area || this.bridgeTouches[id]) return;   // 중복 방지
+        const rect = area.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        const playerNum = Object.keys(this.bridgeTouches).length + 1;
+        const node = document.createElement('div');
+        node.className = 'bridge-player-node';
+        node.style.left = `${x}px`;
+        node.style.top = `${y}px`;
+        node.innerHTML = bridgeHeartHTML(`P${playerNum}`);
+        area.appendChild(node);
+
+        this.bridgeTouches[id] = { x, y, clientX, clientY, el: node, id };
+        soundFX.playSpark();
+        haptics.tick();
+        fxEngine.sparks(clientX, clientY, 8, '#ff007f');
+    },
+
+    removeBridgeTouch(id) {
+        const tracked = this.bridgeTouches[id];
+        if (!tracked) return;
+        tracked.el.remove();
+        delete this.bridgeTouches[id];
     },
 
     handleBridgeStart(e) {
@@ -4109,28 +4218,9 @@ const app = {
         if (this.bridgeIsActive) return;
         soundFX.init();
 
-        const area = document.getElementById('bridge-area');
-        const rect = area.getBoundingClientRect();
-
         for (let i = 0; i < e.changedTouches.length; i++) {
             const touch = e.changedTouches[i];
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-
-            // 중복 방지
-            if (this.bridgeTouches[touch.identifier]) continue;
-
-            const playerNum = Object.keys(this.bridgeTouches).length + 1;
-            const node = document.createElement('div');
-            node.className = 'bridge-player-node';
-            node.style.left = `${x}px`;
-            node.style.top = `${y}px`;
-            node.innerHTML = bridgeHeartHTML(`P${playerNum}`);
-            area.appendChild(node);
-
-            this.bridgeTouches[touch.identifier] = { x, y, el: node, id: touch.identifier };
-            soundFX.playSpark();
-            fxEngine.sparks(touch.clientX, touch.clientY, 8, '#ff007f');
+            this.addBridgeTouch(touch.identifier, touch.clientX, touch.clientY);
         }
 
         this.checkBridgeStart();
@@ -4141,12 +4231,15 @@ const app = {
         if (this.bridgeIsActive) return;
 
         const area = document.getElementById('bridge-area');
+        if (!area) return;
         const rect = area.getBoundingClientRect();
 
         for (let i = 0; i < e.changedTouches.length; i++) {
             const touch = e.changedTouches[i];
             const tracked = this.bridgeTouches[touch.identifier];
             if (tracked) {
+                tracked.clientX = touch.clientX;
+                tracked.clientY = touch.clientY;
                 tracked.x = touch.clientX - rect.left;
                 tracked.y = touch.clientY - rect.top;
                 tracked.el.style.left = `${tracked.x}px`;
@@ -4160,12 +4253,7 @@ const app = {
         if (this.bridgeIsActive) return;
 
         for (let i = 0; i < e.changedTouches.length; i++) {
-            const touch = e.changedTouches[i];
-            const tracked = this.bridgeTouches[touch.identifier];
-            if (tracked) {
-                tracked.el.remove();
-                delete this.bridgeTouches[touch.identifier];
-            }
+            this.removeBridgeTouch(e.changedTouches[i].identifier);
         }
 
         this.checkBridgeStart();
@@ -4175,11 +4263,14 @@ const app = {
         const count = Object.keys(this.bridgeTouches).length;
 
         if (count < 2) {
-            this.clearBridgeTimers();
-            document.getElementById('bridge-msg').innerHTML =
+            clearTimeout(this.bridgeJoinTimer);
+            clearInterval(this.bridgeCountdownInterval);
+            this.bridgeJoinTimer = null;
+            this.bridgeCountdownInterval = null;
+            this.setBridgeMessage(
                 count === 1
                     ? '손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 players!</span>'
-                    : '화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!</span>';
+                    : this.bridgeIdleMessage());
             return;
         }
 
@@ -4187,16 +4278,15 @@ const app = {
         if (this.bridgeJoinTimer) {
             const countBadge = `<span style="color:#00f3ff;font-weight:900;">${count}명</span>`;
             const cdEl = document.querySelector('#bridge-msg .finger-countdown');
-            const sec = cdEl ? cdEl.innerText : '3';
-            document.getElementById('bridge-msg').innerHTML =
-                `💘 참가자 ${countBadge} 감지! 매칭 중... <span class="finger-countdown">${sec}</span>`;
+            const sec = cdEl ? cdEl.innerText : String(this.BRIDGE_JOIN_SECONDS);
+            this.setBridgeMessage(`💘 참가자 ${countBadge} 감지! 매칭 중... <span class="finger-countdown">${sec}</span>`);
             return;
         }
 
-        // 2명 이상 감지 시 3초 카운트다운 시작
-        let left = 3;
-        document.getElementById('bridge-msg').innerHTML =
-            `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`;
+        // 2명 이상 감지 시 카운트다운 시작
+        let left = this.BRIDGE_JOIN_SECONDS;
+        this.setBridgeMessage(
+            `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`);
         soundFX.playSiren();
         haptics.buildUp();
 
@@ -4204,8 +4294,8 @@ const app = {
             left--;
             const currentCount = Object.keys(this.bridgeTouches).length;
             if (left > 0) {
-                document.getElementById('bridge-msg').innerHTML =
-                    `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`;
+                this.setBridgeMessage(
+                    `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`);
                 soundFX.playTick(true);
                 haptics.tick();
             }
@@ -4213,8 +4303,10 @@ const app = {
 
         this.bridgeJoinTimer = setTimeout(() => {
             clearInterval(this.bridgeCountdownInterval);
+            this.bridgeCountdownInterval = null;
+            this.bridgeJoinTimer = null;
             this.runBridgeMatch();
-        }, 3000);
+        }, this.BRIDGE_JOIN_SECONDS * 1000);
     },
 
     runBridgeMatch() {
@@ -4294,9 +4386,10 @@ const app = {
 
         area.appendChild(svg);
 
-        // 노드 매칭 스타일
-        p1.el.classList.add('heart-matched');
-        p2.el.classList.add('heart-matched');
+        // 노드 매칭 스타일 — CSS 는 .bridge-player-node.marked 로 돼 있는데 여기선
+        // 'heart-matched' 를 붙이고 있어 뽑힌 두 하트가 색이 안 바뀌었습니다.
+        p1.el.classList.add('marked');
+        p2.el.classList.add('marked');
 
         // 2. 💖 정중앙 커플 하트 엠블럼 생성
         const midX = (p1.x + p2.x) / 2;
@@ -4315,33 +4408,42 @@ const app = {
         `;
         area.appendChild(emblem);
 
-        // 하트 폭죽 파티클 & 사운드/햅틱
+        // 하트 폭죽 파티클 & 사운드/햅틱 — 파티클 좌표는 화면(viewport) 기준이라
+        // 영역(area) 기준 x/y 에 영역 오프셋을 더해 줍니다(예전엔 왼쪽 위로 치우쳐 터졌음).
+        const areaRect = area.getBoundingClientRect();
+        const vx = (x) => areaRect.left + x;
+        const vy = (y) => areaRect.top + y;
         soundFX.playHeartbeat();
-        setTimeout(() => {
+        this.bridgeMatchTimers.push(setTimeout(() => {
             soundFX.playTada();
-            fxEngine.heartBurst(midX, midY, 40);
-            fxEngine.sparks(midX, midY, 30, '#ffd700');
-            fxEngine.sparks(p1.x, p1.y, 20, '#ff0055');
-            fxEngine.sparks(p2.x, p2.y, 20, '#ff007f');
-        }, 180);
+            fxEngine.heartBurst(vx(midX), vy(midY), 40);
+            fxEngine.sparks(vx(midX), vy(midY), 30, '#ffd700');
+            fxEngine.sparks(vx(p1.x), vy(p1.y), 20, '#ff0055');
+            fxEngine.sparks(vx(p2.x), vy(p2.y), 20, '#ff007f');
+        }, 180));
 
         haptics.buildUp();
 
-        document.getElementById('bridge-msg').innerHTML = '💖 커플 탄생! 정중앙 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check the center mission!</span>';
+        this.setBridgeMessage('💖 커플 탄생! 정중앙 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check the center mission!</span>');
 
-        setTimeout(() => {
+        this.bridgeMatchTimers.push(setTimeout(() => {
             this.showLoveMission();
-        }, 1600);
+        }, 1600));
     },
 
     showLoveMission() {
         const mission = LOVE_MISSIONS[Math.floor(Math.random() * LOVE_MISSIONS.length)];
-        document.getElementById('love-mission-text').innerText = mission;
-        document.getElementById('love-mission-modal').classList.add('show');
+        const text = document.getElementById('love-mission-text');
+        const modal = document.getElementById('love-mission-modal');
+        if (text) text.innerText = mission;
+        if (modal) modal.classList.add('show');
+        haptics.heartbeat();
     },
 
     closeLoveMission() {
-        document.getElementById('love-mission-modal').classList.remove('show');
+        const modal = document.getElementById('love-mission-modal');
+        if (modal) modal.classList.remove('show');
+        soundFX.playTick();
         this.initBridge();
     },
 
@@ -4381,10 +4483,28 @@ const app = {
             grid.appendChild(card);
         }
         this.assignCardDeck();
+        this.updateCardsCounter();
+    },
+
+    // 상단 'n / N 뒤집음' 배지 — 몇 장 남았는지 한눈에 보이게.
+    updateCardsCounter() {
+        const el = document.getElementById('cards-counter');
+        if (!el) return;
+        const flipped = document.querySelectorAll('#cards-grid .card.flipped').length;
+        el.innerText = `${flipped} / ${this.playerCount} 뒤집음 · Flipped`;
+    },
+
+    // 설정 화면에 적어 둔 커스텀 카드 벌칙(쉼표 구분) — 있으면 일반 등급 카드의 풀을 대신합니다.
+    customCardPool() {
+        if (!this.customCardText) return null;
+        const pool = this.customCardText.split(',').map(s => s.trim()).filter(s => s)
+            .map(title => ({ title, desc: '커스텀 벌칙 / Custom penalty' }));
+        return pool.length ? pool : null;
     },
 
     assignCardDeck() {
         this.cardDeck = [];
+        const normalPool = this.customCardPool() || CARD_TIERS_DATA.normal;
         for (let i = 0; i < this.playerCount; i++) {
             const rand = Math.random();
             let cardData;
@@ -4401,7 +4521,7 @@ const app = {
                 cardData = CARD_TIERS_DATA.goldBomb[Math.floor(Math.random() * CARD_TIERS_DATA.goldBomb.length)];
                 tierClass = 'card-rare-bomb';
             } else {
-                cardData = CARD_TIERS_DATA.normal[Math.floor(Math.random() * CARD_TIERS_DATA.normal.length)];
+                cardData = normalPool[Math.floor(Math.random() * normalPool.length)];
                 tierClass = 'card-normal';
             }
             this.cardDeck.push({ ...cardData, tierClass });
@@ -4424,18 +4544,23 @@ const app = {
             soundFX.playFlip();
             const tier = cardElement.getAttribute('data-tier') || (cardElement.dataset && cardElement.dataset.tier) || 'card-normal';
             cardElement.classList.add('flipped', tier);
-            
+            this.updateCardsCounter();
+
             const rect = cardElement.getBoundingClientRect();
             if (tier === 'card-rare-gold') {
                 soundFX.playTada();
+                haptics.buildUp();
                 fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ffd700');
             } else if (tier === 'card-rare-hot') {
                 soundFX.playTada();
+                haptics.heartbeat();
                 fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ff007f');
             } else if (tier === 'card-rare-bomb') {
                 soundFX.playBigBoom();
+                haptics.loser();
                 fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ffaa00');
             } else {
+                haptics.tick();
                 fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 12, '#00f3ff');
             }
         }
@@ -4450,23 +4575,41 @@ const app = {
         cards.forEach(card => {
             card.classList.remove('flipped', 'card-rare-gold', 'card-rare-hot', 'card-rare-bomb', 'card-normal');
         });
+        this.updateCardsCounter();
         soundFX.playFlip();
+        haptics.tick();
         fxEngine.sparks(window.innerWidth / 2, window.innerHeight / 2, 25, '#a200ff');
-        setTimeout(() => {
+        clearTimeout(this.cardResetTimer);
+        this.cardResetTimer = setTimeout(() => {
             this.assignCardDeck();
         }, 400);
     },
 
     /* ============================================================
-       SETTINGS
+       SETTINGS — 예전엔 '저장' 이 확인 메시지만 띄우고 실제로는 아무것도
+       저장하지 않았습니다(텍스트영역을 읽지도 않음). 두 목록을 localStorage 에
+       남기고, 룰렛 입력칸 기본값·일반 카드 풀에 바로 반영합니다.
        ============================================================ */
     saveSettings() {
+        const sr = document.getElementById('setting-roulette');
+        const sc = document.getElementById('setting-cards');
+        this.customRouletteText = sr ? sr.value.trim() : '';
+        this.customCardText = sc ? sc.value.trim() : '';
+        this.storeSet('neonDrinks_customRoulette', this.customRouletteText);
+        this.storeSet('neonDrinks_customCards', this.customCardText);
+
+        const ri = document.getElementById('roulette-input-text');
+        if (ri) ri.value = this.customRouletteText;
+        this.setupCards();
+
         soundFX.playTada();
+        haptics.buildUp();
         fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 50);
         const msg = document.getElementById('settings-msg');
         if (msg) {
             msg.innerText = '✅ 저장 완료! · Settings Saved!';
-            setTimeout(() => msg.innerText = '', 2000);
+            clearTimeout(this.settingsMsgTimer);
+            this.settingsMsgTimer = setTimeout(() => { msg.innerText = ''; }, 2000);
         }
     }
 };

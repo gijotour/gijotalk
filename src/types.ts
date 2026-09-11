@@ -30,6 +30,78 @@ export interface Country {
   description: string;
 }
 
+/* ------------------------------------------------------------------ */
+/* 어휘 학습 (초등 수준 · 상황별 단원)                                    */
+/* ------------------------------------------------------------------ */
+//
+// 한 단원 = 한 상황. 안에서 단어 → 짧은 말 → 대화 3단계로 올라갑니다.
+// 설계: docs/VOCAB_PLAN.md. 데이터: src/data/vocab/. 저장: utils/vocab.ts.
+
+export type VocabUnitId =
+  | 'airport' | 'hotel' | 'transport' | 'restaurant' | 'food'
+  | 'market' | 'sightseeing' | 'massage' | 'friends' | 'emergency';
+
+export interface VocabUnit {
+  id: VocabUnitId;
+  order: number;          // 1..10, 여행 흐름 순
+  title: string;          // '공항'
+  emoji: string;          // '✈️'
+  description: string;    // 한 줄 소개 (초등 수준 문장)
+  category: CategoryId;   // 기존 문장 카테고리와의 연결
+}
+
+export interface VocabWord {
+  id: string;             // 'vw-ph-hotel-01'
+  countryId: CountryId;   // 'ph' | 'vn' (ph 는 영어 병기)
+  unitId: VocabUnitId;
+  emoji: string;          // 반드시 1개
+  word: string;           // 현지어 (1~2 단어)
+  wordEn?: string;        // ph 전용: 영어 병기
+  meaning: string;        // 한국어 뜻
+  pronunciation: string;  // '[한글 발음]'
+  pronunciationEn?: string; // ph 전용: 영어 한글 발음
+  tip?: string;           // 한 줄. UI 에선 접어둠
+}
+
+export interface VocabExpression {
+  id: string;             // 've-ph-hotel-01'
+  countryId: CountryId;
+  unitId: VocabUnitId;
+  text: string;           // 2~5 단어
+  textEn?: string;
+  meaning: string;
+  pronunciation: string;
+  pronunciationEn?: string;
+  wordIds: string[];      // 이 표현에 들어간 단어 (1개 이상)
+  phraseId?: string;      // 같은 내용의 기존 문장이 있으면 그 id (오디오·전광판 재사용)
+}
+
+export interface VocabDialogLine {
+  speaker: 'me' | 'them'; // 나 / 상대
+  text: string;           // 6 단어 이하
+  textEn?: string;
+  meaning: string;
+  pronunciation: string;
+  pronunciationEn?: string;
+  phraseId?: string;
+}
+
+export interface VocabDialog {
+  id: string;             // 'vd-ph-hotel'
+  countryId: CountryId;
+  unitId: VocabUnitId;
+  title: string;          // '체크인 하기'
+  lines: VocabDialogLine[]; // 정확히 4줄
+}
+
+/** 저장·복습 진행 기록 (localStorage, 서버 없음) */
+export interface VocabProgress {
+  seen: number;
+  correct: number;
+  wrong: number;
+  lastAt: number;         // epoch ms
+}
+
 export interface AudioSettings {
   speed: number; // 0.8, 1.0, 1.2
   noiseActive: boolean;

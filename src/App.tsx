@@ -32,6 +32,18 @@ import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
 import { BottomNav, TabType } from './components/BottomNav';
+import { LearnTab } from './components/learn/LearnTab';
+import { VocabBookshelf } from './components/learn/VocabBookshelf';
+import {
+  getSavedVocabIds,
+  toggleVocabId,
+  getVocabProgress,
+  recordSeen,
+  recordAnswer,
+  getUnitDoneIds,
+  markUnitDone,
+  type VocabProgressMap,
+} from './utils/vocab';
 
 import {
   Search,
@@ -50,8 +62,10 @@ export default function App() {
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('전체');
   const [searchQuery, setSearchQuery] = useState('');
+  // 첫 화면은 배우기입니다(docs/VOCAB_PLAN.md §6). 일정표 링크로 들어온
+  // 사람은 예외 — 그 링크를 연 이유가 일정 확인이므로 일정 탭이 먼저입니다.
   const [activeTab, setActiveTab] = useState<TabType>(() =>
-    hasItineraryLink() ? 'itinerary' : 'translate'
+    hasItineraryLink() ? 'itinerary' : 'learn'
   );
 
   // Audio Settings
@@ -60,6 +74,11 @@ export default function App() {
   // Bookmarks State
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
   const [isOffline, setIsOffline] = useState<boolean>(!isBrowserOnline());
+
+  // 어휘 학습 상태 (저장·진행·도장). 문장 북마크와 저장 키가 다릅니다.
+  const [savedVocabIds, setSavedVocabIds] = useState<string[]>([]);
+  const [vocabProgress, setVocabProgress] = useState<VocabProgressMap>({});
+  const [vocabUnitDone, setVocabUnitDone] = useState<string[]>([]);
 
   // Modals
   const [billboardPhrase, setBillboardPhrase] = useState<Phrase | null>(null);
@@ -137,6 +156,9 @@ export default function App() {
     registerServiceWorker();
     void syncAudioCache();
     setBookmarkedIds(getSavedBookmarkIds());
+    setSavedVocabIds(getSavedVocabIds());
+    setVocabProgress(getVocabProgress());
+    setVocabUnitDone(getUnitDoneIds());
 
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
@@ -152,6 +174,23 @@ export default function App() {
 
   const handleToggleBookmark = useCallback((id: string) => {
     setBookmarkedIds((prev) => toggleBookmarkId(id, prev));
+  }, []);
+
+  /* 어휘 학습 — 상태 갱신과 저장을 utils/vocab 한 곳에서만 합니다. */
+  const handleToggleVocabSave = useCallback((id: string) => {
+    setSavedVocabIds((prev) => toggleVocabId(id, prev));
+  }, []);
+
+  const handleVocabSeen = useCallback((id: string) => {
+    setVocabProgress((prev) => recordSeen(id, prev));
+  }, []);
+
+  const handleVocabAnswer = useCallback((id: string, correct: boolean) => {
+    setVocabProgress((prev) => recordAnswer(id, correct, prev));
+  }, []);
+
+  const handleUnitDone = useCallback((stamp: string) => {
+    setVocabUnitDone((prev) => markUnitDone(stamp, prev));
   }, []);
 
   const allPhrases = useMemo(() => [...PHRASES, ...customPhrases], [customPhrases]);
@@ -279,7 +318,22 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-grow w-full max-w-screen-md mx-auto px-3 sm:px-6 py-4 space-y-4">
-        {/* TAB 1: 회화 / 번역 메인 뷰 */}
+        {/* TAB 1: 배우기 (첫 화면) */}
+        {activeTab === 'learn' && (
+          <LearnTab
+            country={selectedCountry}
+            speed={speed}
+            savedIds={savedVocabIds}
+            onToggleSave={handleToggleVocabSave}
+            progress={vocabProgress}
+            onMarkSeen={handleVocabSeen}
+            unitDone={vocabUnitDone}
+            onUnitDone={handleUnitDone}
+            onOpenBillboard={setBillboardPhrase}
+          />
+        )}
+
+        {/* TAB 2: 회화 / 번역 메인 뷰 */}
         {activeTab === 'translate' && (
           <div className="space-y-4 animate-in fade-in duration-150">
             {/* 검색 바 (비행기 아이콘 중복 제거 및 깔끔한 와이드 검색창) */}
@@ -443,9 +497,20 @@ export default function App() {
           />
         )}
 
-        {/* TAB 3: 저장됨 (북마크) */}
+        {/* TAB 4: 저장됨 (내 단어장 + 문장 북마크) */}
         {activeTab === 'bookmarks' && (
           <div className="space-y-4 animate-in fade-in duration-150">
+            {/* 위: 내 단어장 — 외울 것 */}
+            <VocabBookshelf
+              country={selectedCountry}
+              speed={speed}
+              savedIds={savedVocabIds}
+              onToggleSave={handleToggleVocabSave}
+              progress={vocabProgress}
+              onAnswer={handleVocabAnswer}
+            />
+
+            {/* 아래: 기존 문장 보관함 — 현장에서 보여줄 것 */}
             <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
               <div>
                 <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
@@ -606,7 +671,7 @@ export default function App() {
       <BottomNav
         activeTab={activeTab}
         onChangeTab={setActiveTab}
-        bookmarkCount={bookmarkedPhrases.length}
+        bookmarkCount={bookmarkedPhrases.length + savedVocabIds.length}
       />
 
       {/* MODAL 1: 3-Second Emergency Billboard */}

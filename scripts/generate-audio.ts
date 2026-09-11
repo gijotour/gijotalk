@@ -4,6 +4,8 @@
  *   npm run audio            # macOS 내장 음성으로 생성 (무료, 오프라인)
  *   npm run audio -- --force # 이미 있는 파일도 다시 생성
  *   npm run audio -- --backend=google --lang=ph
+ *   npm run audio -- --vocab            # 문장 대신 어휘(단어·짧은 말·대화) 오디오
+ *   npm run audio -- --vocab --dry-run  # 몇 개 만들지만 세어 보고 끝냅니다
  *
  * ── 왜 필요한가
  *   브라우저 TTS(speechSynthesis)는 이 앱에서 세 가지가 안 됩니다.
@@ -30,7 +32,8 @@ import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { COUNTRIES, PHRASES } from '../src/config';
-import type { Phrase } from '../src/types';
+import { VOCAB_WORDS, VOCAB_EXPRESSIONS, VOCAB_DIALOGS } from '../src/data/vocab';
+import type { CountryId, Phrase } from '../src/types';
 import { brighten } from './brighten';
 
 const run = promisify(execFile);
@@ -50,6 +53,10 @@ const flag = (name: string, fallback = '') =>
 const BACKEND = flag('backend', 'say') as 'say' | 'google' | 'espeak';
 const LANG_FILTER = flag('lang', 'all');
 const FORCE = args.includes('--force');
+/** 문장(PHRASES) 대신 어휘(단어·짧은 말·대화)를 만듭니다. docs/VOCAB_PLAN.md §6 */
+const VOCAB = args.includes('--vocab');
+/** 실제로 만들지 않고 "몇 개를 만들 것인지" 만 세어 보고 끝냅니다. */
+const DRY_RUN = args.includes('--dry-run');
 
 /* ------------------------------------------------------------------ */
 /* 음성 매핑                                                            */
@@ -177,6 +184,63 @@ function shouldSkipAudio(p: Phrase): string | null {
   if (p.original.includes('*')) return '마스킹된 텍스트';
   return null;
 }
+
+/**
+ * 만들 오디오 한 개.
+ *
+ * 문장이든 어휘든 결국 "이 id 로, 이 글을, 이 언어 목소리로" 가 전부입니다.
+ * 그래서 둘을 같은 모양으로 바꿔 두고 아래 파이프라인은 하나만 씁니다.
+ */
+interface AudioJob {
+  /** 매니페스트 키이자 파일 이름 (확장자 제외) */
+  id: string;
+  /** 실제로 읽을 글 */
+  text: string;
+  /** 파일이 들어갈 폴더 = 항목이 속한 나라 */
+  countryId: CountryId;
+  /** 목소리를 고르는 기준. 필리핀 어휘의 영어 병기만 여기가 en-US 가 됩니다. */
+  langCode: string;
+  /** 값이 있으면 일부러 만들지 않습니다 */
+  skipReason?: string;
+}
+
+/** 필리핀 어휘의 영어 병기에 쓸 목소리 — 영어 트랙과 같은 것을 씁니다. */
+const EN_LANG_CODE = COUNTRIES.find((c) => c.id === 'en')?.langCode ?? 'en-US';
+
+function phraseJobs(countryId: CountryId, langCode: string): AudioJob[] {
+  return PHRASES.filter((p) => p.countryId === countryId).map((p) => ({
+    id: p.id,
+    text: p.original,
+    countryId,
+    langCode,
+    skipReason: shouldSkipAudio(p) ?? undefined,
+  }));
+}
+
+/**
+ * 어휘 작업 목록.
+ *
+ * 단어·짧은 말은 id 를 그대로 쓰고, 대화는 줄마다 `{id}-L1` … `{id}-L4` 입니다
+ * (UI 가 줄 단위로 재생하기 때문입니다).
+ * 필리핀은 영어를 나란히 보여주므로 `{id}-en` 파일을 하나 더 만듭니다.
+ */
+function vocabJobs(countryId: CountryId, langCode: string): AudioJob[] {
+  const jobs: AudioJob[] = [];
+  const add = (id: string, text: string, textEn?: string) => {
+    jobs.push({ id, text, countryId, langCode });
+    if (textEn) jobs.push({ id: `${id}-en`, text: textEn, countryId, langCode: EN_LANG_CODE });
+  };
+
+  for (const w of VOCAB_WORDS.filter((x) => x.countryId === countryId)) add(w.id, w.word, w.wordEn);
+  for (const e of VOCAB_EXPRESSIONS.filter((x) => x.countryId === countryId)) add(e.id, e.text, e.textEn);
+  for (const d of VOCAB_DIALOGS.filter((x) => x.countryId === countryId)) {
+    d.lines.forEach((line, i) => add(`${d.id}-L${i + 1}`, line.text, line.textEn));
+  }
+  return jobs;
+}
+
+const jobsFor = (countryId: CountryId, langCode: string): AudioJob[] =>
+  VOCAB ? vocabJobs(countryId, langCode) : phraseJobs(countryId, langCode);
 
 /* ------------------------------------------------------------------ */
 /* 후처리                                                              */
@@ -306,6 +370,29 @@ async function main() {
     process.exit(1);
   }
 
+  // 세어만 보고 끝내기. 목소리도 API 키도 필요 없으니 가장 먼저 처리합니다.
+  if (DRY_RUN) {
+    console.log(`\n▶ dry-run — ${VOCAB ? '어휘' : '문장'} / 백엔드 ${BACKEND}`);
+    let total = 0;
+    for (const country of targets) {
+      const list = jobsFor(country.id, country.langCode);
+      const make = list.filter((j) => !j.skipReason);
+      total += make.length;
+      console.log(
+        `  ${country.flag} ${country.name} (${country.langCode}) — ${make.length}개` +
+          (list.length !== make.length ? ` (제외 ${list.length - make.length})` : '')
+      );
+    }
+    console.log(`  합계 ${total}개`);
+    return;
+  }
+
+  // 키가 없으면 항목마다 실패를 쌓지 말고 여기서 바로 멈춥니다.
+  if (BACKEND === 'google' && !process.env.GOOGLE_TTS_API_KEY) {
+    console.error('GOOGLE_TTS_API_KEY 환경변수가 필요합니다.');
+    process.exit(1);
+  }
+
   await mkdir(TMP_DIR, { recursive: true });
 
   const ext = BACKEND === 'google' || BACKEND === 'espeak' ? '.mp3' : '.m4a';
@@ -319,39 +406,38 @@ async function main() {
     const dir = path.join(OUT_DIR, country.id);
     await mkdir(dir, { recursive: true });
 
-    const list = PHRASES.filter((p) => p.countryId === country.id);
+    const list = jobsFor(country.id, country.langCode);
     console.log(`\n▶ ${country.flag} ${country.name} (${country.langCode}) — ${list.length}개`);
 
-    for (const p of list) {
-      const skip = shouldSkipAudio(p);
-      if (skip) {
-        skipped.push({ id: p.id, reason: skip });
+    for (const job of list) {
+      if (job.skipReason) {
+        skipped.push({ id: job.id, reason: job.skipReason });
         continue;
       }
 
-      const outPath = path.join(dir, `${p.id}${ext}`);
-      const rel = `${country.id}/${p.id}${ext}`;
+      const outPath = path.join(dir, `${job.id}${ext}`);
+      const rel = `${country.id}/${job.id}${ext}`;
 
       if (!FORCE && existsSync(outPath)) {
-        generated[p.id] = rel;
+        generated[job.id] = rel;
         reused++;
         continue;
       }
 
       try {
         if (BACKEND === 'google') {
-          await synthesizeWithGoogle(p.original, country.langCode, outPath);
+          await synthesizeWithGoogle(job.text, job.langCode, outPath);
         } else if (BACKEND === 'espeak') {
-          await synthesizeWithEspeak(p.original, country.langCode, outPath);
+          await synthesizeWithEspeak(job.text, job.langCode, outPath);
         } else {
-          await synthesizeWithSay(p.original, country.langCode, outPath);
+          await synthesizeWithSay(job.text, job.langCode, outPath);
         }
-        generated[p.id] = rel;
+        generated[job.id] = rel;
         made++;
         process.stdout.write('.');
       } catch (err) {
         failed++;
-        console.error(`\n  ✗ ${p.id}: ${(err as Error).message}`);
+        console.error(`\n  ✗ ${job.id}: ${(err as Error).message}`);
       }
     }
     process.stdout.write('\n');
@@ -366,9 +452,16 @@ async function main() {
   //    그래서 필터와 무관하게 "디스크에 파일이 있는 모든 문장" 을 기준으로 씁니다.
   //    확장자도 둘 다 봅니다 — say 는 .m4a, google/espeak 는 .mp3 라 나라마다
   //    다른 백엔드로 만들어졌을 수 있습니다.
+  //
+  //    `--vocab` 이 생긴 뒤로는 문장과 어휘를 둘 다 훑습니다. 한쪽만 보면
+  //    `npm run audio`(문장) 한 번에 어휘 오디오가 매니페스트에서 통째로 사라집니다.
   for (const country of COUNTRIES) {
-    for (const phrase of PHRASES.filter((p) => p.countryId === country.id)) {
-      if (generated[phrase.id] || shouldSkipAudio(phrase)) continue;
+    const all = [
+      ...phraseJobs(country.id, country.langCode),
+      ...vocabJobs(country.id, country.langCode),
+    ];
+    for (const phrase of all) {
+      if (generated[phrase.id] || phrase.skipReason) continue;
       const found = await Promise.all(
         ['.m4a', '.mp3'].map(async (candidateExt) => {
           const candidateRel = `${country.id}/${phrase.id}${candidateExt}`;

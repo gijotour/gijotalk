@@ -21,16 +21,32 @@ const renderApp = async () => {
 };
 
 /**
+ * 앱 첫 화면은 배우기입니다(docs/VOCAB_PLAN.md §6).
+ * 회화 화면을 보려는 테스트는 한 번 옮겨야 합니다.
+ */
+const gotoTranslate = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(screen.getByRole('button', { name: '회화' }));
+};
+
+/**
  * 앱 전체를 실제로 띄워서 확인합니다.
  * 개별 유닛 테스트가 통과해도 조립이 틀리면 화면은 깨지므로, 조립을 검증합니다.
  */
 describe('App — 조립 검증', () => {
-  it('하단 탭이 4개다', async () => {
+  it('하단 탭이 5개고 배우기가 맨 앞이다', async () => {
     await renderApp();
     const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
     const tabs = within(nav).getAllByRole('button');
-    expect(tabs).toHaveLength(4);
-    expect(tabs.map((t) => t.textContent)).toEqual(['회화', '일정', '보관함', '긴급']);
+    expect(tabs).toHaveLength(5);
+    expect(tabs.map((t) => t.textContent)).toEqual([
+      '배우기',
+      '회화',
+      '일정',
+      '보관함',
+      '긴급',
+    ]);
+    // 배우기가 첫 화면입니다 — 안 열면 아무도 안 하는 화면이라 기본값으로 둡니다.
+    expect(tabs[0]).toHaveAttribute('aria-current', 'page');
   });
 
   it('일정 탭을 열면 파일 올리기와 양식 받기가 함께 보인다', async () => {
@@ -75,8 +91,10 @@ describe('App — 조립 검증', () => {
     expect(input!.hasAttribute('accept')).toBe(false);
   });
 
-  it('첫 화면에 프로모 배너 없이 회화 카드가 바로 보인다', async () => {
+  it('회화 탭에 프로모 배너 없이 회화 카드가 바로 보인다', async () => {
+    const user = userEvent.setup();
     await renderApp();
+    await gotoTranslate(user);
     expect(screen.queryByText(/무한 연속 오디오 듣기 모드/)).not.toBeInTheDocument();
     expect(screen.queryByText(/원하는 특수 상황 표현이/)).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Para po!' })).toBeInTheDocument();
@@ -85,6 +103,7 @@ describe('App — 조립 검증', () => {
   it('검색이 목록을 좁힌다', async () => {
     const user = userEvent.setup();
     await renderApp();
+    await gotoTranslate(user);
 
     expect(screen.getByRole('heading', { name: 'Para po!' })).toBeInTheDocument();
     await user.type(screen.getByLabelText('회화 검색'), '경찰');
@@ -127,6 +146,7 @@ describe('App — 조립 검증', () => {
   it('북마크를 누르면 보관함에 담기고 뱃지가 올라간다', async () => {
     const user = userEvent.setup();
     await renderApp();
+    await gotoTranslate(user);
 
     const cards = screen.getAllByRole('button', { name: '저장하기' });
     await user.click(cards[0]);
@@ -144,6 +164,7 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     const user = userEvent.setup();
     await renderApp();
 
+    await gotoTranslate(user);
     await user.click(screen.getByRole('button', { name: 'AI에게 맞춤 표현 질문하기' }));
     expect(screen.getByRole('dialog', { name: 'AI 맞춤 현지 회화' })).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('hidden');
@@ -157,6 +178,7 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     const user = userEvent.setup();
     await renderApp();
 
+    await gotoTranslate(user);
     await user.click(screen.getAllByRole('button', { name: '3초 긴급 현장 전광판 확대' })[0]);
     expect(screen.getByRole('dialog', { name: /긴급 전광판/ })).toBeInTheDocument();
 
@@ -168,6 +190,7 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     const user = userEvent.setup();
     await renderApp();
 
+    await gotoTranslate(user);
     await user.click(screen.getAllByRole('button', { name: '내 발음 연습하기 (음성인식)' })[0]);
     expect(screen.getByRole('dialog', { name: '실전 발음 체크' })).toBeInTheDocument();
 

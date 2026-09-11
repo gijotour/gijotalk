@@ -1,8 +1,8 @@
 import React from 'react';
-import { Languages, CalendarDays, Bookmark, ShieldAlert } from 'lucide-react';
+import { GraduationCap, Languages, CalendarDays, Bookmark, ShieldAlert } from 'lucide-react';
 
 /**
- * 탭을 5개에서 3개로 줄였다가, 일정표를 더해 4개가 됐습니다.
+ * 탭을 5개에서 3개로 줄였다가, 일정표를 더해 4개, 배우기를 더해 다시 5개가 됐습니다.
  *
  * 없앤 것과 그 이유:
  *   · 카테고리  → 메인 화면의 카테고리 칩이 이미 같은 일을 합니다. 순수 중복이었습니다.
@@ -11,8 +11,12 @@ import { Languages, CalendarDays, Bookmark, ShieldAlert } from 'lucide-react';
  * 일정표를 탭으로 올린 이유:
  *   여행 중 조회 빈도가 회화만큼 높고 성격이 완전히 다릅니다. 회화 화면에 카드로
  *   끼워 넣으면 정작 회화 목록이 또 첫 화면 아래로 밀려납니다.
+ *
+ * 배우기를 맨 앞에 둔 이유(docs/VOCAB_PLAN.md):
+ *   회화는 "필요할 때 찾아 쓰는" 화면이라 검색과 카테고리로 바로 들어갑니다.
+ *   배우기는 "안 열면 안 하는" 화면입니다. 첫 화면이 아니면 아무도 안 엽니다.
  */
-export type TabType = 'translate' | 'itinerary' | 'bookmarks' | 'emergency';
+export type TabType = 'learn' | 'translate' | 'itinerary' | 'bookmarks' | 'emergency';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -27,6 +31,13 @@ const TABS: Array<{
   activeClass: string;
   idleClass: string;
 }> = [
+  {
+    id: 'learn',
+    label: '배우기',
+    icon: <GraduationCap className="w-6 h-6" />,
+    activeClass: 'bg-brand text-white',
+    idleClass: 'text-ink-soft hover:text-ink',
+  },
   {
     id: 'translate',
     label: '회화',
@@ -77,9 +88,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               key={tab.id}
               onClick={() => onChangeTab(tab.id)}
               aria-current={active ? 'page' : undefined}
-              // 탭이 3개가 되면서 터치 영역을 넉넉히 잡을 수 있게 됐습니다.
+              // 탭이 5개라도 한 칸이 44px 아래로 내려가지 않게 잡습니다.
               // 흔들리는 차 안에서 누르는 앱이라 여백이 곧 기능입니다.
-              className={`flex-1 max-w-36 flex flex-col items-center justify-center gap-1 py-2 rounded-2xl transition-all active:scale-95 font-bold ${
+              className={`flex-1 max-w-36 min-h-14 flex flex-col items-center justify-center gap-1 py-2 rounded-2xl transition-all active:scale-95 font-bold ${
                 active ? tab.activeClass : tab.idleClass
               }`}
             >

@@ -327,5 +327,32 @@ diff gijotalk/public/game/gijo-arcade.html gijoarcade/index.html # 동일 (diff 
 - `npm test`: 전체 14개 테스트 파일, 252개 테스트 ALL PASS (신규 언어 전환, 10대 기본 검색, 게임 허브 플로우 테스트 포함)
 - `npm run build`: Vite 프로덕션 번들 정상 완료 (5.42s)
 
+---
+
+## 🍸 8. GIJO Drink 터치 룰렛 (Touch Roulette & Love Drink) 긴급 결함 수정 및 gb10 전수 QA (2026-10-12)
+
+사용자 긴급 QA 요청("전체qa다시 터치게임안됨, 코딩은 gb10으로 하고 너는 검증 계획시안만")에 따라 수석 아키텍트가 검증 계획시안([`QA_VERIFICATION_PLAN.md`](file:///C:/Users/user/.gemini/antigravity/brain/e22d8a65-35fd-4db9-8fab-81153e9a5f6f/QA_VERIFICATION_PLAN.md))을 수립하고, 시니어 엔지니어 gb10이 `public/game/gijo-drink.html`의 터치 룰렛 엔진을 완벽하게 재구현 및 검증하였습니다.
+
+### A. 원인 분석 및 수정 내역 (`public/game/gijo-drink.html`)
+1. **`setupFingerRoulette()` 완벽 구현**:
+   - `this.setupFingerRoulette` 미선언으로 인한 런타임 `TypeError` 크래시 해결.
+   - `#finger-area`에 `{ passive: false }` 터치 이벤트(`touchstart`, `touchmove`, `touchend`, `touchcancel`) 등록 및 `e.preventDefault()` 적용으로 모바일 스크롤/바운스 방지.
+   - `touch.identifier` 기반 8색 네온 링(`.finger-circle`) 동적 추적 렌더링.
+   - 활성 터치 2개 이상 감지 시 3초 카운트다운 타이머(초당 틱 음향 + 햅틱 펄스) 및 실시간 안내 메시지 표시.
+   - 3초 유지 시 `finishFingerRoulette()` 호출 (술게임 1인 벌칙 복불복 vs 19+ 커플 네온 매칭 연동).
+   - PC 마우스 클릭 시뮬레이션 지원 (`isMouseOnlyDevice()` 감지).
+2. **`clearFingerTimers()` 및 `teardownFingerEvents()` 구현**:
+   - 타이머 누수 방지 및 화면 이탈 시 이벤트 리스너 해제.
+3. **`closeLoveMission()` 중복 선언 버그 수정**:
+   - 모달 닫기 시 화면별(`currentScreen`) 분기 처리로 정상 리셋.
+
+### B. 최종 검증 결과
+- `vm.Script` HTML 구문 분석: `Syntax OK`
+- JSDOM 멀티터치 7단계 시뮬레이션 테스트: ALL PASS (100%)
+- `npx tsc --noEmit`: 0 Errors
+- `npm test`: 14개 테스트 파일, 252개 테스트 전원 통과 (ALL PASS)
+- `npm run build`: 프로덕션 빌드 정상 완료
+
+
 
 

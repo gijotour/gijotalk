@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIJO Drink - Party Game</title>
     <!-- 웹폰트를 렌더링 차단 없이 불러옵니다.
-         원래 <link rel="stylesheet"> 그대로 두면, 이 문서 뒤쪽의 <script>가 폰트 요청이
+         원래 <link rel="stylesheet"> 그대로 두면, 이 문서 뒤쪽의 &lt;script&gt;가 폰트 요청이
          끝날 때까지 파싱을 멈춥니다. 평소엔 안 보이는 문제지만 현지 데이터가 느리거나
          요청이 걸려버리면(연결은 됐는데 응답이 안 오는 상태) 게임 화면 전체가 영원히
          빈 화면으로 멈춥니다 — 여행 중 이 앱을 쓰는 바로 그 상황입니다.
@@ -3627,7 +3627,8 @@ const app = {
     fingerTimer: null,
     fingerCountdownInterval: null,
     fingerResultTimer: null,
-    fingerColors: ['#ff0055', '#00f3ff', '#a200ff', '#ffaa00', '#00ffaa'],
+    fingerIsActive: false,
+    fingerColors: ['#ff0055', '#00f3ff', '#a200ff', '#ffd700', '#00ff66', '#ff00aa', '#ff6600', '#0099ff'],
 
     // Titanic variables
     titanicWeight: 0,
@@ -3971,6 +3972,7 @@ const app = {
         }
         if (this.currentScreen === 'finger') {
             this.clearFingerTimers();
+            this.teardownFingerEvents();
         }
         if (this.currentScreen === 'bridge') {
             this.clearBridgeTimers();
@@ -4430,6 +4432,217 @@ const app = {
         haptics.tick();
     },
 
+    clearFingerTimers() {
+        if (this.fingerTimer) {
+            clearTimeout(this.fingerTimer);
+            this.fingerTimer = null;
+        }
+        if (this.fingerCountdownInterval) {
+            clearInterval(this.fingerCountdownInterval);
+            this.fingerCountdownInterval = null;
+        }
+        if (this.fingerResultTimer) {
+            clearTimeout(this.fingerResultTimer);
+            this.fingerResultTimer = null;
+        }
+        const penaltyModal = document.getElementById('touch-penalty-modal');
+        if (penaltyModal) penaltyModal.classList.remove('show');
+        const loveModal = document.getElementById('love-mission-modal');
+        if (loveModal) loveModal.classList.remove('show');
+    },
+
+    clearFingerCountdown() {
+        if (this.fingerTimer) {
+            clearTimeout(this.fingerTimer);
+            this.fingerTimer = null;
+        }
+        if (this.fingerCountdownInterval) {
+            clearInterval(this.fingerCountdownInterval);
+            this.fingerCountdownInterval = null;
+        }
+    },
+
+    setupFingerRoulette() {
+        soundFX.init();
+        const area = document.getElementById('finger-area');
+        if (!area) return;
+
+        area.innerHTML = '';
+        this.fingerTouches = {};
+        this.fingerIsActive = false;
+        this.clearFingerTimers();
+        this.setFingerMessage(this.fingerIdleMessage());
+
+        this.teardownFingerEvents();
+
+        this.handleFingerStart = this.handleFingerStart.bind(this);
+        this.handleFingerMove = this.handleFingerMove.bind(this);
+        this.handleFingerEnd = this.handleFingerEnd.bind(this);
+
+        area.addEventListener('touchstart', this.handleFingerStart, { passive: false });
+        area.addEventListener('touchmove', this.handleFingerMove, { passive: false });
+        area.addEventListener('touchend', this.handleFingerEnd, { passive: false });
+        area.addEventListener('touchcancel', this.handleFingerEnd, { passive: false });
+
+        // 데스크톱 마우스 폴백
+        this.bindMouseFingerFallback(area, '_fingerMouseHandler',
+            (id, clientX, clientY) => {
+                if (this.fingerIsActive) return;
+                this.addFingerTouch(id, clientX, clientY);
+                this.checkFingerRouletteStart();
+            },
+            (clientX, clientY) => {
+                if (this.fingerIsActive) return true;
+                const id = this.findTouchNear(this.fingerTouches, clientX, clientY, 44);
+                if (id === null) return false;
+                this.removeFingerTouch(id);
+                this.checkFingerRouletteStart();
+                return true;
+            }
+        );
+    },
+
+    teardownFingerEvents() {
+        this.clearFingerTimers();
+        const area = document.getElementById('finger-area');
+        if (!area) return;
+        if (this.handleFingerStart) {
+            area.removeEventListener('touchstart', this.handleFingerStart);
+            area.removeEventListener('touchmove', this.handleFingerMove);
+            area.removeEventListener('touchend', this.handleFingerEnd);
+            area.removeEventListener('touchcancel', this.handleFingerEnd);
+        }
+        if (this._fingerMouseHandler) {
+            area.removeEventListener('mousedown', this._fingerMouseHandler);
+            this._fingerMouseHandler = null;
+        }
+    },
+
+    addFingerTouch(id, clientX, clientY) {
+        const area = document.getElementById('finger-area');
+        if (!area || this.fingerTouches[id]) return;
+        const rect = area.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        const usedColors = new Set(Object.values(this.fingerTouches).map(t => t.color));
+        const color = this.fingerColors.find(c => !usedColors.has(c)) || this.fingerColors[Object.keys(this.fingerTouches).length % this.fingerColors.length];
+
+        const circle = document.createElement('div');
+        circle.className = 'finger-circle';
+        circle.style.left = `${x}px`;
+        circle.style.top = `${y}px`;
+        circle.style.borderColor = color;
+        circle.style.boxShadow = `0 0 25px ${color}, inset 0 0 20px ${color}`;
+
+        area.appendChild(circle);
+
+        this.fingerTouches[id] = { id, x, y, clientX, clientY, color, el: circle };
+
+        soundFX.playSpark();
+        haptics.tick();
+        fxEngine.sparks(clientX, clientY, 12, color);
+    },
+
+    moveFingerTouch(id, clientX, clientY) {
+        const tracked = this.fingerTouches[id];
+        if (!tracked) return;
+        const area = document.getElementById('finger-area');
+        if (!area) return;
+        const rect = area.getBoundingClientRect();
+
+        tracked.clientX = clientX;
+        tracked.clientY = clientY;
+        tracked.x = clientX - rect.left;
+        tracked.y = clientY - rect.top;
+        tracked.el.style.left = `${tracked.x}px`;
+        tracked.el.style.top = `${tracked.y}px`;
+    },
+
+    removeFingerTouch(id) {
+        const tracked = this.fingerTouches[id];
+        if (!tracked) return;
+        if (tracked.el) tracked.el.remove();
+        delete this.fingerTouches[id];
+    },
+
+    handleFingerStart(e) {
+        e.preventDefault();
+        if (this.fingerIsActive) return;
+        soundFX.init();
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            this.addFingerTouch(touch.identifier, touch.clientX, touch.clientY);
+        }
+
+        this.checkFingerRouletteStart();
+    },
+
+    handleFingerMove(e) {
+        e.preventDefault();
+        if (this.fingerIsActive) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            this.moveFingerTouch(touch.identifier, touch.clientX, touch.clientY);
+        }
+    },
+
+    handleFingerEnd(e) {
+        e.preventDefault();
+        if (this.fingerIsActive) return;
+
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            this.removeFingerTouch(e.changedTouches[i].identifier);
+        }
+
+        this.checkFingerRouletteStart();
+    },
+
+    checkFingerRouletteStart() {
+        const count = Object.keys(this.fingerTouches).length;
+
+        if (count < 2) {
+            this.clearFingerCountdown();
+            this.fingerIsActive = false;
+            this.setFingerMessage(
+                count === 1
+                    ? '⚡ 손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 players!</span>'
+                    : this.fingerIdleMessage()
+            );
+            return;
+        }
+
+        if (this.fingerCountdownInterval) {
+            return;
+        }
+
+        let secondsLeft = 3;
+        const updateCountdownMsg = (sec) => {
+            this.setFingerMessage(
+                `⚡ 3초 후 결정! 손가락을 떼지 마세요! <span class="finger-countdown">${sec}</span><span class="i18n-sub">Hold on! Deciding in ${sec}s... (${count} players)</span>`
+            );
+        };
+
+        updateCountdownMsg(secondsLeft);
+        soundFX.playTick();
+        haptics.tick();
+
+        this.fingerCountdownInterval = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft > 0) {
+                updateCountdownMsg(secondsLeft);
+                soundFX.playTick();
+                haptics.tick();
+            } else {
+                this.clearFingerCountdown();
+                this.fingerIsActive = true;
+                this.finishFingerRoulette();
+            }
+        }, 1000);
+    },
+
     closeTouchPenalty() {
         const modal = document.getElementById('touch-penalty-modal');
         if (modal) modal.classList.remove('show');
@@ -4437,6 +4650,8 @@ const app = {
         const area = document.getElementById('finger-area');
         if (area) area.innerHTML = '';
         this.fingerTouches = {};
+        this.fingerIsActive = false;
+        this.clearFingerTimers();
         this.setFingerMessage(this.fingerIdleMessage());
     },
 
@@ -4444,10 +4659,16 @@ const app = {
         const modal = document.getElementById('love-mission-modal');
         if (modal) modal.classList.remove('show');
         soundFX.playTick();
-        const area = document.getElementById('finger-area');
-        if (area) area.innerHTML = '';
-        this.fingerTouches = {};
-        this.setFingerMessage(this.fingerIdleMessage());
+        if (this.currentScreen === 'finger') {
+            const area = document.getElementById('finger-area');
+            if (area) area.innerHTML = '';
+            this.fingerTouches = {};
+            this.fingerIsActive = false;
+            this.clearFingerTimers();
+            this.setFingerMessage(this.fingerIdleMessage());
+        } else {
+            this.initBridge();
+        }
     },
 
     showLoveMission() {
@@ -4503,7 +4724,7 @@ const app = {
         if (pTitle) pTitle.textContent = chosen.title;
         if (pDesc) pDesc.textContent = chosen.desc;
         if (modal) {
-            setTimeout(() => {
+            this.fingerResultTimer = setTimeout(() => {
                 if (this.currentScreen === 'finger') modal.classList.add('show');
             }, 700);
         }
@@ -4571,7 +4792,7 @@ const app = {
 
         this.setFingerMessage('💖 19+ 커플 매칭 완료! 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check your love mission!</span>');
 
-        setTimeout(() => {
+        this.fingerResultTimer = setTimeout(() => {
             if (this.currentScreen === 'finger') this.showLoveMission();
         }, 1200);
     },
@@ -5016,7 +5237,16 @@ const app = {
         const modal = document.getElementById('love-mission-modal');
         if (modal) modal.classList.remove('show');
         soundFX.playTick();
-        this.initBridge();
+        if (this.currentScreen === 'finger') {
+            const area = document.getElementById('finger-area');
+            if (area) area.innerHTML = '';
+            this.fingerTouches = {};
+            this.fingerIsActive = false;
+            this.clearFingerTimers();
+            this.setFingerMessage(this.fingerIdleMessage());
+        } else {
+            this.initBridge();
+        }
     },
 
     /* ============================================================
@@ -5186,6 +5416,7 @@ const app = {
     }
 };
 
+window.app = app;
 window.addEventListener('DOMContentLoaded', () => {
     app.init();
 });

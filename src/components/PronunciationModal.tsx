@@ -1,5 +1,5 @@
 import { Modal } from './Modal';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phrase, Country } from '../types';
 import { startPronunciationCheck } from '../utils/audio';
 import { playPhrase, unlockAudioPlayback } from '../utils/speech';
@@ -21,15 +21,24 @@ export const PronunciationModal: React.FC<PronunciationModalProps> = ({
   const [score, setScore] = useState<number | null>(null);
   const [isMatched, setIsMatched] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const recognitionRef = useRef<{ abort?: () => void } | null>(null);
 
   const startListening = () => {
+    if (recognitionRef.current?.abort) {
+      try {
+        recognitionRef.current.abort();
+      } catch {
+        // Ignored
+      }
+    }
+
     setIsListening(true);
     setTranscript(null);
     setScore(null);
     setIsMatched(null);
     setError(null);
 
-    startPronunciationCheck({
+    recognitionRef.current = startPronunciationCheck({
       langCode: country.langCode,
       targetText: phrase.original,
       onResult: (spokenText, accuracy, matched) => {
@@ -47,6 +56,15 @@ export const PronunciationModal: React.FC<PronunciationModalProps> = ({
 
   useEffect(() => {
     startListening();
+    return () => {
+      if (recognitionRef.current?.abort) {
+        try {
+          recognitionRef.current.abort();
+        } catch {
+          // Ignored
+        }
+      }
+    };
   }, [phrase, country]);
 
   return (

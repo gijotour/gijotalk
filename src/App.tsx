@@ -25,6 +25,7 @@ import { PronunciationModal } from './components/PronunciationModal';
 import { ItineraryTab } from './components/ItineraryTab';
 import { PartyGameModal } from './components/PartyGameModal';
 import { ArcadeModal } from './components/ArcadeModal';
+import { GameHubModal } from './components/GameHubModal';
 import { EntryGuideModal } from './components/EntryGuideModal';
 import { Top10Essentials } from './components/Top10Essentials';
 import { AdBanner } from './components/AdBanner';
@@ -53,6 +54,7 @@ import {
   Maximize2,
   Camera,
   Languages,
+  Gamepad2,
 } from 'lucide-react';
 
 export default function App() {
@@ -64,9 +66,23 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   // 첫 화면은 배우기입니다(docs/VOCAB_PLAN.md §6). 일정표 링크로 들어온
   // 사람은 예외 — 그 링크를 연 이유가 일정 확인이므로 일정 탭이 먼저입니다.
-  const [activeTab, setActiveTab] = useState<TabType>(() =>
-    hasItineraryLink() ? 'itinerary' : 'learn'
-  );
+  // PWA 바로가기(?tab=emergency 등) 지원
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const param = new URLSearchParams(window.location.search).get('tab') as TabType;
+        if (
+          param &&
+          ['learn', 'translate', 'itinerary', 'bookmarks', 'emergency'].includes(param)
+        ) {
+          return param;
+        }
+      } catch {
+        // Ignored
+      }
+    }
+    return hasItineraryLink() ? 'itinerary' : 'learn';
+  });
 
   // Audio Settings
   const [speed, setSpeed] = useState<number>(1.0);
@@ -87,6 +103,7 @@ export default function App() {
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
   const [showPartyGame, setShowPartyGame] = useState<boolean>(false);
   const [showArcade, setShowArcade] = useState<boolean>(false);
+  const [showGameHub, setShowGameHub] = useState<boolean>(false);
   const [showEntryGuide, setShowEntryGuide] = useState<boolean>(false);
 
   // 언어 변경 안내 토스트
@@ -296,6 +313,7 @@ export default function App() {
         selectedCountry={selectedCountry}
         onSelectCountry={handleSelectCountry}
         onOpenAIAssistant={() => setShowAIAssistant(true)}
+        onOpenGameHub={() => setShowGameHub(true)}
         onOpenEmergencyModal={() => {
           if (emergencyPhrases.length > 0) {
             setBillboardPhrase(emergencyPhrases[0]);
@@ -340,12 +358,16 @@ export default function App() {
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
-                  type="text"
+                  type="search"
+                  enterKeyHint="search"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck={false}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="회화 검색"
                   placeholder="원문 · 뜻 · 발음 검색"
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs font-bold"
+                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-base sm:text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs font-bold"
                 />
                 <Search className="w-4 h-4 text-ink-mute absolute left-4 top-4.5" />
                 {searchQuery && (
@@ -384,6 +406,32 @@ export default function App() {
             {/* 오프라인 언어 음성 다운로드 배너 */}
             <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
 
+            {/* 🎮 GIJO 게임 라운지 퀵 런처 배너 */}
+            <div className="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-purple-500/30 p-3 rounded-2xl flex items-center justify-between text-white shadow-xs">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="p-2 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-xl text-white shrink-0 shadow-xs">
+                  <Gamepad2 className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-xs font-black flex items-center gap-1.5 truncate">
+                    <span>GIJO 게임 &amp; 놀거리 라운지</span>
+                    <span className="text-[9px] px-1.5 py-0.5 bg-pink-500/80 text-white rounded-full font-bold shrink-0">
+                      OFFLINE
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-purple-200/80 font-medium truncate">
+                    술자리 미션 룰렛 &amp; 19+ 러브 · 777 슬롯머신 · Neon 2048
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowGameHub(true)}
+                className="ml-2 px-3 py-1.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black text-xs rounded-xl shadow-xs active:scale-95 transition-all whitespace-nowrap shrink-0"
+              >
+                놀러가기 ▾
+              </button>
+            </div>
+
             {/* 카테고리 칩 바 (10대 기본 칩 최우선 배치) */}
             <CategoryChips
               selectedCategory={selectedCategory}
@@ -409,8 +457,8 @@ export default function App() {
               </>
             )}
 
-            {/* 📋 일반 카테고리(호텔, 교통, 식당 등) 및 전체 회화 리스트 */}
-            {selectedCategory !== '10대 기본' && (
+            {/* 📋 일반 카테고리(호텔, 교통, 식당 등) 및 전체 회화 리스트 (검색 중일 때는 10대 기본 선택 상태여도 검색 결과 즉시 표시) */}
+            {(selectedCategory !== '10대 기본' || Boolean(searchQuery)) && (
               <>
                 {filteredPhrases.length > 0 ? (
                   <div className="space-y-3">
@@ -418,7 +466,7 @@ export default function App() {
                     <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="px-2.5 py-1 bg-brand text-white rounded-xl text-xs font-black">
-                          {selectedCategory}
+                          {Boolean(searchQuery) ? '검색 결과' : selectedCategory}
                         </span>
                         <span className="text-xs font-extrabold text-slate-800">
                           회화 목록 ({filteredPhrases.length}개)
@@ -717,6 +765,14 @@ export default function App() {
       {showPhotoModal && (
         <PhotoTranslateModal country={selectedCountry} onClose={() => setShowPhotoModal(false)} />
       )}
+
+      {/* MODAL 5: GIJO 게임 & 놀거리 라운지 허브 */}
+      <GameHubModal
+        isOpen={showGameHub}
+        onClose={() => setShowGameHub(false)}
+        onOpenPartyGame={() => setShowPartyGame(true)}
+        onOpenArcade={() => setShowArcade(true)}
+      />
 
       {/* 파티 게임 & 아케이드 */}
       {showPartyGame && <PartyGameModal onClose={() => setShowPartyGame(false)} />}

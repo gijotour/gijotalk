@@ -357,8 +357,15 @@ describe('vocabAsPhrase — 기존 재생·전광판 재사용', () => {
 
   it('phraseId 가 있으면 기존 문장을 그대로 쓴다 (녹음 오디오 재사용)', () => {
     const existing = PHRASES[0];
-    const phrase = vocabAsPhrase(expression({ phraseId: existing.id }));
+    const phrase = vocabAsPhrase(expression({ phraseId: existing.id, countryId: existing.countryId }));
     expect(phrase).toBe(existing);
+  });
+
+  it('영어 우선(primary: en)일 때는 타갈로그 문장이 아닌 영어 문장과 매칭되거나 영어 Phrase를 생성한다', () => {
+    const tagalogPhrase = PHRASES.find((p) => p.countryId === 'ph')!;
+    const phrase = vocabAsPhrase(expression({ phraseId: tagalogPhrase.id, countryId: 'ph' }), 'en');
+    expect(phrase.countryId).toBe('en');
+    expect(phrase.original).toBe('Key, please.');
   });
 
   it('phraseId 가 가리키는 문장이 없으면 어휘 데이터로 만든다', () => {

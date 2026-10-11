@@ -12,6 +12,7 @@ import { Phrase, Country } from '../types';
 import { audioUrlFor, hasRecordedAudio } from '../data/audioManifest';
 import { speakPhrase } from './audio';
 import { BASE_URL } from './env';
+import { soundEffects } from './soundEffects';
 
 export { hasRecordedAudio };
 
@@ -47,6 +48,7 @@ function getAudioElement(): HTMLAudioElement {
  * 무음 재생을 한 번 시켜 두면 이후 자동 재생(전광판 모드 등)이 막히지 않습니다.
  */
 export function unlockAudioPlayback(): void {
+  soundEffects.unlock();
   if (unlocked) return;
   unlocked = true;
   const el = getAudioElement();

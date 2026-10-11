@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Star, Volume2, Info } from 'lucide-react';
 import type { Country, VocabWord } from '../../types';
 import { vocabDisplay, type VocabItem } from '../../utils/vocab';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { soundEffects } from '../../utils/soundEffects';
 
 interface WordCardProps {
   words: VocabWord[];
@@ -40,6 +41,7 @@ export const WordCard: React.FC<WordCardProps> = ({
   const [flipped, setFlipped] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const didSwipe = useRef(false);
   const reduceMotion = useReducedMotion();
 
   const total = words.length;
@@ -68,10 +70,18 @@ export const WordCard: React.FC<WordCardProps> = ({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') go(-1);
       else if (e.key === 'ArrowRight') go(1);
+      else if (e.key === ' ' && (e.target as HTMLElement)?.tagName !== 'INPUT') {
+        e.preventDefault();
+        soundEffects.playFlip();
+        setFlipped((prev) => {
+          if (!prev && word) onMarkSeen(word.id);
+          return !prev;
+        });
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [total]);
+  }, [total, word]);
 
   if (!word) {
     return (
@@ -86,6 +96,7 @@ export const WordCard: React.FC<WordCardProps> = ({
   const playing = playingId === word.id;
 
   const handleFlip = () => {
+    soundEffects.playFlip();
     setFlipped((prev) => {
       if (!prev) onMarkSeen(word.id);
       return !prev;
@@ -104,8 +115,15 @@ export const WordCard: React.FC<WordCardProps> = ({
       {/* 카드 본체 — 어디를 눌러도 뒤집힙니다 */}
       <button
         type="button"
-        onClick={handleFlip}
+        onClick={() => {
+          if (didSwipe.current) {
+            didSwipe.current = false;
+            return;
+          }
+          handleFlip();
+        }}
         onTouchStart={(e) => {
+          didSwipe.current = false;
           touchStartX.current = e.changedTouches[0]?.clientX ?? null;
         }}
         onTouchEnd={(e) => {
@@ -114,6 +132,7 @@ export const WordCard: React.FC<WordCardProps> = ({
           if (start === null) return;
           const delta = (e.changedTouches[0]?.clientX ?? start) - start;
           if (Math.abs(delta) < SWIPE_PX) return;
+          didSwipe.current = true;
           // 왼쪽으로 밀면 다음 장 — 책장 넘기는 방향과 같습니다.
           go(delta < 0 ? 1 : -1);
         }}

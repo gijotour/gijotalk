@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Country } from '../types';
 import { COUNTRIES, IS_SINGLE_COUNTRY, IS_STATIC_BUILD } from '../config';
-import { Globe, ChevronDown, Sparkles, ShieldAlert, PartyPopper, Gamepad2, FileText, Languages } from 'lucide-react';
+import { Globe, ChevronDown, Sparkles, Gamepad2, FileText, Languages } from 'lucide-react';
 
 interface HeaderProps {
   selectedCountry: Country;
   onSelectCountry: (country: Country) => void;
   onOpenAIAssistant: () => void;
-  onOpenEmergencyModal: () => void;
-  onOpenPartyGame: () => void;
-  onOpenArcade: () => void;
+  onOpenGameHub?: () => void;
+  onOpenEmergencyModal?: () => void;
+  onOpenPartyGame?: () => void;
+  onOpenArcade?: () => void;
   onOpenEntryGuide: () => void;
 }
 
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   selectedCountry,
   onSelectCountry,
   onOpenAIAssistant,
+  onOpenGameHub,
   onOpenEmergencyModal,
   onOpenPartyGame,
   onOpenArcade,
@@ -43,7 +45,10 @@ export const Header: React.FC<HeaderProps> = ({
   }, [dropdownOpen]);
 
   return (
-    <header className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-md px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 border-b border-orange-100 shadow-xs">
+    <header
+      className="sticky top-0 z-50 bg-canvas/95 backdrop-blur-md px-3 sm:px-6 pb-2.5 flex items-center justify-between gap-2 border-b border-orange-100 shadow-xs"
+      style={{ paddingTop: 'calc(0.625rem + env(safe-area-inset-top))' }}
+    >
       {/* 브랜드 */}
       <div className="flex items-center gap-2 min-w-0">
         <div className="bg-brand p-1.5 rounded-xl text-white shrink-0">
@@ -73,6 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => setDropdownOpen(!dropdownOpen)}
             aria-haspopup="listbox"
             aria-expanded={dropdownOpen}
+            aria-label="언어 및 여행 국가 변경"
             className="flex items-center gap-1.5 bg-white hover:bg-orange-50/50 border-2 border-accent text-ink px-2.5 py-1 rounded-full transition-all active:scale-95 font-bold shadow-xs text-xs whitespace-nowrap"
             title="언어 및 여행 국가 변경"
           >
@@ -147,34 +153,15 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
         )}
 
-        {/* 파티 게임 직행 */}
+        {/* 게임 & 놀거리 라운지 (GIJO Drink + GIJO Arcade 통합 허브) */}
         <button
-          onClick={onOpenPartyGame}
-          aria-label="파티 게임 실행"
-          className="p-1.5 bg-ink text-white hover:bg-black rounded-full transition-all active:scale-95 shrink-0"
-          title="파티 게임 실행"
+          onClick={onOpenGameHub ?? onOpenPartyGame}
+          aria-label="GIJO 게임 라운지 (술게임 & 아케이드)"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white rounded-full text-xs font-black transition-all active:scale-95 shrink-0 shadow-xs"
+          title="GIJO 게임 라운지 (술자리 파티 게임 & 아케이드)"
         >
-          <PartyPopper className="w-4 h-4" />
-        </button>
-
-        {/* 오프라인 아케이드 */}
-        <button
-          onClick={onOpenArcade}
-          aria-label="오프라인 아케이드 게임 실행"
-          className="p-1.5 bg-ink text-white hover:bg-black rounded-full transition-all active:scale-95 shrink-0"
-          title="오프라인 아케이드 게임 실행"
-        >
-          <Gamepad2 className="w-4 h-4" />
-        </button>
-
-        {/* Emergency Billboard Direct Launch */}
-        <button
-          onClick={onOpenEmergencyModal}
-          aria-label="3초 긴급 전광판 모드 실행"
-          className="p-1.5 bg-accent/25 text-alert hover:bg-accent/40 border border-accent/60 rounded-full transition-all active:scale-95 shrink-0"
-          title="3초 긴급 전광판 모드 실행"
-        >
-          <ShieldAlert className="w-4 h-4" />
+          <Gamepad2 className="w-3.5 h-3.5 text-yellow-300" />
+          <span className="hidden sm:inline">게임</span>
         </button>
       </div>
     </header>

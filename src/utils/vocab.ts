@@ -383,8 +383,13 @@ export function vocabDisplay(item: VocabItem, countryId: CountryId): VocabDispla
  */
 export function vocabAsPhrase(item: VocabItem, primary: VocabPrimary = 'local'): Phrase {
   if (!isVocabWord(item) && item.phraseId) {
-    const existing = PHRASES.find((p) => p.id === item.phraseId);
-    if (existing) return existing;
+    if (primary === 'en') {
+      const existing = PHRASES.find((p) => p.id === item.phraseId && p.countryId === 'en');
+      if (existing) return existing;
+    } else {
+      const existing = PHRASES.find((p) => p.id === item.phraseId && p.countryId === item.countryId);
+      if (existing) return existing;
+    }
   }
 
   const unit = vocabUnitById(item.unitId);

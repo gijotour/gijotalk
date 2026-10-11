@@ -112,6 +112,34 @@ describe('App — 조립 검증', () => {
     expect(screen.getByRole('heading', { name: /Pakitawag po ng pulis/ })).toBeInTheDocument();
   });
 
+  it('10대 기본 카테고리가 선택된 상태에서 검색해도 검색 결과가 빈 화면 없이 나타난다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+    await gotoTranslate(user);
+
+    // 10대 기본 카테고리 칩 클릭
+    await user.click(screen.getByRole('button', { name: /10대 기본/ }));
+    expect(screen.getByText(/공항·식당·호텔에서 바로 쓰는 1초 생존 표현/)).toBeInTheDocument();
+
+    // 검색창에 검색어 입력 시 일반 회화 영역이 숨겨지지 않고 검색 결과 노출
+    await user.type(screen.getByLabelText('회화 검색'), '경찰');
+    expect(screen.getByRole('heading', { name: /Pakitawag po ng pulis/ })).toBeInTheDocument();
+  });
+
+  it('헤더에서 국가/언어를 영어 또는 베트남어로 변경하면 해당 언어 표현이 렌더링된다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+    await gotoTranslate(user);
+
+    // 언어 드롭다운 열기
+    await user.click(screen.getByRole('button', { name: /언어 및 여행 국가 변경/ }));
+    // 영어 선택
+    await user.click(screen.getByRole('button', { name: /영어/ }));
+
+    // 영어 회화 화면으로 정상 전환됨
+    expect(await screen.findByText(/영어 여행 필수 10대 기본 표현/)).toBeInTheDocument();
+  });
+
   it('탭을 바꾸면 내용이 바뀐다', async () => {
     const user = userEvent.setup();
     await renderApp();
@@ -123,12 +151,17 @@ describe('App — 조립 검증', () => {
     expect(screen.getByText(/아직 저장된 문장이 없습니다/)).toBeInTheDocument();
   });
 
-  it('헤더의 파티 게임 아이콘으로 탭 이동 없이 바로 열고 닫을 수 있다', async () => {
+  it('헤더의 게임 라운지 버튼으로 게임 허브를 거쳐 파티 게임을 열고 닫을 수 있다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
-    // 긴급과 같은 성격의 버튼이라 헤더에 항상 떠 있습니다 — 탭을 옮길 필요가 없습니다.
-    await user.click(screen.getByRole('button', { name: '파티 게임 실행' }));
+    // 헤더의 게임 라운지 버튼을 클릭하면 게임 허브가 열립니다
+    await user.click(screen.getByRole('button', { name: /GIJO 게임 라운지/ }));
+    const hub = screen.getByRole('dialog', { name: 'GIJO 게임 및 놀거리 라운지' });
+    expect(hub).toBeInTheDocument();
+
+    // 허브에서 GIJO Drink 시작하기 클릭
+    await user.click(within(hub).getByRole('button', { name: /GIJO Drink 시작하기/ }));
 
     const dialog = screen.getByRole('dialog', { name: 'GIJO Drink 파티 게임' });
     // 게임 주소는 배포 위치를 따라가야 합니다. '/game/…' 로 박으면 Pages 서브패스에서

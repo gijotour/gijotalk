@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Phrase, Country } from '../types';
 import { playPhrase, unlockAudioPlayback, hasRecordedAudio } from '../utils/speech';
+import { copyText } from '../utils/clipboard';
 import { track } from '../utils/analytics';
 import {
   Volume2,
@@ -12,6 +13,9 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  Copy,
+  Check,
+  Share2,
 } from 'lucide-react';
 
 export interface PhraseCardProps {
@@ -47,9 +51,41 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
+  const [copied, setCopied] = useState(false);
 
   const isMutedByDesign = phrase.toneGuide?.startsWith('🔴') ?? false;
   const hasAudio = hasRecordedAudio(phrase.id);
+
+  const copyTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
+
+  const handleCopy = async (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const text = `${phrase.original} [${phrase.pronunciation}] - ${phrase.translation}`;
+    const ok = await copyText(text);
+    if (ok) {
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = window.setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleShare = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `GIJO Tour: ${phrase.original}`,
+          text: `${phrase.original} [${phrase.pronunciation}]\n${phrase.translation}\n(${phrase.category})`,
+        })
+        .catch(() => {});
+    }
+  };
 
   const handleSpeak = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -105,6 +141,20 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
 
         {/* 우측 빠른 액션 그룹 */}
         <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+          {/* 빠른 원터치 복사 */}
+          <button
+            onClick={handleCopy}
+            className={`p-2 rounded-xl transition-all active:scale-90 ${
+              copied
+                ? 'bg-emerald-100 text-emerald-800'
+                : 'text-ink-mute hover:text-slate-800 hover:bg-slate-100'
+            }`}
+            title={copied ? '복사 완료!' : '문장 복사'}
+            aria-label={copied ? '복사 완료' : '문장 복사'}
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+          </button>
+
           {/* 전광판 */}
           <button
             onClick={() => onOpenBillboard(phrase)}
@@ -185,6 +235,32 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
             </div>
 
             <div className="flex items-center gap-1.5">
+              {/* 복사 버튼 */}
+              <button
+                onClick={handleCopy}
+                className={`p-2 rounded-xl transition-all ${
+                  copied
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'text-ink-mute hover:text-ink bg-white border border-slate-200'
+                }`}
+                title={copied ? '복사 완료!' : '문장 복사'}
+                aria-label={copied ? '복사 완료' : '문장 복사'}
+              >
+                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              </button>
+
+              {/* 공유하기 (모바일 지원 시) */}
+              {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
+                <button
+                  onClick={handleShare}
+                  className="p-2 rounded-xl text-ink-mute hover:text-ink bg-white border border-slate-200 transition-colors"
+                  title="문장 공유하기"
+                  aria-label="문장 공유하기"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              )}
+
               {/* 북마크 */}
               <button
                 onClick={() => onToggleBookmark(phrase.id)}
@@ -271,12 +347,19 @@ export const PhraseCard: React.FC<PhraseCardProps> = ({
                   disabled={isPlaying}
                   className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl font-bold text-xs transition-all active:scale-95 shadow-xs ${
                     isPlaying
-                      ? 'bg-amber-400 text-slate-900 animate-pulse'
+                      ? 'bg-amber-400 text-slate-900 ring-2 ring-amber-300'
                       : 'bg-brand hover:bg-brand-hover text-white'
                   }`}
                 >
                   <Volume2 className={`w-4 h-4 ${isPlaying ? 'animate-bounce' : ''}`} />
                   <span>{isPlaying ? '재생 중...' : '원어민 발음 듣기'}</span>
+                  {isPlaying && (
+                    <span className="flex items-center gap-0.5 h-3 ml-1" aria-hidden="true">
+                      <span className="w-1 h-3 bg-slate-900 rounded-full animate-pulse" />
+                      <span className="w-1 h-2 bg-slate-900 rounded-full animate-pulse" />
+                      <span className="w-1 h-3.5 bg-slate-900 rounded-full animate-pulse" />
+                    </span>
+                  )}
                 </button>
               )}
             </div>

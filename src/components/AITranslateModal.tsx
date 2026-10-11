@@ -4,7 +4,8 @@ import { Country, Phrase } from '../types';
 import { speakPhrase } from '../utils/audio';
 import { accessHeaders } from '../utils/accessCode';
 import { track } from '../utils/analytics';
-import { Sparkles, Send, Volume2, X, AlertCircle, Maximize2, Loader2 } from 'lucide-react';
+import { Sparkles, Send, Volume2, X, AlertCircle, Maximize2, Loader2, Copy, Check } from 'lucide-react';
+import { copyText } from '../utils/clipboard';
 
 interface AITranslateModalProps {
   country: Country;
@@ -31,6 +32,17 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedPhrase, setGeneratedPhrase] = useState<Phrase | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyGenerated = async () => {
+    if (!generatedPhrase) return;
+    const text = `${generatedPhrase.original} [${generatedPhrase.pronunciation}] - ${generatedPhrase.translation}`;
+    const ok = await copyText(text);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const handleTranslate = async (customPrompt?: string) => {
     const textToSubmit = customPrompt || prompt;
@@ -121,11 +133,13 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
           <div className="relative">
             <input
               type="text"
+              enterKeyHint="send"
+              autoComplete="off"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleTranslate()}
               placeholder="예: 얼음 빼고 과일주스 만들어 주세요"
-              className="w-full bg-canvas border-2 border-slate-200 rounded-2xl px-4 py-3.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-vivid pr-12 font-bold"
+              className="w-full bg-canvas border-2 border-slate-200 rounded-2xl px-4 py-3.5 text-base sm:text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-vivid pr-12 font-bold"
             />
             <button
               onClick={() => handleTranslate()}
@@ -181,13 +195,29 @@ export const AITranslateModal: React.FC<AITranslateModalProps> = ({
                   {generatedPhrase.translation}
                 </p>
               </div>
-              <button
-                onClick={() => onOpenBillboard(generatedPhrase)}
-                className="p-2 bg-white border border-slate-200 rounded-xl text-alert hover:bg-orange-50 shadow-xs"
-                title="3초 긴급 전광판 확대"
-              >
-                <Maximize2 className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleCopyGenerated}
+                  className={`p-2 border rounded-xl shadow-xs transition-colors ${
+                    copied
+                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                      : 'bg-white border-slate-200 text-ink-mute hover:bg-slate-50'
+                  }`}
+                  title={copied ? '복사 완료!' : '문장 복사'}
+                  aria-label={copied ? '복사 완료' : '문장 복사'}
+                >
+                  {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onOpenBillboard(generatedPhrase)}
+                  className="p-2 bg-white border border-slate-200 rounded-xl text-alert hover:bg-orange-50 shadow-xs"
+                  title="3초 긴급 전광판 확대"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             <p className="text-xs font-bold text-alert bg-accent/20 p-2 rounded-xl border border-accent/50">

@@ -61,6 +61,22 @@
   small {
     font-size: 0.75rem;
   }
+
+  /* 모바일 터치 최적화: 더블탭 확대 딜레이(300ms) 방지 */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* iOS Safari 폼 포커스 시 뷰포트 강제 자동 확대(Auto-zoom) 방지 */
+  @media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="password"],
+    input[type="url"],
+    input[type="search"],
+    textarea {
+      font-size: 16px !important;
+    }
+  }
 }
 
 /* ------------------------------------------------------------------

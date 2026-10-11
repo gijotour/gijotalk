@@ -78,8 +78,8 @@ export const PartyGameModal: React.FC<PartyGameModalProps> = ({ onClose }) => {
       <iframe
         src={GAME_URL}
         title="GIJO Drink 파티 게임"
-        // 게임은 소리와 진동을 씁니다. 같은 출처라도 명시하지 않으면 막는 브라우저가 있습니다.
-        allow="autoplay; fullscreen"
+        // 게임은 소리와 진동을 씁니다. Permissions-Policy 에 vibrate 를 명시해야 iframe 내 햅틱이 작동합니다.
+        allow="autoplay; fullscreen; vibrate"
         className="flex-1 w-full border-0 bg-[#0a0a0c]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       />

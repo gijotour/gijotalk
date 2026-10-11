@@ -6,6 +6,7 @@ import { ITINERARY_TEMPLATE_FILE, parseItinerary } from '../utils/itinerary';
 import { BASE_URL } from '../utils/env';
 import { buildItineraryLink, buildSheetLink } from '../utils/itineraryLink';
 import { parseSheetUrl, sheetHomeUrl, sheetToItineraryText } from '../utils/itinerarySheet';
+import { copyText } from '../utils/clipboard';
 import {
   X,
   PencilLine,
@@ -133,12 +134,8 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
 
     const url = buildSheetLink(sheetHomeUrl(ref));
     setSheetLink(url);
-    try {
-      await navigator.clipboard.writeText(url);
-      setSheetCopied(true);
-    } catch {
-      // 클립보드가 막힌 브라우저 — 아래 상자에서 직접 복사하면 됩니다.
-    }
+    const ok = await copyText(url);
+    if (ok) setSheetCopied(true);
   };
 
   const handleMakeLink = async () => {
@@ -146,12 +143,8 @@ export const GuideEditorModal: React.FC<GuideEditorModalProps> = ({
     try {
       const url = await buildItineraryLink(text);
       setLink(url);
-      try {
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-      } catch {
-        // 클립보드가 막힌 브라우저 — 아래 상자에서 직접 복사하면 됩니다.
-      }
+      const ok = await copyText(url);
+      if (ok) setCopied(true);
     } catch {
       setLinkError('링크를 만들지 못했습니다.');
     }

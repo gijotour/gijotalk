@@ -1304,6 +1304,575 @@ canvas {
     pointer-events: none;
 }
     
+
+/* ===== ARCADE PORTAL (2 MAIN CHOICES) ===== */
+.arcade-portal {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    margin-top: 6px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 4px 16px;
+}
+
+.portal-card {
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: var(--font-main);
+    background: linear-gradient(145deg, rgba(30, 20, 8, 0.92), rgba(12, 10, 18, 0.96)),
+                url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: clamp(14px, 4vw, 20px);
+    text-align: left;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.25);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+    min-height: clamp(130px, 22vh, 170px);
+}
+
+.portal-card:hover, .portal-card:focus-visible {
+    border-color: #ffd700;
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85), 0 0 35px rgba(255, 215, 0, 0.5);
+}
+
+.portal-card:active {
+    transform: scale(0.98);
+}
+
+.portal-card-glow {
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.35), transparent 70%);
+    pointer-events: none;
+}
+
+.portal-badge-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.portal-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    color: #ffd700;
+    letter-spacing: 0.03em;
+}
+
+.portal-best-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #ffd700;
+    background: rgba(0, 0, 0, 0.65);
+    padding: 3px 9px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.portal-body {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.portal-icon {
+    font-size: clamp(2.4rem, 8vw, 3.2rem);
+    line-height: 1;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+    flex-shrink: 0;
+}
+
+.portal-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.portal-en {
+    display: block;
+    font-size: clamp(0.72rem, 2.4vw, 0.82rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffd700;
+}
+
+.portal-kr {
+    display: block;
+    font-size: clamp(1.2rem, 4.4vw, 1.45rem);
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+.portal-desc {
+    margin: 3px 0 0 0;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.portal-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+    padding-top: 8px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffd700;
+    position: relative;
+    z-index: 2;
+}
+
+.portal-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+}
+
+.portal-card:hover .portal-arrow {
+    transform: translateX(4px);
+}
+
+/* ===== PORTAL DUO (2048 & FLAPPY) ===== */
+.portal-duo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.portal-duo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.portal-duo-title {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--secondary-neon);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.portal-duo-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.arcade-sub-card {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 18px;
+    background: rgba(14, 12, 24, 0.88);
+    backdrop-filter: blur(14px);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.card-puzzle {
+    border-color: rgba(0, 243, 255, 0.35);
+}
+
+.card-puzzle:hover {
+    border-color: #00f3ff;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 20px rgba(0, 243, 255, 0.35);
+}
+
+.card-flappy {
+    border-color: rgba(255, 0, 85, 0.35);
+}
+
+.card-flappy:hover {
+    border-color: #ff0055;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 20px rgba(255, 0, 85, 0.35);
+}
+
+.sub-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.68rem;
+}
+
+.sub-badge {
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 0.65rem;
+}
+
+.sub-badge.cyan {
+    background: rgba(0, 243, 255, 0.15);
+    border: 1px solid rgba(0, 243, 255, 0.4);
+    color: #00f3ff;
+}
+
+.sub-badge.pink {
+    background: rgba(255, 0, 85, 0.15);
+    border: 1px solid rgba(255, 0, 85, 0.4);
+    color: #ff0055;
+}
+
+.sub-best {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.sub-card-body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.sub-icon {
+    font-size: clamp(1.8rem, 6vw, 2.3rem);
+    line-height: 1;
+}
+
+.sub-texts {
+    flex: 1;
+    min-width: 0;
+}
+
+.sub-en {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.55);
+    text-transform: uppercase;
+}
+
+.sub-kr {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.sub-desc {
+    margin: 2px 0 0 0;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sub-card-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.sub-btn-guide {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffd700;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 6px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.sub-btn-guide:hover {
+    background: rgba(255, 215, 0, 0.2);
+    border-color: #ffd700;
+}
+
+.sub-btn-play {
+    flex: 1.2;
+    background: linear-gradient(135deg, var(--secondary-neon), #0077ff);
+    border: none;
+    color: #030310;
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 6px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.card-flappy .sub-btn-play {
+    background: linear-gradient(135deg, #ff0055, #ff7700);
+    color: #fff;
+}
+
+.sub-btn-play:active {
+    transform: scale(0.95);
+}
+
+/* ===== VIP SLOTS JACKPOT TOPPER ===== */
+.slots-jackpot-topper {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(30, 20, 8, 0.95), rgba(16, 12, 10, 0.9));
+    border: 2px solid #ffd700;
+    border-radius: 14px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
+    position: relative;
+    overflow: hidden;
+}
+
+.jackpot-bulbs-strip {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 3px;
+}
+
+.jackpot-bulbs-strip span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffd700;
+    box-shadow: 0 0 6px #ffd700;
+    animation: bulb-chase 1s infinite alternate;
+}
+
+.jackpot-bulbs-strip span:nth-child(even) {
+    animation-delay: 0.5s;
+    background: #ff0055;
+    box-shadow: 0 0 6px #ff0055;
+}
+
+@keyframes bulb-chase {
+    from { opacity: 0.3; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.2); }
+}
+
+.jackpot-marquee-title {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    letter-spacing: 0.05em;
+}
+
+.jackpot-amount-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.jackpot-cur {
+    font-size: 1.1rem;
+}
+
+.jackpot-num {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 14px #ffd700, 0 0 28px rgba(255, 215, 0, 0.6);
+    letter-spacing: 0.04em;
+}
+
+/* Chasing LED lights around reel frame */
+.chasing-led-lights {
+    position: absolute;
+    inset: 2px;
+    border: 2px dashed rgba(255, 215, 0, 0.4);
+    border-radius: 14px;
+    pointer-events: none;
+    z-index: 4;
+    animation: dash-spin 12s linear infinite;
+}
+
+@keyframes dash-spin {
+    to { stroke-dashoffset: 200; }
+}
+
+.reels-frame.tension-pulse {
+    animation: reel-tension-pulse 0.4s infinite alternate;
+}
+
+@keyframes reel-tension-pulse {
+    from { border-color: #ffd700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.5); }
+    to { border-color: #ff0055; box-shadow: 0 0 50px rgba(255, 0, 85, 0.85); }
+}
+
+/* ===== GUIDE BUTTON IN HUD ===== */
+.btn-guide-hud {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffd700;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 6px;
+}
+
+.btn-guide-hud:hover {
+    background: rgba(255, 215, 0, 0.25);
+    border-color: #ffd700;
+}
+
+/* ===== ARCADE GUIDE MODAL ===== */
+.arcade-guide-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.arcade-guide-modal.show {
+    display: flex;
+    animation: guide-pop 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes guide-pop {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.arcade-guide-card {
+    background: linear-gradient(150deg, rgba(22, 16, 36, 0.98), rgba(10, 8, 18, 0.98));
+    border: 2px solid var(--secondary-neon);
+    border-radius: 22px;
+    padding: 20px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.guide-badge {
+    background: rgba(0, 243, 255, 0.2);
+    border: 1px solid var(--secondary-neon);
+    color: var(--secondary-neon);
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.05em;
+}
+
+.guide-close-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.guide-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+    margin: 0;
+}
+
+.guide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.88);
+    line-height: 1.5;
+}
+
+.guide-section {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.guide-section.highlight {
+    background: rgba(255, 215, 0, 0.08);
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+.guide-sec-title {
+    font-weight: 900;
+    color: #ffd700;
+    margin-bottom: 4px;
+    font-size: 0.88rem;
+}
+
+.guide-section ul {
+    margin: 0;
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-guide-confirm {
+    background: linear-gradient(135deg, var(--secondary-neon), #0077ff);
+    border: none;
+    color: #030310;
+    font-size: 0.95rem;
+    font-weight: 900;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 6px;
+    transition: transform 0.15s;
+}
+
+.btn-guide-confirm:active {
+    transform: scale(0.97);
+}
+
 </style>
 </head>
 <body>
@@ -1336,58 +1905,75 @@ canvas {
             </div>
             <span class="ad-banner-cta">VIP 혜택 ➔</span>
         </a>
-        <div class="tile-grid">
-            <button class="tile tile-slots" data-go="slots">
-                <span class="tile-icon">&#127920;</span>
-                <span class="tile-text">
-                    <span class="tile-badge">🎰 🔥 BEST · 1인용</span>
-                    <span class="tile-en">GIJO Slots</span>
-                    <span class="tile-kr">네온 슬롯머신</span>
-                    <span class="tile-best" data-best="slots">BEST 0</span>
-                </span>
+        <div class="arcade-portal">
+            <!-- 1. 777 네온 슬롯머신 (LUCKY 777 VIP SLOTS) -->
+            <button class="portal-card portal-slots" data-go="slots" aria-label="GIJO 777 슬롯머신 · Lucky 777 VIP Slots">
+                <div class="portal-card-glow"></div>
+                <div class="portal-badge-row">
+                    <span class="portal-badge gold">🎰 VIP CASINO · JACKPOT</span>
+                    <span class="portal-best-badge" data-best="slots">BEST 0</span>
+                </div>
+                <div class="portal-body">
+                    <div class="portal-icon">&#127920;</div>
+                    <div class="portal-info">
+                        <span class="portal-en">Lucky 777 VIP Slots</span>
+                        <span class="portal-kr">화려한 네온 777 슬롯머신</span>
+                        <p class="portal-desc">라스베가스 카지노 스타일 VIP 잭팟 &amp; 골드 코인 샤워</p>
+                    </div>
+                </div>
+                <div class="portal-action-bar">
+                    <span class="portal-action-text">VIP 스핀 바로 시작</span>
+                    <span class="portal-arrow">&#10140;</span>
+                </div>
             </button>
-            <button class="tile tile-1" data-go="block">
-                <span class="tile-badge">1인용 · Stack</span>
-                <span class="tile-icon">&#129513;</span>
-                <span class="tile-en">Block Drop</span>
-                <span class="tile-kr">블록 쌓기</span>
-                <span class="tile-best" data-best="block">BEST 0</span>
-            </button>
-            <button class="tile tile-2" data-go="shoot">
-                <span class="tile-badge">1인용 · Shoot</span>
-                <span class="tile-icon">&#128760;</span>
-                <span class="tile-en">Space Shooter</span>
-                <span class="tile-kr">비행기 슈팅</span>
-                <span class="tile-best" data-best="shoot">BEST 0</span>
-            </button>
-            <button class="tile tile-3" data-go="snake">
-                <span class="tile-badge">1인용 · Classic</span>
-                <span class="tile-icon">&#128013;</span>
-                <span class="tile-en">Snake</span>
-                <span class="tile-kr">뱀 키우기</span>
-                <span class="tile-best" data-best="snake">BEST 0</span>
-            </button>
-            <button class="tile tile-4" data-go="brick">
-                <span class="tile-badge">1인용 · Bricks</span>
-                <span class="tile-icon">&#127934;</span>
-                <span class="tile-en">Brick Breaker</span>
-                <span class="tile-kr">벽돌 깨기</span>
-                <span class="tile-best" data-best="brick">BEST 0</span>
-            </button>
-            <button class="tile tile-5" data-go="puzzle">
-                <span class="tile-badge">🔥 깃허브 1위 · 2048</span>
-                <span class="tile-icon">&#128293;</span>
-                <span class="tile-en">Neon 2048</span>
-                <span class="tile-kr">네온 2048</span>
-                <span class="tile-best" data-best="puzzle">BEST 0</span>
-            </button>
-            <button class="tile tile-6" data-go="flappy">
-                <span class="tile-badge">💀 극악 난이도 · Hard</span>
-                <span class="tile-icon">&#128080;</span>
-                <span class="tile-en">Flappy Neon</span>
-                <span class="tile-kr">플래피 네온</span>
-                <span class="tile-best" data-best="flappy">BEST 0</span>
-            </button>
+
+            <!-- 2. GIJO 아케이드 듀오: Neon 2048 & Flappy Neon -->
+            <div class="portal-duo-container">
+                <div class="portal-duo-header">
+                    <span class="portal-duo-title">🕹️ GIJO 아케이드 컬렉션 (공략 가이드 완비)</span>
+                </div>
+                <div class="portal-duo-cards">
+                    <!-- 2048 Card -->
+                    <div class="arcade-sub-card card-puzzle">
+                        <div class="sub-card-top">
+                            <span class="sub-badge cyan">🔥 깃허브 1위 · 2048</span>
+                            <span class="sub-best" data-best="puzzle">BEST 0</span>
+                        </div>
+                        <div class="sub-card-body" data-go="puzzle">
+                            <span class="sub-icon">&#128293;</span>
+                            <div class="sub-texts">
+                                <span class="sub-en">Neon 2048</span>
+                                <span class="sub-kr">네온 2048</span>
+                                <p class="sub-desc">두뇌 풀가동 퍼즐</p>
+                            </div>
+                        </div>
+                        <div class="sub-card-actions">
+                            <button class="sub-btn-guide" onclick="showGuideModal('puzzle')">📖 공략법</button>
+                            <button class="sub-btn-play" data-go="puzzle">▶ 플레이</button>
+                        </div>
+                    </div>
+
+                    <!-- Flappy Card -->
+                    <div class="arcade-sub-card card-flappy">
+                        <div class="sub-card-top">
+                            <span class="sub-badge pink">💀 극악 난이도 · 비행</span>
+                            <span class="sub-best" data-best="flappy">BEST 0</span>
+                        </div>
+                        <div class="sub-card-body" data-go="flappy">
+                            <span class="sub-icon">&#128080;</span>
+                            <div class="sub-texts">
+                                <span class="sub-en">Flappy Neon</span>
+                                <span class="sub-kr">플래피 네온</span>
+                                <p class="sub-desc">파이프 비행 챌린지</p>
+                            </div>
+                        </div>
+                        <div class="sub-card-actions">
+                            <button class="sub-btn-guide" onclick="showGuideModal('flappy')">📖 공략법</button>
+                            <button class="sub-btn-play" data-go="flappy">▶ 플레이</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="footer-note">&copy; GIJO Labs</div>
     </section>
@@ -1405,9 +1991,22 @@ canvas {
         </div>
 
         <div class="slots-body">
+            <!-- VIP JACKPOT TOPPER -->
+            <div class="slots-jackpot-topper" id="slots-jackpot-topper">
+                <div class="jackpot-bulbs-strip">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="jackpot-marquee-title">⭐ VIP 777 MEGA JACKPOT ⭐</div>
+                <div class="jackpot-amount-box">
+                    <span class="jackpot-cur">💎</span>
+                    <span class="jackpot-num" id="jackpot-ticker-val">77,770</span>
+                </div>
+            </div>
+
             <div class="paytable" id="paytable"></div>
 
             <div class="reels-frame" id="reels-frame">
+                <div class="chasing-led-lights"></div>
                 <div class="reels" id="reels"></div>
                 <div class="payline-layer" id="payline-layer"></div>
                 <div class="free-badge hidden" id="free-badge"></div>
@@ -3423,6 +4022,7 @@ class Slots {
         this.updateFreeBadge();
         this.updateAutoSpinLabel();
         this.renderPaytable();
+        this.updateJackpotTicker();
         // 지난번에 빈털터리로 나갔으면 들어오자마자 충전 버튼을 보여줍니다.
         if (this.credits < this.bet) this.offerRefill();
     }
@@ -4124,19 +4724,61 @@ class Slots {
         const frame = document.getElementById('reels-frame');
         const el = document.createElement('div');
         el.className = 'bigwin';
-        const mega = amount >= this.bet * 60;
+        const isSuperJackpot = amount >= this.bet * 80;
+        const isMega = amount >= this.bet * 35;
+        
+        let title = 'BIG WIN';
+        let kr = '멋진 당첨입니다! · BIG WIN!';
+        let coins = 24;
+
+        if (isSuperJackpot) {
+            title = '⭐ 777 SUPER JACKPOT ⭐';
+            kr = '초대박 777 잭팟이 터졌습니다! · SUPER JACKPOT!';
+            coins = 55;
+            if (frame) {
+                frame.classList.add('tension-pulse');
+                setTimeout(() => frame.classList.remove('tension-pulse'), 3500);
+            }
+        } else if (isMega) {
+            title = '🔥 MEGA WIN 🔥';
+            kr = '메가 대박이 터졌습니다! · MEGA WIN!';
+            coins = 38;
+        }
+
         el.innerHTML =
-            `<div class="bigwin-title">${mega ? 'MEGA WIN' : 'BIG WIN'}</div>` +
-            `<div class="bigwin-amount">+${amount}</div>` +
-            `<div class="bigwin-kr">${mega ? '대박이 터졌습니다! · MEGA WIN!' : '크게 터졌습니다! · BIG WIN!'}</div>`;
-        frame.appendChild(el);
+            `<div class="bigwin-title" style="${isSuperJackpot ? 'color:#ffd700; text-shadow:0 0 25px #ffd700, 0 0 40px #ff0055;' : ''}">${title}</div>` +
+            `<div class="bigwin-amount" id="bigwin-countup">+0</div>` +
+            `<div class="bigwin-kr">${kr}</div>`;
+        if (frame) frame.appendChild(el);
+
         sfx.good();
-        setTimeout(() => sfx.good(), 180);
-        setTimeout(() => sfx.good(), 360);
-        vibe([0, 80, 60, 80, 60, 140]);
+        setTimeout(() => sfx.good(), 160);
+        setTimeout(() => sfx.good(), 320);
+        if (isSuperJackpot) {
+            setTimeout(() => sfx.good(), 480);
+            setTimeout(() => sfx.good(), 640);
+        }
+        vibe(isSuperJackpot ? [0, 100, 50, 150, 50, 200, 80, 300] : [0, 80, 60, 80, 60, 140]);
         this.setMsg(`+${amount} 크레딧!`, `You won ${amount} credits!`);
-        this.spawnCoinShower(mega ? 34 : 20);
-        setTimeout(() => el.remove(), 2400);
+        this.spawnCoinShower(coins);
+
+        const countupEl = el.querySelector('#bigwin-countup');
+        let currentDisplay = 0;
+        const step = Math.max(1, Math.floor(amount / 20));
+        const timer = setInterval(() => {
+            currentDisplay = Math.min(amount, currentDisplay + step);
+            if (countupEl) countupEl.textContent = `+${currentDisplay}`;
+            if (currentDisplay >= amount) clearInterval(timer);
+        }, 40);
+
+        setTimeout(() => el.remove(), isSuperJackpot ? 3600 : 2600);
+    }
+
+    updateJackpotTicker() {
+        const ticker = document.getElementById('jackpot-ticker-val');
+        if (!ticker) return;
+        const base = 77770 + Math.floor(Date.now() / 4000) % 999;
+        ticker.textContent = base.toLocaleString();
     }
 
     /** SPIN 뿐 아니라 MAX BET·AUTO 버튼도 같이 잠급니다 — 스핀 도는 중엔 셋 다 조작 불가. */
@@ -4853,7 +5495,77 @@ if (hotSw) {
         sfx.init();
         HOT.on = !HOT.on;
         localStorage.setItem('gijoArcade_hot', HOT.on ? '1' : '0');
-        paintHot();
+        
+/* ===== ARCADE GUIDE MODAL & NAVIGATION ===== */
+const ARCADE_GUIDES = {
+    puzzle: {
+        badge: 'PUZZLE GUIDE · 네온 2048',
+        title: '네온 2048 게임 방법 &amp; 필승 공략',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 게임 목표</div>
+                <p>같은 숫자가 적힌 네온 타일을 합쳐서 궁극의 <b>2048 타일</b>을 완성하는 두뇌 전략 퍼즐입니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🕹️ 조작법</div>
+                <p><b>모바일</b>: 화면을 상 / 하 / 좌 / 우 방향으로 스와이프 (밀기)<br><b>PC</b>: 키보드 방향키 (↑, ↓, ←, →)</p>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">👑 10년차 고수의 필승 3대 법칙</div>
+                <ul>
+                    <li><b>1. 코너 고정의 법칙</b>: 가장 큰 숫자 타일(512, 1024 등)을 반드시 <b>한쪽 모서리(예: 좌측 하단)</b>에 딱 고정하세요. 절대 자리를 비우지 않아야 합니다.</li>
+                    <li><b>2. 절대 금지 방향</b>: 큰 타일이 아래에 있다면, 절대로 <b>위쪽 [↑]</b> 방향으로 스와이프하지 마세요! 모서리 배치가 단숨에 무너집니다.</li>
+                    <li><b>3. 지그재그 체인 정렬</b>: 1행, 2행 순서로 큰 숫자부터 순서대로(1024 ➔ 512 ➔ 256 ➔ 128) 내림차순 정렬하면 연쇄 합체가 연달아 폭발합니다!</li>
+                </ul>
+            </div>
+        `
+    },
+    flappy: {
+        badge: 'FLAPPY GUIDE · 플래피 네온',
+        title: '플래피 네온 게임 방법 &amp; 생존 공략',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 게임 목표</div>
+                <p>중력을 이겨내며 날아오르고, 다가오는 네온 파이프 장애물을 통과해 최고 점수를 기록하세요!</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🕹️ 조작법</div>
+                <p><b>모바일</b>: 화면 아무 곳이나 가볍게 탭 (Tap)<br><b>PC</b>: 스페이스바 (Space) 또는 마우스 클릭</p>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">👑 10년차 고수의 생존 3대 팁</div>
+                <ul>
+                    <li><b>1. 리듬 탭핑</b>: 마구 연타하지 마세요! 새가 살짝 하강할 때 일정한 박자(툭-툭)로 리듬을 타는 것이 핵심입니다.</li>
+                    <li><b>2. 중앙-하단 라인 유지</b>: 파이프를 통과할 때 상단 모서리에 스치기 쉬우므로, 안전하게 <b>파이프 중앙~살짝 아래</b>로 통과하세요.</li>
+                    <li><b>3. 5점 달성 시 황금 왕관 👑</b>: 5점을 돌파하면 머리에 황금 왕관이 씌워집니다! 긴장하지 말고 10점, 20점을 노려보세요!</li>
+                </ul>
+            </div>
+        `
+    }
+};
+
+function showGuideModal(type) {
+    const data = ARCADE_GUIDES[type];
+    if (!data) return;
+    const modal = document.getElementById('arcade-guide-modal');
+    const badge = document.getElementById('guide-badge');
+    const title = document.getElementById('guide-title');
+    const content = document.getElementById('guide-content');
+    if (badge) badge.textContent = data.badge;
+    if (title) title.innerHTML = data.title;
+    if (content) content.innerHTML = data.content;
+    if (modal) modal.classList.add('show');
+    sfx.init();
+    sfx.blip(600, 0.05);
+}
+
+function closeGuideModal() {
+    const modal = document.getElementById('arcade-guide-modal');
+    if (modal) modal.classList.remove('show');
+    sfx.blip(400, 0.04);
+}
+
+paintHot();
         sfx.blip(HOT.on ? 660 : 440, 0.06, 'triangle', 0.05);
         vibe(HOT.on ? [0, 20, 30, 20] : 15);
     });

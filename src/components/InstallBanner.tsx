@@ -19,6 +19,7 @@ import {
   onInstallAvailabilityChange,
   promptInstall,
 } from '../utils/pwa';
+import { copyText } from '../utils/clipboard';
 
 const DISMISS_KEY = 'gijo_install_banner_dismissed_v1';
 
@@ -59,11 +60,11 @@ export const InstallBanner: React.FC<InstallBannerProps> = ({ isOffline }) => {
   };
 
   const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
+    const ok = await copyText(window.location.href);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
+    } else {
       setShowGuide(true);
     }
   };

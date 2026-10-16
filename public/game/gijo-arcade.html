@@ -493,10 +493,12 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: clamp(6px, 1.4vh, 10px);
     padding: 0 10px 10px;
     min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* 릴 창 — 5열 3행이라 세로로 늘려두면 칸이 길쭉해져 슬롯머신처럼 안 보입니다.
@@ -1482,6 +1484,12 @@ canvas {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+}
+
+@media (max-width: 350px) {
+    .portal-duo-cards {
+        grid-template-columns: 1fr;
+    }
 }
 
 .arcade-sub-card {

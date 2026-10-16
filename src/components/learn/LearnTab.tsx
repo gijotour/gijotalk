@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import type { Country, Phrase, VocabUnitId } from '../../types';
 import { VOCAB_UNITS } from '../../data/vocab';
 import type { VocabProgressMap } from '../../utils/vocab';
+import { OfflineAudioCard } from '../OfflineAudioCard';
 import { UnitList } from './UnitList';
 import { UnitScreen } from './UnitScreen';
 
@@ -15,6 +16,7 @@ interface LearnTabProps {
   unitDone: string[];
   onUnitDone: (stamp: string) => void;
   onOpenBillboard: (phrase: Phrase) => void;
+  isOffline?: boolean;
 }
 
 /**
@@ -34,6 +36,7 @@ export const LearnTab: React.FC<LearnTabProps> = ({
   unitDone,
   onUnitDone,
   onOpenBillboard,
+  isOffline = false,
 }) => {
   const [openUnitId, setOpenUnitId] = useState<VocabUnitId | null>(null);
 
@@ -46,7 +49,7 @@ export const LearnTab: React.FC<LearnTabProps> = ({
   const unit = VOCAB_UNITS.find((u) => u.id === openUnitId);
 
   return (
-    <div className="animate-in fade-in duration-150">
+    <div className="space-y-4 animate-in fade-in duration-150">
       {unit ? (
         <UnitScreen
           unit={unit}
@@ -62,12 +65,15 @@ export const LearnTab: React.FC<LearnTabProps> = ({
           onBack={() => setOpenUnitId(null)}
         />
       ) : (
-        <UnitList
-          country={country}
-          progress={progress}
-          unitDone={unitDone}
-          onOpenUnit={setOpenUnitId}
-        />
+        <>
+          <OfflineAudioCard country={country} isOffline={isOffline} />
+          <UnitList
+            country={country}
+            progress={progress}
+            unitDone={unitDone}
+            onOpenUnit={setOpenUnitId}
+          />
+        </>
       )}
     </div>
   );

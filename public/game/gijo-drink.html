@@ -241,228 +241,6 @@ h2.neon-text {
     margin-left: 6px;
 }
 
-/* 볼드 벤토 — 균등한 6칸 대신 위계를 준다.
-   "시간 폭탄"을 대표 칸으로 키우고, 각 칸 색은 그 모드의 실제 게임
-   화면 색과 맞췄다(크로커다일→초록 습지, 타이타닉→맥주 호박색,
-   러브 드링크→보라, 폭탄→빨강/주황 폭발). 메뉴에서 본 색이 게임
-   안에서도 이어지도록 하기 위함. JS 의 app.navigate() 호출은
-   손대지 않았다 — 클래스만 다시 그렸다. */
-.quad-menu {
-    width: 100%;
-    flex: 1;
-    /* flex 자식의 기본 min-height 는 auto(=내용의 min-content 높이) 라서,
-       9칸 버튼의 실제 내용 높이가 화면에 남은 공간보다 크면 flex:1 이
-       찌그러뜨리지 못하고 아래 칸(사다리 게임 아래로)이 화면 밖으로
-       통째로 밀려났었습니다 — 스크롤도 안 걸려서 그 칸들은 아예 손이
-       안 닿았습니다. min-height:0 으로 flex:1 이 실제로 눌러 담게 하고,
-       그래도 안 들어가는 기기(짧은 화면)를 위해 overflow-y:auto 를
-       안전망으로 둡니다. */
-    min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    display: grid;
-    /* 대표 칸 2개가 위에 나란히 서므로 좌우를 같은 폭으로 둡니다. */
-    grid-template-columns: 1fr 1fr;
-    /* 사다리 게임·업앤다운을 삭제하면서 7개로 줄었습니다.
-       1행 = 카드 뒤집기 배너 — HOT 모드에서 실제로 내용이 바뀌는 3개(카드 뒤집기·
-       미션 룰렛·시간 폭탄)를 맨 위로 올려달라는 요청으로 맨 위에 둡니다. 배너를
-       auto 로 두면 다른 칸의 1/3에도 못 미쳐 얇은 띠로 보이므로 0.62fr 로 명시.
-       2행 = 미션 룰렛·시간 폭탄 (나머지 HOT 2개).
-       3행 = 내용이 안 바뀌는 나머지 게임 2개(크로커다일·러브 드링크).
-       4~5행 = 대표 아트가 있는 터치 룰렛·타이타닉 — 사진이 잘 보이도록 맨 아래에
-       두 행씩 크게 배치합니다.
-       각 행에 46px/30px 최소값을 둔 건 — 0 으로 두면 짧은 화면에서 아이콘·영문
-       라벨이 overflow:hidden 에 잘려 배지만 남고 다 사라져 보였기 때문입니다.
-       이 최소값 밑으로는 grid 가 아니라 위 overflow-y:auto 가 받습니다. */
-    grid-template-rows: minmax(30px, 0.62fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr) minmax(46px, 1fr);
-    gap: 6px;
-    /* 예전엔 footer-copyright 가 마지막 행에 겹치지 않도록 여기에 34~42px
-       를 남겼지만, 지금은 그리드 아래에 AD 슬롯 칸이 따로 들어와 있어서
-       실제로 footer 와 겹치는 건 그 AD 칸이었습니다. 여백을 AD 칸 쪽
-       (margin-bottom)으로 옮기고 여기는 최소만 둡니다. */
-    padding: 0 6px 6px;
-}
-
-.quad-btn {
-    /* 테두리를 약간 더 밝게 하여 윤곽선을 뚜렷하게 */
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    outline: none;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    gap: 3px;
-    font-family: var(--font-main);
-    /* 배경을 더 어둡게 하여 네온 배경과 분리 */
-    background: rgba(10, 10, 16, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    position: relative;
-    overflow: hidden;
-    border-radius: 14px;
-    padding: clamp(10px, 3vw, 16px);
-    text-align: left;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
-}
-
-.quad-btn:hover, .quad-btn:focus-visible {
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.8), 0 0 24px rgba(255, 0, 85, 0.4);
-}
-
-.quad-btn:active {
-    transform: scale(0.96);
-}
-
-.quad-badge {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    font-size: clamp(0.6rem, 2.2vw, 0.72rem);
-    font-weight: 800;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: #ffffff;
-    margin-bottom: 3px;
-    letter-spacing: 0.02em;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-.quad-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    clip-path: polygon(0 100%, 100% 100%, 100% 12%, 0 48%);
-    z-index: 0;
-    opacity: 0.85;
-}
-
-.quad-icon, .quad-label-en, .quad-label-kr {
-    position: relative;
-    z-index: 1;
-}
-
-.quad-icon {
-    font-size: clamp(1.5rem, 6vw, 2rem);
-    line-height: 1;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
-}
-
-.quad-label-en {
-    font-size: clamp(0.82rem, 3.2vw, 1rem);
-    font-weight: 800;
-    letter-spacing: -0.005em;
-    color: #fff;
-    text-shadow: 0 2px 4px #000, 0 4px 12px rgba(0,0,0,0.9);
-}
-
-.quad-label-kr {
-    font-size: clamp(0.66rem, 2.5vw, 0.78rem);
-    font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    text-shadow: 0 1px 3px #000, 0 2px 8px rgba(0,0,0,0.8);
-}
-
-/* HOT 모드에서 벌칙·미션 내용이 실제로 바뀌는 미션 룰렛·시간 폭탄 — 배너(카드
-   뒤집기) 바로 아래, 나머지 게임보다 위쪽인 2행에 둡니다. */
-.quad-1 { grid-column: 1; grid-row: 2; }
-.quad-3 { grid-column: 2; grid-row: 2; }
-.quad-2 { grid-column: 1; grid-row: 3; }
-.quad-6 { grid-column: 2; grid-row: 3; }
-
-/* 대표 아트가 있는 두 칸(터치 룰렛·타이타닉) — 사진이 잘 보이도록 맨 아래
-   4~5행에 두 행씩 크게 배치합니다. */
-.quad-4, .quad-5 {
-    grid-row: 4 / 6;
-    padding: clamp(14px, 4vw, 20px);
-}
-.quad-4 { grid-column: 1; }
-.quad-5 { grid-column: 2; }
-
-.quad-4 .quad-icon, .quad-5 .quad-icon { font-size: clamp(2.2rem, 8vw, 3rem); }
-.quad-4 .quad-label-en, .quad-5 .quad-label-en { font-size: clamp(1rem, 4vw, 1.25rem); }
-
-/* 카드 뒤집기 — 전체 폭 배너. 얇은 띠로 보이지 않도록
-   아이콘·글자를 다른 칸에 준하는 크기로 키웠습니다. HOT 모드에서 미션 내용이
-   실제로 바뀌는 3개 중 하나라 맨 위(1행)로 올렸습니다. */
-.quad-9 {
-    grid-column: 1 / 3;
-    grid-row: 1;
-    flex-direction: row;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 20px;
-}
-.quad-9::before { clip-path: none; }
-.quad-9 .quad-icon { font-size: clamp(1.8rem, 6vw, 2.3rem); }
-.quad-9 .quad-label-en { font-size: clamp(0.95rem, 3.6vw, 1.15rem); }
-.quad-9 .quad-label-kr { font-size: clamp(0.72rem, 2.8vw, 0.86rem); }
-
-/* HOT 모드에서 내용이 바뀌는 3개(미션 룰렛·시간 폭탄·카드 뒤집기)만 같은
-   색(HOT 배지와 동일한 그라디언트)으로 통일해 "이 셋은 19+ 에서 달라진다"는
-   걸 색으로도 표시합니다. 나머지는 원래 색 그대로 둡니다. */
-.quad-1::before, .quad-3::before, .quad-9::before {
-    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
-}
-.quad-2::before { background: linear-gradient(120deg, #3ed973, #c4ff4d); }
-.quad-4::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
-.quad-5::before { background: linear-gradient(120deg, #ffaa00, #ffe14d); }
-
-/* 대표 아트가 있는 두 칸(터치 룰렛·타이타닉) — ::before 그라디언트 밑으로
-   사진이 비치도록 opacity 를 낮춥니다. 나머지 칸은 전용 아트가 없어 그대로 둡니다. */
-.quad-4 { background-image: url('assets/drink_touch_roulette_spicy_art_1787296832739.jpg'); background-size: cover; background-position: center; }
-.quad-5 { background-image: url('assets/drink_titanic_spicy_art_1787296806150.jpg'); background-size: cover; background-position: center; }
-.quad-4::before, .quad-5::before { opacity: 0.55; }
-.quad-6::before { background: linear-gradient(135deg, #ff4dd8, var(--tertiary-neon)); }
-
-/* 나머지 5칸(카드 뒤집기·미션 룰렛·시간 폭탄·크로커다일 룰렛·러브 드링크) —
-   1~3행에 걸친 사진 한 장을 그리드 아이템으로 깔고 그 위에 칸들을 얹어 하나로
-   이어져 보이게 합니다. 색 그라디언트(::before)는 완전히 지워서 사진이 그대로
-   드러나고, 아이콘·배지·글자만 그 위에 남습니다. */
-.quad-shared-bg {
-    grid-column: 1 / 3;
-    grid-row: 1 / 4;
-    background: url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
-    border-radius: 14px;
-    z-index: 0;
-    pointer-events: none;
-}
-.quad-1, .quad-2, .quad-3, .quad-6, .quad-9 {
-    background: rgba(18, 18, 28, 0.12);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    z-index: 1;
-    /* 사진이 하나로 이어져 칸 경계가 안 보이면 어디를 눌러야 할지 헷갈리므로,
-       테두리를 또렷하게 키워 탭 영역을 구분합니다. */
-    border-color: rgba(255, 255, 255, 0.4);
-}
-.quad-1:active, .quad-2:active, .quad-3:active, .quad-6:active, .quad-9:active {
-    background: rgba(255, 255, 255, 0.1);
-}
-.quad-1::before, .quad-2::before, .quad-3::before, .quad-6::before, .quad-9::before {
-    display: none;
-}
-/* 글자가 사진 위에 바로 얹히면 밝은 부분에서 안 읽히므로, 라벨이 앉는
-   아래쪽에만 어두운 스크림을 깔아 배경 사진 자체는 그대로 두면서 가독성만
-   올립니다(선택하기 편하도록). */
-.quad-1::after, .quad-2::after, .quad-3::after, .quad-6::after, .quad-9::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.32) 45%, transparent 75%);
-}
-/* 카드 뒤집기(quad-9)는 가로 배너라 글자가 오른쪽까지 퍼져 있어, 위→아래
-   스크림 대신 전체를 고르게 어둡혀야 어디서든 읽힙니다. */
-.quad-9::after { background: rgba(0, 0, 0, 0.45); }
-
 .btn {
     font-family: var(--font-main);
     font-size: clamp(0.95rem, 3vw, 1.15rem);
@@ -498,9 +276,6 @@ h2.neon-text {
     filter: brightness(0.92);
 }
 
-/* ===== 화면별 액센트 — 메뉴 타일에서 쓴 색을 게임 화면 안까지 그대로 잇는다.
-   "위험/실패" 신호(폭탄 패닉, 손가락·사다리 패배, 악어 물림)는 화면 테마와 무관하게
-   항상 핑크/레드로 통일했다 — 기존 코드가 이미 그렇게 되어 있던 규칙을 그대로 따랐다. ===== */
 #screen-roulette-input h2.neon-text,
 #screen-roulette h2.neon-text {
     text-shadow: 0 0 14px var(--primary-neon);
@@ -517,43 +292,6 @@ h2.neon-text {
 #screen-roulette-input textarea {
     border-color: var(--primary-neon);
     box-shadow: inset 0 0 10px rgba(255, 0, 85, 0.2);
-}
-
-#screen-crocodile h2.neon-text {
-    text-shadow: 0 0 14px #3ed973;
-}
-#screen-crocodile .neon-btn {
-    background: linear-gradient(120deg, #3ed973, #c4ff4d);
-    box-shadow: 0 4px 16px rgba(62, 217, 115, 0.4);
-}
-#screen-crocodile .neon-btn:hover {
-    box-shadow: 0 6px 22px rgba(62, 217, 115, 0.55);
-}
-
-#screen-bomb h2.neon-text {
-    text-shadow: 0 0 14px #ff7b00;
-}
-#screen-bomb .neon-btn {
-    background: linear-gradient(135deg, #ff7b00, var(--primary-neon));
-    box-shadow: 0 4px 18px rgba(255, 123, 0, 0.4);
-}
-#screen-bomb .neon-btn:hover {
-    box-shadow: 0 6px 24px rgba(255, 123, 0, 0.55);
-}
-
-#screen-titanic h2.neon-text {
-    text-shadow: 0 0 14px #ffaa00;
-}
-#screen-titanic .neon-btn {
-    background: linear-gradient(120deg, #ffaa00, #ffe14d);
-    box-shadow: 0 4px 18px rgba(255, 170, 0, 0.4);
-}
-#screen-titanic .neon-btn:hover {
-    box-shadow: 0 6px 24px rgba(255, 170, 0, 0.55);
-}
-
-#screen-bridge h2.neon-text {
-    text-shadow: 0 0 14px var(--tertiary-neon);
 }
 
 .btn-back {
@@ -577,20 +315,21 @@ h2.neon-text {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Roulette Screen & Elements
-   배경은 아케이드 슬롯 쪽 'JACKPOT FEVER 777' 카지노 아트가 깔려 있었는데,
-   술자리 미션 룰렛과는 결이 안 맞는 슬롯머신 홍보 이미지라(카지노 간판·슬롯
-   기계) 파티 게임용 대표 아트(DRINKING GAME NIGHT 배너)로 바꿨습니다. 그리고
-   덮는 그라디언트가 0.85~0.95 라 사진이 거의 안 비쳤던 것을 터치 룰렛·타이타닉
-   화면과 같은 0.55~0.88 로 낮춰 실제로 보이게 했습니다. */
+/* Roulette Screen & Elements */
+.roulette-screen,
+#screen-settings {
+    justify-content: flex-start !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-top: clamp(50px, 8vh, 64px);
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+}
+
 .roulette-screen {
     background:
         radial-gradient(ellipse at center, rgba(42, 0, 30, 0.58) 0%, rgba(13, 0, 15, 0.9) 80%),
         url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-top: clamp(14px, 3vh, 24px);
-    padding-bottom: clamp(14px, 3vh, 24px);
 }
 
 body.hot .roulette-screen {
@@ -601,19 +340,15 @@ body.hot .roulette-screen {
 
 .roulette-container {
     position: relative;
-    /* 세로가 짧은 화면(가로 모드·데스크톱 창)에서 flex 열이 높이만 눌러 휠이 타원으로
-       찌그러졌습니다. 가로·세로를 같은 식으로 묶고(높이 48vh 도 상한에 포함)
-       flex-shrink 를 꺼서 항상 정원으로 둡니다 — 넘치면 .roulette-screen 이 스크롤합니다. */
-    width: min(82vw, 400px, 48vh);
-    height: min(82vw, 400px, 48vh);
+    width: min(78vw, 360px, 42vh);
+    height: min(78vw, 360px, 42vh);
     flex-shrink: 0;
-    margin-bottom: clamp(12px, 2.5vh, 20px);
+    margin-bottom: clamp(8px, 2vh, 16px);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 휠 뒤 은은한 후광 */
 .roulette-container::before {
     content: '';
     position: absolute;
@@ -661,11 +396,6 @@ body.hot .roulette-wheel-wrapper {
     box-sizing: border-box;
 }
 
-/* Center Hub — 중앙 SPIN 버튼.
-   원래는 휠 안의 ::after 가상요소(휠과 함께 돌아가는 장식 원판)와 38px 짜리
-   실제 <button> 이 겹쳐 있었는데, 38px 안에 🎯 아이콘과 SPIN 글자가 세로로
-   안 들어가 삐져나왔습니다. 가상요소를 없애고 그 크기·flex 배치를 버튼에
-   그대로 옮겼습니다 — 버튼은 휠 밖(컨테이너)에 있어 회전하지 않습니다. */
 .roulette-center-hub {
     position: absolute;
     top: 50%;
@@ -778,17 +508,20 @@ body.hot .roulette-center-hub {
     text-shadow: 0 0 8px var(--secondary-neon);
 }
 
-.roulette-preset-chips {
+.roulette-preset-chips,
+.editor-presets {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
 }
 
-.roulette-chip-btn {
+.roulette-chip-btn,
+.preset-chip {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.25);
     color: #fff;
+    font-family: var(--font-main);
     font-size: clamp(0.72rem, 2.4vw, 0.82rem);
     font-weight: 700;
     padding: 6px 12px;
@@ -797,18 +530,39 @@ body.hot .roulette-center-hub {
     transition: all 0.2s ease;
 }
 
-.roulette-chip-btn:hover {
+.roulette-chip-btn:hover,
+.preset-chip:hover:not(:disabled) {
     border-color: var(--secondary-neon);
     background: rgba(0, 243, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
 }
 
-.roulette-chip-btn.active {
+.roulette-chip-btn.active,
+.preset-chip.active {
     border-color: var(--primary-neon);
     background: rgba(255, 0, 85, 0.25);
     box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
     color: #fff;
+}
+
+.preset-chip.has-saved {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.16);
+    color: #ffd700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+}
+
+.preset-chip.saved-flash {
+    border-color: #00ff88;
+    background: rgba(0, 255, 136, 0.25);
+    color: #00ff88;
+    box-shadow: 0 0 16px rgba(0, 255, 136, 0.55);
+}
+
+.preset-chip:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 /* Roulette Result Banner (Screen) */
@@ -840,20 +594,16 @@ body.hot .roulette-center-hub {
 }
 
 .result-text {
-    margin-top: 20px;
+    margin-top: 0;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--secondary-neon);
-    min-height: 2rem;
+    min-height: 1.6rem;
     text-shadow: 0 0 10px var(--secondary-neon);
     text-align: center;
-    /* 한글은 기본 word-break 로는 음절 중간(마셔/라 처럼)에서도 줄바꿈된다.
-       영어 보조줄이 붙으며 줄바꿈이 잦아져 더 눈에 띄길래 추가했다. */
     word-break: keep-all;
 }
 
-/* 한글 문장 아래에 붙는 영어 보조줄 — 외국인 참가자도 무슨 상황인지 읽을 수 있게.
-   한글보다 작지만(.title-kr 만큼 작지는 않게) 또렷이 읽히는 크기로 뒀다. */
 .i18n-sub {
     display: block;
     font-size: 0.6em;
@@ -863,266 +613,6 @@ body.hot .roulette-center-hub {
     letter-spacing: 0.01em;
     margin-top: 4px;
 }
-
-/* Bomb */
-.bomb-screen {
-    background: radial-gradient(ellipse at center, #2a1200 0%, #0d0500 80%);
-}
-
-.bomb-container {
-    width: min(70vw, 290px);
-    height: min(70vw, 290px);
-    border-radius: 50%;
-    background: radial-gradient(circle at 32% 28%, #ff8c00 0%, #5c2005 35%, #180702 75%, #050201 100%);
-    box-shadow: inset -12px -12px 28px rgba(0,0,0,0.9), inset 8px 8px 20px rgba(255, 140, 0, 0.45), 0 0 50px rgba(255, 123, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 24px;
-    cursor: pointer;
-    transition: transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
-    user-select: none;
-    position: relative;
-    border: 4px solid #ffaa00;
-}
-
-.bomb-container::before,
-.bomb-container::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid var(--primary-neon);
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-}
-
-.bomb-container.active::before {
-    animation: touch-ring 1.4s ease-out infinite;
-}
-
-.bomb-container.active::after {
-    animation: touch-ring 1.4s ease-out infinite 0.7s;
-}
-
-@keyframes touch-ring {
-    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.9; }
-    100% { transform: translate(-50%, -50%) scale(1.45); opacity: 0; }
-}
-
-.bomb-container:active {
-    transform: scale(0.95);
-}
-
-.bomb-icon {
-    font-size: clamp(3.5rem, 18vw, 6.5rem);
-    margin-bottom: 6px;
-    filter: drop-shadow(0 0 14px rgba(255,123,0,0.65));
-}
-
-.bomb-touch-label {
-    font-size: clamp(0.85rem, 4vw, 1.05rem);
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 0 10px #ff7b00;
-    letter-spacing: 0.05em;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.bomb-container.active .bomb-touch-label {
-    opacity: 1;
-    animation: label-blink 1s ease-in-out infinite;
-}
-
-@keyframes label-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-.bomb-container.active {
-    animation: pulse-bomb 0.5s infinite alternate;
-}
-
-.bomb-container.exploded {
-    background: radial-gradient(circle at 50% 50%, #ff0000, #ff7b00);
-    box-shadow: 0 0 100px #ff0000, 0 0 200px #ff7b00;
-    transform: scale(1.1);
-    transition: all 0.2s;
-}
-
-@keyframes pulse-bomb {
-    0% { box-shadow: inset -10px -10px 20px rgba(0,0,0,0.8), 0 0 20px rgba(255,0,0,0.5); transform: scale(1); }
-    100% { box-shadow: inset -10px -10px 20px rgba(0,0,0,0.8), 0 0 60px rgba(255,0,0,0.9); transform: scale(1.05); }
-}
-
-.bomb-screen-panic {
-    animation: screen-panic-flash 0.5s infinite alternate;
-}
-
-@keyframes screen-panic-flash {
-    0% { box-shadow: inset 0 0 20px rgba(255, 0, 85, 0); }
-    100% { box-shadow: inset 0 0 80px rgba(255, 0, 85, 0.45); }
-}
-
-/* 폭탄 카운트다운 — 예전 .timer{display:none} 이 이 숫자를 통째로 숨겨서
-   위의 '타이머 / 블라인드' 탭이 아무 차이가 없었습니다. 타이머 모드에선 남은
-   초를 보여주고, 블라인드 모드(.blind)에선 blur 로 가립니다. */
-.bomb-timer {
-    font-size: clamp(1.05rem, 5vw, 1.4rem);
-    font-weight: 900;
-    letter-spacing: 0.06em;
-    color: #ffe0b0;
-    text-shadow: 0 0 10px rgba(255, 123, 0, 0.8), 0 1px 2px #000;
-    font-variant-numeric: tabular-nums;
-    transition: filter 0.2s ease;
-}
-
-/* Cards Screen & Elements — 배경 아트는 네온 에이스 카드(슬롯 번들의 카드 아트)라
-   카드 뒤집기와 결이 맞아 그대로 둡니다. 덮는 그라디언트만 룰렛과 같은 이유로 낮췄습니다. */
-.cards-screen {
-    background:
-        radial-gradient(ellipse at center, rgba(30, 8, 45, 0.58) 0%, rgba(10, 5, 18, 0.9) 80%),
-        url('assets/slot_double_gamble_cards_1787296496813.jpg') center/cover;
-    overflow-y: auto;
-    overflow-x: hidden;
-    justify-content: flex-start;
-    padding-top: clamp(14px, 3vh, 24px);
-    padding-bottom: clamp(14px, 3vh, 24px);
-}
-
-body.hot .cards-screen {
-    background:
-        radial-gradient(ellipse at center, rgba(55, 0, 20, 0.62) 0%, rgba(15, 0, 5, 0.92) 80%),
-        url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
-}
-
-.cards-status-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin: 2px 0 10px;
-}
-
-.cards-badge-counter {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(0, 243, 255, 0.5);
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: clamp(0.75rem, 2.4vw, 0.85rem);
-    font-weight: 800;
-    color: #fff;
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.25);
-}
-
-body.hot .cards-badge-counter {
-    border-color: rgba(255, 0, 85, 0.6);
-    box-shadow: 0 0 12px rgba(255, 0, 85, 0.35);
-}
-
-.cards-hint {
-    font-size: clamp(0.72rem, 2.2vw, 0.82rem);
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    font-weight: 600;
-    animation: hint-pulse 2s infinite alternate;
-}
-
-@keyframes hint-pulse {
-    0% { opacity: 0.7; }
-    100% { opacity: 1; }
-}
-
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(8px, 2.5vw, 14px);
-    margin-bottom: 22px;
-    width: 100%;
-    max-width: min(92vw, 440px);
-    perspective: 1200px;
-}
-
-.card {
-    aspect-ratio: 2/3;
-    perspective: 1200px;
-    cursor: pointer;
-    border-radius: 14px;
-    transition: transform 0.2s ease;
-}
-
-.card:active {
-    transform: scale(0.96);
-}
-
-.card-inner {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transition: transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
-    transform-style: preserve-3d;
-    border-radius: 14px;
-}
-
-.card.flipped .card-inner {
-    transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    backface-visibility: hidden;
-    border-radius: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 10px 8px;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-.card-front {
-    background: linear-gradient(145deg, #1c1132, #0d0618);
-    border: 2px solid rgba(162, 0, 255, 0.6);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(162, 0, 255, 0.35);
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 900;
-}
-
-.card-front::before {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: 10px;
-    border: 1px dashed rgba(255, 255, 255, 0.25);
-    pointer-events: none;
-}
-
-.card-back {
-    background: linear-gradient(145deg, #141420, #09090f);
-    border: 2px solid var(--secondary-neon);
-    transform: rotateY(180deg);
-    color: #ffffff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    word-break: keep-all;
-    line-height: 1.35;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 243, 255, 0.4);
-}
-
-/* 등급별 카드 뒷면 색은 파일 끝의 .card.flipped.card-rare-* 블록이 담당합니다.
-   (예전엔 여기에도 어두운 버전이 있었지만 등급 클래스는 항상 flipped 와 함께
-   붙어서 뒤 블록의 !important 에 전부 덮였습니다 — 소리 없이 지던 중복이라 지움) */
 
 /* Settings */
 .settings-container {
@@ -1184,10 +674,10 @@ textarea:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 0;
     background: rgba(255, 255, 255, 0.05);
-    padding: 6px 12px;
+    padding: 5px 12px;
     border-radius: 50px;
     border: 1px solid rgba(162, 0, 255, 0.3);
 }
@@ -1223,373 +713,25 @@ textarea:focus {
     justify-content: center;
 }
 
-/* Crocodile */
-.croc-screen {
-    padding: 0 !important;
-    justify-content: flex-start !important;
-    overflow: hidden;
-    /* 배경을 더 늪지대/악어 느낌이 나는 깊은 네온 초록빛으로 업그레이드 */
-    background: radial-gradient(ellipse at center, #185934 0%, #082114 60%, #030a06 100%);
-}
-
-.croc-back-btn {
-    position: absolute !important;
-    top: 25px !important;
-    left: 20px !important;
-    margin: 0 !important;
-    z-index: 100 !important;
-}
-
-.croc-header {
-    width: 100%;
-    flex-shrink: 0;
-    /* 좌우 여백을 코너의 뒤로가기·다시하기 버튼 폭만큼 넉넉히 둬서
-       제목이 버튼 밑으로 들어가지 않게 한다. */
-    padding: 16px 110px 4px 110px;
-    text-align: center;
-    z-index: 3;
-}
-
-.croc-title {
-    font-size: clamp(1.2rem, 5.5vw, 1.6rem) !important;
-    margin-bottom: 0 !important;
-}
-
-.croc-wrapper {
-    position: relative;
-    width: 100%;
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.croc-ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 90vmin;
-    height: 90vmin;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(43,171,87,0.22) 0%, rgba(43,171,87,0) 70%);
-    animation: croc-ripple-pulse 3s ease-in-out infinite;
-    z-index: 0;
-}
-
-@keyframes croc-ripple-pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
-    50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
-}
-
-.croc-bubbles {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.croc-bubbles span {
-    position: absolute;
-    bottom: -20px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(170, 255, 200, 0.35);
-    box-shadow: 0 0 6px rgba(170, 255, 200, 0.5);
-    animation: croc-bubble-rise linear infinite;
-}
-
-.croc-bubbles span:nth-child(1) { left: 12%; width: 8px; height: 8px; animation-duration: 6s; animation-delay: 0s; }
-.croc-bubbles span:nth-child(2) { left: 26%; width: 14px; height: 14px; animation-duration: 8s; animation-delay: 1.2s; }
-.croc-bubbles span:nth-child(3) { left: 48%; width: 7px; height: 7px; animation-duration: 5.5s; animation-delay: 0.6s; }
-.croc-bubbles span:nth-child(4) { left: 65%; width: 11px; height: 11px; animation-duration: 7s; animation-delay: 2s; }
-.croc-bubbles span:nth-child(5) { left: 80%; width: 9px; height: 9px; animation-duration: 6.5s; animation-delay: 0.3s; }
-.croc-bubbles span:nth-child(6) { left: 90%; width: 13px; height: 13px; animation-duration: 9s; animation-delay: 1.6s; }
-
-@keyframes croc-bubble-rise {
-    0% { transform: translateY(0) translateX(0); opacity: 0; }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.5; }
-    100% { transform: translateY(-110vh) translateX(15px); opacity: 0; }
-}
-
-.croc-img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(74vw, 54vh);
-    max-height: calc(100vh - 180px);
-    height: auto;
-    object-fit: contain;
-    aspect-ratio: 460 / 996;
-    transform: translate(-50%, -50%) scale(1);
-    transform-origin: center 22%;
-    filter: drop-shadow(0 0 35px rgba(43, 171, 87, 0.55));
-    z-index: 1;
-    transition: transform 0.15s cubic-bezier(.6,0,1,.4);
-    user-select: none;
-    -webkit-user-drag: none;
-    pointer-events: none;
-}
-
-.croc-wrapper.idle-anim .croc-img {
-    animation: croc-idle 2.6s ease-in-out infinite;
-}
-
-@keyframes croc-idle {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(0.97); }
-}
-
-.croc-wrapper.biting .croc-img {
-    animation: croc-bite 0.45s cubic-bezier(.6,0,1,.4) forwards;
-}
-
-@keyframes croc-bite {
-    0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    25% { transform: translate(-50%, -50%) scale(0.7, 0.55) rotate(-2deg); }
-    50% { transform: translate(-50%, -50%) scale(0.82, 0.6) rotate(2deg); }
-    100% { transform: translate(-50%, -50%) scale(0.78, 0.58) rotate(0deg); }
-}
-
-.croc-shuffle-btn {
-    /* 색은 위 #screen-crocodile .neon-btn 이 담당 — 여긴 모양/위치만. */
-    position: absolute;
-    top: 25px;
-    right: 20px;
-    width: auto;
-    padding: 6px 14px;
-    z-index: 100;
-    font-size: 0.8rem;
-    height: auto;
-    border-radius: 20px;
-}
-
-/* ===== Bite / Game Over Overlay ===== */
-.croc-bite-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.croc-bite-overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-    cursor: pointer;
-    animation: bite-overlay-pop 0.4s cubic-bezier(.34,1.56,.64,1);
-}
-
-@keyframes bite-overlay-pop {
-    0% { transform: scale(0.3); opacity: 0; }
-    60% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.croc-bite-flash {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, rgba(255,0,55,0.55) 0%, rgba(120,0,20,0.85) 100%);
-    border-radius: 24px;
-}
-
-.croc-bite-overlay.show .croc-bite-flash {
-    animation: bite-flash-strobe 0.5s steps(2, end) 2;
-}
-
-@keyframes bite-flash-strobe {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-}
-
-.croc-bite-text {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
-
-.croc-bite-emoji {
-    font-size: clamp(4rem, 24vw, 7rem);
-    animation: bite-emoji-shake 0.4s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
-}
-
-@keyframes bite-emoji-shake {
-    0%, 100% { transform: rotate(-6deg) scale(1); }
-    50% { transform: rotate(6deg) scale(1.1); }
-}
-
-.croc-bite-caption-en {
-    font-size: clamp(1.6rem, 9vw, 2.6rem);
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 16px var(--primary-neon), 2px 2px 0 #000;
-    letter-spacing: 0.04em;
-}
-
-.croc-bite-caption-kr {
-    font-size: clamp(1rem, 5vw, 1.4rem);
-    font-weight: 700;
-    color: #ffe9b0;
-    text-shadow: 1px 1px 0 #000;
-}
-
-.croc-bite-hint {
-    margin-top: 14px;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.7);
-    animation: hint-blink 1.2s ease-in-out infinite;
-}
-
-@keyframes hint-blink {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-}
-
-.croc-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(78vw, 65vh);
-    height: auto;
-    aspect-ratio: 460 / 996;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    pointer-events: none;
-}
-
-.croc-tooth-grid {
-    position: absolute;
-    inset: 0;
-}
-
-.croc-tooth {
-    position: absolute;
-    width: 13%;
-    height: 7%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    cursor: pointer;
-    pointer-events: auto;
-    background: transparent;
-    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.croc-tooth::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    /* 투명했던 이빨에 은은한 형광 초록빛을 추가하여 클릭 가능 영역을 직관적으로 표시 */
-    background: radial-gradient(circle, rgba(0,255,140,0.2) 0%, rgba(0,255,140,0) 80%);
-    box-shadow: inset 0 0 10px rgba(0,255,140,0.3);
-    transition: background 0.15s ease, box-shadow 0.15s ease;
-    animation: tooth-idle-pulse 2s infinite alternate ease-in-out;
-}
-
-@keyframes tooth-idle-pulse {
-    0% { opacity: 0.3; }
-    100% { opacity: 1; }
-}
-
-.croc-tooth::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid rgba(0,255,140,0.9);
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.croc-tooth:active {
-    transform: translate(-50%, -50%) scale(0.72);
-}
-
-.croc-tooth:active::after {
-    background: radial-gradient(circle, rgba(0,255,140,0.6) 0%, rgba(0,255,140,0) 75%);
-    box-shadow: 0 0 22px rgba(0,255,140,0.7), inset 0 0 12px rgba(0,0,0,0.4);
-}
-
-.croc-tooth.safe-pop {
-    animation: tooth-press-bounce 0.35s cubic-bezier(.34,1.56,.64,1);
-}
-
-.croc-tooth.safe-pop::after {
-    animation: tooth-safe-pop 0.45s ease;
-}
-
-.croc-tooth.safe-pop::before {
-    animation: tooth-press-ring 0.45s ease-out;
-}
-
-@keyframes tooth-press-bounce {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    35% { transform: translate(-50%, -50%) scale(0.68); }
-    70% { transform: translate(-50%, -50%) scale(1.15); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-@keyframes tooth-press-ring {
-    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; border-color: rgba(0,255,140,0.95); }
-    100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; border-color: rgba(0,255,140,0); }
-}
-
-@keyframes tooth-safe-pop {
-    0% { background: radial-gradient(circle, rgba(0,255,140,0.8) 0%, rgba(0,255,140,0.15) 70%); box-shadow: 0 0 28px rgba(0,255,140,0.9); }
-    60% { background: radial-gradient(circle, rgba(0,255,140,0.3) 0%, rgba(0,255,140,0) 70%); box-shadow: 0 0 10px rgba(0,255,140,0.3); }
-    100% { background: radial-gradient(circle at 35% 30%, #5a0e10 0%, #2a0405 65%, #1a0202 100%); box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
-}
-
-.croc-tooth.pressed {
-    pointer-events: none;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.croc-tooth.pressed::after {
-    background: radial-gradient(circle at 35% 30%, #5a0e10 0%, #2a0405 65%, #1a0202 100%);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 6px rgba(0,0,0,0.5);
-    animation: none !important;
-}
-
-.croc-tooth.bomb {
-    z-index: 10;
-    animation: tooth-bomb-shake 0.4s ease;
-}
-
-.croc-tooth.bomb::after {
-    background: radial-gradient(circle, rgba(255,0,55,0.9) 0%, rgba(255,0,55,0.3) 70%);
-    box-shadow: 0 0 50px var(--primary-neon), 0 0 90px var(--primary-neon);
-}
-
-@keyframes tooth-bomb-shake {
-    0%, 100% { transform: translate(-50%, -50%) scale(1.4) rotate(0deg); }
-    25% { transform: translate(-50%, -50%) scale(1.4) rotate(-10deg); }
-    75% { transform: translate(-50%, -50%) scale(1.4) rotate(10deg); }
-}
-
-/* Finger Roulette — 라디얼 그라디언트 뒤로 대표 아트가 은은히 비칩니다.
-   .finger-area(z-index:5)·안내문구(z-index:10) 보다 아래라 조작엔 안 걸립니다. */
+/* Finger Roulette */
 .finger-screen {
-    /* 원래 색(#001d2b/#00080a)이 완전 불투명이라 뒤에 깐 사진이 하나도 안
-       비쳤습니다 — rgba 로 바꿔서 실제로 반투명하게 겹치게 고쳤습니다. */
+    justify-content: flex-start !important;
+    padding-top: clamp(50px, 8vh, 64px);
     background:
         radial-gradient(ellipse at center, rgba(0, 29, 43, 0.55) 0%, rgba(0, 8, 10, 0.88) 80%),
         url('assets/drink_touch_roulette_spicy_art_1787296832739.jpg') center/cover;
+}
+
+#touch-title-neon {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
+    margin-bottom: 6px;
+}
+
+.touch-mode-tabs {
+    position: relative;
+    z-index: 30;
 }
 
 .finger-area {
@@ -1611,7 +753,7 @@ textarea:focus {
     color: #fff;
     text-shadow: 0 0 10px var(--secondary-neon);
     pointer-events: none;
-    margin-top: 0;
+    margin-top: 6px;
     line-height: 1.3;
 }
 
@@ -1677,240 +819,11 @@ textarea:focus {
     40%, 60% { transform: translate3d(10px, 0, 0); }
 }
 
-/* Titanic Game Elements — 위와 같은 이유로 대표 아트를 라디얼 그라디언트 뒤에 겹칩니다. */
-.titanic-screen {
-    background:
-        radial-gradient(ellipse at center, rgba(0, 18, 32, 0.55) 0%, rgba(0, 7, 12, 0.88) 80%),
-        url('assets/drink_titanic_spicy_art_1787296806150.jpg') center/cover;
-}
-
-.titanic-game-area {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-    flex: 1;
-    align-items: center;
-}
-
-/* 맥주잔 — 원래 쓰던 beer_glass_neon.png 가 사실 투명도 없는 jpg라 배경 자리에
-   체크무늬가 그대로 박혀 있었다. 이미지 대신 순수 CSS 도형(테두리+그라디언트)으로
-   다시 그렸다 — 색은 원본 이미지와 같은 사이언 유리 + 호박색 술. */
-.beer-glass {
-    width: clamp(170px, 33vw, 220px);
-    height: clamp(280px, 45vh, 420px);
-    position: relative;
-    border: 3px solid var(--secondary-neon);
-    border-top: none;
-    border-radius: 0 0 26px 26px;
-    background: linear-gradient(180deg, rgba(0, 243, 255, 0.1), rgba(0, 243, 255, 0.02));
-    filter: drop-shadow(0 0 30px rgba(0, 243, 255, 0.4));
-    overflow: hidden;
-}
-
-.beer-glass::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 10px;
-    border-top: 3px solid rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-.beer-liquid {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 70%;
-    background: linear-gradient(to top, rgba(255, 170, 0, 0.75), rgba(255, 200, 0, 0.85));
-    border-radius: 0 0 20px 20px;
-    transition: height 0.3s;
-    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
-}
-
-.beer-liquid::after {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: 0;
-    width: 100%;
-    height: 15px;
-    background: #fff;
-    border-radius: 5px 5px 0 0;
-    box-shadow: 0 -2px 5px rgba(255,255,255,0.8);
-}
-
-/* 소주잔도 beer-glass 와 같은 이유로 이미지 대신 CSS 도형. */
-.soju-cup {
-    position: absolute;
-    width: clamp(70px, 13vw, 95px);
-    height: clamp(85px, 16vw, 115px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 2.5px solid var(--secondary-neon);
-    border-radius: 4px 4px 10px 10px;
-    background: linear-gradient(180deg, rgba(0, 243, 255, 0.08), rgba(0, 243, 255, 0.02));
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 16px rgba(0, 243, 255, 0.35);
-    transition: top 0.4s ease-out;
-    overflow: hidden;
-}
-
-.soju-liquid {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0%;
-    background: rgba(0, 255, 170, 0.6);
-    border-radius: 0 0 7px 7px;
-    transition: height 0.1s linear;
-}
-
-.titanic-controls {
-    width: 100%;
-    max-width: 380px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.titanic-indicator {
-    text-align: center;
-    color: var(--secondary-neon);
-    font-weight: 800;
-    text-shadow: 0 0 8px var(--secondary-neon);
-    font-size: 1.1rem;
-}
-
-.pour-btn {
-    /* 색은 위 #screen-titanic .neon-btn 이 담당 — 여긴 상호작용 속성만. */
-    user-select: none;
-    touch-action: none;
-}
-
-/* Bridge Screen Elements */
-.bridge-screen {
-    /* 배경을 조금 더 화려한 보라색 그라데이션으로 변경 */
-    background: radial-gradient(ellipse at center, #2d0046 0%, #090010 85%);
-}
-
-.bridge-instructions {
-    text-align: center;
-    font-size: clamp(1.1rem, 4.5vw, 1.4rem);
-    font-weight: 900;
-    color: #fff;
-    /* 텍스트 글로우 효과 강화 */
-    text-shadow: 0 0 10px var(--tertiary-neon), 0 0 20px var(--tertiary-neon), 0 0 30px var(--tertiary-neon);
-    margin-bottom: 16px;
-    word-break: keep-all;
-    letter-spacing: 0.5px;
-}
-
-.bridge-area {
-    width: 100%;
-    flex: 1;
-    position: relative;
-    /* 테두리와 배경에 네온 느낌 추가 및 애니메이션 적용 */
-    border: 3px dashed rgba(162, 0, 255, 0.5);
-    border-radius: 20px;
-    background: radial-gradient(circle at center, rgba(162, 0, 255, 0.15) 0%, rgba(162, 0, 255, 0.03) 100%);
-    box-shadow: inset 0 0 50px rgba(162, 0, 255, 0.2), 0 0 30px rgba(162, 0, 255, 0.1);
-    overflow: hidden;
-    animation: bridge-pulse 2s infinite alternate ease-in-out;
-    /* 다중 터치 시 화면 확대나 스크롤이 발생하지 않도록 차단 */
-    touch-action: none;
-}
-
-/* 터치 영역이 비어있을 때 중앙에 안내 아이콘 표시 */
-.bridge-area:empty::before {
-    content: '💖 터치 대기중...';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(162, 0, 255, 0.8);
-    font-size: clamp(1.2rem, 5vw, 1.6rem);
-    font-weight: 900;
-    text-shadow: 0 0 15px rgba(162, 0, 255, 0.8);
-    pointer-events: none;
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes bridge-pulse {
-    0% { border-color: rgba(162, 0, 255, 0.4); box-shadow: inset 0 0 40px rgba(162, 0, 255, 0.15), 0 0 20px rgba(162, 0, 255, 0.1); }
-    100% { border-color: rgba(162, 0, 255, 0.8); box-shadow: inset 0 0 80px rgba(162, 0, 255, 0.35), 0 0 40px rgba(162, 0, 255, 0.25); }
-}
-
-/* 위 :empty::before 안내문이 쓰는 둥실 애니메이션 — 이름만 참조되고 정의가
-   없어서 안내문이 가만히 서 있었습니다. */
-@keyframes float {
-    0%, 100% { transform: translate(-50%, -50%) translateY(0); }
-    50% { transform: translate(-50%, -50%) translateY(-8px); }
-}
-
-/* 러브 드링크 노드 — 원 대신 하트 모양(SVG). 색은 div 의 border/background 가
-   아니라 안의 .heart-svg 에 fill/stroke 로 준다 — border-radius 를 안 쓰므로. */
-.bridge-player-node {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bridge-player-node {
-    width: clamp(72px, 15vw, 96px);
-    height: clamp(72px, 15vw, 96px);
-    transform: translate(-50%, -50%);
-}
-
-.bridge-player-node .heart-svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: rgba(162, 0, 255, 0.28);
-    stroke: var(--tertiary-neon);
-    stroke-width: 1;
-    filter: drop-shadow(0 0 12px rgba(162, 0, 255, 0.55));
-    transition: fill 0.2s, stroke 0.2s;
-}
-
-.bridge-player-node .node-label {
-    position: relative;
-    z-index: 1;
-    margin-top: 12%;
-    font-weight: 800;
-    font-size: clamp(0.85rem, 3vw, 1rem);
-    color: #fff;
-    text-shadow: 0 0 8px var(--tertiary-neon);
-}
-
-.bridge-player-node.marked .heart-svg {
-    fill: rgba(255, 0, 85, 0.55);
-    stroke: var(--primary-neon);
-    filter: drop-shadow(0 0 18px var(--primary-neon));
-}
-
 /* ===== 💘 커플 탄생 정중앙 엠블럼 & 럭셔리 네온 빔 ===== */
 @keyframes couple-heart-thump {
     0% { transform: translate(-50%, -50%) scale(0.92); filter: drop-shadow(0 0 15px #ff007f); }
     50% { transform: translate(-50%, -50%) scale(1.16); filter: drop-shadow(0 0 35px #ff0055) drop-shadow(0 0 50px #ffd700); }
     100% { transform: translate(-50%, -50%) scale(1.08); filter: drop-shadow(0 0 25px #ff00aa); }
-}
-
-@keyframes beam-dash-flow {
-    to { stroke-dashoffset: -40; }
-}
-
-@keyframes ring-spin-pulse {
-    0% { transform: rotate(0deg) scale(1); opacity: 0.8; }
-    50% { transform: rotate(180deg) scale(1.1); opacity: 1; }
-    100% { transform: rotate(360deg) scale(1); opacity: 0.8; }
 }
 
 .couple-center-emblem {
@@ -1925,16 +838,6 @@ textarea:focus {
     animation: couple-heart-thump 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
 }
 
-.couple-emblem-ring {
-    position: absolute;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 3px dashed #ffd700;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 15px rgba(255, 0, 127, 0.6);
-    animation: ring-spin-pulse 4s linear infinite;
-}
-
 .couple-emblem-core {
     position: relative;
     background: radial-gradient(circle, rgba(255, 0, 127, 0.85) 0%, rgba(20, 5, 25, 0.95) 85%);
@@ -1947,27 +850,6 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 30px #ff007f, 0 0 50px rgba(255, 215, 0, 0.6);
-}
-
-.couple-emblem-icon {
-    font-size: 2.2rem;
-    line-height: 1;
-    filter: drop-shadow(0 0 8px #fff);
-}
-
-.couple-emblem-badge {
-    position: absolute;
-    bottom: -12px;
-    background: linear-gradient(135deg, #ff0055, #ffd700);
-    color: #fff;
-    font-weight: 900;
-    font-size: 0.72rem;
-    padding: 3px 10px;
-    border-radius: 20px;
-    white-space: nowrap;
-    border: 1px solid #fff;
-    box-shadow: 0 0 12px #ff0055;
-    letter-spacing: 0.5px;
 }
 
 /* ===== HOT 모드 (19금 벌칙 세트) ===== */
@@ -2012,7 +894,6 @@ textarea:focus {
     word-break: keep-all;
 }
 
-/* 켜짐/꺼짐이 한눈에 보이도록 색과 손잡이 위치를 같이 바꿉니다. */
 .hot-switch {
     flex-shrink: 0;
     width: 52px;
@@ -2132,9 +1013,6 @@ body.hot .hot-toggle-btn {
     z-index: 100;
 }
 
-/* 메인 헤더의 ⚙️ 설정 버튼 — HOT 토글 옆에 같은 알약 모양으로 두되 색은
-   중립. (.hot-toggle-btn 을 같이 쓰면 body.hot 의 붉은 펄스가 여기도 붙어서
-   별도 클래스로 뺐습니다) */
 .gear-btn {
     border: 1.5px solid rgba(255, 255, 255, 0.25);
     outline: none;
@@ -2155,17 +1033,10 @@ body.hot .hot-toggle-btn {
 .gear-btn:active { transform: scale(0.94); }
 .gear-btn:hover { background: rgba(255, 255, 255, 0.16); }
 
-/* 애니메이션 최소화 설정 — 상시 도는 배경 효과(오로라·거품·룰렛 후광·전광판)
-   를 멈춥니다. 파티클 개수는 fxEngine 쪽에서 같은 미디어쿼리로 줄입니다. */
 @media (prefers-reduced-motion: reduce) {
     .aurora-bg,
-    .croc-bubbles span,
-    .croc-ripple,
     .roulette-container::before,
-    .ad-marquee-content,
-    .bridge-area,
-    .bridge-area:empty::before,
-    .couple-emblem-ring {
+    .ad-marquee-content {
         animation: none !important;
     }
 }
@@ -2227,11 +1098,6 @@ body.hot .hot-toggle-btn {
     100% { transform: translateX(-50%) rotate(0deg); }
 }
 
-.bomb-timer.blind {
-    filter: blur(16px);
-    user-select: none;
-}
-
 .finger-circle::after {
     content: '';
     position: absolute;
@@ -2243,26 +1109,6 @@ body.hot .hot-toggle-btn {
 @keyframes aura-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-}
-.titanic-btn-row {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-    max-width: 340px;
-    margin-top: 8px;
-}
-.titanic-btn-row .btn {
-    flex: 1;
-    margin: 0 !important;
-    font-size: clamp(0.78rem, 2.5vw, 0.88rem);
-    padding: 10px 4px;
-}
-.soju-cup.danger-shake {
-    animation: cup-danger 0.3s ease-in-out infinite alternate;
-}
-@keyframes cup-danger {
-    0% { transform: rotate(-3deg); }
-    100% { transform: rotate(3deg); }
 }
 
 .love-mission-modal {
@@ -2312,26 +1158,6 @@ body.hot .hot-toggle-btn {
 @keyframes popIn {
     from { transform: scale(0.7); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
-}
-
-.card.flipped.card-rare-gold .card-back {
-    background: linear-gradient(135deg, #ffe066 0%, #b8860b 50%, #ffd700 100%) !important;
-    color: #000 !important;
-    font-weight: 900;
-    border: 2px solid #fff;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
-}
-.card.flipped.card-rare-hot .card-back {
-    background: linear-gradient(135deg, #ff0055 0%, #80002a 50%, #ff007f 100%) !important;
-    color: #fff !important;
-    border: 2px solid #ff007f;
-    box-shadow: 0 0 25px rgba(255, 0, 127, 0.8);
-}
-.card.flipped.card-rare-bomb .card-back {
-    background: linear-gradient(135deg, #2a0845 0%, #6441a5 100%) !important;
-    color: #ffaa00 !important;
-    border: 2px solid #ffaa00;
-    box-shadow: 0 0 25px rgba(255, 170, 0, 0.8);
 }
 
 /* ===== DUO MENU (2-CARD VIP SHOWCASE) ===== */
@@ -2578,15 +1404,53 @@ body.hot .hot-toggle-btn {
     text-align: center;
 }
 
+.editor-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-shuffle {
+    background: rgba(255, 215, 0, 0.15);
+    border: 1px solid rgba(255, 215, 0, 0.45);
+    color: #ffd700;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-shuffle:hover {
+    background: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
 .btn-clear-all {
     background: transparent;
     border: 1px solid rgba(255, 0, 85, 0.4);
     color: #ff5577;
     font-size: 0.68rem;
     font-weight: 700;
-    padding: 2px 8px;
+    padding: 3px 8px;
     border-radius: 8px;
     cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-clear-all:hover {
+    background: rgba(255, 0, 85, 0.2);
+    color: #fff;
+}
+
+.roulette-slice-info {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--secondary-neon);
+    text-shadow: 0 0 6px rgba(0, 243, 255, 0.4);
+    margin-bottom: 6px;
+    text-align: left;
 }
 
 .mission-tag-list {
@@ -2595,6 +1459,7 @@ body.hot .hot-toggle-btn {
     gap: 6px;
     max-height: 140px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 6px 2px;
     margin-bottom: 10px;
 }
@@ -2611,6 +1476,12 @@ body.hot .hot-toggle-btn {
     padding: 4px 10px;
     border-radius: 14px;
     transition: all 0.2s;
+    user-select: none;
+}
+
+.mission-tag:hover {
+    background: rgba(0, 243, 255, 0.2);
+    border-color: var(--secondary-neon);
 }
 
 .mission-tag-remove {
@@ -2627,6 +1498,7 @@ body.hot .hot-toggle-btn {
     align-items: center;
     justify-content: center;
     line-height: 1;
+    padding: 0;
 }
 
 .mission-tag-remove:hover {
@@ -2649,11 +1521,23 @@ body.hot .hot-toggle-btn {
     padding: 8px 12px;
     font-size: 0.82rem;
     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .mission-add-bar input:focus {
     border-color: var(--secondary-neon);
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+}
+
+@keyframes input-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+.input-shake {
+    animation: input-shake 0.35s ease;
+    border-color: #ff0055 !important;
 }
 
 .mission-add-btn {
@@ -2666,10 +1550,114 @@ body.hot .hot-toggle-btn {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.15s;
+    white-space: nowrap;
 }
 
 .mission-add-btn:active {
     transform: scale(0.95);
+}
+
+/* Quick Penalty Basket (One-Tap Add) */
+.quick-penalty-tray {
+    width: 100%;
+    margin-bottom: 12px;
+    background: rgba(14, 12, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 10px 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+    box-sizing: border-box;
+}
+
+.quick-tray-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.quick-tray-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.quick-tray-tip {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.quick-penalty-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 125px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-right: 2px;
+}
+
+.quick-p-chip {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-family: var(--font-main);
+    font-size: clamp(0.72rem, 2.3vw, 0.78rem);
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    user-select: none;
+}
+
+.quick-p-chip:hover {
+    transform: translateY(-1px) scale(1.03);
+}
+
+.quick-p-chip:active {
+    transform: scale(0.92);
+}
+
+.quick-p-chip.drink {
+    border-color: rgba(0, 243, 255, 0.45);
+    background: rgba(0, 243, 255, 0.12);
+}
+.quick-p-chip.drink:hover {
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    background: rgba(0, 243, 255, 0.25);
+}
+
+.quick-p-chip.hot {
+    border-color: rgba(255, 0, 85, 0.45);
+    background: rgba(255, 0, 85, 0.14);
+}
+.quick-p-chip.hot:hover {
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+    background: rgba(255, 0, 85, 0.28);
+}
+
+.quick-p-chip.fun {
+    border-color: rgba(255, 215, 0, 0.45);
+    background: rgba(255, 215, 0, 0.12);
+}
+.quick-p-chip.fun:hover {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    background: rgba(255, 215, 0, 0.25);
+}
+
+.quick-p-chip.travel {
+    border-color: rgba(0, 255, 136, 0.45);
+    background: rgba(0, 255, 136, 0.12);
+}
+.quick-p-chip.travel:hover {
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    background: rgba(0, 255, 136, 0.25);
 }
 
 .bulk-edit-details {
@@ -2702,12 +1690,13 @@ body.hot .hot-toggle-btn {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    max-width: 440px;
     margin-bottom: 6px;
 }
 
 .btn-edit-missions {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 215, 0, 0.16);
+    border: 1px solid #ffd700;
     color: #ffd700;
     font-size: 0.78rem;
     font-weight: 800;
@@ -2715,11 +1704,105 @@ body.hot .hot-toggle-btn {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.25);
 }
 
 .btn-edit-missions:hover {
-    background: rgba(255, 215, 0, 0.25);
-    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.45);
+}
+
+/* Roulette Winner Dramatic Modal */
+.roulette-winner-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 5, 20, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.roulette-winner-modal.show {
+    display: flex;
+    animation: winner-modal-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes winner-modal-pop {
+    0% { opacity: 0; transform: scale(0.7) translateY(20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.roulette-winner-card {
+    background: linear-gradient(145deg, rgba(35, 12, 38, 0.96), rgba(16, 12, 28, 0.98));
+    border: 2px solid var(--secondary-neon);
+    border-radius: 24px;
+    padding: 26px 20px;
+    text-align: center;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: 0 0 45px rgba(0, 243, 255, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.roulette-winner-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #ff0055, #a200ff);
+    color: #fff;
+    font-weight: 900;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+}
+
+.roulette-winner-title {
+    font-size: clamp(1.4rem, 5.5vw, 1.85rem);
+    font-weight: 900;
+    color: #ffd700;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px #000;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+
+.roulette-winner-sub {
+    font-size: 0.86rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.roulette-winner-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-winner-remove {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 0, 85, 0.45);
+    color: #ff88aa;
+    font-family: var(--font-main);
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-winner-remove:hover {
+    background: rgba(255, 0, 85, 0.25);
+    border-color: #ff0055;
+    color: #fff;
 }
 
 /* ===== TOUCH PENALTY MODAL ===== */
@@ -2900,29 +1983,70 @@ body.hot .hot-toggle-btn {
             <!-- 2. 빠른 프리셋 선택 -->
             <div class="roulette-presets-container">
                 <div class="roulette-presets-title">⚡ 빠른 프리셋 테마 · Quick Presets</div>
-                <div class="roulette-preset-chips">
+                <div class="roulette-preset-chips editor-presets">
                     <button class="roulette-chip-btn active" data-preset="classic" onclick="app.loadRoulettePreset('classic')">🍹 기본 파티</button>
                     <button class="roulette-chip-btn" data-preset="spicy" onclick="app.loadRoulettePreset('spicy')">🔥 19+ 스파이시</button>
                     <button class="roulette-chip-btn" data-preset="king" onclick="app.loadRoulettePreset('king')">👑 왕게임 벌칙</button>
                     <button class="roulette-chip-btn" data-preset="players" onclick="app.loadRoulettePreset('players')">👥 인원별 지목</button>
                     <button class="roulette-chip-btn" data-preset="truth" onclick="app.loadRoulettePreset('truth')">🤫 진실게임</button>
+                    <button class="preset-chip" onclick="app.saveMyCustomPreset()">💾 내 설정 저장</button>
+                    <button class="preset-chip" id="btn-load-my-preset" onclick="app.loadMyCustomPreset()">📂 내 설정 불러오기</button>
                 </div>
             </div>
 
-            <!-- 3. 실시간 미션 태그 리스트 & 직접 수정 에디터 -->
+            <!-- 3. 원클릭 벌칙 바구니 (터치로 바로 담기) -->
+            <div class="quick-penalty-tray">
+                <div class="quick-tray-header">
+                    <span class="quick-tray-title">⚡ 터치로 바로 담는 인기 벌칙 바구니</span>
+                    <span class="quick-tray-tip">터치 즉시 룰렛에 추가!</span>
+                </div>
+                <div class="quick-penalty-chips">
+                    <!-- 🍺 술/벌주 -->
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('원샷! 🍺')">+ 원샷! 🍺</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('양옆 러브샷 🍻')">+ 양옆 러브샷 🍻</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('나 빼고 다 마셔 😎')">+ 나 빼고 다 마셔 😎</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('벌주 2잔! 💣')">+ 벌주 2잔 💣</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('물 한잔 휴식 💧')">+ 물 한잔 💧</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('흑기사권 (대신 마시기) 👑')">+ 흑기사권 👑</button>
+                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('다같이 건배! 🥂')">+ 다같이 건배 🥂</button>
+                    <!-- 🔥 19+ 로맨스 -->
+                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('💋 밀착 러브샷')">+ 💋 밀착 러브샷</button>
+                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('👀 10초 눈싸움')">+ 👀 10초 눈싸움</button>
+                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('🤫 귓속말 비밀고백')">+ 🤫 귓속말 고백</button>
+                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('🫂 5초 백허그')">+ 🫂 5초 백허그</button>
+                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('💖 손깍지 10초')">+ 💖 손깍지 10초</button>
+                    <!-- 🤪 꿀잼 미션 -->
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('애교 3초 🥰')">+ 애교 3초 🥰</button>
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('노래 1절 🎤')">+ 노래 1절 🎤</button>
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('댄스 5초 💃')">+ 댄스 5초 💃</button>
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('최근 검색어 1위 공개 📱')">+ 최근 검색어 📱</button>
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('엽기 셀카 찍기 📸')">+ 엽기 셀카 📸</button>
+                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('왕의 명령 복종 👑')">+ 왕의 명령 👑</button>
+                    <!-- 🌴 여행/동남아 파티 -->
+                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('팁 쏘기 50₱/2만동 💸')">+ 팁 쏘기 💸</button>
+                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('다음 차수 안주 쏘기 🍕')">+ 안주 쏘기 🍕</button>
+                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('Grab 부르기 담당 🚕')">+ Grab 부르기 🚕</button>
+                </div>
+            </div>
+
+            <!-- 4. 실시간 미션 태그 리스트 & 직접 수정 에디터 -->
             <div class="roulette-editor-card">
                 <div class="editor-header">
-                    <span class="editor-title">🎯 룰렛에 들어갈 미션 목록 (<span id="mission-count-badge">0</span>개)</span>
-                    <button class="btn-clear-all" onclick="app.clearAllMissions()">전체 삭제</button>
+                    <span class="editor-title">🎯 룰렛 미션 목록 (<span id="mission-count-badge">0</span>개)</span>
+                    <div class="editor-header-actions">
+                        <button type="button" class="btn-shuffle" onclick="app.shuffleMissions()" title="미션 배치 순서 섞기">🎲 섞기 · Shuffle</button>
+                        <button type="button" class="btn-clear-all" onclick="app.clearAllMissions()">전체 삭제</button>
+                    </div>
                 </div>
+                <div class="roulette-slice-info" id="roulette-slice-info">🎯 총 6개 슬롯 (각 슬롯 약 60°)</div>
                 <div class="mission-tag-list" id="mission-tags-container">
                     <!-- JS로 동적 렌더링 -->
                 </div>
 
                 <!-- 신규 미션 추가 인풋 -->
                 <div class="mission-add-bar">
-                    <input type="text" id="mission-new-input" placeholder="새 벌칙/미션 직접 입력 (예: 애교 3초, 원샷)" maxlength="25" onkeydown="if(event.key==='Enter'){event.preventDefault(); app.addCustomMission();}">
-                    <button class="mission-add-btn" onclick="app.addCustomMission()">+ 추가</button>
+                    <input type="text" id="mission-new-input" placeholder="새 벌칙/미션 직접 입력 (예: 노래방 쏘기, 원샷)" maxlength="28" onkeydown="if(event.key==='Enter'){event.preventDefault(); app.addCustomMission();}">
+                    <button type="button" class="mission-add-btn" onclick="app.addCustomMission()">+ 담기</button>
                 </div>
 
                 <!-- 텍스트 일괄 편집 (복사/붙여넣기) -->
@@ -2938,9 +2062,13 @@ body.hot .hot-toggle-btn {
 
         <!-- Roulette Screen -->
         <section id="screen-roulette" class="screen hidden roulette-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
+            <div class="roulette-top-nav">
+                <button class="btn-back" onclick="history.back()" style="position: static;">&larr; 뒤로 · Back</button>
+                <button type="button" class="btn-edit-missions" onclick="app.editFromWheel()">✏️ 인원 &amp; 미션 수정</button>
+            </div>
             <h2 class="neon-text">GIJO Mission Roulette<br><span class="title-kr">미션 룰렛</span></h2>
             <div class="mode-selector-bar">
+                <button class="mode-tab-btn" id="roulette-tab-custom" onclick="app.applyCustomRoulette()">⭐ 내 미션 · Custom</button>
                 <button class="mode-tab-btn active" id="roulette-tab-classic" onclick="app.setRoulettePreset('classic')">🍺 기본 · Classic</button>
                 <button class="mode-tab-btn" id="roulette-tab-hot" onclick="app.setRoulettePreset('hot')">🔥 19+ HOT · Adult</button>
                 <button class="mode-tab-btn" id="roulette-tab-truth" onclick="app.setRoulettePreset('truth')">🤫 진실 · Truth</button>
@@ -2961,82 +2089,22 @@ body.hot .hot-toggle-btn {
             <button class="btn neon-btn" id="roulette-spin-btn" style="margin-top: 14px; width: 100%; font-size: 1.05rem;" onclick="app.spinRoulette()">
                 🎰 룰렛 돌리기 · SPIN!
             </button>
-            <!-- CSS 는 .roulette-result-card(.has-result 팝 애니메이션) 인데 요소엔
-                 .roulette-result-container 가 붙어 있어 결과 카드 테두리·팝이 안 나왔습니다. -->
             <div id="roulette-result-card" class="roulette-result-card" style="margin-top: 10px; min-height: 48px; text-align: center;" aria-live="polite">
                 <div id="roulette-result" class="result-text font-black" style="font-size: 1.15rem; color: #00f3ff; text-shadow: 0 0 15px rgba(0,243,255,0.7);"></div>
             </div>
-        </section>
 
-        <!-- Bomb Screen -->
-        <section id="screen-bomb" class="screen hidden bomb-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Time Bomb<br><span class="title-kr">시간 폭탄</span></h2>
-            <div class="mode-selector-bar">
-                <button class="mode-tab-btn active" id="bomb-tab-timer" onclick="app.setBombBlindMode(false)">👀 타이머 · Timer</button>
-                <button class="mode-tab-btn" id="bomb-tab-blind" onclick="app.setBombBlindMode(true)">🙈 블라인드 · Blind</button>
-            </div>
-            <div class="bomb-container" id="bomb-container" onclick="app.passBomb()">
-                <div class="bomb-icon">&#128163;</div>
-                <div class="bomb-touch-label">TOUCH!</div>
-                <div class="timer bomb-timer" id="bomb-timer">00:00</div>
-            </div>
-            <button class="btn neon-btn" id="start-bomb-btn" onclick="app.startBomb()">게임 시작 · Start Game</button>
-            <div id="bomb-result" class="result-text"></div>
-        </section>
-
-        <!-- Cards Screen -->
-        <!-- cards-screen 클래스가 빠져 있어 배경 아트·세로 스크롤 CSS 가 통째로 놀고
-             있었습니다 (20인 카드는 스크롤이 없어 아래 카드에 손이 안 닿았음). -->
-        <section id="screen-cards" class="screen hidden cards-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Card Flip<br><span class="title-kr">카드 뒤집기</span></h2>
-            <div class="mode-selector-bar">
-                <button class="mode-tab-btn active" id="card-tab-normal" onclick="app.setCardDeckMode('normal')">🍹 일반 파티 · Party</button>
-                <button class="mode-tab-btn" id="card-tab-hot" onclick="app.setCardDeckMode('hot')">🔥 19+ 스파이시 · Spicy 19+</button>
-            </div>
-            <div class="cards-status-bar">
-                <span class="cards-badge-counter" id="cards-counter" aria-live="polite">0 / 4 뒤집음 · Flipped</span>
-                <span class="cards-hint">카드를 눌러 뒤집기 · Tap a card to flip</span>
-            </div>
-            <div class="cards-grid" id="cards-grid"></div>
-            <button class="btn neon-btn" onclick="app.resetCards()">카드 섞기 · Shuffle Cards</button>
-        </section>
-
-        <!-- Crocodile Screen -->
-        <section id="screen-crocodile" class="screen hidden croc-screen">
-            <button class="btn-back croc-back-btn" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <div class="croc-header">
-                <h2 class="neon-text croc-title">GIJO Crocodile Roulette<br><span class="title-kr">크로커다일 룰렛</span></h2>
-                <div class="mode-selector-bar" style="margin: 4px auto 8px auto;">
-                    <button class="mode-tab-btn active" id="croc-tab-1" onclick="app.setCrocBombCount(1)">💣 1개 · 1 Bomb</button>
-                    <button class="mode-tab-btn" id="croc-tab-2" onclick="app.setCrocBombCount(2)">💣💣 2개 · 2 Bombs</button>
-                    <button class="mode-tab-btn" id="croc-tab-3" onclick="app.setCrocBombCount(3)">💀 3개 · 3 Bombs</button>
-                </div>
-            </div>
-            <div class="croc-wrapper" id="croc-wrapper">
-                <div class="croc-ripple"></div>
-                <div class="croc-bubbles">
-                    <span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <!-- 이 화면은 display:none 으로 숨어 있어 lazy 면 처음 들어올 때 이빨 판만 먼저
-                     뜨고 악어가 뒤늦게 찍힙니다(눌러야 할 자리가 안 보임). 190KB 한 장이라
-                     eager 로 미리 받고 decoding 만 비동기로 둡니다. -->
-                <img class="croc-img" id="croc-img" src="assets/croc_mascot.png" alt="크로커다일 룰렛 악어 마스코트 · Crocodile mascot" decoding="async" draggable="false">
-                <div class="croc-container">
-                    <div class="croc-tooth-grid" id="croc-grid"></div>
-                </div>
-                <div class="croc-bite-overlay" id="croc-bite-overlay" onclick="app.initCrocodile()">
-                    <div class="croc-bite-flash"></div>
-                    <div class="croc-bite-text">
-                        <span class="croc-bite-emoji">&#129321;</span>
-                        <span class="croc-bite-caption-en">CHOMP!</span>
-                        <span class="croc-bite-caption-kr">물렸다! 🦷</span>
-                        <span class="croc-bite-hint">화면을 눌러 다시하기 · Tap anywhere to play again</span>
+            <!-- Roulette Winner Dramatic Modal (당첨 팝업 모달) -->
+            <div class="roulette-winner-modal" id="roulette-winner-modal" onclick="app.closeRouletteWinner(false)">
+                <div class="roulette-winner-card" onclick="event.stopPropagation()">
+                    <div class="roulette-winner-badge">💥 룰렛 벌칙 당첨! · PENALTY 💥</div>
+                    <div class="roulette-winner-title font-black" id="roulette-winner-title">원샷! 🍺</div>
+                    <div class="roulette-winner-sub" id="roulette-winner-sub">피할 수 없다! 술자리의 룰을 따라 당당히 벌칙을 수행하세요! 🍻</div>
+                    <div class="roulette-winner-actions">
+                        <button type="button" class="btn neon-btn" onclick="app.closeRouletteWinner(false)">🍻 벌칙 완료 · 다시 돌리기</button>
+                        <button type="button" class="btn-winner-remove" onclick="app.closeRouletteWinner(true)">❌ 이 벌칙 빼고 계속하기 (서바이벌)</button>
                     </div>
                 </div>
             </div>
-            <button class="btn neon-btn croc-shuffle-btn" onclick="app.initCrocodile()">&#128260; 다시하기 · Retry</button>
         </section>
 
         <!-- Finger Roulette Screen -->
@@ -3073,48 +2141,6 @@ body.hot .hot-toggle-btn {
             </div>
         </section>
 
-        <!-- Titanic Screen -->
-        <section id="screen-titanic" class="screen hidden titanic-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Neon Titanic<br><span class="title-kr">찰랑찰랑 타이타닉</span></h2>
-            <p class="subtitle">터치해서 술을 채우세요. 소주잔이 가라앉으면 벌칙!<span class="i18n-sub">Hold to pour. Whoever sinks the shot glass drinks!</span></p>
-            
-            <div class="titanic-game-area">
-                <div class="beer-glass" id="beer-glass">
-                    <div class="beer-liquid" id="beer-liquid"></div>
-                    <div class="soju-cup" id="soju-cup">
-                        <div class="soju-liquid" id="soju-liquid"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="titanic-controls">
-                <div class="titanic-indicator" id="titanic-indicator">소주잔 무게 · Weight: 0%</div>
-                <div class="titanic-btn-row">
-                    <button class="btn neon-btn" onclick="app.tapPourSingle()">💧 톡! · Drop</button>
-                    <button class="btn neon-btn pour-btn" id="pour-btn">🌊 꾹~ · Hold</button>
-                </div>
-                <button class="btn neon-btn" style="margin-top:6px;" onclick="app.initTitanic()">다음 판 시작 · Next Round</button>
-            </div>
-        </section>
-
-        <!-- Bridge Screen -->
-        <section id="screen-bridge" class="screen hidden bridge-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Love Drink<br><span class="title-kr">러브 드링크</span></h2>
-            <div class="bridge-instructions" id="bridge-msg">화면에 손가락을 모두 올려주세요!<span class="i18n-sub">Everyone place a finger on the screen!</span></div>
-            <div id="bridge-area" class="bridge-area"></div>
-            
-            <!-- Love Mission Modal -->
-            <div class="love-mission-modal" id="love-mission-modal" onclick="app.closeLoveMission()">
-                <div class="love-mission-card">
-                    <div class="love-mission-title">💘 커플 돌발 미션 · Couple Mission</div>
-                    <div class="love-mission-content" id="love-mission-text">...</div>
-                    <button class="btn neon-btn" onclick="app.closeLoveMission()">확인 · OK</button>
-                </div>
-            </div>
-        </section>
-
         <!-- Settings Screen -->
         <section id="screen-settings" class="screen hidden">
             <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
@@ -3132,10 +2158,6 @@ body.hot .hot-toggle-btn {
                 <div class="setting-group">
                     <label>룰렛 벌칙 · Roulette Missions (comma separated)</label>
                     <textarea id="setting-roulette" rows="4"></textarea>
-                </div>
-                <div class="setting-group">
-                    <label>카드 벌칙 · Card Missions (comma separated)</label>
-                    <textarea id="setting-cards" rows="4"></textarea>
                 </div>
                 <button class="btn neon-btn save-btn" onclick="app.saveSettings()">저장 · Save Settings</button>
                 <div id="settings-msg" class="msg-text"></div>
@@ -3271,7 +2293,6 @@ const soundFX = {
 
 const haptics = {
     vibrate(pattern) {
-        // iframe 안(권한 정책)이나 일부 브라우저에선 vibrate 가 예외를 던집니다 — 게임이 멈추면 안 됩니다.
         try {
             if (navigator.vibrate) navigator.vibrate(pattern);
         } catch (e) {}
@@ -3295,7 +2316,6 @@ const fxEngine = {
         this.canvas = document.getElementById('gijo-fx-canvas');
         if (!this.canvas) return;
         this.ctx = this.canvas.getContext('2d');
-        // 애니메이션 최소화 설정이면 파티클 개수를 1/3 로 줄입니다(끄지는 않음 — 결과 신호는 남겨야 하므로).
         try {
             const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
             this.reduced = mq.matches;
@@ -3312,9 +2332,7 @@ const fxEngine = {
     scaled(count) {
         return this.reduced ? Math.max(3, Math.ceil(count / 3)) : count;
     },
-    // 파티클이 있을 때만 rAF 를 돌립니다 — 예전엔 빈 캔버스를 매 프레임 지우며 영원히 돌았습니다.
     kick() {
-        // 창이 가려져 rAF 가 멈춘 동안 파티클만 계속 쌓이지 않도록 상한을 둡니다(오래된 것부터 버림).
         if (this.particles.length > 600) this.particles.splice(0, this.particles.length - 600);
         if (this.running || !this.ctx) return;
         this.running = true;
@@ -3454,6 +2472,8 @@ const fxEngine = {
 };
 
 /* ===== PRESETS & PENALTY DATASETS ===== */
+const ROULETTE_CUSTOM_STORAGE_KEY = 'gijo_drink_saved_custom_v1';
+
 const ROULETTE_PRESETS = {
     classic: [
         '원샷! 🍺 (Bottoms Up!)',
@@ -3491,8 +2511,6 @@ const ROULETTE_PRESETS = {
     ]
 };
 
-/* 벌칙 입력 화면의 '👑 왕게임 벌칙' 프리셋 칩 전용 — 룰렛 칸 라벨은 8자에서 잘리므로
-   앞머리에 핵심을 둡니다. 쉼표는 구분자라 문장 안에 쓰지 않습니다. */
 const KING_GAME_PENALTIES = [
     '왕이 고른 둘 러브샷 💕 (King picks 2 for a love shot)',
     '왕에게 애교 3초 🥰 (3s aegyo for the King)',
@@ -3500,27 +2518,6 @@ const KING_GAME_PENALTIES = [
     '왕이 시킨 성대모사 🎤 (Do an impression the King picks)',
     '왕과 눈싸움 5초 👀 (5s staring contest vs the King)',
     '왕이 고른 노래 한 소절 🎶 (Sing a line the King picks)'
-];
-
-const HOT_PASS_MISSIONS = [
-    { kr: '눈 5초 맞추고 손깍지 끼며 패스! 👀🔥', en: 'Hold 5s eye contact & hold hands, then pass!' },
-    { kr: '귓속말로 야릇한 심쿵 칭찬하고 패스! 💬💋', en: 'Whisper a spicy compliment, then pass!' },
-    { kr: '손등에 뽀뽀 3초 하고 패스! or 1잔 💋', en: 'Kiss their hand 3s and pass — or take a shot!' },
-    { kr: '가장 섹시한 포즈로 패스하기! 🔥💃', en: 'Pass it as seductively as you can!' },
-    { kr: '작업 멘트 날리며 눈맞추고 패스! 😏💘', en: 'Drop a seductive pickup line, then pass!' },
-    { kr: '백허그 5초 후 패스! or 2잔 🫂🔥', en: '5-second back hug, then pass — or take 2 shots!' },
-    { kr: '윙크하면서 섹시하게 패스하기! 😉✨', en: 'Pass while winking seductively!' },
-    { kr: '러브샷 제안하면서 밀착 패스! 🥂💋', en: 'Propose a love shot and pass!' }
-];
-
-const NORMAL_PASS_MISSIONS = [
-    { kr: '오른쪽 사람 이름 부르며 넘기기! 🗣️', en: "Call out the name of the person on your right!" },
-    { kr: '윙크하면서 패스하기! 😉', en: 'Pass while winking!' },
-    { kr: '3초간 얼음 후 넘기기! ❄️', en: 'Freeze for 3 seconds, then pass!' },
-    { kr: '손가락 하트 발사하고 패스! 🫶', en: 'Make a finger heart, then pass!' },
-    { kr: '하이파이브하고 넘기기! ✋', en: 'High-five, then pass!' },
-    { kr: '애교 부리면서 패스하기! 💕', en: 'Pass while acting extra cute (aegyo)!' },
-    { kr: '양손으로 정중히 전달하기! 🙇', en: 'Pass it with both hands, respectfully!' }
 ];
 
 const LOVE_MISSIONS = [
@@ -3534,41 +2531,10 @@ const LOVE_MISSIONS = [
     '💃 5초간 커플 블루스 댄스\n(5-second Couple Slow Dance)'
 ];
 
-const CARD_TIERS_DATA = {
-    goldRare: [
-        { title: '👑 흑기사 소환권 · Black Knight', desc: '벌칙 위임 1회 / Pass penalty to anyone!' },
-        { title: '🛡️ 무적 방어막 · Shield', desc: '다음 1회 벌칙 면제 / Immune to next penalty!' },
-        { title: '🎯 지목 원샷권 · Point Shot', desc: '지목한 사람 원샷 / Choose 1 person to drink!' }
-    ],
-    hotJoker: [
-        { title: '🔥 19+ 러브샷 · Love Shot', desc: '밀착 러브샷 / Intimate love shot with someone!' },
-        { title: '💋 귓속말 진실 · Secret Whisper', desc: '비밀 질문 답변 / Whisper secret truth!' },
-        { title: '🫂 5초 백허그 · 5s Back Hug', desc: '5초 백허그 or 2잔 / 5s back hug or 2 shots!' }
-    ],
-    goldBomb: [
-        { title: '💣 황금 폭탄 · Double Shot!', desc: '더블 벌칙! 혼자 2잔 / Drink 2 shots alone!' },
-        { title: '💥 전체 폭탄 · All Drink!', desc: '나 빼고 전원 1잔씩 / Everyone except you drinks 1 shot!' }
-    ],
-    normal: [
-        { title: '🍺 1잔 마시기 · Take 1 Shot', desc: '한 잔 비우기 / Take 1 clean shot!' },
-        { title: '💧 물 한 컵 · Drink Water', desc: '물 한잔으로 휴식 / Take a refreshing water break!' },
-        { title: '👉 오른쪽 마시기 · Right Drinks', desc: '오른쪽 친구 건배 / Person on your right drinks!' },
-        { title: '👈 왼쪽 마시기 · Left Drinks', desc: '왼쪽 친구 건배 / Person on your left drinks!' },
-        { title: '🥂 다같이 건배 · Cheers All', desc: '모두 함께 짠 / Everyone toasts together!' },
-        { title: '🎤 노래 한 소절 · Sing 5s', desc: '신나게 5초 노래 / Sing a song for 5 seconds!' }
-    ]
-};
-
-const BRIDGE_HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
-
-function bridgeHeartHTML(labelText) {
-    const label = labelText ? `<span class="node-label">${labelText}</span>` : '';
-    return `<svg class="heart-svg" viewBox="0 0 24 24"><path d="${BRIDGE_HEART_PATH}"/></svg>${label}`;
-}
-
 /* ===== MAIN APP OBJECT ===== */
 const app = {
     roulettePlayers: 4,
+    roulettePlayerCount: 4,
     currentMissions: [
         '원샷! 🍺 (Bottoms Up!)',
         '양옆 마시기 🍻 (Left/Right)',
@@ -3595,32 +2561,12 @@ const app = {
     // Roulette variables
     currentRoulettePreset: 'classic',
     currentMissionRouletteOptions: [],
-    customRouletteOptions: null,   // 벌칙 입력 화면에서 직접 적은 목록 (없으면 null → 프리셋 사용)
+    customRouletteOptions: null,
     isSpinning: false,
     rouletteRotation: 0,
     rouletteSpinTimer: null,
-    rouletteTickInterval: null,
-
-    // Bomb variables — 남은 시간은 틱을 세지 않고 마감 시각(bombDeadline)으로 계산합니다.
-    // 탭이 뒤로 가면 setInterval 이 늦어져 틱 세기로는 시간이 어긋났습니다.
-    bombInterval: null,
-    bombTimeLeft: 0,
-    bombDeadline: 0,
-    bombPausedRemaining: null,
-    isBombActive: false,
-    isBombBlind: false,
-    
-    // Crocodile variables
-    crocBombCount: 1,
-    crocBombIndexes: new Set(),
-    crocIsOver: false,
-    crocToothPositions: [
-        {x: 39.12, y: 24.25}, {x: 60.95, y: 24.25}, {x: 18.85, y: 25.50}, {x: 81.28, y: 25.50},
-        {x: 11.11, y: 31.84}, {x: 88.90, y: 31.84}, {x: 11.86, y: 39.26}, {x: 88.24, y: 39.25},
-        {x: 13.23, y: 47.06}, {x: 86.84, y: 47.07}, {x: 13.61, y: 57.60}, {x: 86.38, y: 57.60},
-        {x: 12.22, y: 65.43}, {x: 87.74, y: 65.43}, {x: 11.54, y: 72.81}, {x: 88.50, y: 72.80},
-        {x: 19.51, y: 78.86}, {x: 80.56, y: 78.86}, {x: 39.14, y: 80.41}, {x: 60.95, y: 80.41}
-    ],
+    rouletteTickTimer: null,
+    lastRouletteWinner: null,
 
     // Finger variables
     fingerTouches: {},
@@ -3630,30 +2576,9 @@ const app = {
     fingerIsActive: false,
     fingerColors: ['#ff0055', '#00f3ff', '#a200ff', '#ffd700', '#00ff66', '#ff00aa', '#ff6600', '#0099ff'],
 
-    // Titanic variables
-    titanicWeight: 0,
-    titanicLimit: 85,
-    titanicInterval: null,
-    titanicIsOver: false,
-
-    // Bridge / Love Drink
-    bridgeTouches: {},
-    bridgeIsActive: false,
-    bridgeJoinTimer: null,
-    bridgeCountdownInterval: null,
-    bridgeMatchTimers: [],
-    BRIDGE_JOIN_SECONDS: 3,
-
-    // Cards variables
-    cardDeck: [],
-    cardDeckMode: 'normal',
-
-    // Settings (설정 화면 텍스트영역) — localStorage 에 저장되는 사용자 벌칙 목록
+    // Settings
     customRouletteText: '',
-    customCardText: '',
 
-    /* localStorage 는 사파리 사생활 보호 모드·저장 공간 차단 시 접근 자체가 예외를
-       던집니다. 게임이 그걸로 죽으면 안 되므로 전부 이 두 함수를 거칩니다. */
     storeGet(key) {
         try { return localStorage.getItem(key); } catch (e) { return null; }
     },
@@ -3661,33 +2586,15 @@ const app = {
         try { localStorage.setItem(key, value); } catch (e) {}
     },
 
-    setCardDeckMode(mode) {
-        this.cardDeckMode = mode;
-        this.syncCardDeckTabs();
-        soundFX.playTick();
-        this.resetCards();
-    },
-
-    syncCardDeckTabs() {
-        const btnNorm = document.getElementById('card-tab-normal');
-        const btnHot = document.getElementById('card-tab-hot');
-        if (btnNorm) btnNorm.classList.toggle('active', this.cardDeckMode === 'normal');
-        if (btnHot) btnHot.classList.toggle('active', this.cardDeckMode === 'hot');
-    },
-
     init() {
         this.loadSettings();
-        this.setupCards();
+        this.syncCustomPresetButtonState();
         this.setupHistoryHandler();
         this.setupKeyboard();
         this.setupVisibilityHandler();
         fxEngine.init();
     },
 
-    /* 데스크톱 키보드 폴백 — Space 한 키만 씁니다.
-       룰렛: 돌리기 / 폭탄: 시작·패스 / 타이타닉: 누르는 동안 붓기.
-       버튼·입력칸에 포커스가 있으면 브라우저 기본 동작(버튼 클릭)에 맡깁니다 —
-       안 그러면 같은 동작이 두 번 나갑니다. */
     setupKeyboard() {
         window.addEventListener('keydown', (e) => {
             if (e.code !== 'Space' || e.repeat) return;
@@ -3696,40 +2603,22 @@ const app = {
             if (this.currentScreen === 'roulette') {
                 e.preventDefault();
                 this.spinRoulette();
-            } else if (this.currentScreen === 'bomb') {
-                e.preventDefault();
-                if (this.isBombActive) this.passBomb(); else this.startBomb();
-            } else if (this.currentScreen === 'titanic') {
-                e.preventDefault();
-                this.startPour();
             }
-        });
-        window.addEventListener('keyup', (e) => {
-            if (e.code === 'Space' && this.currentScreen === 'titanic') this.stopPour();
         });
     },
 
-    /* 탭이 뒤로 가거나 화면이 꺼지면 — 폭탄은 멈추고(돌아오면 남은 시간 그대로 재개),
-       붓는 중이던 타이타닉은 손을 뗀 것으로 칩니다(touchend 가 안 오는 경우가 있음). */
     setupVisibilityHandler() {
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.pauseBomb();
-                this.stopPour();
-            } else {
-                this.resumeBomb();
+            if (document.hidden && this.currentScreen === 'finger' && !this.fingerIsActive) {
+                this.clearFingerCountdown();
             }
         });
     },
 
-    /* 터치 포인트가 아예 없는 기기(데스크톱 마우스)인지 — 터치 룰렛·러브 드링크의
-       클릭 폴백을 켤지 결정합니다. 터치스크린 노트북은 터치를 그대로 씁니다. */
     isMouseOnlyDevice() {
         return !(navigator.maxTouchPoints > 0 || 'ontouchstart' in window);
     },
 
-    /* 마우스 폴백: 클릭하면 그 자리에 가상 손가락을 놓고, 놓인 자리를 다시 클릭하면 뗍니다.
-       area 마다 바운드 핸들러를 this[key] 에 보관해 재진입 시 중복으로 안 쌓이게 합니다. */
     bindMouseFingerFallback(area, key, onAdd, onRemoveNear) {
         if (this[key]) {
             area.removeEventListener('mousedown', this[key]);
@@ -3767,21 +2656,18 @@ const app = {
 
     loadSettings() {
         this.hotMode = this.storeGet('neonDrinks_hot') === '1';
-        // HOT 이 켜진 채 다시 열면 카드 덱도 19+ 로 맞춥니다(토글할 때와 같은 규칙).
-        this.cardDeckMode = this.hotMode ? 'hot' : 'normal';
-        this.syncCardDeckTabs();
         this.applyHotModeVisuals();
         const savedCount = parseInt(this.storeGet('neonDrinks_players'), 10);
-        // 예전엔 parseInt 가 NaN 이면 Math.max(2, NaN) = NaN 이 인원수가 돼 카드가 0장 나왔습니다.
-        if (!isNaN(savedCount)) this.playerCount = Math.max(2, Math.min(20, savedCount));
+        if (!isNaN(savedCount)) {
+            this.playerCount = Math.max(2, Math.min(20, savedCount));
+            this.roulettePlayers = Math.max(2, Math.min(12, savedCount));
+            this.roulettePlayerCount = this.roulettePlayers;
+        }
         this.updatePlayerDisplay();
 
         this.customRouletteText = this.storeGet('neonDrinks_customRoulette') || '';
-        this.customCardText = this.storeGet('neonDrinks_customCards') || '';
         const sr = document.getElementById('setting-roulette');
-        const sc = document.getElementById('setting-cards');
         if (sr) sr.value = this.customRouletteText;
-        if (sc) sc.value = this.customCardText;
         const ri = document.getElementById('roulette-input-text');
         if (ri && !ri.value && this.customRouletteText) ri.value = this.customRouletteText;
     },
@@ -3794,7 +2680,7 @@ const app = {
         const sw = document.getElementById('hot-switch');
         if (sw) {
             sw.setAttribute('aria-checked', on ? 'true' : 'false');
-            sw.classList.toggle('on', on);   // .hot-switch.on 이 손잡이 위치·색을 바꿉니다 — 예전엔 안 붙었음
+            sw.classList.toggle('on', on);
         }
         const tb = document.getElementById('hot-toggle-btn');
         if (tb) tb.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -3810,11 +2696,7 @@ const app = {
         soundFX.playTada();
         haptics.buildUp();
         fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 40);
-        // HOT 이 실제로 내용을 바꾸는 세 게임을 같이 맞춥니다: 룰렛 프리셋·카드 덱·(폭탄은 passBomb 이 hotMode 를 직접 봄)
         this.setRoulettePreset(this.hotMode ? 'hot' : 'classic');
-        this.cardDeckMode = this.hotMode ? 'hot' : 'normal';
-        this.syncCardDeckTabs();
-        this.setupCards();
     },
 
     changePlayerCount(delta) {
@@ -3823,6 +2705,7 @@ const app = {
 
     changeRoulettePlayers(delta) {
         this.roulettePlayers = Math.max(2, Math.min(12, this.roulettePlayers + delta));
+        this.roulettePlayerCount = this.roulettePlayers;
         this.playerCount = this.roulettePlayers;
         this.storeSet('neonDrinks_players', this.playerCount);
         this.updatePlayerDisplay();
@@ -3853,27 +2736,147 @@ const app = {
         else list = [...ROULETTE_PRESETS.classic];
 
         this.currentMissions = [...list];
+        this.currentMissionRouletteOptions = [...this.currentMissions];
         document.querySelectorAll('.roulette-chip-btn').forEach(b => b.classList.toggle('active', b.dataset.preset === name));
+        const loadBtn = document.getElementById('btn-load-my-preset');
+        if (loadBtn) loadBtn.classList.remove('active');
         this.renderMissionTags();
         soundFX.playTick();
         haptics.tick();
     },
 
+    saveMyCustomPreset() {
+        if (!this.currentMissions || this.currentMissions.length < 2) {
+            alert('최소 2개 이상의 미션/벌칙이 있어야 저장할 수 있습니다!');
+            return;
+        }
+        this.roulettePlayerCount = this.roulettePlayers;
+        this.currentMissionRouletteOptions = [...this.currentMissions];
+        const payload = {
+            players: this.roulettePlayerCount,
+            items: this.currentMissionRouletteOptions
+        };
+        this.storeSet(ROULETTE_CUSTOM_STORAGE_KEY, JSON.stringify(payload));
+        soundFX.init();
+        soundFX.playTada();
+        haptics.buildUp();
+
+        const saveBtn = document.querySelector('.editor-presets button[onclick*="saveMyCustomPreset"]');
+        if (saveBtn) {
+            saveBtn.textContent = '✅ 저장 완료!';
+            saveBtn.classList.add('saved-flash');
+            clearTimeout(this._savePresetBtnTimer);
+            this._savePresetBtnTimer = setTimeout(() => {
+                saveBtn.textContent = '💾 내 설정 저장';
+                saveBtn.classList.remove('saved-flash');
+            }, 1500);
+        }
+        this.syncCustomPresetButtonState();
+    },
+
+    loadMyCustomPreset() {
+        const raw = this.storeGet(ROULETTE_CUSTOM_STORAGE_KEY);
+        if (!raw) {
+            alert('저장된 내 커스텀 설정이 없습니다. 먼저 [💾 내 설정 저장]을 눌러주세요!');
+            return;
+        }
+        try {
+            const parsed = JSON.parse(raw);
+            if (!parsed || !Array.isArray(parsed.items) || parsed.items.length < 2) {
+                alert('저장된 설정 데이터가 올바르지 않습니다.');
+                return;
+            }
+            const savedPlayers = parseInt(parsed.players, 10);
+            if (!isNaN(savedPlayers)) {
+                this.roulettePlayers = Math.max(2, Math.min(12, savedPlayers));
+                this.roulettePlayerCount = this.roulettePlayers;
+                this.playerCount = this.roulettePlayers;
+                this.storeSet('neonDrinks_players', this.playerCount);
+                this.updatePlayerDisplay();
+                const display = document.getElementById('roulette-player-display');
+                const sub = document.getElementById('roulette-player-sub');
+                if (display) display.textContent = this.roulettePlayers + '명';
+                if (sub) sub.textContent = '현재 ' + this.roulettePlayers + '명 참여 중';
+            }
+            this.currentMissions = parsed.items.map(s => String(s).trim()).filter(Boolean);
+            this.currentMissionRouletteOptions = [...this.currentMissions];
+            this.customRouletteOptions = [...this.currentMissions];
+
+            document.querySelectorAll('.roulette-chip-btn').forEach(b => b.classList.remove('active'));
+            const loadBtn = document.getElementById('btn-load-my-preset');
+            if (loadBtn) loadBtn.classList.add('active');
+
+            this.renderMissionTags();
+            soundFX.init();
+            soundFX.playTada();
+            haptics.buildUp();
+        } catch (e) {
+            alert('저장된 설정을 불러오는 중 오류가 발생했습니다.');
+        }
+    },
+
+    syncCustomPresetButtonState() {
+        const loadBtn = document.getElementById('btn-load-my-preset');
+        if (!loadBtn) return;
+        const raw = this.storeGet(ROULETTE_CUSTOM_STORAGE_KEY);
+        let hasSaved = false;
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                hasSaved = Boolean(parsed && Array.isArray(parsed.items) && parsed.items.length >= 2);
+            } catch (e) {}
+        }
+        loadBtn.classList.toggle('has-saved', hasSaved);
+        loadBtn.disabled = !hasSaved;
+    },
+
     renderMissionTags() {
+        this.currentMissionRouletteOptions = [...this.currentMissions];
         const container = document.getElementById('mission-tags-container');
         const countBadge = document.getElementById('mission-count-badge');
         const bulkText = document.getElementById('roulette-input-text');
-        if (countBadge) countBadge.textContent = this.currentMissions.length;
+        const sliceInfo = document.getElementById('roulette-slice-info');
+        const count = this.currentMissions.length;
+
+        if (countBadge) countBadge.textContent = count;
         if (bulkText) bulkText.value = this.currentMissions.join(', ');
+        if (sliceInfo) {
+            const sliceDeg = count > 0 ? (360 / count).toFixed(1).replace('.0', '') : 0;
+            sliceInfo.textContent = `🎯 총 ${count}개 슬롯 (각 슬롯 약 ${sliceDeg}°)`;
+        }
 
         if (!container) return;
         container.innerHTML = '';
         this.currentMissions.forEach((m, idx) => {
             const tag = document.createElement('div');
             tag.className = 'mission-tag';
-            tag.innerHTML = `<span>${m}</span><button class="mission-tag-remove" onclick="app.removeMissionTag(${idx})" title="삭제">&times;</button>`;
+            tag.innerHTML = `<span>${m}</span><button type="button" class="mission-tag-remove" onclick="app.removeMissionTag(${idx})" title="삭제">&times;</button>`;
             container.appendChild(tag);
         });
+    },
+
+    quickAddPenalty(text) {
+        if (!text) return;
+        this.currentMissions.push(text);
+        this.renderMissionTags();
+        soundFX.playSpark();
+        haptics.tick();
+
+        const container = document.getElementById('mission-tags-container');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    },
+
+    shuffleMissions() {
+        if (!this.currentMissions || this.currentMissions.length < 2) return;
+        for (let i = this.currentMissions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.currentMissions[i], this.currentMissions[j]] = [this.currentMissions[j], this.currentMissions[i]];
+        }
+        this.renderMissionTags();
+        soundFX.playCardFlip();
+        haptics.tick();
     },
 
     removeMissionTag(index) {
@@ -3891,18 +2894,32 @@ const app = {
         const input = document.getElementById('mission-new-input');
         if (!input) return;
         const val = input.value.trim();
-        if (!val) return;
+        if (!val) {
+            input.classList.remove('input-shake');
+            void input.offsetWidth;
+            input.classList.add('input-shake');
+            soundFX.playFail();
+            haptics.tick();
+            return;
+        }
         this.currentMissions.push(val);
         input.value = '';
+        input.focus();
         this.renderMissionTags();
-        soundFX.playTick();
+        soundFX.playSpark();
         haptics.tick();
+
+        const container = document.getElementById('mission-tags-container');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
     },
 
     clearAllMissions() {
         this.currentMissions = [];
         this.renderMissionTags();
         soundFX.playTick();
+        haptics.tick();
     },
 
     applyBulkMissions() {
@@ -3928,12 +2945,25 @@ const app = {
         this.navigate('roulette');
     },
 
+    editFromWheel() {
+        this.currentMissions = [...this.currentMissionRouletteOptions];
+        this.navigate('roulette-input');
+    },
+
     applyCustomRoulette() {
         this.currentRoulettePreset = 'custom';
         document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
-        this.currentMissionRouletteOptions = [...this.customRouletteOptions];
+        const tabCustom = document.getElementById('roulette-tab-custom');
+        if (tabCustom) tabCustom.classList.add('active');
+
+        if (this.customRouletteOptions && this.customRouletteOptions.length >= 2) {
+            this.currentMissionRouletteOptions = [...this.customRouletteOptions];
+        } else if (this.currentMissions && this.currentMissions.length >= 2) {
+            this.currentMissionRouletteOptions = [...this.currentMissions];
+        }
         this.updateRouletteWheel(this.currentMissionRouletteOptions);
         this.clearRouletteResult();
+        soundFX.playTick();
     },
 
     clearRouletteResult() {
@@ -3941,44 +2971,39 @@ const app = {
         const resultCard = document.getElementById('roulette-result-card');
         if (resultText) resultText.innerText = '';
         if (resultCard) resultCard.classList.remove('has-result');
+        const modal = document.getElementById('roulette-winner-modal');
+        if (modal) modal.classList.remove('show');
     },
 
     cancelRouletteSpin() {
-        clearInterval(this.rouletteTickInterval);
-        clearTimeout(this.rouletteSpinTimer);
-        this.rouletteTickInterval = null;
-        this.rouletteSpinTimer = null;
+        if (this.rouletteTickTimer) {
+            clearTimeout(this.rouletteTickTimer);
+            this.rouletteTickTimer = null;
+        }
+        if (this.rouletteSpinTimer) {
+            clearTimeout(this.rouletteSpinTimer);
+            this.rouletteSpinTimer = null;
+        }
         if (this.isSpinning) {
             this.isSpinning = false;
             const spinBtn = document.getElementById('roulette-spin-btn');
             if (spinBtn) spinBtn.disabled = false;
             this.clearRouletteResult();
         }
+        const modal = document.getElementById('roulette-winner-modal');
+        if (modal) modal.classList.remove('show');
     },
 
     navigate(screenId, isPopState = false) {
         soundFX.init();
         soundFX.playTick();
 
-        // 떠나는 화면의 뒷정리 — 타이머·rAF·겹침 요소가 다음 진입까지 남지 않게 합니다.
         if (this.currentScreen === 'roulette') {
             this.cancelRouletteSpin();
-        }
-        if (this.currentScreen === 'bomb') {
-            this.resetBomb();
-        }
-        if (this.currentScreen === 'titanic') {
-            this.stopPour();
         }
         if (this.currentScreen === 'finger') {
             this.clearFingerTimers();
             this.teardownFingerEvents();
-        }
-        if (this.currentScreen === 'bridge') {
-            this.clearBridgeTimers();
-        }
-        if (this.currentScreen === 'crocodile') {
-            clearTimeout(this.crocOverlayTimeout);
         }
 
         const activeScreens = document.querySelectorAll('.screen.active');
@@ -4003,6 +3028,7 @@ const app = {
         if (screenId === 'roulette-input') {
             this.changeRoulettePlayers(0);
             this.renderMissionTags();
+            this.syncCustomPresetButtonState();
         }
         if (screenId === 'roulette') {
             if (this.customRouletteOptions) {
@@ -4011,21 +3037,15 @@ const app = {
                 this.setRoulettePreset(this.hotMode ? 'hot' : this.currentRoulettePreset);
             }
         }
-        if (screenId === 'cards') this.setupCards();
-        if (screenId === 'crocodile') this.initCrocodile();
         if (screenId === 'finger') this.setupFingerRoulette();
-        if (screenId === 'titanic') this.initTitanic();
-        if (screenId === 'bridge') this.initBridge();
     },
 
     /* ============================================================
        1. MISSION ROULETTE LOGIC
        ============================================================ */
     setRoulettePreset(presetName) {
-        // 'custom' 등 프리셋에 없는 이름이 오면 [...undefined] 로 TypeError 가 났습니다.
         if (!ROULETTE_PRESETS[presetName]) presetName = 'classic';
         this.currentRoulettePreset = presetName;
-        this.customRouletteOptions = null;   // 탭을 고르면 직접 입력 목록은 내려놓습니다
         document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
         const activeTab = document.getElementById(`roulette-tab-${presetName}`);
         if (activeTab) activeTab.classList.add('active');
@@ -4080,6 +3100,9 @@ const app = {
         if (resultCard) resultCard.classList.remove('has-result');
         if (spinBtn) spinBtn.disabled = true;
 
+        const modal = document.getElementById('roulette-winner-modal');
+        if (modal) modal.classList.remove('show');
+
         soundFX.init();
         haptics.tick();
 
@@ -4089,19 +3112,33 @@ const app = {
 
         wheel.style.transform = `rotate(${this.rouletteRotation}deg)`;
 
-        this.rouletteTickInterval = setInterval(() => {
-            soundFX.playTick();
+        // Realistic deceleration ticking
+        let currentInterval = 55;
+        const startTime = Date.now();
+        const spinDuration = 4200;
+
+        const runTick = () => {
+            if (!this.isSpinning) return;
+            const elapsed = Date.now() - startTime;
+            if (elapsed >= spinDuration) return;
+
+            soundFX.playTick(elapsed > 3000);
             haptics.tick();
             if (pointer) {
                 pointer.classList.remove('tick-bounce');
                 void pointer.offsetWidth;
                 pointer.classList.add('tick-bounce');
             }
-        }, 130);
+
+            const p = elapsed / spinDuration;
+            currentInterval = 55 + Math.pow(p, 2.5) * 420;
+            this.rouletteTickTimer = setTimeout(runTick, currentInterval);
+        };
+        runTick();
 
         this.rouletteSpinTimer = setTimeout(() => {
-            clearInterval(this.rouletteTickInterval);
-            this.rouletteTickInterval = null;
+            clearTimeout(this.rouletteTickTimer);
+            this.rouletteTickTimer = null;
             this.rouletteSpinTimer = null;
             this.isSpinning = false;
             if (spinBtn) spinBtn.disabled = false;
@@ -4110,291 +3147,63 @@ const app = {
             const segmentAngle = 360 / optionsToUse.length;
             const segmentIndex = Math.floor(((360 - normalizedDegrees) % 360) / segmentAngle);
             const winner = optionsToUse[segmentIndex] || '당첨! Winner!';
+            this.lastRouletteWinner = winner;
+
             if (resultText) resultText.innerHTML = `🎉 결과: ${winner}<span class="i18n-sub">Result</span>`;
             if (resultCard) resultCard.classList.add('has-result');
             soundFX.playTada();
             haptics.buildUp();
 
             const rect = wheel.getBoundingClientRect();
-            fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 80);
-        }, 4200);
+            fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 90);
+
+            setTimeout(() => {
+                this.openRouletteWinner(winner);
+            }, 350);
+        }, spinDuration);
     },
 
-    /* ============================================================
-       2. TIME BOMB LOGIC
-       ============================================================ */
-    setBombBlindMode(isBlind) {
-        this.isBombBlind = isBlind;
-        const tabTimer = document.getElementById('bomb-tab-timer');
-        const tabBlind = document.getElementById('bomb-tab-blind');
-        if (tabTimer) tabTimer.classList.toggle('active', !isBlind);
-        if (tabBlind) tabBlind.classList.toggle('active', isBlind);
-        const timerEl = document.getElementById('bomb-timer');
-        if (timerEl) timerEl.classList.toggle('blind', isBlind);
-        soundFX.playTick();
-        if (this.isBombActive) this.updateBombDisplay();
+    openRouletteWinner(winner) {
+        const modal = document.getElementById('roulette-winner-modal');
+        const title = document.getElementById('roulette-winner-title');
+        const sub = document.getElementById('roulette-winner-sub');
+        if (!modal) return;
+        if (title) title.textContent = winner;
+        if (sub) {
+            sub.textContent = '피할 수 없다! 술자리의 룰을 따라 당당히 벌칙을 수행하세요! 🍻';
+        }
+        modal.classList.add('show');
     },
 
-    resetBomb() {
-        clearInterval(this.bombInterval);
-        clearTimeout(this.bombRestartTimer);
-        this.bombInterval = null;
-        this.isBombActive = false;
-        this.bombPausedRemaining = null;
-        const container = document.getElementById('bomb-container');
-        if (container) {
-            container.classList.remove('active', 'exploded');
-            container.style.animationDuration = '';
-            container.style.transform = '';
-        }
-        const screen = document.getElementById('screen-bomb');
-        if (screen) screen.classList.remove('bomb-screen-panic');
-        const timerEl = document.getElementById('bomb-timer');
-        if (timerEl) timerEl.innerText = '00:00';
-        const result = document.getElementById('bomb-result');
-        if (result) result.innerHTML = '';
-        const startBtn = document.getElementById('start-bomb-btn');
-        if (startBtn) {
-            startBtn.style.display = 'block';
-            startBtn.innerText = '게임 시작 · Start Game';
-        }
-    },
+    closeRouletteWinner(removeThisPenalty = false) {
+        const modal = document.getElementById('roulette-winner-modal');
+        if (modal) modal.classList.remove('show');
 
-    startBomb() {
-        if (this.isBombActive) return;
-        this.resetBomb();
-        const startBtn = document.getElementById('start-bomb-btn');
-        if (startBtn) startBtn.style.display = 'none';
-        const container = document.getElementById('bomb-container');
-        if (container) container.classList.add('active');
-
-        const seconds = 14 + Math.floor(Math.random() * 16); // 14 ~ 30s
-        this.bombTimeLeft = seconds;
-        this.bombDeadline = Date.now() + seconds * 1000;
-        this.bombPausedRemaining = null;
-        this.isBombActive = true;
-        const result = document.getElementById('bomb-result');
-        if (result) result.innerHTML =
-            '화면의 폭탄을 터치해서 넘기세요!<span class="i18n-sub">Touch the bomb to pass it on!</span>';
-
-        this.updateBombDisplay();
-        soundFX.init();
-        haptics.buildUp();
-        this.startBombTicker();
-    },
-
-    /* 200ms 마다 마감 시각과 비교해 '초가 바뀐 순간'에만 심장박동·틱을 냅니다.
-       인터벌이 밀려도(백그라운드·저사양) 남은 시간 자체는 어긋나지 않습니다. */
-    startBombTicker() {
-        clearInterval(this.bombInterval);
-        this.bombInterval = setInterval(() => this.tickBomb(), 200);
-    },
-
-    tickBomb() {
-        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
-        const remaining = Math.max(0, Math.ceil((this.bombDeadline - Date.now()) / 1000));
-        if (remaining === this.bombTimeLeft) return;
-        this.bombTimeLeft = remaining;
-        this.updateBombDisplay();
-
-        if (remaining <= 0) {
-            this.explodeBomb();
-            return;
-        }
-        if (remaining <= 5) {
-            soundFX.playTick(true);
-            haptics.tick();
-            const screen = document.getElementById('screen-bomb');
-            if (screen) screen.classList.add('bomb-screen-panic');
-        } else {
-            soundFX.playHeartbeat();
-            haptics.heartbeat();
-        }
-        const container = document.getElementById('bomb-container');
-        if (container) {
-            const rect = container.getBoundingClientRect();
-            fxEngine.sparks(rect.left + rect.width * 0.7, rect.top + 20, 4, '#ffaa00');
-        }
-    },
-
-    // 탭이 뒤로 갈 때 — 남은 시간을 붙들어 두고 인터벌을 끊습니다(visibilitychange 에서 호출).
-    pauseBomb() {
-        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
-        this.bombPausedRemaining = Math.max(1000, this.bombDeadline - Date.now());
-        clearInterval(this.bombInterval);
-        this.bombInterval = null;
-    },
-
-    resumeBomb() {
-        if (!this.isBombActive || this.bombPausedRemaining === null) return;
-        this.bombDeadline = Date.now() + this.bombPausedRemaining;
-        this.bombPausedRemaining = null;
-        this.startBombTicker();
-    },
-
-    updateBombDisplay() {
-        const timerEl = document.getElementById('bomb-timer');
-        const shown = Math.max(0, this.bombTimeLeft);
-        if (timerEl) timerEl.innerText = this.isBombBlind ? '??:??' : `00:${shown.toString().padStart(2, '0')}`;
-
-        const container = document.getElementById('bomb-container');
-        if (!container) return;
-        if (this.bombTimeLeft < 5) {
-            container.style.animationDuration = '0.12s';
-        } else if (this.bombTimeLeft < 10) {
-            container.style.animationDuration = '0.25s';
-        } else {
-            container.style.animationDuration = '0.5s';
-        }
-    },
-
-    passBomb() {
-        if (!this.isBombActive || this.bombPausedRemaining !== null) return;
-
-        // 패스할 때마다 ±1초 흔들림. 마감은 최소 '지금+1초' 로 묶어 패스 직후 터지는 일은 없게.
-        const timeChange = Math.floor(Math.random() * 3) - 1;
-        this.bombDeadline = Math.max(Date.now() + 1000, this.bombDeadline + timeChange * 1000);
-        this.bombTimeLeft = Math.max(1, Math.ceil((this.bombDeadline - Date.now()) / 1000));
-        this.updateBombDisplay();
-
-        const container = document.getElementById('bomb-container');
-        if (container) {
-            container.style.transform = 'scale(0.85) rotate(' + (Math.random() * 10 - 5) + 'deg)';
-            setTimeout(() => { container.style.transform = ''; }, 120);
-        }
-
-        soundFX.playTick(true);
-        haptics.tick();
-
-        // HOT 모드(19+)를 켜면 돌발 미션도 19+ 세트로 — 예전엔 어디서도 안 켜지는 별도 플래그(bombSpicyMode)를 봤습니다.
-        const passMissions = this.hotMode ? HOT_PASS_MISSIONS : NORMAL_PASS_MISSIONS;
-        const result = document.getElementById('bomb-result');
-        if (!result) return;
-
-        if (Math.random() < 0.4 && this.bombTimeLeft > 4) {
-            const mission = passMissions[Math.floor(Math.random() * passMissions.length)];
-            result.innerHTML =
-                `🚨 돌발 미션: ${mission.kr}<span class="i18n-sub">🚨 Surprise mission: ${mission.en}</span>`;
-            haptics.buildUp();
-        } else {
-            result.innerHTML =
-                '폭탄이 옆 사람에게 패스되었습니다! 💣<span class="i18n-sub">Passed to the next player! 💣</span>';
-        }
-    },
-
-    explodeBomb() {
-        soundFX.playBigBoom();
-        clearInterval(this.bombInterval);
-        this.bombInterval = null;
-        this.isBombActive = false;
-        this.bombPausedRemaining = null;
-        const container = document.getElementById('bomb-container');
-        if (container) {
-            container.classList.remove('active');
-            container.classList.add('exploded');
-        }
-        const screen = document.getElementById('screen-bomb');
-        if (screen) screen.classList.remove('bomb-screen-panic');
-        const timerEl = document.getElementById('bomb-timer');
-        if (timerEl) timerEl.innerText = '💥 BOOM! 💥';
-        const result = document.getElementById('bomb-result');
-        if (result) result.innerHTML =
-            '💥 펑! 당신 차례에 터졌습니다! 마셔라! 💥<span class="i18n-sub">It exploded on your turn — drink up! 🍻</span>';
-        haptics.loser();
-
-        if (container) {
-            const rect = container.getBoundingClientRect();
-            fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 80, '#ff0055');
-        }
-
-        // 화면을 떠나면 resetBomb 이 이 타이머도 끊습니다(안 끊으면 숨은 화면의 버튼 글자만 바뀜 — 무해하지만 정리).
-        this.bombRestartTimer = setTimeout(() => {
-            const startBtn = document.getElementById('start-bomb-btn');
-            if (startBtn) {
-                startBtn.style.display = 'block';
-                startBtn.innerText = '다시 시작 · Play Again';
+        if (removeThisPenalty && this.lastRouletteWinner) {
+            if (this.currentMissionRouletteOptions.length <= 2) {
+                alert('룰렛 유지를 위해 최소 2개의 미션이 필요합니다! (더 이상 제외할 수 없습니다)');
+                return;
             }
-        }, 2000);
-    },
+            const idx = this.currentMissionRouletteOptions.indexOf(this.lastRouletteWinner);
+            if (idx > -1) {
+                const removedItem = this.lastRouletteWinner;
+                this.currentMissionRouletteOptions.splice(idx, 1);
+                this.currentMissions = [...this.currentMissionRouletteOptions];
+                this.customRouletteOptions = [...this.currentMissionRouletteOptions];
+                this.updateRouletteWheel(this.currentMissionRouletteOptions);
+                soundFX.playSpark();
+                haptics.tick();
 
-    /* ============================================================
-       3. CROCODILE ROULETTE LOGIC
-       ============================================================ */
-    setCrocBombCount(count) {
-        this.crocBombCount = count;
-        document.getElementById('croc-tab-1').classList.toggle('active', count === 1);
-        document.getElementById('croc-tab-2').classList.toggle('active', count === 2);
-        document.getElementById('croc-tab-3').classList.toggle('active', count === 3);
-        this.initCrocodile();
-    },
-
-    initCrocodile() {
-        const grid = document.getElementById('croc-grid');
-        const wrapper = document.getElementById('croc-wrapper');
-        const overlay = document.getElementById('croc-bite-overlay');
-        grid.innerHTML = '';
-        this.crocIsOver = false;
-        wrapper.classList.remove('biting');
-        wrapper.classList.add('idle-anim');
-        overlay.classList.remove('show');
-        clearTimeout(this.crocOverlayTimeout);
-        
-        const count = this.crocToothPositions.length; // 20 teeth
-        this.crocBombIndexes.clear();
-        while (this.crocBombIndexes.size < this.crocBombCount) {
-            this.crocBombIndexes.add(Math.floor(Math.random() * count));
-        }
-        
-        this.crocToothPositions.forEach((pos, i) => {
-            const tooth = document.createElement('div');
-            tooth.className = 'croc-tooth';
-            tooth.style.left = pos.x + '%';
-            tooth.style.top = pos.y + '%';
-            tooth.onclick = () => this.pressCrocTooth(tooth, i);
-            grid.appendChild(tooth);
-        });
-    },
-
-    pressCrocTooth(tooth, idx) {
-        if (this.crocIsOver || tooth.classList.contains('pressed')) return;
-        
-        soundFX.init();
-        const wrapper = document.getElementById('croc-wrapper');
-        
-        if (this.crocBombIndexes.has(idx)) {
-            this.crocIsOver = true;
-            tooth.classList.add('bomb', 'bomb-hell');
-            wrapper.classList.remove('idle-anim');
-            wrapper.classList.add('biting');
-            soundFX.playChomp();
-            soundFX.playBigBoom();
-            haptics.loser();
-
-            const rect = tooth.getBoundingClientRect();
-            fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 40, '#ff0055');
-
-            const screen = document.getElementById('screen-crocodile');
-            screen.classList.remove('shake');
-            void screen.offsetWidth;
-            screen.classList.add('shake');
-
-            const overlay = document.getElementById('croc-bite-overlay');
-            this.crocOverlayTimeout = setTimeout(() => {
-                overlay.classList.add('show');
-                soundFX.playFail();
-            }, 280);
-        } else {
-            tooth.classList.add('pressed', 'safe-pop');
-            soundFX.playTick();
-            soundFX.playHeartbeat();
-            haptics.tick();
-            const rect = tooth.getBoundingClientRect();
-            fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 8, '#00f3ff');
+                const resultText = document.getElementById('roulette-result');
+                if (resultText) {
+                    resultText.innerHTML = `❌ '${removedItem}' 제외됨 (남은 ${this.currentMissionRouletteOptions.length}개)<span class="i18n-sub">Excluded from wheel</span>`;
+                }
+            }
         }
     },
 
     /* ============================================================
-       4. TOUCH ROULETTE LOGIC
+       2. TOUCH ROULETTE & LOVE DRINK LOGIC
        ============================================================ */
     fingerIdleMessage() {
         const pcHint = this.isMouseOnlyDevice() ? ' · PC: 클릭하여 손가락 배치' : '';
@@ -4659,16 +3468,12 @@ const app = {
         const modal = document.getElementById('love-mission-modal');
         if (modal) modal.classList.remove('show');
         soundFX.playTick();
-        if (this.currentScreen === 'finger') {
-            const area = document.getElementById('finger-area');
-            if (area) area.innerHTML = '';
-            this.fingerTouches = {};
-            this.fingerIsActive = false;
-            this.clearFingerTimers();
-            this.setFingerMessage(this.fingerIdleMessage());
-        } else {
-            this.initBridge();
-        }
+        const area = document.getElementById('finger-area');
+        if (area) area.innerHTML = '';
+        this.fingerTouches = {};
+        this.fingerIsActive = false;
+        this.clearFingerTimers();
+        this.setFingerMessage(this.fingerIdleMessage());
     },
 
     showLoveMission() {
@@ -4798,611 +3603,15 @@ const app = {
     },
 
     /* ============================================================
-       5. NEON TITANIC LOGIC
-       ============================================================ */
-    initTitanic() {
-        soundFX.init();
-        this.titanicWeight = 0;
-        this.titanicIsOver = false;
-        this.titanicLimit = 75 + Math.floor(Math.random() * 20);
-        
-        const cup = document.getElementById('soju-cup');
-        const liquid = document.getElementById('soju-liquid');
-        const indicator = document.getElementById('titanic-indicator');
-        
-        cup.style.top = '15px';
-        cup.classList.remove('shake', 'danger-shake');
-        liquid.style.height = '0%';
-        indicator.innerText = '소주잔 무게 · Weight: 0%';
-        indicator.style.color = 'var(--secondary-neon)';
-        
-        const btn = document.getElementById('pour-btn');
-        btn.onmousedown = btn.ontouchstart = (e) => {
-            e.preventDefault();
-            this.startPour();
-        };
-        btn.onmouseup = btn.onmouseleave = btn.ontouchend = btn.ontouchcancel = (e) => {
-            e.preventDefault();
-            this.stopPour();
-        };
-    },
-
-    tapPourSingle() {
-        if (this.titanicIsOver) return;
-        soundFX.init();
-        this.titanicWeight += 3.5;
-        this.updateTitanicVisuals();
-        soundFX.playTick(true);
-        haptics.tick();
-        const cup = document.getElementById('soju-cup');
-        const rect = cup.getBoundingClientRect();
-        fxEngine.splash(rect.left + rect.width / 2, rect.top + 10, 6);
-        
-        if (this.titanicWeight >= this.titanicLimit) {
-            this.sinkTitanic();
-        }
-    },
-
-    startPour() {
-        if (this.titanicIsOver) return;
-        clearInterval(this.titanicInterval);
-        
-        this.titanicInterval = setInterval(() => {
-            this.titanicWeight += 0.9;
-            this.updateTitanicVisuals();
-            soundFX.playTick(true);
-            haptics.tick();
-            
-            if (this.titanicWeight >= this.titanicLimit) {
-                this.sinkTitanic();
-            }
-        }, 30);
-    },
-
-    stopPour() {
-        clearInterval(this.titanicInterval);
-    },
-
-    updateTitanicVisuals() {
-        const glass = document.getElementById('beer-glass');
-        const cup = document.getElementById('soju-cup');
-        const liquid = document.getElementById('soju-liquid');
-        const indicator = document.getElementById('titanic-indicator');
-        
-        liquid.style.height = Math.min(100, this.titanicWeight) + '%';
-        indicator.innerText = `소주잔 무게 · Weight: ${Math.floor(this.titanicWeight)}%`;
-        
-        const maxTravel = glass.clientHeight - cup.clientHeight - 20;
-        const sinkOffset = 15 + ((this.titanicWeight / 100) * maxTravel);
-        cup.style.top = `${sinkOffset}px`;
-
-        if (this.titanicWeight >= 65) {
-            cup.classList.add('danger-shake');
-            indicator.style.color = '#ffaa00';
-        }
-    },
-
-    sinkTitanic() {
-        clearInterval(this.titanicInterval);
-        this.titanicIsOver = true;
-        
-        const glass = document.getElementById('beer-glass');
-        const cup = document.getElementById('soju-cup');
-        const indicator = document.getElementById('titanic-indicator');
-        
-        cup.classList.remove('danger-shake');
-        cup.classList.add('shake');
-        soundFX.playSplash();
-        soundFX.playBigBoom();
-        haptics.loser();
-
-        const rect = cup.getBoundingClientRect();
-        fxEngine.splash(rect.left + rect.width / 2, rect.top + rect.height / 2, 40);
-        
-        setTimeout(() => {
-            const bottomPos = glass.clientHeight - cup.clientHeight - 8;
-            cup.style.top = `${bottomPos}px`;
-            indicator.innerHTML =
-                '🚢 타이타닉 침몰! 원샷!<span class="i18n-sub">The Titanic sank — bottoms up! 🍻</span>';
-            indicator.style.color = '#ff0055';
-        }, 350);
-    },
-
-    /* ============================================================
-       6. LOVE DRINK LOGIC (2~10인 완벽 멀티터치 지원)
-       ============================================================ */
-    bridgeIdleMessage() {
-        const pcHint = this.isMouseOnlyDevice() ? ' · PC: click to place a finger, click it again to lift' : '';
-        return `화면에 손가락을 모두 올려주세요! (2~8인)<span class="i18n-sub">Everyone place a finger on the screen!${pcHint}</span>`;
-    },
-
-    setBridgeMessage(html) {
-        const msg = document.getElementById('bridge-msg');
-        if (msg) msg.innerHTML = html;
-    },
-
-    initBridge() {
-        const area = document.getElementById('bridge-area');
-        if (!area) return;
-        area.innerHTML = '';
-        this.bridgeTouches = {};
-        this.bridgeIsActive = false;
-        this.clearBridgeTimers();
-        this.setBridgeMessage(this.bridgeIdleMessage());
-
-        this.teardownBridgeEvents();
-
-        this.handleBridgeStart = this.handleBridgeStart.bind(this);
-        this.handleBridgeMove = this.handleBridgeMove.bind(this);
-        this.handleBridgeEnd = this.handleBridgeEnd.bind(this);
-
-        area.addEventListener('touchstart', this.handleBridgeStart, {passive: false});
-        area.addEventListener('touchmove', this.handleBridgeMove, {passive: false});
-        area.addEventListener('touchend', this.handleBridgeEnd, {passive: false});
-        area.addEventListener('touchcancel', this.handleBridgeEnd, {passive: false});
-
-        // 데스크톱 마우스 폴백 (터치 포인트가 없는 기기에서만 붙습니다)
-        this.bindMouseFingerFallback(area, '_bridgeMouseHandler',
-            (id, x, y) => { if (!this.bridgeIsActive) { this.addBridgeTouch(id, x, y); this.checkBridgeStart(); } },
-            (x, y) => {
-                if (this.bridgeIsActive) return true;
-                const id = this.findTouchNear(this.bridgeTouches, x, y);
-                if (id === null) return false;
-                this.removeBridgeTouch(id);
-                this.checkBridgeStart();
-                return true;
-            });
-    },
-
-    teardownBridgeEvents() {
-        this.clearBridgeTimers();
-        const area = document.getElementById('bridge-area');
-        if (!area) return;
-        area.removeEventListener('touchstart', this.handleBridgeStart);
-        area.removeEventListener('touchmove', this.handleBridgeMove);
-        area.removeEventListener('touchend', this.handleBridgeEnd);
-        area.removeEventListener('touchcancel', this.handleBridgeEnd);
-    },
-
-    /* 모집 카운트다운뿐 아니라 매칭 연출 타이머(폭죽·미션 팝업)와 미션 모달까지 함께 정리합니다.
-       예전엔 매칭 직후 뒤로가기를 누르면 1.6초 뒤 숨은 화면에서 모달이 .show 로 켜졌고,
-       다시 들어오면 그 모달이 그대로 떠 있었습니다. */
-    clearBridgeTimers() {
-        clearTimeout(this.bridgeJoinTimer);
-        clearInterval(this.bridgeCountdownInterval);
-        this.bridgeJoinTimer = null;
-        this.bridgeCountdownInterval = null;
-        (this.bridgeMatchTimers || []).forEach(t => clearTimeout(t));
-        this.bridgeMatchTimers = [];
-        const modal = document.getElementById('love-mission-modal');
-        if (modal) modal.classList.remove('show');
-    },
-
-    addBridgeTouch(id, clientX, clientY) {
-        const area = document.getElementById('bridge-area');
-        if (!area || this.bridgeTouches[id]) return;   // 중복 방지
-        const rect = area.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        const playerNum = Object.keys(this.bridgeTouches).length + 1;
-        const node = document.createElement('div');
-        node.className = 'bridge-player-node';
-        node.style.left = `${x}px`;
-        node.style.top = `${y}px`;
-        node.innerHTML = bridgeHeartHTML(`P${playerNum}`);
-        area.appendChild(node);
-
-        this.bridgeTouches[id] = { x, y, clientX, clientY, el: node, id };
-        soundFX.playSpark();
-        haptics.tick();
-        fxEngine.sparks(clientX, clientY, 8, '#ff007f');
-    },
-
-    removeBridgeTouch(id) {
-        const tracked = this.bridgeTouches[id];
-        if (!tracked) return;
-        tracked.el.remove();
-        delete this.bridgeTouches[id];
-    },
-
-    handleBridgeStart(e) {
-        e.preventDefault();
-        if (this.bridgeIsActive) return;
-        soundFX.init();
-
-        for (let i = 0; i < e.changedTouches.length; i++) {
-            const touch = e.changedTouches[i];
-            this.addBridgeTouch(touch.identifier, touch.clientX, touch.clientY);
-        }
-
-        this.checkBridgeStart();
-    },
-
-    handleBridgeMove(e) {
-        e.preventDefault();
-        if (this.bridgeIsActive) return;
-
-        const area = document.getElementById('bridge-area');
-        if (!area) return;
-        const rect = area.getBoundingClientRect();
-
-        for (let i = 0; i < e.changedTouches.length; i++) {
-            const touch = e.changedTouches[i];
-            const tracked = this.bridgeTouches[touch.identifier];
-            if (tracked) {
-                tracked.clientX = touch.clientX;
-                tracked.clientY = touch.clientY;
-                tracked.x = touch.clientX - rect.left;
-                tracked.y = touch.clientY - rect.top;
-                tracked.el.style.left = `${tracked.x}px`;
-                tracked.el.style.top = `${tracked.y}px`;
-            }
-        }
-    },
-
-    handleBridgeEnd(e) {
-        e.preventDefault();
-        if (this.bridgeIsActive) return;
-
-        for (let i = 0; i < e.changedTouches.length; i++) {
-            this.removeBridgeTouch(e.changedTouches[i].identifier);
-        }
-
-        this.checkBridgeStart();
-    },
-
-    checkBridgeStart() {
-        const count = Object.keys(this.bridgeTouches).length;
-
-        if (count < 2) {
-            clearTimeout(this.bridgeJoinTimer);
-            clearInterval(this.bridgeCountdownInterval);
-            this.bridgeJoinTimer = null;
-            this.bridgeCountdownInterval = null;
-            this.setBridgeMessage(
-                count === 1
-                    ? '손가락 1개 감지! 한 명 더 올려주세요!<span class="i18n-sub">Need at least 2 players!</span>'
-                    : this.bridgeIdleMessage());
-            return;
-        }
-
-        // 이미 타이머가 돌고 있으면 손가락 수 메시지만 갱신하고 카운트다운은 유지
-        if (this.bridgeJoinTimer) {
-            const countBadge = `<span style="color:#00f3ff;font-weight:900;">${count}명</span>`;
-            const cdEl = document.querySelector('#bridge-msg .finger-countdown');
-            const sec = cdEl ? cdEl.innerText : String(this.BRIDGE_JOIN_SECONDS);
-            this.setBridgeMessage(`💘 참가자 ${countBadge} 감지! 매칭 중... <span class="finger-countdown">${sec}</span>`);
-            return;
-        }
-
-        // 2명 이상 감지 시 카운트다운 시작
-        let left = this.BRIDGE_JOIN_SECONDS;
-        this.setBridgeMessage(
-            `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${count}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`);
-        soundFX.playSiren();
-        haptics.buildUp();
-
-        this.bridgeCountdownInterval = setInterval(() => {
-            left--;
-            const currentCount = Object.keys(this.bridgeTouches).length;
-            if (left > 0) {
-                this.setBridgeMessage(
-                    `💘 참가자 <span style="color:#00f3ff;font-weight:900;">${currentCount}명</span> 감지! 매칭 중... <span class="finger-countdown">${left}</span>`);
-                soundFX.playTick(true);
-                haptics.tick();
-            }
-        }, 1000);
-
-        this.bridgeJoinTimer = setTimeout(() => {
-            clearInterval(this.bridgeCountdownInterval);
-            this.bridgeCountdownInterval = null;
-            this.bridgeJoinTimer = null;
-            this.runBridgeMatch();
-        }, this.BRIDGE_JOIN_SECONDS * 1000);
-    },
-
-    runBridgeMatch() {
-        const nodes = Object.values(this.bridgeTouches);
-        if (nodes.length < 2) {
-            this.bridgeIsActive = false;
-            this.checkBridgeStart();
-            return;
-        }
-        this.bridgeIsActive = true;
-
-        const shuffled = [...nodes].sort(() => Math.random() - 0.5);
-        const p1 = shuffled[0];
-        const p2 = shuffled[1];
-
-        // 매칭되지 않은 나머지 손가락 노드는 반투명 처리
-        nodes.forEach(n => {
-            if (n !== p1 && n !== p2) {
-                n.el.style.opacity = '0.25';
-                n.el.style.transform = 'scale(0.85)';
-            }
-        });
-
-        const area = document.getElementById('bridge-area');
-        
-        // 1. 화려한 네온 커플 레이저 빔 (SVG)
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.style.position = 'absolute';
-        svg.style.inset = '0';
-        svg.style.width = '100%';
-        svg.style.height = '100%';
-        svg.style.pointerEvents = 'none';
-        svg.style.zIndex = '5';
-
-        // SVG 그라디언트 정의
-        svg.innerHTML = `
-            <defs>
-                <linearGradient id="coupleBeamGrad" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#ff0055" />
-                    <stop offset="50%" stop-color="#ffd700" />
-                    <stop offset="100%" stop-color="#ff007f" />
-                </linearGradient>
-                <filter id="coupleGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="6" result="blur" />
-                    <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
-            </defs>
-        `;
-
-        // 외부 글로우 광선
-        const glowLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        glowLine.setAttribute('x1', p1.x);
-        glowLine.setAttribute('y1', p1.y);
-        glowLine.setAttribute('x2', p2.x);
-        glowLine.setAttribute('y2', p2.y);
-        glowLine.setAttribute('stroke', '#ff007f');
-        glowLine.setAttribute('stroke-width', '16');
-        glowLine.setAttribute('stroke-opacity', '0.45');
-        glowLine.setAttribute('filter', 'url(#coupleGlow)');
-        svg.appendChild(glowLine);
-
-        // 내부 네온 빔 코어 (점선 애니메이션 스트림)
-        const coreLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        coreLine.setAttribute('x1', p1.x);
-        coreLine.setAttribute('y1', p1.y);
-        coreLine.setAttribute('x2', p2.x);
-        coreLine.setAttribute('y2', p2.y);
-        coreLine.setAttribute('stroke', 'url(#coupleBeamGrad)');
-        coreLine.setAttribute('stroke-width', '6');
-        coreLine.setAttribute('stroke-linecap', 'round');
-        coreLine.setAttribute('stroke-dasharray', '12 8');
-        coreLine.style.animation = 'beam-dash-flow 1s linear infinite';
-        svg.appendChild(coreLine);
-
-        area.appendChild(svg);
-
-        // 노드 매칭 스타일 — CSS 는 .bridge-player-node.marked 로 돼 있는데 여기선
-        // 'heart-matched' 를 붙이고 있어 뽑힌 두 하트가 색이 안 바뀌었습니다.
-        p1.el.classList.add('marked');
-        p2.el.classList.add('marked');
-
-        // 2. 💖 정중앙 커플 하트 엠블럼 생성
-        const midX = (p1.x + p2.x) / 2;
-        const midY = (p1.y + p2.y) / 2;
-
-        const emblem = document.createElement('div');
-        emblem.className = 'couple-center-emblem';
-        emblem.style.left = midX + 'px';
-        emblem.style.top = midY + 'px';
-        emblem.innerHTML = `
-            <div class="couple-emblem-ring"></div>
-            <div class="couple-emblem-core">
-                <span class="couple-emblem-icon">👩‍❤️‍💋‍👨</span>
-            </div>
-            <div class="couple-emblem-badge">💘 MATCH 100% 💘</div>
-        `;
-        area.appendChild(emblem);
-
-        // 하트 폭죽 파티클 & 사운드/햅틱 — 파티클 좌표는 화면(viewport) 기준이라
-        // 영역(area) 기준 x/y 에 영역 오프셋을 더해 줍니다(예전엔 왼쪽 위로 치우쳐 터졌음).
-        const areaRect = area.getBoundingClientRect();
-        const vx = (x) => areaRect.left + x;
-        const vy = (y) => areaRect.top + y;
-        soundFX.playHeartbeat();
-        this.bridgeMatchTimers.push(setTimeout(() => {
-            soundFX.playTada();
-            fxEngine.heartBurst(vx(midX), vy(midY), 40);
-            fxEngine.sparks(vx(midX), vy(midY), 30, '#ffd700');
-            fxEngine.sparks(vx(p1.x), vy(p1.y), 20, '#ff0055');
-            fxEngine.sparks(vx(p2.x), vy(p2.y), 20, '#ff007f');
-        }, 180));
-
-        haptics.buildUp();
-
-        this.setBridgeMessage('💖 커플 탄생! 정중앙 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check the center mission!</span>');
-
-        this.bridgeMatchTimers.push(setTimeout(() => {
-            this.showLoveMission();
-        }, 1600));
-    },
-
-    showLoveMission() {
-        const mission = LOVE_MISSIONS[Math.floor(Math.random() * LOVE_MISSIONS.length)];
-        const text = document.getElementById('love-mission-text');
-        const modal = document.getElementById('love-mission-modal');
-        if (text) text.innerText = mission;
-        if (modal) modal.classList.add('show');
-        haptics.heartbeat();
-    },
-
-    closeLoveMission() {
-        const modal = document.getElementById('love-mission-modal');
-        if (modal) modal.classList.remove('show');
-        soundFX.playTick();
-        if (this.currentScreen === 'finger') {
-            const area = document.getElementById('finger-area');
-            if (area) area.innerHTML = '';
-            this.fingerTouches = {};
-            this.fingerIsActive = false;
-            this.clearFingerTimers();
-            this.setFingerMessage(this.fingerIdleMessage());
-        } else {
-            this.initBridge();
-        }
-    },
-
-    /* ============================================================
-       7. CARD FLIP LOGIC
-       ============================================================ */
-    setupCards() {
-        const grid = document.getElementById('cards-grid');
-        if (!grid) return;
-        grid.innerHTML = '';
-        
-        let cols = 3;
-        if (this.playerCount <= 4) cols = 2;
-        else if (this.playerCount >= 15) cols = 5;
-        else if (this.playerCount >= 10) cols = 4;
-        grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-        
-        for(let i=0; i<this.playerCount; i++) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            
-            const inner = document.createElement('div');
-            inner.className = 'card-inner';
-            
-            const front = document.createElement('div');
-            front.className = 'card-front';
-            front.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span style="font-size:1.4rem;">🃏</span><span style="font-size:0.75rem;opacity:0.8;">#${i+1}</span></div>`;
-            
-            const back = document.createElement('div');
-            back.className = 'card-back';
-            
-            inner.appendChild(front);
-            inner.appendChild(back);
-            card.appendChild(inner);
-            
-            card.onclick = () => this.flipCard(card, i);
-            grid.appendChild(card);
-        }
-        this.assignCardDeck();
-        this.updateCardsCounter();
-    },
-
-    // 상단 'n / N 뒤집음' 배지 — 몇 장 남았는지 한눈에 보이게.
-    updateCardsCounter() {
-        const el = document.getElementById('cards-counter');
-        if (!el) return;
-        const flipped = document.querySelectorAll('#cards-grid .card.flipped').length;
-        el.innerText = `${flipped} / ${this.playerCount} 뒤집음 · Flipped`;
-    },
-
-    // 설정 화면에 적어 둔 커스텀 카드 벌칙(쉼표 구분) — 있으면 일반 등급 카드의 풀을 대신합니다.
-    customCardPool() {
-        if (!this.customCardText) return null;
-        const pool = this.customCardText.split(',').map(s => s.trim()).filter(s => s)
-            .map(title => ({ title, desc: '커스텀 벌칙 / Custom penalty' }));
-        return pool.length ? pool : null;
-    },
-
-    assignCardDeck() {
-        this.cardDeck = [];
-        const normalPool = this.customCardPool() || CARD_TIERS_DATA.normal;
-        for (let i = 0; i < this.playerCount; i++) {
-            const rand = Math.random();
-            let cardData;
-            let tierClass = 'card-normal';
-
-            const isHotDeck = this.cardDeckMode === 'hot';
-            if (isHotDeck && rand < 0.65) {
-                cardData = CARD_TIERS_DATA.hotJoker[Math.floor(Math.random() * CARD_TIERS_DATA.hotJoker.length)];
-                tierClass = 'card-rare-hot';
-            } else if (rand < 0.2) {
-                cardData = CARD_TIERS_DATA.goldRare[Math.floor(Math.random() * CARD_TIERS_DATA.goldRare.length)];
-                tierClass = 'card-rare-gold';
-            } else if (rand < 0.35) {
-                cardData = CARD_TIERS_DATA.goldBomb[Math.floor(Math.random() * CARD_TIERS_DATA.goldBomb.length)];
-                tierClass = 'card-rare-bomb';
-            } else {
-                cardData = normalPool[Math.floor(Math.random() * normalPool.length)];
-                tierClass = 'card-normal';
-            }
-            this.cardDeck.push({ ...cardData, tierClass });
-        }
-
-        const cards = document.querySelectorAll('.card');
-        cards.forEach((card, index) => {
-            const back = card.querySelector('.card-back');
-            const data = this.cardDeck[index];
-            if (back && data) {
-                back.innerHTML = `<div style="font-weight:900;font-size:0.95rem;margin-bottom:4px;">${data.title}</div><div style="font-size:0.75rem;opacity:0.85;">${data.desc}</div>`;
-                card.setAttribute('data-tier', data.tierClass);
-                if (card.dataset) card.dataset.tier = data.tierClass;
-            }
-        });
-    },
-
-    flipCard(cardElement, idx) {
-        if (!cardElement.classList.contains('flipped')) {
-            soundFX.playFlip();
-            const tier = cardElement.getAttribute('data-tier') || (cardElement.dataset && cardElement.dataset.tier) || 'card-normal';
-            cardElement.classList.add('flipped', tier);
-            this.updateCardsCounter();
-
-            const rect = cardElement.getBoundingClientRect();
-            if (tier === 'card-rare-gold') {
-                soundFX.playTada();
-                haptics.buildUp();
-                fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ffd700');
-            } else if (tier === 'card-rare-hot') {
-                soundFX.playTada();
-                haptics.heartbeat();
-                fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ff007f');
-            } else if (tier === 'card-rare-bomb') {
-                soundFX.playBigBoom();
-                haptics.loser();
-                fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 35, '#ffaa00');
-            } else {
-                haptics.tick();
-                fxEngine.sparks(rect.left + rect.width / 2, rect.top + rect.height / 2, 12, '#00f3ff');
-            }
-        }
-    },
-
-    resetCards() {
-        const cards = document.querySelectorAll('.card');
-        if (!cards || cards.length === 0) {
-            this.setupCards();
-            return;
-        }
-        cards.forEach(card => {
-            card.classList.remove('flipped', 'card-rare-gold', 'card-rare-hot', 'card-rare-bomb', 'card-normal');
-        });
-        this.updateCardsCounter();
-        soundFX.playFlip();
-        haptics.tick();
-        fxEngine.sparks(window.innerWidth / 2, window.innerHeight / 2, 25, '#a200ff');
-        clearTimeout(this.cardResetTimer);
-        this.cardResetTimer = setTimeout(() => {
-            this.assignCardDeck();
-        }, 400);
-    },
-
-    /* ============================================================
-       SETTINGS — 예전엔 '저장' 이 확인 메시지만 띄우고 실제로는 아무것도
-       저장하지 않았습니다(텍스트영역을 읽지도 않음). 두 목록을 localStorage 에
-       남기고, 룰렛 입력칸 기본값·일반 카드 풀에 바로 반영합니다.
+       3. SETTINGS
        ============================================================ */
     saveSettings() {
         const sr = document.getElementById('setting-roulette');
-        const sc = document.getElementById('setting-cards');
         this.customRouletteText = sr ? sr.value.trim() : '';
-        this.customCardText = sc ? sc.value.trim() : '';
         this.storeSet('neonDrinks_customRoulette', this.customRouletteText);
-        this.storeSet('neonDrinks_customCards', this.customCardText);
 
         const ri = document.getElementById('roulette-input-text');
         if (ri) ri.value = this.customRouletteText;
-        this.setupCards();
 
         soundFX.playTada();
         haptics.buildUp();

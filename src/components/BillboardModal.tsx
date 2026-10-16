@@ -4,11 +4,58 @@ import { Phrase, Country } from '../types';
 import { playPhrase, stopAllPlayback, unlockAudioPlayback } from '../utils/speech';
 import { track } from '../utils/analytics';
 import { copyText } from '../utils/clipboard';
-import { Volume2, X, ShieldAlert, Bus, Sun, Moon, Copy, Check } from 'lucide-react';
+import { CURRENCIES, currencyForCountry, toKRW, formatNumber } from '../utils/currency';
+import { soundEffects } from '../utils/soundEffects';
+import {
+  Volume2,
+  X,
+  ShieldAlert,
+  Bus,
+  Sun,
+  Moon,
+  Copy,
+  Check,
+  Calculator,
+  MessageSquare,
+} from 'lucide-react';
 
 interface WakeLockSentinel {
   release: () => Promise<void>;
 }
+
+interface QuickReplyOption {
+  id: string;
+  emoji: string;
+  ko: string;
+  local: Record<string, string>;
+}
+
+const QUICK_REPLIES: QuickReplyOption[] = [
+  {
+    id: 'ok',
+    emoji: '⭕',
+    ko: '네, 가능해요 (OK)',
+    local: { ph: 'Oo, pwede po', vn: 'Được ạ (OK)', en: 'Yes, OK!' },
+  },
+  {
+    id: 'no',
+    emoji: '❌',
+    ko: '안 돼요 / 품절이에요',
+    local: { ph: 'Hindi pwede / Wala po', vn: 'Không được / Hết rồi', en: 'No / Sold out' },
+  },
+  {
+    id: 'wait',
+    emoji: '⏳',
+    ko: '잠시만 기다려 주세요',
+    local: { ph: 'Sandali lang po', vn: 'Đợi một chút nhé', en: 'Wait a moment' },
+  },
+  {
+    id: 'discount',
+    emoji: '👌',
+    ko: '깎아드릴게요 (할인 OK)',
+    local: { ph: 'Sige, bawas presyo', vn: 'OK, giảm giá nhé', en: 'OK, discount!' },
+  },
+];
 
 interface BillboardModalProps {
   phrase: Phrase;
@@ -25,6 +72,9 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
   const [sunlightMode, setSunlightMode] = useState(false);
   const [copied, setCopied] = useState(false);
   const copyTimerRef = useRef<number | null>(null);
+  const [showReplyPad, setShowReplyPad] = useState(false);
+  const [selectedReply, setSelectedReply] = useState<QuickReplyOption | null>(null);
+  const [priceInput, setPriceInput] = useState<string>('0');
 
   // 🔴 강한 욕설은 자동 재생하지 않습니다. 전광판은 열자마자 소리가 나기 때문에
   // 공공장소에서 사고가 날 수 있습니다. 화면으로만 보여줍니다.
@@ -119,13 +169,16 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
       panelClassName={`w-full h-full ${panelBg} flex flex-col justify-between p-4 sm:p-6 overflow-y-auto select-none animate-in fade-in duration-200 transition-colors`}
     >
       {/* Top Header */}
-      <header className="flex justify-between items-center w-full z-50 shrink-0 mb-2">
-        <div className="flex items-center gap-2">
-          <ShieldAlert className={`w-6 h-6 shrink-0 ${sunlightMode ? 'text-slate-950' : 'text-brand'}`} />
-          <span className={`font-black text-base sm:text-lg tracking-tight font-['Montserrat'] ${sunlightMode ? 'text-slate-950' : 'text-white'}`}>
+      <header
+        className="flex justify-between items-center w-full z-50 shrink-0 mb-2 gap-2"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <ShieldAlert className={`w-5 h-5 sm:w-6 sm:h-6 shrink-0 ${sunlightMode ? 'text-slate-950' : 'text-brand'}`} />
+          <span className={`font-black text-sm sm:text-lg tracking-tight font-['Montserrat'] whitespace-nowrap truncate ${sunlightMode ? 'text-slate-950' : 'text-white'}`}>
             GIJO Tour{' '}
             <span
-              className={`text-xs font-bold px-2 py-0.5 border rounded ${
+              className={`text-[11px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 border rounded hidden min-[370px]:inline-block ${
                 sunlightMode
                   ? 'bg-black text-white border-black'
                   : 'text-blue-400 bg-blue-950/60 border-blue-800'
@@ -139,14 +192,14 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
           </span>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* 야외 햇빛 고대비 모드 토글 */}
           <button
             type="button"
             onClick={() => setSunlightMode(!sunlightMode)}
             aria-label={sunlightMode ? '어두운 모드로 전환' : '야외 햇빛 고대비 모드로 전환'}
             title={sunlightMode ? '다크 모드' : '야외 햇빛 고대비 모드'}
-            className={`w-11 h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
+            className={`w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
               sunlightMode
                 ? 'bg-black text-amber-300 border-black'
                 : 'bg-white/10 hover:bg-white/20 text-amber-300 border-white/20'
@@ -161,7 +214,7 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
             onClick={handleCopy}
             aria-label="문장 복사"
             title={copied ? '복사 완료!' : '문장 복사'}
-            className={`w-11 h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
+            className={`w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
               sunlightMode
                 ? 'bg-black/10 hover:bg-black/20 text-slate-950 border-black/20'
                 : 'bg-white/10 hover:bg-white/20 text-white border-white/10'
@@ -174,13 +227,13 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
           <button
             onClick={onClose}
             aria-label="닫기"
-            className={`w-11 h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
+            className={`w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-full active:scale-95 transition-all border ${
               sunlightMode
                 ? 'bg-black text-white hover:bg-slate-800 border-black'
                 : 'bg-white/10 hover:bg-white/20 text-white border-white/10'
             }`}
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
       </header>
@@ -188,12 +241,12 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
       {/* Main Content Area — 터치 시 소리 재실행 */}
       <main
         onClick={handleReplay}
-        className="flex-grow flex flex-col items-center justify-center relative my-auto text-center px-2 py-4 cursor-pointer"
+        className="flex-grow flex flex-col items-center justify-center relative my-auto text-center px-2 py-2 sm:py-4 cursor-pointer"
       >
         {/* Visual Pulse Animation Container */}
         {!sunlightMode && (
           <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
-            <div className="relative w-64 h-64 md:w-96 md:h-96 flex items-center justify-center">
+            <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-96 md:h-96 flex items-center justify-center">
               <div className="absolute w-full h-full rounded-full border-4 border-brand-vivid/30 animate-ping"></div>
               <div className="absolute w-3/4 h-3/4 rounded-full border-2 border-emerald-400/20 animate-pulse"></div>
             </div>
@@ -202,7 +255,7 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
 
         {/* Local Instruction Badge */}
         <p
-          className={`text-xs font-black uppercase tracking-[0.25em] px-4 py-1.5 rounded-full border mb-4 ${
+          className={`text-[11px] sm:text-xs font-black uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full border mb-3 ${
             sunlightMode
               ? 'bg-black text-white border-black'
               : 'text-[#8ef3f3] bg-[#112240] border-slate-700/80'
@@ -213,7 +266,7 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
 
         {/* Huge Native Phrase Text */}
         <h1
-          className={`text-4xl sm:text-6xl md:text-8xl font-black tracking-tight leading-tight my-2 font-['Montserrat'] max-w-full break-words ${
+          className={`text-3xl min-[380px]:text-4xl sm:text-6xl md:text-8xl font-black tracking-tight leading-tight my-1.5 sm:my-2 font-['Montserrat'] max-w-full break-words ${
             sunlightMode
               ? 'text-slate-950 drop-shadow-none'
               : 'text-white drop-shadow-[0_0_35px_rgba(255,107,74,0.6)]'
@@ -263,6 +316,150 @@ export const BillboardModal: React.FC<BillboardModalProps> = ({
             {phrase.usageTip || '화면을 터치하면 다시 큰 소리로 읽어줍니다. 운전기사나 현지인에게 보여주세요.'}
           </p>
         </div>
+      </div>
+
+      {/* 🤝 전광판 2.0: 양방향 소통 & 현지인 가격 입력 패드 */}
+      <div className="w-full max-w-lg mx-auto my-1.5 shrink-0">
+        <button
+          type="button"
+          onClick={() => {
+            soundEffects.playTap();
+            setShowReplyPad((v) => !v);
+          }}
+          className={`w-full py-2.5 px-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 border transition-all active:scale-98 ${
+            sunlightMode
+              ? 'bg-black/90 text-amber-300 border-black'
+              : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-400/40'
+          }`}
+        >
+          <MessageSquare className="w-4 h-4" />
+          <span>
+            {showReplyPad
+              ? '🤝 상대방 응답 · 가격 입력 패드 닫기 ▲'
+              : '🤝 상대방(현지인) 응답 버튼 · 가격 입력 패드 열기 ▼'}
+          </span>
+        </button>
+
+        {showReplyPad && (() => {
+          const currCode = currencyForCountry(country.id);
+          const currMeta = CURRENCIES[currCode];
+          const numPrice = Number(priceInput) || 0;
+          const krwPrice = toKRW(numPrice, currCode);
+          const langKey = country.id === 'vn' ? 'vn' : country.id === 'ph' ? 'ph' : 'en';
+
+          return (
+            <div
+              className={`mt-2 p-3.5 rounded-2xl border space-y-3 text-left ${
+                sunlightMode
+                  ? 'bg-white text-slate-950 border-black'
+                  : 'bg-slate-900/95 text-white border-white/15'
+              }`}
+            >
+              {/* 선택된 응답 배너 */}
+              {selectedReply && (
+                <div className="p-2.5 rounded-xl bg-emerald-600 text-white font-black text-sm flex items-center justify-between">
+                  <span>
+                    {selectedReply.emoji} 현지인 응답: {selectedReply.ko} (
+                    {selectedReply.local[langKey]})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedReply(null)}
+                    className="text-xs underline ml-2"
+                  >
+                    지우기
+                  </button>
+                </div>
+              )}
+
+              {/* 1) 현지인이 누르는 원터치 의사소통 칩 */}
+              <div>
+                <p className="text-[11px] font-bold opacity-75 mb-1.5">
+                  💬 현지인이 손가락으로 눌러 대답할 수 있습니다 (Touch to Reply):
+                </p>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {QUICK_REPLIES.map((r) => {
+                    const active = selectedReply?.id === r.id;
+                    return (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => {
+                          soundEffects.playSuccess();
+                          setSelectedReply(r);
+                        }}
+                        className={`p-2 rounded-xl border text-left transition-all active:scale-95 ${
+                          active
+                            ? 'bg-emerald-600 text-white border-emerald-400'
+                            : sunlightMode
+                            ? 'bg-slate-100 text-slate-900 border-slate-300'
+                            : 'bg-white/10 text-white border-white/15 hover:bg-white/15'
+                        }`}
+                      >
+                        <div className="text-xs font-black">
+                          {r.emoji} {r.local[langKey]}
+                        </div>
+                        <div className="text-[11px] font-bold opacity-80">{r.ko}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 2) 현지인 가격 직접 입력 패드 (즉시 원화 환산) */}
+              <div className="pt-2 border-t border-white/10">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[11px] font-bold opacity-80 flex items-center gap-1">
+                    <Calculator className="w-3.5 h-3.5" />
+                    <span>현지인 가격 입력 (Enter Price · {currCode})</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPriceInput('0')}
+                    className="text-[11px] font-black text-rose-400 underline"
+                  >
+                    초기화(C)
+                  </button>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-black/50 border border-white/15 flex items-baseline justify-between gap-2 mb-2">
+                  <div className="text-lg sm:text-xl font-black text-amber-300">
+                    {currMeta.symbol} {formatNumber(numPrice)} {currCode}
+                  </div>
+                  <div className="text-base sm:text-lg font-black text-emerald-400">
+                    ≈ {formatNumber(krwPrice)}원
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-6 gap-1">
+                  {['1', '2', '3', '4', '5', '0', '6', '7', '8', '9', '00', '000'].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() => {
+                        soundEffects.playTap();
+                        setPriceInput((prev) => {
+                          const base = prev === '0' ? '' : prev;
+                          const next = base + d;
+                          return next.length > 9 ? prev : next || '0';
+                        });
+                      }}
+                      className={`py-2 rounded-lg text-xs font-black border active:scale-95 ${
+                        d === '000'
+                          ? 'bg-amber-500 text-slate-950 border-amber-400'
+                          : sunlightMode
+                          ? 'bg-slate-200 text-slate-950 border-slate-400'
+                          : 'bg-white/10 text-white border-white/15 hover:bg-white/20'
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Primary Action: Replay Loud Audio */}

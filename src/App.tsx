@@ -27,6 +27,7 @@ import { PartyGameModal } from './components/PartyGameModal';
 import { ArcadeModal } from './components/ArcadeModal';
 import { GameHubModal } from './components/GameHubModal';
 import { EntryGuideModal } from './components/EntryGuideModal';
+import { TravelCalculatorModal } from './components/TravelCalculatorModal';
 import { Top10Essentials } from './components/Top10Essentials';
 import { AdBanner } from './components/AdBanner';
 import { hasItineraryLink } from './utils/itineraryLink';
@@ -105,6 +106,7 @@ export default function App() {
   const [showArcade, setShowArcade] = useState<boolean>(false);
   const [showGameHub, setShowGameHub] = useState<boolean>(false);
   const [showEntryGuide, setShowEntryGuide] = useState<boolean>(false);
+  const [showCalculator, setShowCalculator] = useState<boolean>(false);
 
   // 언어 변경 안내 토스트
   const [languageNotice, setLanguageNotice] = useState<string | null>(null);
@@ -322,6 +324,7 @@ export default function App() {
         onOpenPartyGame={() => setShowPartyGame(true)}
         onOpenArcade={() => setShowArcade(true)}
         onOpenEntryGuide={() => setShowEntryGuide(true)}
+        onOpenCalculator={() => setShowCalculator(true)}
       />
 
       {/* 언어 변경 가이드 플로팅 알림 */}
@@ -348,6 +351,7 @@ export default function App() {
             unitDone={vocabUnitDone}
             onUnitDone={handleUnitDone}
             onOpenBillboard={setBillboardPhrase}
+            isOffline={isOffline}
           />
         )}
 
@@ -760,6 +764,13 @@ export default function App() {
           onClose={() => setShowEntryGuide(false)}
         />
       )}
+
+      {/* MODAL 4.5: 동남아 실전 1초 환율 & 팁·더치페이 계산기 */}
+      <TravelCalculatorModal
+        isOpen={showCalculator}
+        country={selectedCountry}
+        onClose={() => setShowCalculator(false)}
+      />
 
       {/* 사진 번역 */}
       {showPhotoModal && (

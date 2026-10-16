@@ -227,6 +227,14 @@ class SoundEffectsEngine {
     osc.start(startTime);
     osc.stop(startTime + 0.08);
   }
+
+  public playTap(): void {
+    this.playFlip();
+  }
+
+  public playSuccess(): void {
+    this.playCorrect();
+  }
 }
 
 export const soundEffects = new SoundEffectsEngine();

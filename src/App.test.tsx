@@ -207,13 +207,34 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     expect(document.body.style.overflow).toBe('');
   });
 
-  it('전광판이 dialog 로 열리고 ESC 로 닫힌다', async () => {
+  it('전광판이 dialog 로 열리고 양방향 응답 패드를 지원하며 ESC 로 닫힌다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
     await gotoTranslate(user);
     await user.click(screen.getAllByRole('button', { name: '3초 긴급 현장 전광판 확대' })[0]);
-    expect(screen.getByRole('dialog', { name: /긴급 전광판/ })).toBeInTheDocument();
+    const dialog = screen.getByRole('dialog', { name: /긴급 전광판/ });
+    expect(dialog).toBeInTheDocument();
+
+    // 전광판 2.0: 상대방 응답 및 가격 입력 패드 열기
+    await user.click(within(dialog).getByRole('button', { name: /상대방\(현지인\) 응답 버튼/ }));
+    expect(within(dialog).getByText(/현지인 가격 입력/)).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('헤더에서 1초 환율 및 팁·더치페이 계산기 모달이 열린다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    await user.click(screen.getByRole('button', { name: '1초 환율 및 팁·더치페이 계산기' }));
+    const dialog = screen.getByRole('dialog', { name: '1초 환율 및 팁·더치페이 계산기' });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText(/한국 돈 환산/)).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole('button', { name: /골프 · 마사지 팁 기준/ }));
+    expect(within(dialog).getByText(/18홀 캐디 팁/)).toBeInTheDocument();
 
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

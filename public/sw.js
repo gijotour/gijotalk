@@ -1,7 +1,7 @@
 // GIJO Tour Service Worker — 오프라인 우선 캐싱
 //
 // 릴리스할 때마다 VERSION 을 올리면 이전 캐시가 자동 정리됩니다.
-const VERSION = 'v47';
+const VERSION = 'v48';
 const SHELL_CACHE = `gijo-shell-${VERSION}`;
 const ASSET_CACHE = `gijo-assets-${VERSION}`;
 const FONT_CACHE = `gijo-fonts-${VERSION}`;
@@ -15,7 +15,7 @@ const BASE = new URL('./', self.location.href).pathname; // '/' 또는 '/<저장
 const at = (path) => BASE + path;
 
 // 빌드 산출물(assets/*.js)은 파일명에 해시가 붙어 이름을 미리 알 수 없으므로
-// 여기서는 셸만 프리캐시하고, 해시 자산은 최초 방문 시 런타임에 캐시합니다.
+// 여기서는 셸과 독립 정적 게임 페이지를 프리캐시하고, 해시 자산은 최초 방문 시 런타임에 캐시합니다.
 const SHELL_ASSETS = [
   at(''),
   at('index.html'),
@@ -23,6 +23,8 @@ const SHELL_ASSETS = [
   at('icon-180.png'),
   at('icon-192.png'),
   at('icon-512.png'),
+  at('game/gijo-drink.html'),
+  at('game/gijo-arcade.html'),
 ];
 
 const isFontRequest = (url) =>

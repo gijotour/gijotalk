@@ -33,20 +33,20 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
       onClose={onClose}
       label="GIJO 게임 및 놀거리 라운지"
       variant="center"
-      panelClassName="bg-slate-900 border-2 border-purple-500/40 rounded-3xl p-5 sm:p-6 w-full max-w-lg shadow-2xl text-white relative animate-in zoom-in-95 duration-150 overflow-hidden"
+      panelClassName="bg-slate-900 border-2 border-purple-500/40 rounded-3xl p-4 sm:p-6 w-full max-w-lg max-h-[90dvh] overflow-y-auto shadow-2xl text-white relative animate-in zoom-in-95 duration-150"
     >
       {/* 배경 장식 글로우 */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-amber-600/20 rounded-full blur-3xl pointer-events-none" />
 
       {/* 헤더 */}
-      <div className="flex items-start justify-between gap-3 mb-5 relative z-10">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/30">
+      <div className="flex items-start justify-between gap-3 mb-4 sm:mb-5 relative z-10">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="p-2.5 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/30 shrink-0">
             <Gamepad2 className="w-6 h-6 text-white" />
           </div>
-          <div>
-            <h2 className="text-lg sm:text-xl font-black tracking-tight text-white flex items-center gap-2">
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-xl font-black tracking-tight text-white flex flex-wrap items-center gap-2">
               <span>GIJO 게임 라운지</span>
               <span className="text-[10px] px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-black text-white uppercase tracking-wider">
                 HUB
@@ -60,23 +60,23 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
         <button
           onClick={onClose}
           aria-label="닫기"
-          className="p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+          className="p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors shrink-0"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* 게임 목록 카드들 */}
-      <div className="space-y-4 relative z-10">
+      <div className="space-y-3.5 sm:space-y-4 relative z-10">
         {/* 1. GIJO Drink 카드 */}
-        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-purple-950/40 border border-purple-500/30 rounded-2xl p-4 transition-all hover:border-purple-400/60 shadow-lg">
-          <div className="flex items-center justify-between mb-2.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-pink-500/20 text-pink-400 rounded-xl">
+        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-purple-950/40 border border-purple-500/30 rounded-2xl p-3.5 sm:p-4 transition-all hover:border-purple-400/60 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="p-1.5 bg-pink-500/20 text-pink-400 rounded-xl shrink-0">
                 <PartyPopper className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+              <div className="min-w-0">
+                <h3 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-1.5">
                   <span>GIJO Drink</span>
                   <span className="text-[10px] font-bold px-2 py-0.5 bg-pink-500/20 text-pink-300 border border-pink-500/30 rounded-full flex items-center gap-1">
                     <Flame className="w-2.5 h-2.5 fill-pink-400 text-pink-400" />
@@ -94,11 +94,11 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
           <div className="grid grid-cols-2 gap-2 mb-3 text-[11px] text-slate-400">
             <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
               <Dices className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-              <span>미션 룰렛 &amp; 직접 수정</span>
+              <span className="truncate">미션 룰렛 &amp; 직접 수정</span>
             </div>
             <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-              <span>19+ 러브 &amp; 터치 룰렛</span>
+              <span className="truncate">19+ 러브 &amp; 터치 룰렛</span>
             </div>
           </div>
 
@@ -115,14 +115,14 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
         </div>
 
         {/* 2. GIJO Arcade 카드 */}
-        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-amber-950/40 border border-amber-500/30 rounded-2xl p-4 transition-all hover:border-amber-400/60 shadow-lg">
-          <div className="flex items-center justify-between mb-2.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 bg-amber-500/20 text-amber-400 rounded-xl">
+        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-amber-950/40 border border-amber-500/30 rounded-2xl p-3.5 sm:p-4 transition-all hover:border-amber-400/60 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="p-1.5 bg-amber-500/20 text-amber-400 rounded-xl shrink-0">
                 <Trophy className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+              <div className="min-w-0">
+                <h3 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-1.5">
                   <span>GIJO Arcade</span>
                   <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full flex items-center gap-1">
                     <Plane className="w-2.5 h-2.5 text-amber-400" />

@@ -40,6 +40,7 @@ import {
 } from '../utils/itinerarySheet';
 import { GuideEditorModal } from './GuideEditorModal';
 import { Modal } from './Modal';
+import { copyText } from '../utils/clipboard';
 import {
   CalendarDays,
   X,
@@ -65,6 +66,9 @@ import {
   Camera,
   Coffee,
   Sparkles,
+  MapPin,
+  Copy,
+  Check,
 } from 'lucide-react';
 
 interface ItineraryTabProps {
@@ -145,6 +149,8 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
   const [pasteText, setPasteText] = useState('');
   // 장소 후보가 둘 이상일 때 어디로 갈지 고르는 중인 항목
   const [choosingPlace, setChoosingPlace] = useState<ItineraryItem | null>(null);
+  // 그랩(Grab)/택시 앱 붙여넣기용 장소 복사 피드백 키
+  const [copiedPlaceKey, setCopiedPlaceKey] = useState<string | null>(null);
   // 이미 일정표가 있는 상태에서 "새 일정표로 바꾸기" 를 눌렀을 때
   const [showReplace, setShowReplace] = useState(false);
   const [syncing, setSyncing] = useState(false);
@@ -368,6 +374,23 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
     const options = splitPlaceOptions(item.place ?? '');
     if (options.length > 1) setChoosingPlace(item);
     else onOpenBillboard(placePhrase(item, options[0]));
+  };
+
+  /** 그랩(Grab) · 택시 호출 앱에 바로 붙여넣을 수 있도록 장소명을 클립보드에 복사합니다. */
+  const handleCopyPlace = async (place: string, key: string) => {
+    const target = splitPlaceOptions(place)[0] || place;
+    const ok = await copyText(target);
+    if (ok) {
+      setCopiedPlaceKey(key);
+      setTimeout(() => {
+        setCopiedPlaceKey((prev) => (prev === key ? null : prev));
+      }, 2000);
+    }
+  };
+
+  const googleMapsUrl = (place: string) => {
+    const target = splitPlaceOptions(place)[0] || place;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(target)}`;
   };
 
   // accept 를 걸지 않습니다.
@@ -791,9 +814,7 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                       )}
 
                       {/* 현장 동작 — 여기가 이 앱 안에 일정표가 있어야 하는 이유입니다.
-                          회화를 먼저, 보여주기를 그 옆에 둡니다. "기사에게 보여주기" 는
-                          이름이 길어 줄을 혼자 다 먹었고, 그 탓에 회화 버튼이 다음 줄로
-                          밀리는 카드가 많았습니다. */}
+                          회화를 먼저, 보여주기를 그 옆에 두고, 그랩(Grab) 복사와 구글지도 바로가기를 함께 제공합니다. */}
                       {(item.place || category) && (
                         <div className="flex flex-wrap gap-2 mt-3">
                           {category && (
@@ -806,13 +827,47 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
                             </button>
                           )}
                           {item.place && (
-                            <button
-                              onClick={() => handleShowPlace(item)}
-                              className="inline-flex items-center gap-1.5 px-3 py-2 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
-                            >
-                              <Maximize2 className="w-3.5 h-3.5" />
-                              보여주기
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleShowPlace(item)}
+                                className="inline-flex items-center gap-1.5 px-3 py-2 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
+                              >
+                                <Maximize2 className="w-3.5 h-3.5" />
+                                보여주기
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleCopyPlace(item.place!, `item-${i}`)}
+                                aria-label={`${item.place} 주소 복사 (Grab·택시용)`}
+                                className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl active:scale-95 transition-all border ${
+                                  copiedPlaceKey === `item-${i}`
+                                    ? 'bg-emerald-600 text-white border-emerald-600'
+                                    : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                                }`}
+                              >
+                                {copiedPlaceKey === `item-${i}` ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5" />
+                                    복사됨 ✓
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3.5 h-3.5" />
+                                    Grab 복사
+                                  </>
+                                )}
+                              </button>
+                              <a
+                                href={googleMapsUrl(item.place)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${item.place} 구글 지도 열기`}
+                                className="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-bold rounded-xl active:scale-95 transition-all"
+                              >
+                                <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                                지도
+                              </a>
+                            </>
                           )}
                         </div>
                       )}
@@ -968,21 +1023,51 @@ export const ItineraryTab: React.FC<ItineraryTabProps> = ({
             <div>
               <h3 className="font-black text-sm">어디로 가시나요?</h3>
               <p className="text-xs text-ink-mute font-medium mt-0.5">
-                일정표에 후보가 여러 곳 적혀 있습니다. 고른 곳만 크게 띄웁니다.
+                일정표에 후보가 여러 곳 적혀 있습니다. 고른 곳을 크게 띄우거나 그랩·지도로 여세요.
               </p>
             </div>
 
-            {splitPlaceOptions(choosingPlace.place ?? '').map((option) => (
-              <button
+            {splitPlaceOptions(choosingPlace.place ?? '').map((option, optIdx) => (
+              <div
                 key={option}
-                onClick={() => {
-                  onOpenBillboard(placePhrase(choosingPlace, option));
-                  setChoosingPlace(null);
-                }}
-                className="w-full text-left px-4 py-3 bg-canvas border-2 border-slate-200 rounded-2xl text-sm font-bold text-ink hover:border-brand active:scale-95 transition-all"
+                className="p-3 bg-canvas border-2 border-slate-200 rounded-2xl space-y-2"
               >
-                📍 {option}
-              </button>
+                <button
+                  onClick={() => {
+                    onOpenBillboard(placePhrase(choosingPlace, option));
+                    setChoosingPlace(null);
+                  }}
+                  className="w-full text-left text-sm font-bold text-ink hover:text-brand transition-colors"
+                >
+                  📍 {option}
+                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => {
+                      onOpenBillboard(placePhrase(choosingPlace, option));
+                      setChoosingPlace(null);
+                    }}
+                    className="flex-1 py-1.5 bg-ink text-white text-xs font-bold rounded-xl active:scale-95 transition-all"
+                  >
+                    전광판 보기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyPlace(option, `opt-${optIdx}`)}
+                    className="px-2.5 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-xl active:scale-95 transition-all"
+                  >
+                    {copiedPlaceKey === `opt-${optIdx}` ? '복사됨 ✓' : 'Grab 복사'}
+                  </button>
+                  <a
+                    href={googleMapsUrl(option)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 text-xs font-bold rounded-xl active:scale-95 transition-all"
+                  >
+                    지도
+                  </a>
+                </div>
+              </div>
             ))}
 
             <button

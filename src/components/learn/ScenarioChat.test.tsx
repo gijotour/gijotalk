@@ -3,7 +3,7 @@ import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import { PASSCODE_HASH, UNLOCK_STORAGE_KEY } from '../../utils/appLock';
-import { scenariosFor } from '../../data/scenarios';
+import { SCENARIOS, scenarioLineAsPhrase, scenariosFor } from '../../data/scenarios';
 
 const renderApp = async () => {
   localStorage.setItem(UNLOCK_STORAGE_KEY, PASSCODE_HASH);
@@ -13,18 +13,20 @@ const renderApp = async () => {
 };
 
 describe('만남 대화 시나리오', () => {
-  it('배우기 안 만남 대화 탭에서 상대방 말을 듣고 대답을 고르며 3턴 대화를 완료할 수 있다', async () => {
+  it('앱을 열면 만남 대화가 메인으로 열리고 필리핀어(타갈로그) 최소 단어로 3턴 대화를 완료한다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
-    await user.click(screen.getByRole('tab', { name: '만남 대화' }));
+    // 만남 대화가 기본 메인 화면입니다.
+    expect(screen.getByRole('tab', { name: '만남 대화' })).toHaveAttribute('aria-selected', 'true');
 
     const list = scenariosFor('ph');
-    expect(list.length).toBeGreaterThanOrEqual(5);
+    expect(list).toHaveLength(5);
     const cafe = list[0];
 
     await user.click(screen.getByRole('button', { name: `${cafe.title} 대화 시작` }));
     expect(screen.getByText(`[${cafe.turns[0].partner.pronunciation}]`)).toBeInTheDocument();
+    expect(screen.getByText(cafe.turns[0].partner.text)).toBeInTheDocument();
 
     for (let i = 0; i < cafe.turns.length; i++) {
       const choice = cafe.turns[i].choices[0];
@@ -42,7 +44,6 @@ describe('만남 대화 시나리오', () => {
     const user = userEvent.setup();
     await renderApp();
 
-    await user.click(screen.getByRole('tab', { name: '만남 대화' }));
     const cafe = scenariosFor('ph')[0];
     await user.click(screen.getByRole('button', { name: `${cafe.title} 대화 시작` }));
 
@@ -53,8 +54,22 @@ describe('만남 대화 시나리오', () => {
     expect(screen.getByRole('dialog', { name: /긴급 전광판/ })).toBeInTheDocument();
   });
 
-  it('영어 트랙(en)과 베트남어(vn)에서도 시나리오 5종을 불러온다', () => {
-    expect(scenariosFor('en').length).toBeGreaterThanOrEqual(5);
-    expect(scenariosFor('vn').length).toBeGreaterThanOrEqual(5);
+  it('필리핀어(ph)·영어(en)·베트남어(vn) 모든 대사가 4단어 이하 최소 단어이고 각 언어 음성 코드로 매핑된다', () => {
+    for (const countryId of ['ph', 'en', 'vn'] as const) {
+      const list = scenariosFor(countryId);
+      expect(list).toHaveLength(5);
+      for (const sc of list) {
+        expect(sc.turns).toHaveLength(3);
+        for (const turn of sc.turns) {
+          expect(turn.partner.text.trim().split(/\s+/).length).toBeLessThanOrEqual(4);
+          expect(scenarioLineAsPhrase(turn.partner, countryId).countryId).toBe(countryId);
+          for (const ch of turn.choices) {
+            expect(ch.text.trim().split(/\s+/).length).toBeLessThanOrEqual(4);
+            expect(ch.partnerReply.text.trim().split(/\s+/).length).toBeLessThanOrEqual(4);
+          }
+        }
+      }
+    }
+    expect(SCENARIOS).toHaveLength(15);
   });
 });

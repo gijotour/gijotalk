@@ -29,18 +29,22 @@ const renderApp = async () => {
 const HOTEL = VOCAB_UNITS.find((u) => u.id === 'hotel')!;
 
 const openHotelUnit = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(screen.getByRole('tab', { name: '단원 학습' }));
   await user.click(screen.getByRole('button', { name: `${HOTEL.title} 단원 열기` }));
 };
 
 describe('배우기 탭', () => {
-  it('앱을 열면 배우기가 먼저 나오고 단원 10개가 보인다', async () => {
+  it('앱을 열면 만남 대화가 먼저 나오고 단원 학습을 누르면 단원 10개가 보인다', async () => {
+    const user = userEvent.setup();
     await renderApp();
 
+    expect(screen.getByRole('tab', { name: '만남 대화' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.queryByLabelText('회화 검색')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('tab', { name: '단원 학습' }));
     const units = screen.getAllByRole('button', { name: /단원 열기$/ });
     expect(units).toHaveLength(VOCAB_UNITS.length);
     expect(units).toHaveLength(10);
-    // 단원 목록이 먼저라면 회화 검색창은 아직 없어야 합니다.
-    expect(screen.queryByLabelText('회화 검색')).not.toBeInTheDocument();
   });
 
   it('단원을 열면 단어 카드가 한 장 나온다', async () => {

@@ -45,7 +45,7 @@ export const LearnTab: React.FC<LearnTabProps> = ({
   onChangeSubTab,
 }) => {
   const [openUnitId, setOpenUnitId] = useState<VocabUnitId | null>(null);
-  const [internalSubTab, setInternalSubTab] = useState<LearnSubTab>('units');
+  const [internalSubTab, setInternalSubTab] = useState<LearnSubTab>('scenarios');
   const subTab = controlledSubTab ?? internalSubTab;
   const setSubTab = onChangeSubTab ?? setInternalSubTab;
 
@@ -78,25 +78,12 @@ export const LearnTab: React.FC<LearnTabProps> = ({
 
   return (
     <div className="space-y-3.5 animate-in fade-in duration-150">
-      {/* 심플 세그먼트 전환: 단원 학습 / 만남 대화 / 내 단어장 */}
+      {/* 심플 세그먼트 전환: 만남 대화 / 단원 학습 / 내 단어장 */}
       <div
         role="tablist"
         aria-label="학습 메뉴 전환"
         className="grid grid-cols-3 bg-slate-100 p-1 rounded-2xl border border-slate-200/70"
       >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={subTab === 'units'}
-          onClick={() => setSubTab('units')}
-          className={`py-2 rounded-xl text-xs font-bold transition-all ${
-            subTab === 'units'
-              ? 'bg-white text-ink shadow-xs'
-              : 'text-ink-soft hover:text-ink'
-          }`}
-        >
-          단원 학습
-        </button>
         <button
           type="button"
           role="tab"
@@ -109,6 +96,19 @@ export const LearnTab: React.FC<LearnTabProps> = ({
           }`}
         >
           만남 대화
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={subTab === 'units'}
+          onClick={() => setSubTab('units')}
+          className={`py-2 rounded-xl text-xs font-bold transition-all ${
+            subTab === 'units'
+              ? 'bg-white text-ink shadow-xs'
+              : 'text-ink-soft hover:text-ink'
+          }`}
+        >
+          단원 학습
         </button>
         <button
           type="button"

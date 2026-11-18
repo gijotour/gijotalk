@@ -71,7 +71,7 @@ export default function App() {
         // Ignored
       }
     }
-    return 'units';
+    return 'scenarios';
   });
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     if (typeof window !== 'undefined') {

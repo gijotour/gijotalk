@@ -197,9 +197,9 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
             <MessageCircle className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-sm font-black text-slate-900">새로운 사람 만나 대화하기</h2>
+            <h2 className="text-sm font-black text-slate-900">만남 대화 · 최소 단어로 말하기</h2>
             <p className="text-xs font-medium text-ink-mute mt-0.5">
-              상대방 말을 듣고 내 대답을 고르면 대화가 이어집니다
+              짧은 1~3단어 대답만 골라도 현지인과 자연스럽게 이어집니다
             </p>
           </div>
         </div>

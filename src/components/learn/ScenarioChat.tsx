@@ -354,9 +354,9 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
         })}
       </ul>
 
-      {/* 내가 대답 고르기 */}
+      {/* 내가 대답 고르기 (2x2 최소 단어 카드) */}
       {currentTurn && !waitingReply && (
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 space-y-2">
           <div className="flex items-center justify-between px-0.5">
             <span className="text-xs font-black text-slate-900">
               내가 대답해 보기 ({turnIndex + 1} / {activeScenario.turns.length})
@@ -364,38 +364,44 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
             <span className="text-[11px] font-medium text-ink-mute">누르면 바로 말해요</span>
           </div>
 
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-2">
             {currentTurn.choices.map((choice) => {
               const previewId = `${currentTurn.id}-${choice.id}`;
               return (
                 <div
                   key={choice.id}
-                  className="bg-white border border-slate-200 hover:border-brand rounded-xl p-3 flex items-center gap-2.5 transition-colors"
+                  className="bg-white border border-slate-200 hover:border-brand rounded-xl p-2.5 flex flex-col justify-between gap-1.5 transition-colors"
                 >
-                  <button
-                    type="button"
-                    onClick={() => handlePickChoice(choice)}
-                    className="flex-1 min-w-0 text-left active:scale-[0.99]"
-                  >
-                    <p className="text-sm font-black text-slate-900">[{choice.pronunciation}]</p>
-                    <p className="text-xs font-bold text-brand mt-0.5">{choice.meaning}</p>
-                    <p className="text-[11px] text-ink-mute mt-0.5 truncate">{choice.text}</p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      speakLine({
-                        id: previewId,
-                        text: choice.text,
-                        pronunciation: choice.pronunciation,
-                        meaning: choice.meaning,
-                      })
-                    }
-                    aria-label={`${choice.meaning} 미리 듣기`}
-                    className="w-10 h-10 shrink-0 rounded-xl bg-slate-100 hover:bg-slate-200 text-ink flex items-center justify-center active:scale-95"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-start justify-between gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handlePickChoice(choice)}
+                      className="flex-1 min-w-0 text-left active:scale-[0.98]"
+                    >
+                      <p className="text-[13px] font-black text-slate-900 leading-tight">
+                        [{choice.pronunciation}]
+                      </p>
+                      <p className="text-[11px] font-bold text-brand mt-1 leading-snug">
+                        {choice.meaning}
+                      </p>
+                      <p className="text-[10px] text-ink-mute mt-0.5 truncate">{choice.text}</p>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        speakLine({
+                          id: previewId,
+                          text: choice.text,
+                          pronunciation: choice.pronunciation,
+                          meaning: choice.meaning,
+                        })
+                      }
+                      aria-label={`${choice.meaning} 미리 듣기`}
+                      className="w-7 h-7 shrink-0 rounded-lg bg-slate-100 hover:bg-slate-200 text-ink flex items-center justify-center active:scale-95"
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -409,7 +415,7 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
           <div>
             <p className="text-base font-black text-slate-900">대화를 마쳤어요 🎉</p>
             <p className="text-xs font-medium text-ink-mute mt-0.5">
-              {activeScenario.partnerName}님과 자연스럽게 3턴 대화를 나눴습니다.
+              {activeScenario.partnerName}님과 자연스럽게 {activeScenario.turns.length}턴 대화를 나눴습니다.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-2">

@@ -13,7 +13,7 @@ const renderApp = async () => {
 };
 
 describe('만남 대화 시나리오', () => {
-  it('앱을 열면 만남 대화가 메인으로 열리고 필리핀어(타갈로그) 최소 단어로 3턴 대화를 완료한다', async () => {
+  it('앱을 열면 만남 대화가 메인으로 열리고 필리핀어(타갈로그) 최소 단어로 4턴 대화를 완료한다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
@@ -54,13 +54,14 @@ describe('만남 대화 시나리오', () => {
     expect(screen.getByRole('dialog', { name: /긴급 전광판/ })).toBeInTheDocument();
   });
 
-  it('필리핀어(ph)·영어(en)·베트남어(vn) 모든 대사가 4단어 이하 최소 단어이고 각 언어 음성 코드로 매핑된다', () => {
+  it('필리핀어(ph)·영어(en)·베트남어(vn) 모든 대사가 4턴×4개 선택지, 4단어 이하 최소 단어이고 각 언어 음성 코드로 매핑된다', () => {
     for (const countryId of ['ph', 'en', 'vn'] as const) {
       const list = scenariosFor(countryId);
       expect(list).toHaveLength(5);
       for (const sc of list) {
-        expect(sc.turns).toHaveLength(3);
+        expect(sc.turns).toHaveLength(4);
         for (const turn of sc.turns) {
+          expect(turn.choices.length).toBeGreaterThanOrEqual(4);
           expect(turn.partner.text.trim().split(/\s+/).length).toBeLessThanOrEqual(4);
           expect(scenarioLineAsPhrase(turn.partner, countryId).countryId).toBe(countryId);
           for (const ch of turn.choices) {

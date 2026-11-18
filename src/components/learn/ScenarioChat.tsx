@@ -4,7 +4,10 @@ import {
   ChevronLeft,
   Maximize2,
   MessageCircle,
+  Mic,
+  RefreshCw,
   RotateCcw,
+  Star,
   Volume2,
 } from 'lucide-react';
 import type { Country, Phrase } from '../../types';
@@ -15,6 +18,7 @@ import {
   type Scenario,
   type ScenarioChoice,
   type ScenarioLine,
+  type SwapChip,
 } from '../../data/scenarios';
 import { playPhrase, stopAllPlayback, unlockAudioPlayback } from '../../utils/speech';
 
@@ -49,16 +53,28 @@ interface ChatMessage {
   tip?: string;
 }
 
+interface ActiveSwap {
+  choice: ScenarioChoice;
+  chip: SwapChip;
+  chipId: string;
+}
+
 interface ScenarioChatProps {
   country: Country;
   speed: number;
   onOpenBillboard: (phrase: Phrase) => void;
+  onOpenPractice?: (phrase: Phrase) => void;
+  savedIds?: string[];
+  onToggleSave?: (id: string) => void;
 }
 
 export const ScenarioChat: React.FC<ScenarioChatProps> = ({
   country,
   speed,
   onOpenBillboard,
+  onOpenPractice,
+  savedIds = [],
+  onToggleSave,
 }) => {
   const list = scenariosFor(country.id);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -68,9 +84,12 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
   const [waitingReply, setWaitingReply] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [slowMode, setSlowMode] = useState(false);
+  const [activeSwap, setActiveSwap] = useState<ActiveSwap | null>(null);
 
   const timerRef = useRef<number | null>(null);
   const aliveRef = useRef(true);
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     aliveRef.current = true;
@@ -89,17 +108,25 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
     setMessages([]);
     setTurnIndex(0);
     setWaitingReply(false);
+    setActiveSwap(null);
   }, [country.id]);
+
+  // 새 말풍선이 추가되거나 대화가 끝나면 자연스럽게 아래로 스크롤 (jsdom 에서는 생략)
+  useEffect(() => {
+    if (!activeId) return;
+    chatEndRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'end' });
+  }, [activeId, messages.length, waitingReply]);
 
   const speakLine = (line: ScenarioLine) => {
     unlockAudioPlayback();
     setPlayingId(line.id);
     const phrase = scenarioLineAsPhrase(line, country.id);
     const voiceCountry = COUNTRIES.find((c) => c.id === phrase.countryId) ?? country;
+    const effectiveRate = speed * (slowMode ? 0.8 : 1);
     playPhrase({
       phrase,
       country: voiceCountry,
-      rate: speed,
+      rate: effectiveRate,
       onEnd: () => {
         if (aliveRef.current) setPlayingId(null);
       },
@@ -116,6 +143,7 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
     setActiveId(scenario.id);
     setTurnIndex(0);
     setWaitingReply(false);
+    setActiveSwap(null);
     setMessages(
       firstTurn
         ? [{ uid: `${scenario.id}-0-p`, speaker: 'partner', line: firstTurn.partner }]
@@ -131,25 +159,27 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
     stopAllPlayback();
     setActiveId(null);
     setWaitingReply(false);
+    setActiveSwap(null);
   };
 
   const activeScenario = list.find((s) => s.id === activeId) ?? null;
 
-  const handlePickChoice = (choice: ScenarioChoice) => {
+  const handlePickChoice = (choice: ScenarioChoice, swapOverride?: { line: ScenarioLine }) => {
     if (!activeScenario || waitingReply) return;
     const currentTurn = activeScenario.turns[turnIndex];
     if (!currentTurn) return;
 
-    const myLine: ScenarioLine = {
-      id: `${currentTurn.id}-${choice.id}`,
+    const myLine: ScenarioLine = swapOverride?.line ?? {
+      id: `${activeScenario.id}-${currentTurn.id}-${choice.id}`,
       text: choice.text,
       pronunciation: choice.pronunciation,
       meaning: choice.meaning,
     };
 
+    setActiveSwap(null);
     setMessages((prev) => [
       ...prev,
-      { uid: `me-${turnIndex}-${choice.id}`, speaker: 'me', line: myLine, tip: choice.tip },
+      { uid: `me-${turnIndex}-${myLine.id}`, speaker: 'me', line: myLine, tip: choice.tip },
     ]);
     setWaitingReply(true);
     speakLine(myLine);
@@ -254,11 +284,20 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
 
   const currentTurn = activeScenario.turns[turnIndex];
   const isFinished = turnIndex >= activeScenario.turns.length && !waitingReply;
+  const turnSwaps = currentTurn
+    ? currentTurn.choices.flatMap((choice) =>
+        (choice.swapChips ?? []).map((chip, idx) => ({
+          choice,
+          chip,
+          chipId: `${activeScenario.id}-${currentTurn.id}-${choice.id}-s${idx}`,
+        }))
+      )
+    : [];
 
   return (
     <section className="space-y-3" aria-label={`${activeScenario.title} 대화방`}>
       {/* 대화방 상단 바 */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-3 flex items-center gap-2.5">
+      <div className="bg-white border border-slate-200 rounded-2xl p-3 flex items-center gap-2">
         <button
           type="button"
           onClick={handleBack}
@@ -278,6 +317,19 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
         </div>
         <button
           type="button"
+          onClick={() => setSlowMode((v) => !v)}
+          aria-pressed={slowMode}
+          aria-label="0.8배 천천히 듣기 전환"
+          className={`h-10 px-2.5 shrink-0 rounded-xl border text-xs font-black transition-colors active:scale-95 ${
+            slowMode
+              ? 'bg-brand text-white border-brand'
+              : 'border-slate-200 text-ink-soft hover:bg-slate-50'
+          }`}
+        >
+          0.8x
+        </button>
+        <button
+          type="button"
           onClick={() => startScenario(activeScenario)}
           aria-label="대화 처음부터 다시하기"
           className="w-10 h-10 shrink-0 flex items-center justify-center rounded-xl border border-slate-200 text-ink-soft hover:bg-slate-50 active:scale-95"
@@ -291,6 +343,9 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
         {messages.map((msg) => {
           const isMe = msg.speaker === 'me';
           const isPlaying = playingId === msg.line.id;
+          const isSaved = savedIds.includes(msg.line.id);
+          const phraseForAction = scenarioLineAsPhrase(msg.line, country.id);
+
           return (
             <li
               key={msg.uid}
@@ -313,18 +368,16 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
                   {msg.line.meaning}
                 </p>
 
-                <div className="pt-1 flex items-center gap-1.5">
+                <div className="pt-1 flex flex-wrap items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => speakLine(msg.line)}
                     aria-label={`${msg.line.meaning} 발음 듣기`}
                     className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-1 active:scale-95 transition-colors ${
-                      isMe
-                        ? isPlaying
-                          ? 'bg-brand text-white'
-                          : 'bg-white/15 text-white hover:bg-white/25'
-                        : isPlaying
-                          ? 'bg-brand text-white'
+                      isPlaying
+                        ? 'bg-brand text-white'
+                        : isMe
+                          ? 'bg-white/15 text-white hover:bg-white/25'
                           : 'bg-slate-100 text-ink hover:bg-slate-200'
                     }`}
                   >
@@ -332,15 +385,46 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
                     <span>{isPlaying ? '재생 중' : '듣기'}</span>
                   </button>
 
+                  {isMe && onOpenPractice && (
+                    <button
+                      type="button"
+                      onClick={() => onOpenPractice(phraseForAction)}
+                      aria-label={`${msg.line.meaning} 발음 따라 말하기`}
+                      className="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-[11px] font-bold flex items-center gap-1 active:scale-95"
+                    >
+                      <Mic className="w-3.5 h-3.5" />
+                      <span>말하기</span>
+                    </button>
+                  )}
+
                   {isMe && (
                     <button
                       type="button"
-                      onClick={() => onOpenBillboard(scenarioLineAsPhrase(msg.line, country.id))}
+                      onClick={() => onOpenBillboard(phraseForAction)}
                       aria-label={`${msg.line.meaning} 크게 보여주기`}
                       className="px-2.5 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-[11px] font-bold flex items-center gap-1 active:scale-95"
                     >
                       <Maximize2 className="w-3.5 h-3.5" />
                       <span>전광판</span>
+                    </button>
+                  )}
+
+                  {onToggleSave && (
+                    <button
+                      type="button"
+                      onClick={() => onToggleSave(msg.line.id)}
+                      aria-pressed={isSaved}
+                      aria-label={isSaved ? `${msg.line.meaning} 단어장 저장 취소` : `${msg.line.meaning} 단어장에 저장`}
+                      className={`px-2 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-1 active:scale-95 transition-colors ${
+                        isSaved
+                          ? 'bg-amber-400 text-slate-900'
+                          : isMe
+                            ? 'bg-white/15 text-white hover:bg-white/25'
+                            : 'bg-slate-100 text-ink-soft hover:bg-slate-200'
+                      }`}
+                    >
+                      <Star className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />
+                      <span>{isSaved ? '저장됨' : '저장'}</span>
                     </button>
                   )}
                 </div>
@@ -356,7 +440,7 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
 
       {/* 내가 대답 고르기 (2x2 최소 단어 카드) */}
       {currentTurn && !waitingReply && (
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 space-y-2">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 space-y-2.5">
           <div className="flex items-center justify-between px-0.5">
             <span className="text-xs font-black text-slate-900">
               내가 대답해 보기 ({turnIndex + 1} / {activeScenario.turns.length})
@@ -366,7 +450,7 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
 
           <div className="grid grid-cols-2 gap-2">
             {currentTurn.choices.map((choice) => {
-              const previewId = `${currentTurn.id}-${choice.id}`;
+              const previewId = `${activeScenario.id}-${currentTurn.id}-${choice.id}`;
               return (
                 <div
                   key={choice.id}
@@ -406,6 +490,67 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
               );
             })}
           </div>
+
+          {/* 1단어 바꿔 끼우기 (턴에 변형 칩이 있는 경우) */}
+          {turnSwaps.length > 0 && (
+            <div className="pt-2 border-t border-slate-200/80 space-y-2">
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-[11px] font-black text-slate-700 flex items-center gap-1">
+                  <RefreshCw className="w-3 h-3 text-brand" />
+                  1단어 바꿔 말하기
+                </span>
+                <span className="text-[10px] font-medium text-ink-mute">눌러서 바로 듣기</span>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                {turnSwaps.map(({ choice, chip, chipId }) => {
+                  const selected = activeSwap?.chipId === chipId;
+                  return (
+                    <button
+                      key={chipId}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => {
+                        setActiveSwap({ choice, chip, chipId });
+                        speakLine({ id: chipId, ...chip });
+                      }}
+                      className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-colors active:scale-95 ${
+                        selected
+                          ? 'bg-brand text-white border-brand'
+                          : 'bg-white text-ink border-slate-200 hover:border-brand/60'
+                      }`}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeSwap && (
+                <div className="bg-white border border-brand/40 rounded-xl p-2.5 flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-black text-slate-900 truncate">
+                      [{activeSwap.chip.pronunciation}]
+                    </p>
+                    <p className="text-[11px] font-bold text-brand truncate">
+                      {activeSwap.chip.meaning} · {activeSwap.chip.text}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handlePickChoice(activeSwap.choice, {
+                        line: { id: activeSwap.chipId, ...activeSwap.chip },
+                      })
+                    }
+                    className="shrink-0 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-[11px] font-black active:scale-95"
+                  >
+                    이걸로 답하기
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -436,6 +581,8 @@ export const ScenarioChat: React.FC<ScenarioChatProps> = ({
           </div>
         </div>
       )}
+
+      <div ref={chatEndRef} />
     </section>
   );
 };

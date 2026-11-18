@@ -21,6 +21,7 @@ interface LearnTabProps {
   unitDone: string[];
   onUnitDone: (stamp: string) => void;
   onOpenBillboard: (phrase: Phrase) => void;
+  onOpenPractice?: (phrase: Phrase) => void;
   isOffline?: boolean;
   subTab?: LearnSubTab;
   onChangeSubTab?: (tab: LearnSubTab) => void;
@@ -40,6 +41,7 @@ export const LearnTab: React.FC<LearnTabProps> = ({
   unitDone,
   onUnitDone,
   onOpenBillboard,
+  onOpenPractice,
   isOffline = false,
   subTab: controlledSubTab,
   onChangeSubTab,
@@ -141,11 +143,17 @@ export const LearnTab: React.FC<LearnTabProps> = ({
           />
         </>
       ) : subTab === 'scenarios' ? (
-        <ScenarioChat
-          country={country}
-          speed={speed}
-          onOpenBillboard={onOpenBillboard}
-        />
+        <>
+          <OfflineAudioCard country={country} isOffline={isOffline} compact />
+          <ScenarioChat
+            country={country}
+            speed={speed}
+            savedIds={savedIds}
+            onToggleSave={onToggleSave}
+            onOpenPractice={onOpenPractice}
+            onOpenBillboard={onOpenBillboard}
+          />
+        </>
       ) : (
         <VocabBookshelf
           country={country}

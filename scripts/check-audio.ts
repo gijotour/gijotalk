@@ -11,6 +11,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { PHRASES, COUNTRIES } from '../src/config';
 import { AUDIO_FILES } from '../src/data/audioManifest';
+import { scenarioAudioEntries } from '../src/data/scenarios';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const AUDIO_DIR = path.join(ROOT, 'public', 'audio');
@@ -64,7 +65,10 @@ for (const phrase of PHRASES) {
 }
 
 // 반대 방향 — 문장은 지웠는데 오디오만 남은 경우
-const validIds = new Set(PHRASES.map((p) => p.id));
+const validIds = new Set([
+  ...PHRASES.map((p) => p.id),
+  ...scenarioAudioEntries().map((s) => s.id),
+]);
 for (const id of Object.keys(AUDIO_FILES)) {
   if (!validIds.has(id)) {
     problems.push(`${id}: 문장은 없는데 오디오만 남아 있습니다.`);

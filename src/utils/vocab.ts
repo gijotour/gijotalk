@@ -27,6 +27,7 @@ import {
   VOCAB_EXPRESSIONS,
   VOCAB_DIALOGS,
 } from '../data/vocab';
+import { scenarioVocabItemById } from '../data/scenarios';
 
 /* ------------------------------------------------------------------ */
 /* 저장 키 (docs/VOCAB_PLAN.md §5)                                      */
@@ -265,7 +266,7 @@ export function vocabItemById(id: string): VocabItem | undefined {
     const line = dialogLineItems(dialog).find((l) => l.id === id);
     if (line) return line;
   }
-  return undefined;
+  return scenarioVocabItemById(id);
 }
 
 export const vocabUnitById = (unitId: string) => VOCAB_UNITS.find((u) => u.id === unitId);

@@ -1,10 +1,22 @@
-import type { CountryId, Phrase } from '../types';
+import type { CountryId, Phrase, VocabExpression, VocabUnitId } from '../types';
+import { PHRASES } from '../config';
+import { AUDIO_FILES } from './audioManifest';
+
+export interface SwapChip {
+  /** 버튼에 표시할 짧은 한국어 힌트 (예: "물", "3명") */
+  label: string;
+  text: string;
+  pronunciation: string;
+  meaning: string;
+}
 
 export interface ScenarioLine {
   id: string;
   text: string;
   pronunciation: string;
   meaning: string;
+  /** 사전 녹음된 PHRASES 문장과 동일한 경우 오디오 재사용 id */
+  phraseId?: string;
 }
 
 export interface ScenarioChoice {
@@ -15,6 +27,8 @@ export interface ScenarioChoice {
   /** 내가 고른 답에 대한 상대방의 자연스러운 반응 */
   partnerReply: ScenarioLine;
   tip?: string;
+  /** 핵심 단어 하나만 바꿔 바로 말해볼 수 있는 미니 변형 칩 */
+  swapChips?: SwapChip[];
 }
 
 export interface ScenarioTurn {
@@ -161,6 +175,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Isa pa po!',
             pronunciation: '이사 파 포!',
             meaning: '하나 더 마실래요!',
+            swapChips: [
+              { label: '아이스커피', text: 'Iced coffee po.', pronunciation: '아이스드 커피 포.', meaning: '아이스 커피 주세요.' },
+              { label: '물 한 잔', text: 'Isang tubig po.', pronunciation: '이상 투빅 포.', meaning: '물 한 잔 주세요.' },
+              { label: '메뉴판', text: 'Menu po.', pronunciation: '메뉴 포.', meaning: '메뉴판 주세요.' },
+            ],
             partnerReply: {
               id: 'sc-ph-cafe-r2d',
               text: 'Wow, coffee lover!',
@@ -341,6 +360,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Hotel po.',
             pronunciation: '호텔 포.',
             meaning: '호텔로 가주세요.',
+            swapChips: [
+              { label: '해변', text: 'Sa beach po.', pronunciation: '사 비치 포.', meaning: '해변으로 가주세요.' },
+              { label: '쇼핑몰', text: 'Sa mall po.', pronunciation: '사 몰 포.', meaning: '쇼핑몰로 가주세요.' },
+              { label: '식당', text: 'Restaurant po.', pronunciation: '레스토랑 포.', meaning: '식당으로 가주세요.' },
+            ],
             partnerReply: {
               id: 'sc-ph-taxi-r1c',
               text: 'Okay, alisto!',
@@ -569,6 +593,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Dalawa po.',
             pronunciation: '달라와 포.',
             meaning: '두 명이요.',
+            swapChips: [
+              { label: '1명', text: 'Isa po.', pronunciation: '이사 포.', meaning: '한 명이요.' },
+              { label: '3명', text: 'Tatlo po.', pronunciation: '탓로 포.', meaning: '세 명이요.' },
+              { label: '5명', text: 'Lima po.', pronunciation: '리마 포.', meaning: '다섯 명이요.' },
+            ],
             partnerReply: {
               id: 'sc-ph-rest-r1a',
               text: 'Pasok po!',
@@ -714,6 +743,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Yelo po.',
             pronunciation: '예로 포.',
             meaning: '얼음 좀 더 주세요.',
+            swapChips: [
+              { label: '물', text: 'Tubig po.', pronunciation: '투빅 포.', meaning: '물 주세요.' },
+              { label: '커피', text: 'Kape po.', pronunciation: '카페 포.', meaning: '커피 주세요.' },
+              { label: '맥주', text: 'Serbesa po.', pronunciation: '세르베사 포.', meaning: '맥주 주세요.' },
+            ],
             partnerReply: {
               id: 'sc-ph-rest-r3c',
               text: 'Sige, ice!',
@@ -894,6 +928,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Dalawa, magkano?',
             pronunciation: '달라와, 막카노?',
             meaning: '두 개 얼마예요?',
+            swapChips: [
+              { label: '1개', text: 'Isa, magkano?', pronunciation: '이사, 막카노?', meaning: '한 개 얼마예요?' },
+              { label: '3개', text: 'Tatlo, magkano?', pronunciation: '탓로, 막카노?', meaning: '세 개 얼마예요?' },
+              { label: '전부', text: 'Lahat, magkano?', pronunciation: '라핫, 막카노?', meaning: '전부 얼마예요?' },
+            ],
             partnerReply: {
               id: 'sc-ph-mkt-r2b',
               text: 'Four fifty po.',
@@ -1070,6 +1109,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Balikat po.',
             pronunciation: '발리캇 포.',
             meaning: '어깨요.',
+            swapChips: [
+              { label: '목', text: 'Leeg po.', pronunciation: '레엑 포.', meaning: '목이 아파요.' },
+              { label: '다리', text: 'Binti po.', pronunciation: '빈티 포.', meaning: '다리가 뭉쳤어요.' },
+              { label: '손·팔', text: 'Kamay po.', pronunciation: '카마이 포.', meaning: '손과 팔이요.' },
+            ],
             partnerReply: {
               id: 'sc-ph-spa-r1a',
               text: 'Sige po.',
@@ -1417,6 +1461,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'One more!',
             pronunciation: '원 모어!',
             meaning: '한 잔 더 마실래요!',
+            swapChips: [
+              { label: '아이스', text: 'Iced coffee, please.', pronunciation: '아이스드 커피, 플리즈.', meaning: '아이스 커피 주세요.' },
+              { label: '핫', text: 'Hot coffee, please.', pronunciation: '핫 커피, 플리즈.', meaning: '따뜻한 커피 주세요.' },
+              { label: '물 한 잔', text: 'Water, please.', pronunciation: '워터, 플리즈.', meaning: '물 한 잔 주세요.' },
+            ],
             partnerReply: {
               id: 'sc-en-cafe-r2d',
               text: 'Haha, coffee lover!',
@@ -1593,6 +1642,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'This hotel, please.',
             pronunciation: '디스 호텔, 플리즈.',
             meaning: '이 호텔로 가주세요.',
+            swapChips: [
+              { label: '해변', text: 'To beach, please.', pronunciation: '투 비치, 플리즈.', meaning: '해변으로 가주세요.' },
+              { label: '쇼핑몰', text: 'To mall, please.', pronunciation: '투 몰, 플리즈.', meaning: '쇼핑몰로 가주세요.' },
+              { label: '시내', text: 'Downtown, please.', pronunciation: '다운타운, 플리즈.', meaning: '시내로 가주세요.' },
+            ],
             partnerReply: {
               id: 'sc-en-taxi-r1c',
               text: 'Sure, let us go!',
@@ -1816,6 +1870,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Two, please.',
             pronunciation: '투, 플리즈.',
             meaning: '두 명이요.',
+            swapChips: [
+              { label: '1명', text: 'One, please.', pronunciation: '원, 플리즈.', meaning: '한 명이요.' },
+              { label: '3명', text: 'Three, please.', pronunciation: '쓰리, 플리즈.', meaning: '세 명이요.' },
+              { label: '5명', text: 'Five, please.', pronunciation: '파이브, 플리즈.', meaning: '다섯 명이요.' },
+            ],
             partnerReply: {
               id: 'sc-en-rest-r1a',
               text: 'This way!',
@@ -1958,6 +2017,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'More ice, please.',
             pronunciation: '모어 아이스, 플리즈.',
             meaning: '얼음 좀 더 주세요.',
+            swapChips: [
+              { label: '물', text: 'Water, please.', pronunciation: '워터, 플리즈.', meaning: '물 주세요.' },
+              { label: '커피', text: 'Coffee, please.', pronunciation: '커피, 플리즈.', meaning: '커피 주세요.' },
+              { label: '맥주', text: 'One beer, please.', pronunciation: '원 비어, 플리즈.', meaning: '맥주 한 잔 주세요.' },
+            ],
             partnerReply: {
               id: 'sc-en-rest-r3c',
               text: 'More ice ready!',
@@ -2134,6 +2198,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Two, how much?',
             pronunciation: '투, 하우 머치?',
             meaning: '두 개 얼마예요?',
+            swapChips: [
+              { label: '1개', text: 'One, how much?', pronunciation: '원, 하우 머치?', meaning: '한 개 얼마예요?' },
+              { label: '3개', text: 'Three, how much?', pronunciation: '쓰리, 하우 머치?', meaning: '세 개 얼마예요?' },
+              { label: '전부', text: 'All, how much?', pronunciation: '올, 하우 머치?', meaning: '전부 얼마예요?' },
+            ],
             partnerReply: {
               id: 'sc-en-mkt-r2b',
               text: 'Four fifty!',
@@ -2310,6 +2379,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Shoulders, please.',
             pronunciation: '숄더즈, 플리즈.',
             meaning: '어깨 해주세요.',
+            swapChips: [
+              { label: '목', text: 'Neck, please.', pronunciation: '넥, 플리즈.', meaning: '목 좀 해주세요.' },
+              { label: '허리', text: 'Lower back, please.', pronunciation: '로어 백, 플리즈.', meaning: '허리 좀 해주세요.' },
+              { label: '종아리', text: 'Calves, please.', pronunciation: '카브즈, 플리즈.', meaning: '종아리 해주세요.' },
+            ],
             partnerReply: {
               id: 'sc-en-spa-r1a',
               text: 'Got it.',
@@ -2656,6 +2730,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Thêm một ly!',
             pronunciation: '템 못 리!',
             meaning: '한 잔 더요!',
+            swapChips: [
+              { label: '연유커피', text: 'Cà phê sữa!', pronunciation: '까페 쓰어!', meaning: '연유 커피 주세요!' },
+              { label: '찬 물', text: 'Cho nước mát!', pronunciation: '쪼 느억 맛!', meaning: '시원한 물 주세요!' },
+              { label: '덜 달게', text: 'Ít ngọt nhé!', pronunciation: '잇 응옷 녜!', meaning: '덜 달게 해주세요!' },
+            ],
             partnerReply: {
               id: 'sc-vn-cafe-r2d',
               text: 'Mê cà phê rồi!',
@@ -2833,6 +2912,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Về khách sạn.',
             pronunciation: '베 칵 산.',
             meaning: '호텔로 가주세요.',
+            swapChips: [
+              { label: '해변', text: 'Ra biển nhé.', pronunciation: '자 비엔 녜.', meaning: '해변으로 가주세요.' },
+              { label: '쇼핑몰', text: 'Đi siêu thị.', pronunciation: '디 시에우 티.', meaning: '쇼핑몰로 가주세요.' },
+              { label: '시내', text: 'Vào trung tâm.', pronunciation: '바오 쭝 떰.', meaning: '시내로 가주세요.' },
+            ],
             partnerReply: {
               id: 'sc-vn-taxi-r1c',
               text: 'Ok khách sạn!',
@@ -3057,6 +3141,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Hai người.',
             pronunciation: '하이 응어이.',
             meaning: '두 명이요.',
+            swapChips: [
+              { label: '1명', text: 'Một người ạ.', pronunciation: '못 응어이 아.', meaning: '혼자예요.' },
+              { label: '3명', text: 'Ba người ạ.', pronunciation: '바 응어이 아.', meaning: '세 명이요.' },
+              { label: '5명', text: 'Năm người ạ.', pronunciation: '남 응어이 아.', meaning: '다섯 명이요.' },
+            ],
             partnerReply: {
               id: 'sc-vn-rest-r1a',
               text: 'Mời ngồi đây!',
@@ -3201,6 +3290,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Thêm đá nhé!',
             pronunciation: '템 다 녜!',
             meaning: '얼음 좀 더 주세요!',
+            swapChips: [
+              { label: '물', text: 'Cho nước nhé!', pronunciation: '쪼 느억 녜!', meaning: '물 주세요!' },
+              { label: '커피', text: 'Cho cà phê!', pronunciation: '쪼 까페!', meaning: '커피 주세요!' },
+              { label: '맥주', text: 'Thêm bia nhé!', pronunciation: '템 비아 녜!', meaning: '맥주 더 주세요!' },
+            ],
             partnerReply: {
               id: 'sc-vn-rest-r3c',
               text: 'Đá đây ạ!',
@@ -3378,6 +3472,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Hai cái bao nhiêu?',
             pronunciation: '하이 까이 바오 니에우?',
             meaning: '두 개 얼마예요?',
+            swapChips: [
+              { label: '1개', text: 'Một cái bao nhiêu?', pronunciation: '못 까이 바오 니에우?', meaning: '한 개 얼마예요?' },
+              { label: '3개', text: 'Ba cái bao nhiêu?', pronunciation: '바 까이 바오 니에우?', meaning: '세 개 얼마예요?' },
+              { label: '전부', text: 'Hết bao nhiêu?', pronunciation: '헷 바오 니에우?', meaning: '전부 얼마예요?' },
+            ],
             partnerReply: {
               id: 'sc-vn-mkt-r2b',
               text: 'Hai trăm tám!',
@@ -3554,6 +3653,11 @@ export const SCENARIOS: Scenario[] = [
             text: 'Vai và lưng.',
             pronunciation: '바이 바 릉.',
             meaning: '어깨랑 등요.',
+            swapChips: [
+              { label: '목', text: 'Cổ nhé.', pronunciation: '꼬 녜.', meaning: '목 좀 해주세요.' },
+              { label: '손·팔', text: 'Tay nhé.', pronunciation: '따이 녜.', meaning: '손과 팔이요.' },
+              { label: '종아리', text: 'Bắp chân nhé.', pronunciation: '밥 쩐 녜.', meaning: '종아리 해주세요.' },
+            ],
             partnerReply: {
               id: 'sc-vn-spa-r1a',
               text: 'Vâng, làm kỹ!',
@@ -3780,6 +3884,47 @@ export const SCENARIOS: Scenario[] = [
   },
 ];
 
+const normalizeSpeechText = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim();
+
+const RECORDED_PHRASE_BY_KEY: ReadonlyMap<string, string> = (() => {
+  const map = new Map<string, string>();
+  for (const p of PHRASES) {
+    if (!AUDIO_FILES[p.id]) continue;
+    const key = `${p.countryId}|${normalizeSpeechText(p.original)}`;
+    if (!map.has(key)) map.set(key, p.id);
+  }
+  return map;
+})();
+
+const UNIT_BY_SCENARIO_SUFFIX: ReadonlyArray<[string, VocabUnitId]> = [
+  ['-cafe', 'friends'],
+  ['-taxi', 'transport'],
+  ['-restaurant', 'restaurant'],
+  ['-market', 'market'],
+  ['-spa', 'massage'],
+];
+
+export function scenarioUnitFor(scenarioId: string): VocabUnitId {
+  for (const [suffix, unit] of UNIT_BY_SCENARIO_SUFFIX) {
+    if (scenarioId.endsWith(suffix)) return unit;
+  }
+  return 'friends';
+}
+
+export function resolveScenarioAudioId(line: Pick<ScenarioLine, 'id' | 'text' | 'phraseId'>, countryId: CountryId): string {
+  const voiceCountryId: CountryId =
+    countryId === 'vn' ? 'vn' : countryId === 'ph' ? 'ph' : 'en';
+  if (line.phraseId && AUDIO_FILES[line.phraseId]) return line.phraseId;
+  const matched = RECORDED_PHRASE_BY_KEY.get(
+    `${voiceCountryId}|${normalizeSpeechText(line.text)}`
+  );
+  return matched ?? line.id;
+}
+
 export function scenariosFor(countryId: CountryId): Scenario[] {
   const list = SCENARIOS.filter((s) => s.countryId === countryId);
   return list.length > 0 ? list : SCENARIOS.filter((s) => s.countryId === 'en');
@@ -3789,11 +3934,108 @@ export function scenarioLineAsPhrase(line: ScenarioLine, countryId: CountryId): 
   const voiceCountryId: CountryId =
     countryId === 'vn' ? 'vn' : countryId === 'ph' ? 'ph' : 'en';
   return {
-    id: line.id,
+    id: resolveScenarioAudioId(line, voiceCountryId),
     countryId: voiceCountryId,
     category: '미팅/사교',
     original: line.text,
     translation: line.meaning,
     pronunciation: `[${line.pronunciation}]`,
   };
+}
+
+/** 내 단어장/복습 퀴즈에서 저장된 만남 대화(`sc-*`) ID 를 복원합니다. */
+export function scenarioVocabItemById(id: string): VocabExpression | undefined {
+  if (!id.startsWith('sc-')) return undefined;
+  for (const sc of SCENARIOS) {
+    if (!id.startsWith(`${sc.id}-`) && !id.startsWith(sc.id.replace('-restaurant', '-rest').replace('-market', '-mkt') + '-')) {
+      continue;
+    }
+    const unitId = scenarioUnitFor(sc.id);
+    for (const turn of sc.turns) {
+      if (turn.partner.id === id) {
+        return {
+          id,
+          countryId: sc.countryId,
+          unitId,
+          text: turn.partner.text,
+          meaning: turn.partner.meaning,
+          pronunciation: turn.partner.pronunciation,
+          wordIds: [],
+          phraseId: resolveScenarioAudioId(turn.partner, sc.countryId),
+        };
+      }
+      for (const ch of turn.choices) {
+        const choiceId = `${sc.id}-${turn.id}-${ch.id}`;
+        if (choiceId === id) {
+          return {
+            id,
+            countryId: sc.countryId,
+            unitId,
+            text: ch.text,
+            meaning: ch.meaning,
+            pronunciation: ch.pronunciation,
+            wordIds: [],
+            phraseId: resolveScenarioAudioId({ id: choiceId, text: ch.text }, sc.countryId),
+          };
+        }
+        if (ch.swapChips) {
+          for (let sIdx = 0; sIdx < ch.swapChips.length; sIdx++) {
+            const chip = ch.swapChips[sIdx];
+            const chipId = `${choiceId}-s${sIdx}`;
+            if (chipId === id) {
+              return {
+                id,
+                countryId: sc.countryId,
+                unitId,
+                text: chip.text,
+                meaning: chip.meaning,
+                pronunciation: chip.pronunciation,
+                wordIds: [],
+                phraseId: resolveScenarioAudioId({ id: chipId, text: chip.text }, sc.countryId),
+              };
+            }
+          }
+        }
+        if (ch.partnerReply.id === id) {
+          return {
+            id,
+            countryId: sc.countryId,
+            unitId,
+            text: ch.partnerReply.text,
+            meaning: ch.partnerReply.meaning,
+            pronunciation: ch.partnerReply.pronunciation,
+            wordIds: [],
+            phraseId: resolveScenarioAudioId(ch.partnerReply, sc.countryId),
+          };
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
+export interface ScenarioAudioEntry {
+  id: string;
+  text: string;
+  countryId: CountryId;
+}
+
+/** 사전 오디오 생성·검증용 시나리오 대사 전수 목록 */
+export function scenarioAudioEntries(countryId?: CountryId): ScenarioAudioEntry[] {
+  const out: ScenarioAudioEntry[] = [];
+  for (const sc of SCENARIOS) {
+    if (countryId && sc.countryId !== countryId) continue;
+    for (const turn of sc.turns) {
+      out.push({ id: turn.partner.id, text: turn.partner.text, countryId: sc.countryId });
+      for (const ch of turn.choices) {
+        const choiceId = `${sc.id}-${turn.id}-${ch.id}`;
+        out.push({ id: choiceId, text: ch.text, countryId: sc.countryId });
+        ch.swapChips?.forEach((chip, sIdx) => {
+          out.push({ id: `${choiceId}-s${sIdx}`, text: chip.text, countryId: sc.countryId });
+        });
+        out.push({ id: ch.partnerReply.id, text: ch.partnerReply.text, countryId: sc.countryId });
+      }
+    }
+  }
+  return out;
 }

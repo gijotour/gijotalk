@@ -9,6 +9,7 @@ import {
   FileText,
   Calculator,
   SlidersHorizontal,
+  CheckSquare,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -21,6 +22,7 @@ interface HeaderProps {
   onOpenArcade?: () => void;
   onOpenEntryGuide: () => void;
   onOpenCalculator?: () => void;
+  onOpenChecklist?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenPartyGame,
   onOpenEntryGuide,
   onOpenCalculator,
+  onOpenChecklist,
 }) => {
   const [openMenu, setOpenMenu] = useState<'country' | 'tools' | null>(null);
   const navRef = useRef<HTMLDivElement | null>(null);
@@ -181,6 +184,24 @@ export const Header: React.FC<HeaderProps> = ({
                   <div>
                     <div>환율 · 팁 · 1/N 계산기</div>
                     <div className="text-[11px] font-medium text-ink-mute">오프라인 즉시 환산</div>
+                  </div>
+                </button>
+              )}
+
+              {onOpenChecklist && (
+                <button
+                  role="menuitem"
+                  onClick={() => {
+                    setOpenMenu(null);
+                    onOpenChecklist();
+                  }}
+                  aria-label="출국 1분 체크리스트 열기"
+                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 text-left text-xs font-bold text-ink hover:bg-slate-50 transition-colors"
+                >
+                  <CheckSquare className="w-4 h-4 text-ink-soft shrink-0" />
+                  <div>
+                    <div>출국 1분 체크리스트</div>
+                    <div className="text-[11px] font-medium text-ink-mute">여권 · eSIM · 오프라인 음성</div>
                   </div>
                 </button>
               )}

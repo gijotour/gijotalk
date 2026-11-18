@@ -1344,6 +1344,49 @@ canvas {
     box-shadow: 0 0 32px rgba(245, 158, 11, 0.5);
 }
 
+.slots-goal-pill {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 11px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.slots-goal-pill.done {
+    border-color: rgba(52, 211, 153, 0.55);
+    background: rgba(52, 211, 153, 0.12);
+    color: #6ee7b7;
+}
+
+.btn-undo-hud {
+    background: var(--surface-color);
+    border: 1px solid var(--border-strong);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 6px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-undo-hud:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.btn-undo-hud:not(:disabled):active { transform: scale(0.95); }
+
 /* ===== GUIDE BUTTON IN HUD ===== */
 .btn-guide-hud {
     background: var(--bg-card);
@@ -1577,6 +1620,11 @@ canvas {
                 <span class="streak-pill" id="streak-pill">연승 0</span>
             </div>
 
+            <div class="slots-goal-pill" id="slots-goal-pill">
+                <span id="slots-goal-text">🎯 오늘 목표: 피버 1회 발동하기</span>
+                <span id="slots-goal-reward">+200 보너스</span>
+            </div>
+
             <div class="slots-msg" id="slots-msg"></div>
 
             <div class="slots-controls">
@@ -1668,6 +1716,7 @@ canvas {
     <section id="scr-puzzle" class="screen hidden game-screen">
         <div class="hud">
             <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="btn-undo-hud" id="puzzle-undo-btn" disabled aria-label="직전 수 되돌리기">&#8617; 되돌리기</button>
             <div class="hud-stats">
                 <div class="stat"><span class="stat-label">Score</span><span class="stat-val" data-score>0</span></div>
                 <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
@@ -3607,7 +3656,9 @@ class Slots {
         this.setMsg('행운을 빌어요!', 'Good luck!');
         this.updateFreeBadge();
         this.updateAutoSpinLabel();
+        this.dailyGoalDone = localStorage.getItem('gijoSlots_goal_date') === this.todayKey();
         this.updateLuckyUI();
+        this.updateGoalUI();
         this.renderPaytable();
         this.updateJackpotTicker();
         if (this._tickerId) clearInterval(this._tickerId);
@@ -3670,6 +3721,34 @@ class Slots {
         this.saveCredits();
     }
 
+    todayKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    }
+
+    updateGoalUI() {
+        const pill = document.getElementById('slots-goal-pill');
+        const txt = document.getElementById('slots-goal-text');
+        const reward = document.getElementById('slots-goal-reward');
+        if (!pill || !txt || !reward) return;
+        pill.classList.toggle('done', this.dailyGoalDone);
+        txt.textContent = this.dailyGoalDone
+            ? '✅ 오늘 목표 달성: 피버 발동 완료!'
+            : `🎯 오늘 목표: 피버 1회 발동 (${this.luckyCharge}/5)`;
+        reward.textContent = this.dailyGoalDone ? '+200 지급됨' : '+200 보너스';
+    }
+
+    completeDailyGoal() {
+        if (this.dailyGoalDone) return;
+        this.dailyGoalDone = true;
+        try { localStorage.setItem('gijoSlots_goal_date', this.todayKey()); } catch {}
+        this.credits += 200;
+        this.setStat('credit', this.credits);
+        this.saveCredits();
+        this.updateGoalUI();
+        this.spawnCoinShower(10);
+    }
+
     updateLuckyUI() {
         const wrap = document.getElementById('lucky-bar-wrap');
         const fill = document.getElementById('lucky-fill');
@@ -3697,6 +3776,7 @@ class Slots {
                 spinBtn.textContent = this.luckyBoostReady ? '⚡ 무료 x2 SPIN!' : 'SPIN · 돌리기';
             }
         }
+        this.updateGoalUI();
     }
 
     streakMult() {
@@ -3893,6 +3973,7 @@ class Slots {
         if (isLuckyBoost) {
             this.luckyBoostReady = false;
             this.luckyCharge = 0;
+            this.completeDailyGoal();
         }
         this.setSpinLock(true);
         this.clearWinVisuals();
@@ -4538,10 +4619,29 @@ class Neon2048 extends Game {
         this.grid = Array.from({ length: P_GRID_SIZE }, () => Array(P_GRID_SIZE).fill(0));
         this.score = 0;
         this.won = false;
+        this.undoState = null;
         this.setStat('score', 0);
         this.setStat('bestval', store.best(this.id));
+        this.syncUndoBtn();
         this.addRandomTile();
         this.addRandomTile();
+    }
+
+    syncUndoBtn() {
+        const btn = document.getElementById('puzzle-undo-btn');
+        if (btn) btn.disabled = !this.undoState || this.over;
+    }
+
+    undo() {
+        if (!this.running || this.over || !this.undoState) return;
+        this.grid = this.undoState.grid.map(r => [...r]);
+        this.score = this.undoState.score;
+        this.won = this.undoState.won;
+        this.undoState = null;
+        this.setStat('score', this.score);
+        this.syncUndoBtn();
+        sfx.blip(380, 0.05, 'triangle', 0.04);
+        vibe(10);
     }
 
     addRandomTile() {
@@ -4562,6 +4662,9 @@ class Neon2048 extends Game {
 
     move(dir) {
         if (this.over) return;
+        const prevGrid = this.grid.map(r => [...r]);
+        const prevScore = this.score;
+        const prevWon = this.won;
         let moved = false;
         let mergedScore = 0;
         const size = P_GRID_SIZE;
@@ -4613,12 +4716,16 @@ class Neon2048 extends Game {
         rotateGrid((4 - rotations) % 4);
 
         if (moved) {
+            this.undoState = { grid: prevGrid, score: prevScore, won: prevWon };
             this.score += mergedScore;
             this.setStat('score', this.score);
             this.addRandomTile();
+            this.syncUndoBtn();
             sfx.blip(520 + Math.min(mergedScore, 500), 0.05, 'triangle', 0.04);
             vibe(15);
             if (this.checkGameOver()) {
+                this.undoState = null;
+                this.syncUndoBtn();
                 this.gameOver();
             }
         }
@@ -4636,6 +4743,10 @@ class Neon2048 extends Game {
     }
 
     bindInput() {
+        const undoBtn = document.getElementById('puzzle-undo-btn');
+        if (undoBtn) {
+            this.on(undoBtn, 'click', () => { sfx.init(); this.undo(); });
+        }
         let sx = 0, sy = 0;
         this.on(this.canvas, 'touchstart', (e) => {
             e.preventDefault(); sfx.init();

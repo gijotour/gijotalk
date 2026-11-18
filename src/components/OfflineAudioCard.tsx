@@ -11,9 +11,15 @@ import { CloudDownload, CheckCircle2, Loader2, WifiOff, AlertTriangle } from 'lu
 interface OfflineAudioCardProps {
   country: Country;
   isOffline: boolean;
+  /** 메인 화면 등 상단 배너용 1줄 컴팩트 모드 (이미 저장 완료 시 숨김) */
+  compact?: boolean;
 }
 
-export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isOffline }) => {
+export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({
+  country,
+  isOffline,
+  compact = false,
+}) => {
   const [status, setStatus] = useState<OfflineStatus | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -46,6 +52,59 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
   if (!status || status.total === 0) return null;
 
   const pct = status.total ? Math.round((status.cached / status.total) * 100) : 0;
+
+  if (compact) {
+    if (status.complete) return null;
+    return (
+      <div className="bg-slate-900 text-white rounded-2xl px-3.5 py-2.5 flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="w-8 h-8 rounded-xl bg-white/10 text-amber-300 flex items-center justify-center shrink-0">
+              {isOffline ? (
+                <WifiOff className="w-4 h-4" />
+              ) : (
+                <CloudDownload className="w-4 h-4" />
+              )}
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-black truncate">
+                {country.flag} {country.name} 발음 오프라인 저장
+              </p>
+              <p className="text-[11px] text-slate-300 font-medium truncate">
+                {isOffline
+                  ? '온라인일 때 먼저 받아 두면 비행기에서도 재생돼요'
+                  : `${status.total}개 (${estimatedSizeMB(country.id)}) · 출국 전 한 번만 받기`}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloading || isOffline}
+            aria-label={`${country.name} 오프라인 발음 지금 받기`}
+            className="shrink-0 min-h-9 px-3 bg-brand hover:bg-brand-hover disabled:bg-slate-700 disabled:text-slate-400 text-white text-xs font-black rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
+          >
+            {downloading ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>{progress}%</span>
+              </>
+            ) : (
+              <span>받기</span>
+            )}
+          </button>
+        </div>
+        {downloading && (
+          <div className="h-1 bg-white/15 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-brand transition-all duration-200"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div

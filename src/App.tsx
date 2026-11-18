@@ -27,6 +27,7 @@ import { ArcadeModal } from './components/ArcadeModal';
 import { GameHubModal } from './components/GameHubModal';
 import { EntryGuideModal } from './components/EntryGuideModal';
 import { TravelCalculatorModal } from './components/TravelCalculatorModal';
+import { TravelChecklistModal } from './components/TravelChecklistModal';
 import { Top10Essentials } from './components/Top10Essentials';
 import { AdBanner } from './components/AdBanner';
 import { hasItineraryLink } from './utils/itineraryLink';
@@ -110,6 +111,7 @@ export default function App() {
   const [showGameHub, setShowGameHub] = useState<boolean>(false);
   const [showEntryGuide, setShowEntryGuide] = useState<boolean>(false);
   const [showCalculator, setShowCalculator] = useState<boolean>(false);
+  const [showChecklist, setShowChecklist] = useState<boolean>(false);
 
   // 언어 변경 안내 토스트
   const [languageNotice, setLanguageNotice] = useState<string | null>(null);
@@ -334,6 +336,7 @@ export default function App() {
         onOpenArcade={() => setShowArcade(true)}
         onOpenEntryGuide={() => setShowEntryGuide(true)}
         onOpenCalculator={() => setShowCalculator(true)}
+        onOpenChecklist={() => setShowChecklist(true)}
       />
 
       {/* 언어 변경 가이드 플로팅 알림 */}
@@ -361,6 +364,7 @@ export default function App() {
             unitDone={vocabUnitDone}
             onUnitDone={handleUnitDone}
             onOpenBillboard={setBillboardPhrase}
+            onOpenPractice={setMicPracticePhrase}
             isOffline={isOffline}
             subTab={learnSubTab}
             onChangeSubTab={setLearnSubTab}
@@ -691,6 +695,16 @@ export default function App() {
         country={selectedCountry}
         onClose={() => setShowCalculator(false)}
       />
+
+      {/* MODAL 4.6: 출국 전 1분 오프라인 준비 체크리스트 */}
+      {showChecklist && (
+        <TravelChecklistModal
+          country={selectedCountry}
+          isOffline={isOffline}
+          onClose={() => setShowChecklist(false)}
+          onOpenEntryGuide={() => setShowEntryGuide(true)}
+        />
+      )}
 
       {/* 사진 번역 */}
       {showPhotoModal && (

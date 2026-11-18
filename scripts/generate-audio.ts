@@ -33,6 +33,7 @@ import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { COUNTRIES, PHRASES } from '../src/config';
 import { VOCAB_WORDS, VOCAB_EXPRESSIONS, VOCAB_DIALOGS } from '../src/data/vocab';
+import { scenarioAudioEntries } from '../src/data/scenarios';
 import type { CountryId, Phrase } from '../src/types';
 import { brighten } from './brighten';
 
@@ -55,6 +56,8 @@ const LANG_FILTER = flag('lang', 'all');
 const FORCE = args.includes('--force');
 /** 문장(PHRASES) 대신 어휘(단어·짧은 말·대화)를 만듭니다. docs/VOCAB_PLAN.md §6 */
 const VOCAB = args.includes('--vocab');
+/** 만남 대화(SCENARIOS) 대사 전체를 만듭니다. */
+const SCENARIOS_MODE = args.includes('--scenarios');
 /** 실제로 만들지 않고 "몇 개를 만들 것인지" 만 세어 보고 끝냅니다. */
 const DRY_RUN = args.includes('--dry-run');
 
@@ -239,8 +242,21 @@ function vocabJobs(countryId: CountryId, langCode: string): AudioJob[] {
   return jobs;
 }
 
+function scenarioJobs(countryId: CountryId, langCode: string): AudioJob[] {
+  return scenarioAudioEntries(countryId).map((entry) => ({
+    id: entry.id,
+    text: entry.text,
+    countryId,
+    langCode,
+  }));
+}
+
 const jobsFor = (countryId: CountryId, langCode: string): AudioJob[] =>
-  VOCAB ? vocabJobs(countryId, langCode) : phraseJobs(countryId, langCode);
+  SCENARIOS_MODE
+    ? scenarioJobs(countryId, langCode)
+    : VOCAB
+      ? vocabJobs(countryId, langCode)
+      : phraseJobs(countryId, langCode);
 
 /* ------------------------------------------------------------------ */
 /* 후처리                                                              */
@@ -372,7 +388,8 @@ async function main() {
 
   // 세어만 보고 끝내기. 목소리도 API 키도 필요 없으니 가장 먼저 처리합니다.
   if (DRY_RUN) {
-    console.log(`\n▶ dry-run — ${VOCAB ? '어휘' : '문장'} / 백엔드 ${BACKEND}`);
+    const modeLabel = SCENARIOS_MODE ? '만남 대화' : VOCAB ? '어휘' : '문장';
+    console.log(`\n▶ dry-run — ${modeLabel} / 백엔드 ${BACKEND}`);
     let total = 0;
     for (const country of targets) {
       const list = jobsFor(country.id, country.langCode);
@@ -459,6 +476,7 @@ async function main() {
     const all = [
       ...phraseJobs(country.id, country.langCode),
       ...vocabJobs(country.id, country.langCode),
+      ...scenarioJobs(country.id, country.langCode),
     ];
     for (const phrase of all) {
       if (generated[phrase.id] || phrase.skipReason) continue;

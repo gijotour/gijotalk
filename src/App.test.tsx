@@ -253,6 +253,25 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
+  it('헤더 도구 메뉴에서 출국 1분 체크리스트를 열고 항목을 체크할 수 있다', async () => {
+    const user = userEvent.setup();
+    await renderApp();
+
+    await user.click(screen.getByRole('button', { name: '여행 도구 메뉴' }));
+    await user.click(screen.getByRole('menuitem', { name: '출국 1분 체크리스트 열기' }));
+
+    const dialog = screen.getByRole('dialog', { name: '출국 1분 체크리스트' });
+    expect(dialog).toBeInTheDocument();
+
+    const itemBtn = within(dialog).getByRole('button', { name: /여권 유효기간 6개월 이상/ });
+    await user.click(itemBtn);
+    expect(itemBtn).toHaveAttribute('aria-pressed', 'true');
+    expect(JSON.parse(localStorage.getItem('gijo_trip_checklist_v1') ?? '[]')).toContain('passport');
+
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog', { name: '출국 1분 체크리스트' })).not.toBeInTheDocument();
+  });
+
 });
 
 

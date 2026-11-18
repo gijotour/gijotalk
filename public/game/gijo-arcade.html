@@ -12,14 +12,26 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"></noscript>
     <style>
 :root {
-    --bg-color: #0a0a0c;
-    --primary-neon: #ff0055;
-    --secondary-neon: #00f3ff;
-    --tertiary-neon: #a200ff;
-    --lime-neon: #c4ff4d;
-    --amber-neon: #ffaa00;
-    --text-color: #ffffff;
-    --font-main: 'Outfit', sans-serif;
+    --bg-color: #111318;
+    --surface-color: #1a1d24;
+    --surface-hover: #222630;
+    --bg-card: #1a1d24;
+    --bg-surface: #222630;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --line: rgba(255, 255, 255, 0.08);
+    --primary-neon: #ff4d6d;
+    --secondary-neon: #e2e8f0;
+    --tertiary-neon: #818cf8;
+    --lime-neon: #34d399;
+    --amber-neon: #f59e0b;
+    --gold: #f59e0b;
+    --hot-accent: #ff4d6d;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --txt-main: #f8fafc;
+    --txt-muted: #94a3b8;
+    --font-main: 'Outfit', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
 }
 
 * {
@@ -38,17 +50,14 @@ html, body {
     width: 100%;
     position: fixed;
     overscroll-behavior: none;
-    background-image: 
-        radial-gradient(ellipse at 15% 15%, rgba(0, 243, 255, 0.12) 0%, transparent 45%),
-        radial-gradient(ellipse at 85% 20%, rgba(255, 0, 85, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(162, 0, 255, 0.1) 0%, transparent 55%);
-    background-attachment: fixed;
 }
 
 #app {
     width: 100%;
     height: 100dvh;
     position: relative;
+    max-width: 520px;
+    margin: 0 auto;
 }
 
 .screen {
@@ -56,7 +65,7 @@ html, body {
     inset: 0;
     display: flex;
     flex-direction: column;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.2s ease;
 }
 
 .screen.hidden {
@@ -72,316 +81,64 @@ html, body {
 
 /* ===== 메뉴 ===== */
 .menu-header {
-    padding: clamp(16px, 5vw, 28px) 20px clamp(8px, 3vw, 16px);
+    padding: calc(18px + env(safe-area-inset-top)) 16px 14px;
     text-align: center;
     flex-shrink: 0;
-    padding-top: calc(clamp(16px, 5vw, 28px) + env(safe-area-inset-top));
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(ellipse at 50% -10%, rgba(245, 158, 11, 0.16), rgba(255, 77, 109, 0.06) 55%, transparent 80%);
 }
 
 .menu-title {
-    font-size: clamp(1.7rem, 8vw, 2.6rem);
+    font-size: clamp(1.45rem, 6.4vw, 1.9rem);
     font-weight: 900;
-    letter-spacing: -0.01em;
-    color: #fff;
-    text-shadow: 0 0 20px var(--secondary-neon);
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 20%, #fde68a 65%, #f59e0b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .menu-sub {
-    margin-top: 6px;
-    font-size: clamp(0.72rem, 3vw, 0.88rem);
-    color: #8b8b95;
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
     word-break: keep-all;
 }
 
-/* GIJO VIP 아케이드 상단 네온 롤링 전광판 */
 .ad-banner {
-    position: relative;
-    width: calc(100% - 16px);
-    margin: 6px auto 10px auto;
-    flex-shrink: 0;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    padding: 0 10px;
-    border-radius: 14px;
-    text-decoration: none;
-    background: linear-gradient(120deg, rgba(0, 243, 255, 0.2), rgba(255, 215, 0, 0.2)), rgba(14, 14, 22, 0.85);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(0, 243, 255, 0.5);
-    box-shadow: 0 0 16px rgba(0, 243, 255, 0.3), inset 0 0 8px rgba(0, 243, 255, 0.15);
-    transition: transform 0.15s ease;
-}
-.ad-banner:active { transform: scale(0.98); }
-
-.ad-badge-tag {
-    background: linear-gradient(135deg, #00f3ff, #0066ff);
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 900;
-    padding: 3px 7px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    margin-right: 8px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+    display: none !important;
 }
 
-.ad-marquee-wrapper {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-}
-
-.ad-marquee-content {
-    display: inline-flex;
-    white-space: nowrap;
-    animation: gijoArcadeMarquee 24s linear infinite;
-}
-
-.ad-marquee-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding-right: 40px;
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
-
-.ad-marquee-item em {
-    color: #ffd700;
-    font-style: normal;
-    font-weight: 800;
-}
-
-@keyframes gijoArcadeMarquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.ad-banner-cta {
-    flex-shrink: 0;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 800;
-    white-space: nowrap;
-    margin-left: 6px;
-}
-
-.tile-grid {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* 슬롯이 대표 칸(가로 전체)이고, 그 아래 기존 4개가 2x2 로 들어갑니다. */
-    grid-template-rows: auto; auto-rows: minmax(90px, 1fr); overflow-y: auto;
-    gap: 8px;
-    padding: 0 8px calc(16px + env(safe-area-inset-bottom));
-    min-height: 0;
-}
-
-.tile {
-    position: relative;
-    overflow: hidden;
-    border: 1.5px solid rgba(255, 255, 255, 0.22);
-    outline: none;
-    cursor: pointer;
-    border-radius: 18px;
-    background: rgba(14, 14, 22, 0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    gap: 3px;
-    padding: clamp(14px, 4.2vw, 20px);
-    text-align: left;
-    font-family: var(--font-main);
-    box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-    transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.tile:hover, .tile:focus-visible {
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: translateY(-3px) scale(1.015);
-    box-shadow: 0 16px 42px 0 rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 243, 255, 0.4);
-}
-
-.tile:active { transform: scale(0.96); }
-
-.tile-badge {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 7px;
-    font-size: clamp(0.58rem, 2.1vw, 0.68rem);
-    font-weight: 800;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    margin-bottom: 2px;
-    letter-spacing: 0.02em;
-}
-
-.tile::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    clip-path: polygon(0 100%, 100% 100%, 100% 14%, 0 50%);
-}
-
-.tile > * { position: relative; z-index: 1; }
-
-.tile-icon {
-    font-size: clamp(1.7rem, 7vw, 2.4rem);
-    line-height: 1;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
-}
-
-.tile-en {
-    font-size: clamp(0.85rem, 3.4vw, 1.05rem);
-    font-weight: 800;
-    color: #fff;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.55);
-}
-
-.tile-kr {
-    font-size: clamp(0.68rem, 2.7vw, 0.8rem);
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-}
-
-.tile-best {
-    margin-top: 3px;
-    font-size: clamp(0.6rem, 2.4vw, 0.7rem);
-    font-weight: 700;
-    color: rgba(255,255,255,0.7);
-    letter-spacing: 0.02em;
-}
-
-/* 슬롯 대표 칸 — 가로로 눕혀 배너처럼.
-   .tile 보다 앞에 있으면 같은 specificity(클래스 1개)라 소스 순서상 나중에 오는
-   .tile 의 flex-direction:column·align-items:flex-start·justify-content:flex-end·
-   padding 가 이 규칙을 통째로 덮어씁니다 — row/center 로 눕히려던 게 column 으로
-   눌리면서 아이콘+텍스트(4줄)가 칸 높이를 넘어 위로 잘려 보였습니다. .tile 보다
-   뒤에 둬서 이 규칙이 이기게 합니다. */
-.tile-slots {
-    grid-column: 1 / 3;
-    grid-row: 1;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 14px;
-    padding: 14px 20px;
-    background-image: url('assets/slot_spicy_777_fun_banner.jpg');
-    background-size: cover;
-    background-position: center;
-}
-.tile-slots::before {
-    clip-path: none;
-    background: linear-gradient(90deg, #b8860b, #ffd700 45%, #ff2d78);
-    opacity: 0.6;
-}
-.tile-slots .tile-icon { font-size: clamp(2rem, 8vw, 2.8rem); }
-.tile-slots .tile-text { display: flex; flex-direction: column; gap: 1px; }
-.tile-slots .tile-en { font-size: clamp(0.95rem, 4vw, 1.2rem); }
-
-.tile-1::before { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); }
-.tile-2::before { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); }
-.tile-3::before { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); }
-.tile-4::before { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); }
-
-/* 게임별 대표 아트 — 각 타일의 ::before 대각선 그라디언트는 그대로 두고
-   opacity 를 낮춰 그 아래로 사진이 비치게 합니다(색 정체성 + 실사 둘 다). */
-/* 아트는 469x840 세로형이라 가로 타일에선 가운데 띠만 남습니다. 피사체(캐릭터·기기)가
-   위쪽 1/3 에 몰려 있어 center 35% 로 잘라야 얼굴이 보입니다. */
-.tile-1 { background-image: url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-2 { background-image: url('assets/space_shooter_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-3 { background-image: url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-4 { background-image: url('assets/brick_breaker_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-5 { background-image: url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-5::before { background: linear-gradient(120deg, #ff007f, #a200ff); }
-.tile-6 { background-image: url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center 35%; }
-.tile-6::before { background: linear-gradient(120deg, #ff0055, #ffaa00); }
-/* 색 덮개는 0.42 — 0.55 에선 사진이 거의 안 보였습니다. 글자는 아래쪽 어두운 띠(::after)가 받쳐줍니다. */
-.tile-1::before, .tile-2::before, .tile-3::before, .tile-4::before, .tile-5::before, .tile-6::before { opacity: 0.42; }
-.tile::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 62%;
-    background: linear-gradient(to top, rgba(6, 6, 10, 0.78), rgba(6, 6, 10, 0));
-    pointer-events: none;
-}
-.tile-slots::after { height: 100%; background: linear-gradient(90deg, rgba(6,6,10,0.55), rgba(6,6,10,0.05)); }
-body.hot .tile-5::before { background: linear-gradient(120deg, #ff2d78, #ffd700); }
-body.hot .tile-6::before { background: linear-gradient(120deg, #ff2d78, #a200ff); }
-
-/* ===== 🔥 HOT 테마 — 심야 라운지 분위기 =====
-   기본 테마(사이언/라임/앰버)는 밝고 오락실 느낌입니다. HOT 을 켜면 자홍·보라
-   위주의 어두운 라운지 톤으로 바꿔, 파티 게임의 HOT 모드와 결이 맞게 합니다.
-   토큰만 갈아끼우므로 각 게임의 로직은 건드리지 않습니다. */
+/* ===== 🔥 HOT 테마 ===== */
 body.hot {
-    --bg-color: #120610;
-    background-color: #120610;
+    --primary-neon: #e11d48;
 }
 
-body.hot .menu-title { text-shadow: 0 0 22px #ff2d78; }
-body.hot .menu-sub { color: #b98aa8; }
+body.hot .menu-sub { color: #fda4af; }
+body.hot canvas { background: #14080e; }
+body.hot .btn-back { color: #fda4af; }
+body.hot .overlay { background: rgba(16, 6, 12, 0.9); }
+body.hot .ov-score { color: #fda4af !important; }
+body.hot .ov-btn { background: var(--primary-neon) !important; color: #fff !important; }
 
-/* background(단축) 이 아니라 background-color 로 — 단축 속성을 쓰면 위 4개
-   타일에 깔아둔 background-image 가 HOT 모드에서 통째로 지워집니다. */
-body.hot .tile { background-color: #170a14; }
-body.hot .tile-slots::before { background: linear-gradient(90deg, #7c1d4f, #ff2d78 45%, #ffd700); }
-body.hot .tile-1::before { background: linear-gradient(120deg, #ff2d78, #ff8fb1); }
-body.hot .tile-2::before { background: linear-gradient(120deg, #d926a9, #ff6bcb); }
-body.hot .tile-3::before { background: linear-gradient(120deg, #a020f0, #e879f9); }
-body.hot .tile-4::before { background: linear-gradient(120deg, #ff4d6d, #ffa07a); }
-
-body.hot canvas { background: #0e0410; }
-body.hot .btn-back { color: #ff8fb1; }
-body.hot .overlay { background: rgba(14, 4, 14, 0.88); }
-body.hot .ov-score { color: #ff6bcb !important; }
-body.hot .ov-btn {
-    background: linear-gradient(120deg, #ff2d78, #c026d3) !important;
-    box-shadow: 0 4px 20px rgba(255, 45, 120, 0.5) !important;
-}
-
-/* 게임 오버·신기록에 뜨는 도발 멘트 */
 .ov-taunt {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #ff8fb1;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fda4af;
     word-break: keep-all;
     max-width: 28ch;
-    line-height: 1.5;
+    line-height: 1.45;
 }
 
 .ov-taunt .i18n-sub {
     display: block;
     margin-top: 3px;
     font-size: 0.72rem;
-    font-weight: 600;
-    color: rgba(255,255,255,0.55);
+    font-weight: 500;
+    color: var(--text-muted);
 }
 
-/* ===== 클리어 보상 카드 =====
-   판을 깨거나 구간을 넘길 때 잠깐 떴다 사라집니다. 게임을 멈추지 않도록
-   pointer-events 를 꺼두고, 애니메이션이 끝나면 스스로 제거됩니다. */
 .reward-card {
     position: absolute;
     left: 50%;
@@ -391,67 +148,53 @@ body.hot .ov-btn {
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    padding: 18px 28px;
-    border-radius: 20px;
-    background: rgba(20, 4, 18, 0.92);
-    border: 1px solid rgba(255, 45, 120, 0.55);
-    box-shadow: 0 0 44px rgba(255, 45, 120, 0.45);
+    padding: 16px 24px;
+    border-radius: 18px;
+    background: var(--surface-color);
+    border: 1px solid var(--primary-neon);
     z-index: 6;
     pointer-events: none;
     text-align: center;
-    animation: reward-pop 0.36s cubic-bezier(.34,1.56,.64,1),
-               reward-out 0.45s ease 1.5s forwards;
+    animation: reward-pop 0.3s ease, reward-out 0.4s ease 1.5s forwards;
 }
 
 @keyframes reward-pop {
-    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
     100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
 @keyframes reward-out {
-    to { transform: translate(-50%, -80%) scale(0.95); opacity: 0; }
+    to { transform: translate(-50%, -75%) scale(0.95); opacity: 0; }
 }
 
-.reward-icon {
-    font-size: clamp(2.6rem, 12vw, 3.4rem);
-    line-height: 1;
-    filter: drop-shadow(0 0 20px rgba(255, 45, 120, 0.85));
-}
+.reward-icon { font-size: 2.4rem; line-height: 1; }
+.reward-kr { font-size: 0.95rem; font-weight: 800; color: #fff; }
+.reward-en { font-size: 0.72rem; font-weight: 500; color: var(--text-muted); }
 
-.reward-kr {
-    font-size: clamp(0.95rem, 4vw, 1.1rem);
-    font-weight: 900;
-    color: #fff;
-    word-break: keep-all;
-}
-
-.reward-en {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
-}
-
-/* ===== HOT 토글 스위치 (메뉴) ===== */
+/* ===== HOT 토글 ===== */
 .hot-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-top: 12px;
+    gap: 8px;
+    margin-top: 10px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    padding: 5px 10px 5px 12px;
+    border-radius: 999px;
 }
 
 .hot-toggle-label {
-    font-size: 0.76rem;
-    font-weight: 800;
-    color: #8b8b95;
-    letter-spacing: 0.02em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
 }
 
-body.hot .hot-toggle-label { color: #ff8fb1; }
+body.hot .hot-toggle-label { color: #fda4af; }
 
 .hot-sw {
-    width: 46px;
-    height: 26px;
+    width: 40px;
+    height: 22px;
     border: none;
     outline: none;
     cursor: pointer;
@@ -466,19 +209,18 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: #fff;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
 .hot-sw.on {
-    background: linear-gradient(120deg, #ff2d78, #c026d3);
-    box-shadow: 0 0 14px rgba(255, 45, 120, 0.55);
+    background: var(--primary-neon);
 }
 
-.hot-sw.on span { transform: translateX(20px); }
+.hot-sw.on span { transform: translateX(18px); }
 
 
 /* ============================================================
@@ -487,22 +229,32 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
    가상 크레딧 전용입니다. 결제도, 현금 환전도, 외부 통신도 없습니다.
    크레딧이 떨어지면 무료로 충전 버튼이 나옵니다.
    ============================================================ */
-.slots-screen { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.slots-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 24%, rgba(245, 158, 11, 0.14), rgba(129, 140, 248, 0.08) 46%, #0b0d13 84%);
+}
+
+body.hot .slots-screen {
+    background: radial-gradient(ellipse at 50% 24%, rgba(255, 45, 120, 0.2), rgba(168, 85, 247, 0.1) 46%, #11070d 84%);
+}
 
 .slots-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: clamp(6px, 1.4vh, 10px);
-    padding: 0 10px 10px;
+    justify-content: space-evenly;
+    gap: clamp(6px, 1.2vh, 10px);
+    padding: 0 10px 8px;
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
-/* 릴 창 — 5열 3행이라 세로로 늘려두면 칸이 길쭉해져 슬롯머신처럼 안 보입니다.
-   비율을 고정해 칸이 거의 정사각형이 되게 합니다. */
+/* 릴 창 — 3D 드럼 릴 + 황금 캐비닛 프레임 + 중앙 페이라인 포인터 */
 .reels-frame {
     position: relative;
     width: 100%;
@@ -510,25 +262,38 @@ body.hot .hot-toggle-label { color: #ff8fb1; }
     max-height: 100%;
     flex: 0 1 auto;
     min-height: 0;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 8px;
-    /* 각 릴(.reel)이 자체적으로 rgba(0,0,0,0.55) 배경을 깔고 있어 심볼 위에
-       사진이 겹쳐도 안 흐려집니다 — 릴 사이 여백·테두리 쪽에서 더 잘 보입니다. */
-    background:
-        linear-gradient(160deg, rgba(26, 18, 6, 0.65), rgba(11, 10, 18, 0.82)),
-        url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 35px rgba(255, 215, 0, 0.5), inset 0 0 35px rgba(0,0,0,0.85);
+    background: linear-gradient(180deg, #1f2433 0%, #12151e 100%);
+    border: 1.5px solid rgba(245, 158, 11, 0.6);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.14);
     overflow: hidden;
 }
 
-body.hot .reels-frame {
-    border-color: #ff2d78;
-    box-shadow: 0 0 38px rgba(255, 45, 120, 0.55), inset 0 0 35px rgba(0,0,0,0.85);
-    background:
-        linear-gradient(160deg, rgba(32, 10, 26, 0.65), rgba(13, 4, 16, 0.82)),
-        url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
+.reels-frame::before,
+.reels-frame::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    z-index: 6;
+    pointer-events: none;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
 }
+.reels-frame::before { left: 2px; border-left: 7px solid var(--gold); }
+.reels-frame::after { right: 2px; border-right: 7px solid var(--gold); }
+
+body.hot .reels-frame {
+    border-color: var(--primary-neon);
+    background: linear-gradient(180deg, #271320 0%, #150b12 100%);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65), 0 0 26px rgba(255, 45, 120, 0.22);
+}
+
+body.hot .reels-frame::before { border-left-color: var(--primary-neon); }
+body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
 
 .reels {
     display: grid;
@@ -540,8 +305,26 @@ body.hot .reels-frame {
 .reel {
     position: relative;
     overflow: hidden;
-    border-radius: 9px;
-    background: rgba(0, 0, 0, 0.55);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, #050609 0%, #141824 22%, #1d2334 50%, #141824 78%, #050609 100%);
+    box-shadow: inset 0 10px 16px -8px rgba(0, 0, 0, 0.85), inset 0 -10px 16px -8px rgba(0, 0, 0, 0.85);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.reel.landed {
+    animation: reel-bounce 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.reel.hot-hit {
+    border-color: rgba(250, 204, 21, 0.85);
+    box-shadow: inset 0 0 16px rgba(250, 204, 21, 0.28);
+}
+
+@keyframes reel-bounce {
+    0%   { transform: translateY(4px); }
+    60%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
 }
 
 /* 릴 안에서 위아래로 흐르는 심볼 띠 */
@@ -736,14 +519,16 @@ body.hot .pt-chip b { color: #ff8fb1; }
 }
 
 /* 보너스 배지 안의 숫자 강조 */
-.free-badge b { color: #ffd700; font-weight: 900; }
+.free-badge b { color: var(--gold); font-weight: 800; }
 
 /* 조작부 */
 .slots-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-shrink: 0;
+    flex-wrap: wrap;
+    row-gap: 8px;
 }
 
 .bet-box {
@@ -752,7 +537,8 @@ body.hot .pt-chip b { color: #ff8fb1; }
     gap: 8px;
     padding: 7px 10px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
+    background: var(--bg-card);
+    border: 1px solid var(--line);
     flex-shrink: 0;
 }
 
@@ -760,14 +546,14 @@ body.hot .pt-chip b { color: #ff8fb1; }
     font-size: 0.55rem;
     font-weight: 800;
     letter-spacing: 0.08em;
-    color: #7a7a85;
+    color: var(--txt-muted);
     text-transform: uppercase;
 }
 
 .bet-val {
-    font-size: 1rem;
-    font-weight: 900;
-    color: #ffd700;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--gold);
     min-width: 3ch;
     text-align: center;
     font-variant-numeric: tabular-nums;
@@ -776,98 +562,105 @@ body.hot .pt-chip b { color: #ff8fb1; }
 .bet-btn {
     width: 26px;
     height: 26px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,215,0,0.6);
-    background: transparent;
-    color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg-surface);
+    color: var(--txt-main);
     font-size: 0.9rem;
-    font-weight: 900;
+    font-weight: 800;
     cursor: pointer;
     line-height: 1;
     font-family: var(--font-main);
 }
 
-.bet-btn:active { transform: scale(0.9); }
+.bet-btn:active { transform: scale(0.92); }
 
 .spin-btn {
     flex: 1;
-    padding: 15px 10px;
+    padding: 14px 12px;
     border: none;
     outline: none;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 14px;
     font-family: var(--font-main);
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 900;
-    color: #2a1a00;
-    background: linear-gradient(120deg, #ffd700, #ffb300);
-    box-shadow: 0 4px 18px rgba(255, 200, 0, 0.42);
-    text-shadow: none;
+    color: #1c1000;
+    background: linear-gradient(180deg, #fde047 0%, #f59e0b 58%, #d97706 100%);
+    box-shadow: 0 4px 18px rgba(245, 158, 11, 0.36), 0 3px 0 #92400e, inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transition: transform 0.1s, filter 0.12s, box-shadow 0.12s;
+}
+
+.spin-btn.fever-ready {
+    background: linear-gradient(180deg, #67e8f9 0%, #f59e0b 52%, #ea580c 100%);
+    color: #090d16;
+    box-shadow: 0 0 22px rgba(245, 158, 11, 0.65), 0 3px 0 #9a3412, inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    animation: fever-pulse 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes fever-pulse {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.16); }
 }
 
 body.hot .spin-btn {
     color: #fff;
-    background: linear-gradient(120deg, #ff2d78, #c026d3);
-    box-shadow: 0 4px 20px rgba(255, 45, 120, 0.5);
+    background: linear-gradient(180deg, #ff5e8a 0%, #e11d48 58%, #9f1239 100%);
+    box-shadow: 0 4px 20px rgba(255, 45, 120, 0.42), 0 3px 0 #700926, inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-.spin-btn:active { transform: scale(0.97); }
-.spin-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
-
-/* ===== MAX BET · Auto Spin =====
-   컨트롤이 베팅-,베팅+,MAX,SPIN,AUTO 5개로 늘어나 좁은 화면(≤340px)에서
-   한 줄에 다 안 들어갈 수 있어 flex-wrap 을 허용합니다. */
-.slots-controls { flex-wrap: wrap; row-gap: 8px; }
+.spin-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3), 0 1px 0 #92400e;
+}
+.spin-btn:disabled { opacity: 0.48; cursor: default; transform: none; box-shadow: none; }
 
 .maxbet-btn {
     flex-shrink: 0;
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-radius: 10px;
-    border: 1.5px solid rgba(255, 215, 0, 0.55);
-    background: rgba(255, 215, 0, 0.12);
-    color: #ffd700;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    color: var(--gold);
     font-family: var(--font-main);
-    font-size: 0.62rem;
-    font-weight: 900;
+    font-size: 0.65rem;
+    font-weight: 800;
     letter-spacing: 0.03em;
     cursor: pointer;
 }
 
-.maxbet-btn:active { transform: scale(0.94); }
+.maxbet-btn:active { transform: scale(0.95); }
 .maxbet-btn:disabled { opacity: 0.4; cursor: default; }
 
 body.hot .maxbet-btn {
-    border-color: rgba(255, 45, 120, 0.6);
-    background: rgba(255, 45, 120, 0.16);
-    color: #ff2d78;
+    color: var(--hot-accent);
 }
 
 .autospin-btn {
     flex-shrink: 0;
     padding: 12px 10px;
-    border-radius: 14px;
-    border: 1.5px solid rgba(255, 255, 255, 0.22);
-    background: rgba(255, 255, 255, 0.06);
-    color: #d8d8e0;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    color: var(--txt-muted);
     font-family: var(--font-main);
     font-size: 0.68rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.02em;
     cursor: pointer;
-    min-width: 62px;
+    min-width: 60px;
 }
 
 .autospin-btn.on {
-    border-color: #ffd700;
-    background: rgba(255, 215, 0, 0.16);
-    color: #ffd700;
-    animation: autospin-pulse 1s infinite alternate;
+    border-color: var(--gold);
+    background: rgba(245, 158, 11, 0.14);
+    color: var(--gold);
 }
 
 body.hot .autospin-btn.on {
-    border-color: #ff2d78;
-    background: rgba(255, 45, 120, 0.18);
-    color: #ff2d78;
+    border-color: var(--hot-accent);
+    background: rgba(255, 77, 109, 0.14);
+    color: var(--hot-accent);
 }
 
 @keyframes autospin-pulse {
@@ -1106,14 +899,14 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
 }
 
 .btn-back {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: var(--secondary-neon);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-color);
     font-family: var(--font-main);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    padding: 7px 13px;
-    border-radius: 20px;
+    padding: 7px 12px;
+    border-radius: 999px;
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -1125,7 +918,6 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
     display: flex;
     justify-content: flex-end;
     gap: clamp(10px, 4vw, 20px);
-    /* 점수가 늘어도 자리가 흔들리지 않게 합니다. */
     font-variant-numeric: tabular-nums;
 }
 
@@ -1140,13 +932,13 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #7a7a85;
+    color: var(--text-muted);
 }
 
 .stat-val {
     display: block;
-    font-size: clamp(1rem, 4.5vw, 1.3rem);
-    font-weight: 900;
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
+    font-weight: 800;
     color: #fff;
 }
 
@@ -1154,40 +946,31 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
     flex: 1;
     position: relative;
     min-height: 0;
-    margin: 0 10px 10px;
+    margin: 0 12px 10px;
     border-radius: 16px;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 243, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-color);
 }
 
 canvas {
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 14px;
-    /* 캔버스 위에서 스크롤·확대가 일어나면 조작이 안 됩니다. */
+    border-radius: 15px;
     touch-action: none;
-    background: #08080b;
+    background: #14161c;
 }
-
-/* Block Drop·Snake 는 draw() 가 캔버스 전체가 아니라 격자 칸만 fillRect 로
-   덮습니다 — 격자 바깥 여백은 매 프레임 clearRect 만 되고 투명하게 남아서,
-   여기에 건 배경 사진이 격자를 가리지 않고 테두리처럼 비칩니다. */
-#cv-block { background-image: linear-gradient(rgba(8,8,11,0.4), rgba(8,8,11,0.65)), url('assets/block_drop_fun_art.jpg'); background-size: cover; background-position: center; }
-#cv-puzzle { background-image: linear-gradient(rgba(8,8,11,0.35), rgba(8,8,11,0.65)), url('assets/neon_2048_fun_art.jpg'); background-size: cover; background-position: center; }
-#cv-flappy { background-image: linear-gradient(rgba(8,8,11,0.3), rgba(8,8,11,0.65)), url('assets/flappy_neon_fun_art.jpg'); background-size: cover; background-position: center; }
-#cv-snake { background-image: linear-gradient(rgba(8,8,11,0.4), rgba(8,8,11,0.65)), url('assets/neon_snake_fun_art.jpg'); background-size: cover; background-position: center; }
 
 .hint {
     text-align: center;
     font-size: 0.72rem;
-    color: #6e6e78;
-    padding: 0 16px 10px;
+    color: var(--text-muted);
+    padding: 0 16px 12px;
     flex-shrink: 0;
     word-break: keep-all;
 }
 
-/* ===== 오버레이 (시작 / 게임 오버 / 일시정지) ===== */
+/* ===== 오버레이 ===== */
 .overlay {
     position: absolute;
     inset: 0;
@@ -1198,97 +981,78 @@ canvas {
     gap: 6px;
     padding: 20px;
     text-align: center;
-    background: rgba(6, 6, 9, 0.86);
-    border-radius: 14px;
+    background: rgba(17, 19, 24, 0.9);
+    border-radius: 15px;
     z-index: 5;
 }
 
 .overlay.hidden { display: none; }
 
 .ov-title {
-    font-size: clamp(1.5rem, 8vw, 2.2rem);
-    font-weight: 900;
+    font-size: clamp(1.4rem, 7vw, 2rem);
+    font-weight: 800;
     color: #fff;
 }
 
 .ov-kr {
-    font-size: clamp(0.85rem, 3.6vw, 1rem);
-    font-weight: 700;
-    color: #b6b6c0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
     word-break: keep-all;
 }
 
 .ov-score {
-    margin-top: 10px;
-    font-size: clamp(1.1rem, 5vw, 1.5rem);
-    font-weight: 900;
-    color: var(--secondary-neon);
+    margin-top: 8px;
+    font-size: clamp(1.1rem, 5vw, 1.45rem);
+    font-weight: 800;
+    color: #fff;
     font-variant-numeric: tabular-nums;
 }
 
 .ov-best {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #8b8b95;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
     font-variant-numeric: tabular-nums;
 }
 
 .ov-new {
     margin-top: 4px;
-    font-size: 0.85rem;
-    font-weight: 900;
+    font-size: 0.82rem;
+    font-weight: 800;
     color: var(--amber-neon);
-    text-shadow: 0 0 12px rgba(255, 170, 0, 0.6);
-    animation: pop 0.4s cubic-bezier(.34,1.56,.64,1);
+    animation: pop 0.35s ease;
 }
 
 @keyframes pop {
-    0% { transform: scale(0.5); opacity: 0; }
+    0% { transform: scale(0.8); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
 .ov-btn {
-    margin-top: 16px;
+    margin-top: 14px;
     font-family: var(--font-main);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 800;
     color: #fff;
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 13px 34px;
-    border-radius: 16px;
-    background: linear-gradient(120deg, var(--secondary-neon), #4d8cff);
-    box-shadow: 0 4px 18px rgba(0, 243, 255, 0.4);
-    text-shadow: 0 2px 6px rgba(0,0,0,0.45);
+    padding: 12px 32px;
+    border-radius: 14px;
+    background: var(--primary-neon);
 }
 
 .ov-btn:active { transform: scale(0.96); }
 
 .ov-hint {
-    margin-top: 12px;
-    font-size: 0.75rem;
-    color: #7a7a85;
-    line-height: 1.6;
+    margin-top: 10px;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    line-height: 1.5;
     word-break: keep-all;
     max-width: 30ch;
 }
-
-/* 게임별 액센트 — 메뉴 타일 색을 게임 화면 안까지 그대로 잇습니다. */
-#scr-block .ov-btn { background: linear-gradient(120deg, var(--secondary-neon), #4d8cff); box-shadow: 0 4px 18px rgba(0,243,255,0.4); }
-#scr-shoot .ov-btn { background: linear-gradient(120deg, var(--primary-neon), #ff6b9d); box-shadow: 0 4px 18px rgba(255,0,85,0.4); }
-#scr-snake .ov-btn { background: linear-gradient(120deg, #3ed973, var(--lime-neon)); box-shadow: 0 4px 18px rgba(62,217,115,0.4); }
-#scr-brick .ov-btn { background: linear-gradient(120deg, var(--amber-neon), #ffe14d); box-shadow: 0 4px 18px rgba(255,170,0,0.4); }
-
-#scr-puzzle .ov-btn { background: linear-gradient(120deg, #ff007f, #a200ff); box-shadow: 0 4px 18px rgba(162,0,255,0.45); }
-#scr-flappy .ov-btn { background: linear-gradient(120deg, var(--primary-neon), var(--amber-neon)); box-shadow: 0 4px 18px rgba(255,120,0,0.45); }
-
-#scr-block .ov-score { color: var(--secondary-neon); }
-#scr-shoot .ov-score { color: var(--primary-neon); }
-#scr-snake .ov-score { color: var(--lime-neon); }
-#scr-brick .ov-score { color: var(--amber-neon); }
-#scr-puzzle .ov-score { color: #ff7ab8; }
-#scr-flappy .ov-score { color: var(--amber-neon); }
 
 /* 화면 흔들림·파티클을 줄여달라는 기기 설정을 존중합니다(멀미 방지). */
 @media (prefers-reduced-motion: reduce) {
@@ -1307,460 +1071,302 @@ canvas {
 }
     
 
-/* ===== ARCADE PORTAL (2 MAIN CHOICES) ===== */
+/* ===== ARCADE PORTAL (MINIMAL 3-ITEM LIST) ===== */
 .arcade-portal {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
     width: 100%;
-    margin-top: 6px;
+    margin-top: 4px;
     flex: 1;
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 0 4px 16px;
+    padding: 0 2px 12px;
 }
 
-.portal-card {
-    border: 1px solid rgba(255, 215, 0, 0.4);
-    outline: none;
-    cursor: pointer;
+.portal-item {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-family: var(--font-main);
-    background: linear-gradient(145deg, rgba(30, 20, 8, 0.92), rgba(12, 10, 18, 0.96)),
-                url('assets/slot_spicy_777_fun_banner.jpg') center/cover;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    position: relative;
+    align-items: stretch;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: linear-gradient(145deg, rgba(30, 35, 48, 0.96), rgba(20, 23, 30, 0.98));
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     overflow: hidden;
-    border-radius: 20px;
-    padding: clamp(14px, 4vw, 20px);
-    text-align: left;
-    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 215, 0, 0.25);
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
-    min-height: clamp(130px, 22vh, 170px);
+    transition: border-color 0.15s, transform 0.15s, background 0.15s;
 }
 
-.portal-card:hover, .portal-card:focus-visible {
-    border-color: #ffd700;
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.85), 0 0 35px rgba(255, 215, 0, 0.5);
+.portal-item-slots {
+    border-color: rgba(245, 158, 11, 0.38);
+    background: linear-gradient(135deg, rgba(44, 32, 16, 0.72), rgba(22, 24, 32, 0.96));
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.1);
 }
 
-.portal-card:active {
-    transform: scale(0.98);
+.portal-item:active {
+    transform: scale(0.985);
 }
 
-.portal-card-glow {
-    position: absolute;
-    inset: -30%;
-    background: radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.35), transparent 70%);
-    pointer-events: none;
-}
-
-.portal-badge-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 2;
-}
-
-.portal-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    font-size: 0.72rem;
-    font-weight: 800;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 215, 0, 0.5);
-    color: #ffd700;
-    letter-spacing: 0.03em;
-}
-
-.portal-best-badge {
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: #ffd700;
-    background: rgba(0, 0, 0, 0.65);
-    padding: 3px 9px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.portal-body {
+.portal-item-main {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font-family: var(--font-main);
+    padding: 16px 14px;
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 2;
+    text-align: left;
+    cursor: pointer;
 }
 
-.portal-icon {
-    font-size: clamp(2.4rem, 8vw, 3.2rem);
-    line-height: 1;
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+.portal-item-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: linear-gradient(145deg, #262c3d, #191d28);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     flex-shrink: 0;
 }
 
-.portal-info {
+.portal-item-slots .portal-item-icon {
+    border-color: rgba(245, 158, 11, 0.5);
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.08));
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
+}
+
+.portal-item-puzzle .portal-item-icon {
+    border-color: rgba(56, 189, 248, 0.45);
+    background: linear-gradient(145deg, rgba(56, 189, 248, 0.2), rgba(37, 99, 235, 0.08));
+}
+
+.portal-item-flappy .portal-item-icon {
+    border-color: rgba(255, 77, 109, 0.45);
+    background: linear-gradient(145deg, rgba(255, 77, 109, 0.2), rgba(190, 18, 60, 0.08));
+}
+
+.portal-item-texts {
     flex: 1;
     min-width: 0;
-}
-
-.portal-en {
-    display: block;
-    font-size: clamp(0.72rem, 2.4vw, 0.82rem);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #ffd700;
-}
-
-.portal-kr {
-    display: block;
-    font-size: clamp(1.2rem, 4.4vw, 1.45rem);
-    font-weight: 900;
-    color: #ffffff;
-    letter-spacing: -0.02em;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-}
-
-.portal-desc {
-    margin: 3px 0 0 0;
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.portal-action-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid rgba(255, 215, 0, 0.3);
-    padding-top: 8px;
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: #ffd700;
-    position: relative;
-    z-index: 2;
-}
-
-.portal-arrow {
-    font-size: 1.1rem;
-    transition: transform 0.2s;
-}
-
-.portal-card:hover .portal-arrow {
-    transform: translateX(4px);
-}
-
-/* ===== PORTAL DUO (2048 & FLAPPY) ===== */
-.portal-duo-container {
     display: flex;
     flex-direction: column;
+    gap: 3px;
+}
+
+.portal-item-title-row {
+    display: flex;
+    align-items: center;
     gap: 8px;
 }
 
-.portal-duo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 4px;
-}
-
-.portal-duo-title {
-    font-size: 0.82rem;
-    font-weight: 800;
-    color: var(--secondary-neon);
-    text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-}
-
-.portal-duo-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-@media (max-width: 350px) {
-    .portal-duo-cards {
-        grid-template-columns: 1fr;
-    }
-}
-
-.arcade-sub-card {
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    border-radius: 18px;
-    background: rgba(14, 12, 24, 0.88);
-    backdrop-filter: blur(14px);
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 8px;
-    transition: all 0.2s ease;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
-
-.card-puzzle {
-    border-color: rgba(0, 243, 255, 0.35);
-}
-
-.card-puzzle:hover {
-    border-color: #00f3ff;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 20px rgba(0, 243, 255, 0.35);
-}
-
-.card-flappy {
-    border-color: rgba(255, 0, 85, 0.35);
-}
-
-.card-flappy:hover {
-    border-color: #ff0055;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 20px rgba(255, 0, 85, 0.35);
-}
-
-.sub-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.68rem;
-}
-
-.sub-badge {
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-weight: 800;
-    font-size: 0.65rem;
-}
-
-.sub-badge.cyan {
-    background: rgba(0, 243, 255, 0.15);
-    border: 1px solid rgba(0, 243, 255, 0.4);
-    color: #00f3ff;
-}
-
-.sub-badge.pink {
-    background: rgba(255, 0, 85, 0.15);
-    border: 1px solid rgba(255, 0, 85, 0.4);
-    color: #ff0055;
-}
-
-.sub-best {
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.65);
-}
-
-.sub-card-body {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    padding: 4px 0;
-}
-
-.sub-icon {
-    font-size: clamp(1.8rem, 6vw, 2.3rem);
-    line-height: 1;
-}
-
-.sub-texts {
-    flex: 1;
-    min-width: 0;
-}
-
-.sub-en {
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.55);
-    text-transform: uppercase;
-}
-
-.sub-kr {
-    display: block;
+.portal-item-title {
     font-size: 1.05rem;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.2;
+    font-weight: 800;
+    color: var(--txt-main);
+    letter-spacing: -0.02em;
 }
 
-.sub-desc {
-    margin: 2px 0 0 0;
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.7);
+.portal-item-desc {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--txt-muted);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.sub-card-actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 4px;
-}
-
-.sub-btn-guide {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffd700;
+.portal-best-pill {
     font-size: 0.68rem;
-    font-weight: 800;
-    padding: 6px 4px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.15s;
+    font-weight: 700;
+    color: var(--gold);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
 }
 
-.sub-btn-guide:hover {
-    background: rgba(255, 215, 0, 0.2);
-    border-color: #ffd700;
+.portal-item-arrow {
+    font-size: 1rem;
+    color: var(--txt-muted);
+    flex-shrink: 0;
 }
 
-.sub-btn-play {
-    flex: 1.2;
-    background: linear-gradient(135deg, var(--secondary-neon), #0077ff);
+.portal-item-guide {
+    width: 44px;
     border: none;
-    color: #030310;
-    font-size: 0.72rem;
-    font-weight: 900;
-    padding: 6px 4px;
-    border-radius: 8px;
+    border-left: 1px solid var(--line);
+    background: transparent;
+    color: var(--txt-muted);
+    font-family: var(--font-main);
+    font-size: 0.85rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: transform 0.15s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card-flappy .sub-btn-play {
-    background: linear-gradient(135deg, #ff0055, #ff7700);
-    color: #fff;
+.portal-item-guide:hover, .portal-item-guide:active {
+    background: var(--bg-surface);
+    color: var(--txt-main);
 }
 
-.sub-btn-play:active {
-    transform: scale(0.95);
-}
-
-/* ===== VIP SLOTS JACKPOT TOPPER ===== */
+/* ===== METALLIC SLOTS JACKPOT BAR ===== */
 .slots-jackpot-topper {
     width: 100%;
-    background: linear-gradient(180deg, rgba(30, 20, 8, 0.95), rgba(16, 12, 10, 0.9));
-    border: 2px solid #ffd700;
-    border-radius: 14px;
-    padding: 6px 10px;
-    margin-bottom: 8px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
     overflow: hidden;
-}
-
-.jackpot-bulbs-strip {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 3px;
-}
-
-.jackpot-bulbs-strip span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #ffd700;
-    box-shadow: 0 0 6px #ffd700;
-    animation: bulb-chase 1s infinite alternate;
-}
-
-.jackpot-bulbs-strip span:nth-child(even) {
-    animation-delay: 0.5s;
-    background: #ff0055;
-    box-shadow: 0 0 6px #ff0055;
-}
-
-@keyframes bulb-chase {
-    from { opacity: 0.3; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1.2); }
+    background: linear-gradient(110deg, #1b1710 0%, #2a2010 50%, #1b1710 100%);
+    background-size: 200% 100%;
+    border: 1px solid rgba(245, 158, 11, 0.55);
+    border-radius: 13px;
+    padding: 8px 13px;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(253, 224, 71, 0.18);
+    flex-shrink: 0;
 }
 
 .jackpot-marquee-title {
-    font-size: 0.85rem;
+    font-size: 0.76rem;
     font-weight: 900;
-    color: #ffd700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-    letter-spacing: 0.05em;
+    background: linear-gradient(90deg, #fde047, #f59e0b, #fff7cc, #f59e0b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    animation: gold-shimmer 4s linear infinite;
+}
+
+@keyframes gold-shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
 .jackpot-amount-box {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 2px;
+    gap: 5px;
 }
 
 .jackpot-cur {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
 .jackpot-num {
-    font-size: 1.35rem;
+    font-size: 1.08rem;
     font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 14px #ffd700, 0 0 28px rgba(255, 215, 0, 0.6);
-    letter-spacing: 0.04em;
+    color: #fef08a;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+    font-variant-numeric: tabular-nums;
 }
 
-/* Chasing LED lights around reel frame */
-.chasing-led-lights {
-    position: absolute;
-    inset: 2px;
-    border: 2px dashed rgba(255, 215, 0, 0.4);
-    border-radius: 14px;
-    pointer-events: none;
-    z-index: 4;
-    animation: dash-spin 12s linear infinite;
+/* ===== LUCKY FEVER METER & WIN STREAK ===== */
+.lucky-bar-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 11px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
 }
 
-@keyframes dash-spin {
-    to { stroke-dashoffset: 200; }
+.lucky-bar-wrap.ready {
+    border-color: rgba(245, 158, 11, 0.7);
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.14), rgba(56, 189, 248, 0.12));
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.22);
+}
+
+.lucky-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--txt-muted);
+    white-space: nowrap;
+}
+
+.lucky-bar-wrap.ready .lucky-label {
+    color: #fde047;
+}
+
+.lucky-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lucky-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #f59e0b, #fde047, #38bdf8);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+    transition: width 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.streak-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--txt-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.streak-pill.active {
+    background: rgba(245, 158, 11, 0.18);
+    color: #fde047;
+    border-color: rgba(245, 158, 11, 0.55);
 }
 
 .reels-frame.tension-pulse {
-    animation: reel-tension-pulse 0.4s infinite alternate;
-}
-
-@keyframes reel-tension-pulse {
-    from { border-color: #ffd700; box-shadow: 0 0 35px rgba(255, 215, 0, 0.5); }
-    to { border-color: #ff0055; box-shadow: 0 0 50px rgba(255, 0, 85, 0.85); }
+    border-color: #fde047;
+    box-shadow: 0 0 32px rgba(245, 158, 11, 0.5);
 }
 
 /* ===== GUIDE BUTTON IN HUD ===== */
 .btn-guide-hud {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffd700;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--txt-muted);
     font-size: 0.72rem;
-    font-weight: 800;
+    font-weight: 700;
     padding: 5px 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s;
     margin-left: 6px;
 }
 
-.btn-guide-hud:hover {
-    background: rgba(255, 215, 0, 0.25);
-    border-color: #ffd700;
+.btn-guide-hud:hover, .btn-guide-hud:active {
+    color: var(--txt-main);
+    background: var(--bg-surface);
 }
 
 /* ===== ARCADE GUIDE MODAL ===== */
 .arcade-guide-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.75);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1770,24 +1376,17 @@ canvas {
 
 .arcade-guide-modal.show {
     display: flex;
-    animation: guide-pop 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
-}
-
-@keyframes guide-pop {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
 }
 
 .arcade-guide-card {
-    background: linear-gradient(150deg, rgba(22, 16, 36, 0.98), rgba(10, 8, 18, 0.98));
-    border: 2px solid var(--secondary-neon);
-    border-radius: 22px;
-    padding: 20px;
-    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+    max-width: 400px;
     width: 100%;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -1800,59 +1399,57 @@ canvas {
 }
 
 .guide-badge {
-    background: rgba(0, 243, 255, 0.2);
-    border: 1px solid var(--secondary-neon);
-    color: var(--secondary-neon);
-    font-size: 0.72rem;
-    font-weight: 900;
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
+    color: var(--gold);
+    font-size: 0.7rem;
+    font-weight: 800;
     padding: 3px 10px;
-    border-radius: 12px;
-    letter-spacing: 0.05em;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
 }
 
 .guide-close-btn {
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.5rem;
+    color: var(--txt-muted);
+    font-size: 1.4rem;
     cursor: pointer;
     line-height: 1;
 }
 
 .guide-title {
-    font-size: 1.35rem;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--txt-main);
     margin: 0;
 }
 
 .guide-content {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--txt-muted);
     line-height: 1.5;
 }
 
 .guide-section {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--bg-surface);
+    border: 1px solid var(--line);
     border-radius: 12px;
     padding: 10px 12px;
 }
 
 .guide-section.highlight {
-    background: rgba(255, 215, 0, 0.08);
-    border-color: rgba(255, 215, 0, 0.4);
+    border-color: rgba(245, 158, 11, 0.35);
 }
 
 .guide-sec-title {
-    font-weight: 900;
-    color: #ffd700;
+    font-weight: 800;
+    color: var(--txt-main);
     margin-bottom: 4px;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
 }
 
 .guide-section ul {
@@ -1860,25 +1457,24 @@ canvas {
     padding-left: 18px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .btn-guide-confirm {
-    background: linear-gradient(135deg, var(--secondary-neon), #0077ff);
+    background: var(--gold);
     border: none;
-    color: #030310;
-    font-size: 0.95rem;
-    font-weight: 900;
+    color: #111318;
+    font-size: 0.92rem;
+    font-weight: 800;
     padding: 12px;
     border-radius: 12px;
     cursor: pointer;
     width: 100%;
-    margin-top: 6px;
-    transition: transform 0.15s;
+    margin-top: 4px;
 }
 
 .btn-guide-confirm:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
 }
 
 </style>
@@ -1890,97 +1486,57 @@ canvas {
     <section id="scr-menu" class="screen active">
         <div class="menu-header">
             <h1 class="menu-title">GIJO Arcade</h1>
-            <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임<br>Offline games for flights &amp; waiting</p>
+            <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임 · Offline Mini Games</p>
             <div class="hot-toggle">
-                <span class="hot-toggle-label" id="hot-label">🔥 HOT 테마 · 심야 라운지</span>
+                <span class="hot-toggle-label" id="hot-label">심야 라운지 테마</span>
                 <button class="hot-sw" id="hot-sw" type="button" role="switch" aria-checked="false"
-                        aria-label="HOT 테마 켜기/끄기 · Toggle HOT theme"><span></span></button>
+                        aria-label="심야 테마 켜기/끄기 · Toggle theme"><span></span></button>
             </div>
         </div>
-        <!-- GIJO VIP 아케이드 네온 롤링 전광판 (자체 광고판) -->
-        <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
-            <span class="ad-badge-tag">GIJO VIP</span>
-            <div class="ad-marquee-wrapper">
-                <div class="ad-marquee-content">
-                    <span class="ad-marquee-item">🎰 <em>[GIJO VIP LOUNGE]</em> 동남아 골프·호텔 최저가 보장 &amp; 럭셔리 단독 픽업!</span>
-                    <span class="ad-marquee-item">🌴 <em>[여행자 혜택]</em> 지아이조 투어 고객 전용 현지 액티비티 VIP 패스권!</span>
-                    <span class="ad-marquee-item">✈️ <em>[실시간 상담]</em> 24시간 카카오톡 전담 가이드 연결 ➔</span>
-                    <!-- 롤링 반복용 복제본 -->
-                    <span class="ad-marquee-item">🎰 <em>[GIJO VIP LOUNGE]</em> 동남아 골프·호텔 최저가 보장 &amp; 럭셔리 단독 픽업!</span>
-                    <span class="ad-marquee-item">🌴 <em>[여행자 혜택]</em> 지아이조 투어 고객 전용 현지 액티비티 VIP 패스권!</span>
-                    <span class="ad-marquee-item">✈️ <em>[실시간 상담]</em> 24시간 카카오톡 전담 가이드 연결 ➔</span>
-                </div>
-            </div>
-            <span class="ad-banner-cta">VIP 혜택 ➔</span>
-        </a>
+
         <div class="arcade-portal">
-            <!-- 1. 777 네온 슬롯머신 (LUCKY 777 VIP SLOTS) -->
-            <button class="portal-card portal-slots" data-go="slots" aria-label="GIJO 777 슬롯머신 · Lucky 777 VIP Slots">
-                <div class="portal-card-glow"></div>
-                <div class="portal-badge-row">
-                    <span class="portal-badge gold">🎰 VIP CASINO · JACKPOT</span>
-                    <span class="portal-best-badge" data-best="slots">BEST 0</span>
-                </div>
-                <div class="portal-body">
-                    <div class="portal-icon">&#127920;</div>
-                    <div class="portal-info">
-                        <span class="portal-en">Lucky 777 VIP Slots</span>
-                        <span class="portal-kr">화려한 네온 777 슬롯머신</span>
-                        <p class="portal-desc">라스베가스 카지노 스타일 VIP 잭팟 &amp; 골드 코인 샤워</p>
-                    </div>
-                </div>
-                <div class="portal-action-bar">
-                    <span class="portal-action-text">VIP 스핀 바로 시작</span>
-                    <span class="portal-arrow">&#10140;</span>
-                </div>
-            </button>
+            <div class="portal-item portal-item-slots">
+                <button class="portal-item-main" data-go="slots" aria-label="GIJO 777 슬롯머신 · Lucky 777 Slots">
+                    <span class="portal-item-icon">&#127920;</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">777 슬롯</span>
+                            <span class="portal-best-pill" data-best="slots">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">가볍게 돌리는 오프라인 777 슬롯</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
 
-            <!-- 2. GIJO 아케이드 듀오: Neon 2048 & Flappy Neon -->
-            <div class="portal-duo-container">
-                <div class="portal-duo-header">
-                    <span class="portal-duo-title">🕹️ GIJO 아케이드 컬렉션 (공략 가이드 완비)</span>
-                </div>
-                <div class="portal-duo-cards">
-                    <!-- 2048 Card -->
-                    <div class="arcade-sub-card card-puzzle">
-                        <div class="sub-card-top">
-                            <span class="sub-badge cyan">🔥 깃허브 1위 · 2048</span>
-                            <span class="sub-best" data-best="puzzle">BEST 0</span>
-                        </div>
-                        <div class="sub-card-body" data-go="puzzle">
-                            <span class="sub-icon">&#128293;</span>
-                            <div class="sub-texts">
-                                <span class="sub-en">Neon 2048</span>
-                                <span class="sub-kr">네온 2048</span>
-                                <p class="sub-desc">두뇌 풀가동 퍼즐</p>
-                            </div>
-                        </div>
-                        <div class="sub-card-actions">
-                            <button class="sub-btn-guide" onclick="showGuideModal('puzzle')">📖 공략법</button>
-                            <button class="sub-btn-play" data-go="puzzle">▶ 플레이</button>
-                        </div>
-                    </div>
+            <div class="portal-item portal-item-puzzle">
+                <button class="portal-item-main" data-go="puzzle" aria-label="2048 숫자 퍼즐 · Neon 2048">
+                    <span class="portal-item-icon">&#128290;</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">2048 퍼즐</span>
+                            <span class="portal-best-pill" data-best="puzzle">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">밀어서 숫자를 합치는 두뇌 퍼즐</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+                <button class="portal-item-guide" type="button" onclick="showGuideModal('puzzle')" aria-label="2048 공략 보기" title="공략">?</button>
+            </div>
 
-                    <!-- Flappy Card -->
-                    <div class="arcade-sub-card card-flappy">
-                        <div class="sub-card-top">
-                            <span class="sub-badge pink">💀 극악 난이도 · 비행</span>
-                            <span class="sub-best" data-best="flappy">BEST 0</span>
-                        </div>
-                        <div class="sub-card-body" data-go="flappy">
-                            <span class="sub-icon">&#128080;</span>
-                            <div class="sub-texts">
-                                <span class="sub-en">Flappy Neon</span>
-                                <span class="sub-kr">플래피 네온</span>
-                                <p class="sub-desc">파이프 비행 챌린지</p>
-                            </div>
-                        </div>
-                        <div class="sub-card-actions">
-                            <button class="sub-btn-guide" onclick="showGuideModal('flappy')">📖 공략법</button>
-                            <button class="sub-btn-play" data-go="flappy">▶ 플레이</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="portal-item portal-item-flappy">
+                <button class="portal-item-main" data-go="flappy" aria-label="플래피 비행 · Flappy Flight">
+                    <span class="portal-item-icon">&#128640;</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">플래피 비행</span>
+                            <span class="portal-best-pill" data-best="flappy">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">화면 터치로 장애물을 통과하는 챌린지</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+                <button class="portal-item-guide" type="button" onclick="showGuideModal('flappy')" aria-label="플래피 공략 보기" title="공략">?</button>
             </div>
         </div>
         <div class="footer-note">&copy; GIJO Labs</div>
@@ -1999,14 +1555,10 @@ canvas {
         </div>
 
         <div class="slots-body">
-            <!-- VIP JACKPOT TOPPER -->
             <div class="slots-jackpot-topper" id="slots-jackpot-topper">
-                <div class="jackpot-bulbs-strip">
-                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <div class="jackpot-marquee-title">⭐ VIP 777 MEGA JACKPOT ⭐</div>
+                <span class="jackpot-marquee-title">777 JACKPOT</span>
                 <div class="jackpot-amount-box">
-                    <span class="jackpot-cur">💎</span>
+                    <span class="jackpot-cur">&#128142;</span>
                     <span class="jackpot-num" id="jackpot-ticker-val">77,770</span>
                 </div>
             </div>
@@ -2014,10 +1566,15 @@ canvas {
             <div class="paytable" id="paytable"></div>
 
             <div class="reels-frame" id="reels-frame">
-                <div class="chasing-led-lights"></div>
                 <div class="reels" id="reels"></div>
                 <div class="payline-layer" id="payline-layer"></div>
                 <div class="free-badge hidden" id="free-badge"></div>
+            </div>
+
+            <div class="lucky-bar-wrap" id="lucky-bar-wrap">
+                <span class="lucky-label" id="lucky-label">⚡ 피버 0/5</span>
+                <div class="lucky-track"><div class="lucky-fill" id="lucky-fill"></div></div>
+                <span class="streak-pill" id="streak-pill">연승 0</span>
             </div>
 
             <div class="slots-msg" id="slots-msg"></div>
@@ -2139,6 +1696,18 @@ canvas {
         <p class="hint">화면 탭 / 스페이스 = 날아오르기 · Tap or Space to flap</p>
     </section>
 
+</div>
+
+<div class="arcade-guide-modal" id="arcade-guide-modal" role="dialog" aria-modal="true" aria-label="게임 공략">
+    <div class="arcade-guide-card">
+        <div class="guide-header">
+            <span class="guide-badge" id="guide-badge"></span>
+            <button class="guide-close-btn" type="button" onclick="closeGuideModal()" aria-label="닫기">&times;</button>
+        </div>
+        <h2 class="guide-title" id="guide-title"></h2>
+        <div class="guide-content" id="guide-content"></div>
+        <button class="btn-guide-confirm" type="button" onclick="closeGuideModal()">확인</button>
+    </div>
 </div>
 
 <script>
@@ -3970,6 +3539,12 @@ class Slots {
         // Jackpot Fever: 777 이 3개 뜨면 다음 3스핀 동안 세븐·와일드 확률 3배.
         this.feverActive = false;
         this.feverSpinsLeft = 0;
+        // Lucky Meter (5칸 게이지) + 연승 콤보
+        this.luckyCharge = 0;
+        this.luckyBoostReady = false;
+        this.winStreak = 0;
+        this._tickerId = null;
+        this._jackpotVal = 77770 + (Math.floor(Date.now() / 4000) % 999);
     }
 
     get bet() { return BET_LEVELS[this.betIndex]; }
@@ -4011,6 +3586,9 @@ class Slots {
         this.autoSpinsLeft = 0;
         this.feverActive = false;
         this.feverSpinsLeft = 0;
+        this.luckyCharge = 0;
+        this.luckyBoostReady = false;
+        this.winStreak = 0;
         this.strips = Array.from({ length: REEL_COUNT }, () => buildStrip(false));
         this.refillArmed = false;
         this._timers = [];
@@ -4029,8 +3607,15 @@ class Slots {
         this.setMsg('행운을 빌어요!', 'Good luck!');
         this.updateFreeBadge();
         this.updateAutoSpinLabel();
+        this.updateLuckyUI();
         this.renderPaytable();
         this.updateJackpotTicker();
+        if (this._tickerId) clearInterval(this._tickerId);
+        this._tickerId = setInterval(() => {
+            if (!this.running) return;
+            this._jackpotVal += 1 + Math.floor(Math.random() * 3);
+            this.updateJackpotTicker();
+        }, 750);
         // 지난번에 빈털터리로 나갔으면 들어오자마자 충전 버튼을 보여줍니다.
         if (this.credits < this.bet) this.offerRefill();
     }
@@ -4076,11 +3661,49 @@ class Slots {
         this.autoSpinning = false;
         if (this.raf) cancelAnimationFrame(this.raf);
         this.raf = null;
+        if (this._tickerId) clearInterval(this._tickerId);
+        this._tickerId = null;
         (this._timers || []).forEach(clearTimeout);
         this._timers = [];
         this.offAll();
         this.clearOverlays();
         this.saveCredits();
+    }
+
+    updateLuckyUI() {
+        const wrap = document.getElementById('lucky-bar-wrap');
+        const fill = document.getElementById('lucky-fill');
+        const label = document.getElementById('lucky-label');
+        const streakEl = document.getElementById('streak-pill');
+        const spinBtn = document.getElementById('spin-btn');
+        const pct = this.luckyBoostReady ? 100 : Math.min(100, (this.luckyCharge / 5) * 100);
+        if (fill) fill.style.width = `${pct}%`;
+        if (wrap) wrap.classList.toggle('ready', this.luckyBoostReady);
+        if (label) {
+            label.textContent = this.luckyBoostReady
+                ? '⚡ 피버 준비 완료! (무료 x2)'
+                : `⚡ 피버 ${this.luckyCharge}/5`;
+        }
+        if (streakEl) {
+            const mult = this.streakMult();
+            streakEl.classList.toggle('active', this.winStreak >= 2);
+            streakEl.textContent = this.winStreak >= 2
+                ? `🔥 ${this.winStreak}연승 x${mult}`
+                : `연승 ${this.winStreak}`;
+        }
+        if (spinBtn && !this.refillArmed) {
+            spinBtn.classList.toggle('fever-ready', this.luckyBoostReady);
+            if (!this.spinning) {
+                spinBtn.textContent = this.luckyBoostReady ? '⚡ 무료 x2 SPIN!' : 'SPIN · 돌리기';
+            }
+        }
+    }
+
+    streakMult() {
+        if (this.winStreak >= 4) return 2;
+        if (this.winStreak === 3) return 1.5;
+        if (this.winStreak === 2) return 1.2;
+        return 1;
     }
 
     // 다른 게임과 인터페이스를 맞추기 위한 자리(캔버스가 없어 할 일이 없습니다).
@@ -4258,13 +3881,19 @@ class Slots {
         // 충전 버튼 상태면 SPIN 버튼이 곧 충전 버튼입니다.
         if (this.refillArmed) { this.doRefill(); return; }
 
-        const paying = this.freeSpins === 0;
+        const isLuckyBoost = this.luckyBoostReady && this.freeSpins === 0;
+        const paying = this.freeSpins === 0 && !isLuckyBoost;
         if (paying && this.credits < this.bet) {
             this.offerRefill();
             return;
         }
 
         this.spinning = true;
+        this._activeBoostMult = isLuckyBoost ? 2 : 1;
+        if (isLuckyBoost) {
+            this.luckyBoostReady = false;
+            this.luckyCharge = 0;
+        }
         this.setSpinLock(true);
         this.clearWinVisuals();
         this.setStat('win', 0);
@@ -4272,11 +3901,16 @@ class Slots {
         if (paying) {
             this.credits -= this.bet;
             this.setStat('credit', this.credits);
+        } else if (isLuckyBoost) {
+            this.updateLuckyUI();
         } else {
             this.freeSpins--;
             this.updateFreeBadge();
         }
-        this.setMsg(paying ? '돌리는 중...' : '프리스핀!', paying ? 'Spinning...' : 'Free spin!');
+        this.setMsg(
+            isLuckyBoost ? '⚡ 피버 x2 무료 스핀!' : (paying ? '돌리는 중...' : '프리스핀!'),
+            isLuckyBoost ? 'Lucky Fever Free x2 Spin!' : (paying ? 'Spinning...' : 'Free spin!')
+        );
 
         // 각 릴의 최종 정지 위치를 먼저 정합니다(연출은 그 위를 달릴 뿐입니다).
         const finalPos = this.strips.map(strip => (Math.random() * strip.length) | 0);
@@ -4346,7 +3980,21 @@ class Slots {
                 this.pos[r] = target;
                 this.renderOne(r);
                 el.classList.remove('spinning');
-                sfx.blip(300 + r * 60, 0.05, 'square', 0.04);
+                el.classList.remove('landed', 'hot-hit');
+                void el.offsetWidth;
+                el.classList.add('landed');
+                let hasHot = false;
+                for (let row = 0; row < ROWS_VISIBLE; row++) {
+                    const id = strip[(target + row) % strip.length];
+                    if (id === 'seven' || id === 'chili' || id === 'wild') hasHot = true;
+                }
+                if (hasHot) {
+                    el.classList.add('hot-hit');
+                    sfx.blip(780 + r * 90, 0.08, 'triangle', 0.06);
+                    setTimeout(() => el.classList.remove('hot-hit'), 550);
+                } else {
+                    sfx.blip(300 + r * 60, 0.05, 'square', 0.04);
+                }
                 vibe(10);
             }
         };
@@ -4366,7 +4014,9 @@ class Slots {
 
     evaluate(scatterCount) {
         const grid = this.visibleGrid();
-        const mult = this.bonusActive ? this.bonusMult : 1;
+        const boostMult = this._activeBoostMult || 1;
+        this._activeBoostMult = 1;
+        const mult = (this.bonusActive ? this.bonusMult : 1) * boostMult;
         // 🎰 Jackpot Fever 트리거 판정 — 페이라인이 아니라 화면에 보이는 15칸 전체에서 셉니다.
         const sevenCount = grid.reduce((n, col) => n + col.filter(id => id === 'seven').length, 0);
         let total = 0;
@@ -4441,6 +4091,9 @@ class Slots {
         const triggered = !this.bonusActive && scatterCount >= 3;
 
         if (total > 0) {
+            this.winStreak++;
+            const sMult = this.streakMult();
+            if (sMult > 1) total = Math.round(total * sMult);
             this.credits += total;
             this.setStat('credit', this.credits);
             this.setStat('win', total);
@@ -4450,24 +4103,41 @@ class Slots {
                 store.setBest(this.id, total);
                 this.setStat('bestval', store.best(this.id));
             }
+        } else {
+            this.winStreak = 0;
+        }
+
+        if (!this.bonusActive && boostMult === 1 && !this.luckyBoostReady) {
+            const chargeStep = (sevenCount > 0 || scatterCount > 0) ? 2 : 1;
+            this.luckyCharge = Math.min(5, this.luckyCharge + chargeStep);
+            if (this.luckyCharge >= 5) {
+                this.luckyBoostReady = true;
+            }
         }
 
         this.saveCredits();
         this.updateFreeBadge();
+        this.updateLuckyUI();
 
         const bigThreshold = this.bet * 20;
         if (total >= bigThreshold && total > 0) {
             this.showBigWin(total);
         } else if (bonusNotes.length) {
             this.setMsg(bonusNotes.join(' · '), `+${total}`);
+            this.spawnCoinShower(12);
             sfx.good();
             vibe([0, 40, 40, 40]);
         } else if (total > 0) {
-            this.setMsg(`+${total} 크레딧!`, `You won ${total} credits!`);
+            const streakTag = this.winStreak >= 2 ? ` · 🔥 ${this.winStreak}연승!` : '';
+            this.setMsg(`+${total} 크레딧!${streakTag}`, `You won ${total} credits!`);
+            this.spawnCoinShower(this.winStreak >= 2 ? 14 : 8);
             sfx.good();
             vibe([0, 40, 40, 40]);
         } else if (!triggered) {
-            this.setMsg('아쉽네요. 한 번 더!', 'So close. Spin again!');
+            this.setMsg(
+                this.luckyBoostReady ? '⚡ 피버 완충! 다음 스핀은 무료 x2!' : `아쉽네요. 피버 +1 (${this.luckyCharge}/5)`,
+                this.luckyBoostReady ? 'Lucky Spin ready — FREE x2 next!' : 'Keep spinning to fill Lucky Fever!'
+            );
         }
 
         this.spinning = false;
@@ -4785,8 +4455,7 @@ class Slots {
     updateJackpotTicker() {
         const ticker = document.getElementById('jackpot-ticker-val');
         if (!ticker) return;
-        const base = 77770 + Math.floor(Date.now() / 4000) % 999;
-        ticker.textContent = base.toLocaleString();
+        ticker.textContent = (this._jackpotVal || 77770).toLocaleString();
     }
 
     /** SPIN 뿐 아니라 MAX BET·AUTO 버튼도 같이 잠급니다 — 스핀 도는 중엔 셋 다 조작 불가. */
@@ -5503,49 +5172,54 @@ if (hotSw) {
         sfx.init();
         HOT.on = !HOT.on;
         localStorage.setItem('gijoArcade_hot', HOT.on ? '1' : '0');
-        
+        paintHot();
+        sfx.blip(HOT.on ? 660 : 440, 0.06, 'triangle', 0.05);
+        vibe(HOT.on ? [0, 20, 30, 20] : 15);
+    });
+}
+
 /* ===== ARCADE GUIDE MODAL & NAVIGATION ===== */
 const ARCADE_GUIDES = {
     puzzle: {
-        badge: 'PUZZLE GUIDE · 네온 2048',
-        title: '네온 2048 게임 방법 &amp; 필승 공략',
+        badge: 'PUZZLE GUIDE · 2048',
+        title: '2048 게임 방법 &amp; 공략',
         content: `
             <div class="guide-section">
                 <div class="guide-sec-title">🎯 게임 목표</div>
-                <p>같은 숫자가 적힌 네온 타일을 합쳐서 궁극의 <b>2048 타일</b>을 완성하는 두뇌 전략 퍼즐입니다.</p>
+                <p>같은 숫자가 적힌 타일을 합쳐서 <b>2048 타일</b>을 완성하는 퍼즐 게임입니다.</p>
             </div>
             <div class="guide-section">
                 <div class="guide-sec-title">🕹️ 조작법</div>
-                <p><b>모바일</b>: 화면을 상 / 하 / 좌 / 우 방향으로 스와이프 (밀기)<br><b>PC</b>: 키보드 방향키 (↑, ↓, ←, →)</p>
+                <p><b>모바일</b>: 상 / 하 / 좌 / 우로 화면을 스와이프<br><b>PC</b>: 키보드 방향키 (↑, ↓, ←, →)</p>
             </div>
             <div class="guide-section highlight">
-                <div class="guide-sec-title">👑 10년차 고수의 필승 3대 법칙</div>
+                <div class="guide-sec-title">💡 고수 3가지 팁</div>
                 <ul>
-                    <li><b>1. 코너 고정의 법칙</b>: 가장 큰 숫자 타일(512, 1024 등)을 반드시 <b>한쪽 모서리(예: 좌측 하단)</b>에 딱 고정하세요. 절대 자리를 비우지 않아야 합니다.</li>
-                    <li><b>2. 절대 금지 방향</b>: 큰 타일이 아래에 있다면, 절대로 <b>위쪽 [↑]</b> 방향으로 스와이프하지 마세요! 모서리 배치가 단숨에 무너집니다.</li>
-                    <li><b>3. 지그재그 체인 정렬</b>: 1행, 2행 순서로 큰 숫자부터 순서대로(1024 ➔ 512 ➔ 256 ➔ 128) 내림차순 정렬하면 연쇄 합체가 연달아 폭발합니다!</li>
+                    <li><b>1. 코너 고정</b>: 가장 큰 숫자 타일을 한쪽 모서리(예: 왼쪽 아래)에 계속 두세요.</li>
+                    <li><b>2. 반대 방향 피하기</b>: 큰 타일이 아래에 몰려 있을 때 위쪽 [↑] 스와이프는 가급적 피하세요.</li>
+                    <li><b>3. 내림차순 정렬</b>: 큰 숫자부터 차례대로 이어지도록 배치하면 연쇄 합체가 쉬워집니다.</li>
                 </ul>
             </div>
         `
     },
     flappy: {
-        badge: 'FLAPPY GUIDE · 플래피 네온',
-        title: '플래피 네온 게임 방법 &amp; 생존 공략',
+        badge: 'FLAPPY GUIDE · 비행',
+        title: '플래피 비행 방법 &amp; 공략',
         content: `
             <div class="guide-section">
                 <div class="guide-sec-title">🎯 게임 목표</div>
-                <p>중력을 이겨내며 날아오르고, 다가오는 네온 파이프 장애물을 통과해 최고 점수를 기록하세요!</p>
+                <p>화면을 터치해 높이를 조절하며 장애물 사이를 통과해 최고 점수를 세우세요.</p>
             </div>
             <div class="guide-section">
                 <div class="guide-sec-title">🕹️ 조작법</div>
-                <p><b>모바일</b>: 화면 아무 곳이나 가볍게 탭 (Tap)<br><b>PC</b>: 스페이스바 (Space) 또는 마우스 클릭</p>
+                <p><b>모바일</b>: 화면 아무 곳이나 터치 (Tap)<br><b>PC</b>: 스페이스바 (Space) 또는 클릭</p>
             </div>
             <div class="guide-section highlight">
-                <div class="guide-sec-title">👑 10년차 고수의 생존 3대 팁</div>
+                <div class="guide-sec-title">💡 생존 팁</div>
                 <ul>
-                    <li><b>1. 리듬 탭핑</b>: 마구 연타하지 마세요! 새가 살짝 하강할 때 일정한 박자(툭-툭)로 리듬을 타는 것이 핵심입니다.</li>
-                    <li><b>2. 중앙-하단 라인 유지</b>: 파이프를 통과할 때 상단 모서리에 스치기 쉬우므로, 안전하게 <b>파이프 중앙~살짝 아래</b>로 통과하세요.</li>
-                    <li><b>3. 5점 달성 시 황금 왕관 👑</b>: 5점을 돌파하면 머리에 황금 왕관이 씌워집니다! 긴장하지 말고 10점, 20점을 노려보세요!</li>
+                    <li><b>1. 일정한 박자</b>: 빠르게 연타하기보다 살짝 내려갈 때 맞춰 툭-툭 눌러 리듬을 타세요.</li>
+                    <li><b>2. 중앙 아래 유지</b>: 점프 직후 위 파이프에 닿지 않도록 틈 중앙~살짝 아래를 노리세요.</li>
+                    <li><b>3. 5점 왕관</b>: 5점을 넘기면 왕관 연출이 켜집니다. 욕심내지 말고 한 칸씩 통과하세요.</li>
                 </ul>
             </div>
         `
@@ -5573,11 +5247,8 @@ function closeGuideModal() {
     sfx.blip(400, 0.04);
 }
 
-paintHot();
-        sfx.blip(HOT.on ? 660 : 440, 0.06, 'triangle', 0.05);
-        vibe(HOT.on ? [0, 20, 30, 20] : 15);
-    });
-}
+window.showGuideModal = showGuideModal;
+window.closeGuideModal = closeGuideModal;
 
 paintHot();
 

@@ -62,9 +62,9 @@
       "url": "./?tab=emergency"
     },
     {
-      "name": "내 보관함",
-      "short_name": "보관함",
-      "description": "저장해 둔 문장 바로 열기",
+      "name": "내 단어장",
+      "short_name": "단어장",
+      "description": "저장해 둔 단어와 퀴즈 바로 열기",
       "url": "./?tab=bookmarks"
     }
   ]

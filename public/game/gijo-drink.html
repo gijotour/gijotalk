@@ -16,12 +16,17 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap"></noscript>
     <style>
 :root {
-    --bg-color: #0a0a0c;
-    --primary-neon: #ff0055;
-    --secondary-neon: #00f3ff;
-    --tertiary-neon: #a200ff;
-    --text-color: #ffffff;
-    --font-main: 'Outfit', sans-serif;
+    --bg-color: #111318;
+    --surface-color: #1a1d24;
+    --surface-hover: #222630;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --primary-neon: #ff4d6d;
+    --secondary-neon: #e2e8f0;
+    --tertiary-neon: #818cf8;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --font-main: 'Outfit', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
 }
 
 * {
@@ -46,30 +51,17 @@ html, body {
     height: 100dvh;
     position: relative;
     z-index: 1;
+    max-width: 520px;
+    margin: 0 auto;
 }
 
-/* 메인 로비 뒤에 깔리는 오로라 배경 — 마크업(#app 첫 자식)과 짝입니다.
-   HOT 모드에선 body.hot .aurora-bg 가 붉게 바꿉니다. */
 .aurora-bg {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: 
-        radial-gradient(ellipse at 15% 15%, rgba(255, 0, 85, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 25%, rgba(0, 243, 255, 0.14) 0%, transparent 50%),
-        radial-gradient(circle at 50% 75%, rgba(162, 0, 255, 0.12) 0%, transparent 60%),
-        radial-gradient(circle at 80% 85%, rgba(255, 170, 0, 0.08) 0%, transparent 40%);
-    filter: blur(12px);
-    will-change: transform;
-    transform: translateZ(0);
-    animation: aurora-mesh-drift 12s ease-in-out infinite alternate;
+    inset: 0;
+    background: transparent;
     pointer-events: none;
     z-index: 0;
-}
-
-@keyframes aurora-mesh-drift {
-    0% { transform: scale(1) translate(0, 0); opacity: 0.85; }
-    50% { transform: scale(1.08) translate(-1%, 2%); opacity: 1; }
-    100% { transform: scale(1.03) translate(2%, -1%); opacity: 0.9; }
+    transition: background 0.3s ease;
 }
 
 .screen {
@@ -78,12 +70,12 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: clamp(12px, 3vw, 24px);
+    padding: clamp(16px, 4vw, 24px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     box-sizing: border-box;
 }
 
@@ -101,43 +93,40 @@ html, body {
 }
 
 .title {
-    font-size: clamp(2rem, 9vw, 3.2rem);
-    line-height: 1.1;
+    font-size: clamp(1.5rem, 6.5vw, 2rem);
+    line-height: 1.15;
 }
 
 .neon-text {
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    color: #fff;
-    text-shadow: 0 0 18px var(--primary-neon);
-    margin-bottom: 8px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
+    margin-bottom: 4px;
     text-align: center;
 }
 
 h2.neon-text {
-    font-size: clamp(1.3rem, 6vw, 1.8rem);
-    color: #fff;
-    text-shadow: 0 0 14px var(--secondary-neon);
-    margin-bottom: 18px;
+    font-size: clamp(1.15rem, 5vw, 1.45rem);
+    color: var(--text-color);
+    margin-bottom: 10px;
 }
 
 .title-kr {
-    display: inline-block;
-    font-size: 0.55em;
-    color: #aaa;
-    text-shadow: none;
-    font-weight: 400;
-    margin-top: 4px;
+    display: block;
+    font-size: 0.65em;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 2px;
 }
 
 .subtitle {
-    color: #999;
-    font-size: 0.9rem;
-    margin-bottom: 28px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-bottom: 16px;
     text-align: center;
 }
 
-/* ===== Main Quad Menu ===== */
+/* ===== Main Menu ===== */
 .main-menu-screen {
     padding: 0 !important;
     justify-content: flex-start !important;
@@ -145,174 +134,85 @@ h2.neon-text {
 
 .main-header {
     width: 100%;
-    padding: clamp(14px, 4vw, 24px) 20px clamp(10px, 3vw, 20px) 20px;
+    padding: calc(18px + env(safe-area-inset-top)) 16px 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
     flex-shrink: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(ellipse at 50% -15%, rgba(255, 77, 109, 0.2), rgba(129, 140, 248, 0.08) 55%, transparent 82%);
 }
 
 .main-header .title {
-    font-size: clamp(1.6rem, 7vw, 2.5rem);
-    margin-bottom: 8px;
-}
-
-/* 상단 배너 — 자체 홍보 슬롯 (GIJO TOUR VIP 네온 롤링 전광판) */
-.ad-banner {
-    position: relative;
-    width: calc(100% - 12px);
-    margin: 6px auto;
-    flex-shrink: 0;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    padding: 0 10px;
-    border-radius: 14px;
-    text-decoration: none;
-    background: linear-gradient(120deg, rgba(255, 107, 74, 0.25), rgba(255, 0, 85, 0.25)), rgba(10, 15, 30, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 107, 74, 0.5);
-    box-shadow: 0 0 15px rgba(255, 107, 74, 0.3), inset 0 0 10px rgba(255, 107, 74, 0.15);
-    transition: transform 0.15s ease;
-}
-.ad-banner:active { transform: scale(0.98); }
-
-.ad-badge-tag {
-    background: linear-gradient(135deg, #FF6B4A, #FF0055);
-    color: #fff;
-    font-size: 0.65rem;
+    font-size: clamp(1.4rem, 6.2vw, 1.85rem);
+    margin-bottom: 0;
     font-weight: 900;
-    padding: 3px 7px;
-    border-radius: 6px;
-    flex-shrink: 0;
-    margin-right: 8px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 0 8px rgba(255, 107, 74, 0.6);
+    background: linear-gradient(135deg, #ffffff 20%, #fda4af 65%, #ff4d6d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.ad-marquee-wrapper {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-    mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-}
-
-.ad-marquee-content {
-    display: inline-flex;
-    white-space: nowrap;
-    animation: gijoMarquee 24s linear infinite;
-}
-
-.ad-marquee-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding-right: 40px;
-    color: #fff;
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
-
-.ad-marquee-item em {
-    color: #FFD700;
-    font-style: normal;
-    font-weight: 800;
-}
-
-@keyframes gijoMarquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.ad-banner-cta {
-    flex-shrink: 0;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 800;
-    white-space: nowrap;
-    margin-left: 6px;
+.ad-banner {
+    display: none !important;
 }
 
 .btn {
     font-family: var(--font-main);
-    font-size: clamp(0.95rem, 3vw, 1.15rem);
+    font-size: 0.95rem;
     font-weight: 700;
-    padding: clamp(10px, 2.5vw, 14px) clamp(16px, 4vw, 24px);
-    border-radius: 16px;
+    padding: 13px 18px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
     border: none;
     outline: none;
     width: 100%;
 }
 
 .neon-btn {
-    background: linear-gradient(120deg, var(--secondary-neon), #4d8cff);
+    background: linear-gradient(180deg, #ff6b86 0%, #ff4d6d 55%, #e11d48 100%);
     color: #fff;
     border: none;
-    box-shadow: 0 4px 18px rgba(0, 243, 255, 0.4);
-    position: relative;
-    overflow: hidden;
     white-space: nowrap;
     font-weight: 800;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 4px 16px rgba(255, 77, 109, 0.35), 0 3px 0 #9f1239, inset 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .neon-btn:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 6px 24px rgba(0, 243, 255, 0.55);
+    filter: brightness(1.06);
 }
 
 .neon-btn:active {
-    transform: scale(0.96);
-    filter: brightness(0.92);
+    transform: translateY(2px);
+    box-shadow: 0 2px 8px rgba(255, 77, 109, 0.3), 0 1px 0 #9f1239;
 }
 
-#screen-roulette-input h2.neon-text,
-#screen-roulette h2.neon-text {
-    text-shadow: 0 0 14px var(--primary-neon);
-}
-#screen-roulette-input .neon-btn,
-#screen-roulette .neon-btn {
-    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
-    box-shadow: 0 4px 18px rgba(255, 0, 85, 0.4);
-}
-#screen-roulette-input .neon-btn:hover,
-#screen-roulette .neon-btn:hover {
-    box-shadow: 0 6px 24px rgba(255, 0, 85, 0.55);
-}
-#screen-roulette-input textarea {
-    border-color: var(--primary-neon);
-    box-shadow: inset 0 0 10px rgba(255, 0, 85, 0.2);
+.neon-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .btn-back {
     position: absolute;
-    top: clamp(16px, 4vw, 25px);
-    left: clamp(16px, 4vw, 20px);
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: var(--secondary-neon);
+    top: calc(14px + env(safe-area-inset-top));
+    left: 16px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-color);
     font-family: var(--font-main);
-    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-    padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 15px);
-    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background-color 0.15s;
     z-index: 100;
 }
 
 .btn-back:hover {
-    text-shadow: 0 0 10px var(--secondary-neon);
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--surface-hover);
 }
 
 /* Roulette Screen & Elements */
@@ -322,51 +222,44 @@ h2.neon-text {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding-top: clamp(50px, 8vh, 64px);
-    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+    padding-top: calc(16px + env(safe-area-inset-top));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    background: var(--bg-color);
 }
 
-.roulette-screen {
-    background:
-        radial-gradient(ellipse at center, rgba(42, 0, 30, 0.58) 0%, rgba(13, 0, 15, 0.9) 80%),
-        url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
+#screen-roulette.roulette-play-screen {
+    justify-content: space-between !important;
+    overflow: hidden;
+    padding: calc(12px + env(safe-area-inset-top)) 12px calc(18px + env(safe-area-inset-bottom));
+    gap: 8px;
 }
 
-body.hot .roulette-screen {
-    background:
-        radial-gradient(ellipse at center, rgba(60, 0, 20, 0.62) 0%, rgba(15, 0, 5, 0.92) 80%),
-        url('assets/drink_spicy_main_banner_1787296777970.jpg') center/cover;
+.roulette-header-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--text-color);
+    letter-spacing: -0.02em;
+}
+
+.roulette-stage {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
 }
 
 .roulette-container {
     position: relative;
-    width: min(78vw, 360px, 42vh);
-    height: min(78vw, 360px, 42vh);
+    width: min(92vw, 430px, 58dvh);
+    height: min(92vw, 430px, 58dvh);
     flex-shrink: 0;
-    margin-bottom: clamp(8px, 2vh, 16px);
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.roulette-container::before {
-    content: '';
-    position: absolute;
-    inset: -8%;
-    background: radial-gradient(circle, rgba(255, 0, 85, 0.45) 0%, rgba(0, 243, 255, 0.25) 45%, transparent 72%);
-    border-radius: 50%;
-    filter: blur(10px);
-    pointer-events: none;
-    animation: roulette-aura 4s infinite alternate ease-in-out;
-}
-
-body.hot .roulette-container::before {
-    background: radial-gradient(circle, rgba(255, 0, 85, 0.6) 0%, rgba(255, 107, 157, 0.3) 50%, transparent 75%);
-}
-
-@keyframes roulette-aura {
-    0% { transform: scale(0.96); opacity: 0.7; }
-    100% { transform: scale(1.04); opacity: 1; }
 }
 
 .roulette-wheel-wrapper {
@@ -375,24 +268,19 @@ body.hot .roulette-container::before {
     position: relative;
     border-radius: 50%;
     padding: 8px;
-    background: linear-gradient(135deg, #2b2b3a 0%, #101018 100%);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 243, 255, 0.4);
+    background: conic-gradient(from 0deg, #ff4d6d, #f59e0b, #38bdf8, #a855f7, #ff4d6d);
+    box-shadow: 0 0 28px rgba(255, 77, 109, 0.28), 0 10px 28px rgba(0, 0, 0, 0.5);
     box-sizing: border-box;
-}
-
-body.hot .roulette-wheel-wrapper {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 0, 85, 0.55);
 }
 
 .roulette-wheel {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 8px solid #ffffff;
-    box-shadow: 0 0 0 4px var(--primary-neon), 0 0 45px rgba(255, 0, 85, 0.65), inset 0 0 35px rgba(0, 0, 0, 0.5);
+    border: 3px solid #111318;
     position: relative;
     overflow: hidden;
-    transition: transform 4.2s cubic-bezier(0.12, 0.88, 0.32, 1);
+    transition: transform 3.6s cubic-bezier(0.12, 0.88, 0.32, 1);
     box-sizing: border-box;
 }
 
@@ -400,45 +288,38 @@ body.hot .roulette-wheel-wrapper {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: clamp(52px, 14vw, 66px);
-    height: clamp(52px, 14vw, 66px);
+    width: clamp(58px, 15vw, 72px);
+    height: clamp(58px, 15vw, 72px);
     padding: 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ff7aa6, #ff0055 55%, #55001d);
+    background: radial-gradient(circle at 30% 30%, #334155, #0f172a);
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 20px #ff0055, 0 4px 10px rgba(0,0,0,0.6);
     border: 3px solid #ffffff;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1px;
     cursor: pointer;
     user-select: none;
     font-family: var(--font-main);
     transition: transform 0.12s ease;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 77, 109, 0.5);
 }
 
 .roulette-center-hub:active {
     transform: translate(-50%, -50%) scale(0.92);
 }
 
-body.hot .roulette-center-hub {
-    border-color: var(--primary-neon);
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.4);
-}
-
 .roulette-center-hub-icon {
-    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    font-size: 1rem;
     line-height: 1;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
 }
 
 .roulette-center-hub-text {
-    font-size: clamp(0.48rem, 1.5vw, 0.58rem);
+    font-size: 0.72rem;
     font-weight: 900;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     color: #fff;
 }
 
@@ -452,46 +333,50 @@ body.hot .roulette-center-hub {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: clamp(14px, 3.5vw, 22px);
+    padding-top: clamp(18px, 4.8vw, 28px);
     font-weight: 900;
-    font-size: clamp(0.78rem, 2.4vw, 0.95rem);
+    font-size: clamp(0.84rem, 3.1vw, 1.04rem);
     color: #ffffff;
-    text-shadow: 0 2px 4px #000, 0 0 8px rgba(0, 0, 0, 0.95);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.88);
     pointer-events: none;
     box-sizing: border-box;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
 }
 
-/* 3D Pointer with Physics Twitch */
+/* Minimal Pointer */
 .roulette-pointer {
     position: absolute;
-    top: -16px;
+    top: -12px;
     left: 50%;
     transform: translateX(-50%);
-    width: 0; 
-    height: 0; 
-    border-left: 16px solid transparent;
-    border-right: 16px solid transparent;
-    border-top: 36px solid #ff0055;
-    filter: drop-shadow(0 0 10px #ff0055) drop-shadow(0 4px 6px rgba(0,0,0,0.8));
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 30px solid var(--primary-neon);
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
     z-index: 20;
     transform-origin: 50% 0%;
     transition: transform 0.05s ease;
 }
 
-.roulette-pointer::after {
-    content: '';
-    position: absolute;
-    top: -36px;
-    left: -8px;
-    width: 16px;
-    height: 16px;
-    background: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 0 10px #fff;
+.roulette-bottom-bar {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
-/* Quick Presets on Input Screen */
+.roulette-count-hint {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Quick Presets */
 .roulette-presets-container {
     width: 100%;
     max-width: 440px;
@@ -502,170 +387,153 @@ body.hot .roulette-center-hub {
 }
 
 .roulette-presets-title {
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: var(--secondary-neon);
-    text-shadow: 0 0 8px var(--secondary-neon);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
 }
 
 .roulette-preset-chips,
 .editor-presets {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
+    gap: 6px;
+    justify-content: flex-start;
 }
 
 .roulette-chip-btn,
 .preset-chip {
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #fff;
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
     font-family: var(--font-main);
-    font-size: clamp(0.72rem, 2.4vw, 0.82rem);
+    font-size: 0.75rem;
     font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 20px;
+    padding: 6px 11px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
 }
 
 .roulette-chip-btn:hover,
 .preset-chip:hover:not(:disabled) {
-    border-color: var(--secondary-neon);
-    background: rgba(0, 243, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+    border-color: var(--border-strong);
+    color: var(--text-color);
 }
 
 .roulette-chip-btn.active,
 .preset-chip.active {
     border-color: var(--primary-neon);
-    background: rgba(255, 0, 85, 0.25);
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+    background: var(--primary-neon);
     color: #fff;
 }
 
 .preset-chip.has-saved {
-    border-color: #ffd700;
-    background: rgba(255, 215, 0, 0.16);
-    color: #ffd700;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
 }
 
 .preset-chip.saved-flash {
-    border-color: #00ff88;
-    background: rgba(0, 255, 136, 0.25);
-    color: #00ff88;
-    box-shadow: 0 0 16px rgba(0, 255, 136, 0.55);
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
 }
 
 .preset-chip:disabled {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
-/* Roulette Result Banner (Screen) */
+/* Roulette Result Banner */
 .roulette-result-card {
-    margin-top: 12px;
-    width: 90%;
-    max-width: 380px;
-    min-height: 48px;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 440px;
+    min-height: 44px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    border-radius: 14px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
+    padding: 8px 14px;
+    border-radius: 12px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
 }
 
 .roulette-result-card.has-result {
-    border-color: var(--secondary-neon);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.35);
-    animation: result-card-pop 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+    border-color: var(--primary-neon);
+    animation: result-card-pop 0.3s ease-out;
 }
 
 @keyframes result-card-pop {
-    0% { transform: scale(0.9); opacity: 0; }
+    0% { transform: scale(0.95); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
 .result-text {
     margin-top: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--secondary-neon);
-    min-height: 1.6rem;
-    text-shadow: 0 0 10px var(--secondary-neon);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-color);
     text-align: center;
     word-break: keep-all;
 }
 
 .i18n-sub {
     display: block;
-    font-size: 0.6em;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
-    text-shadow: none;
-    letter-spacing: 0.01em;
-    margin-top: 4px;
+    font-size: 0.72em;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 3px;
 }
 
 /* Settings */
 .settings-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 440px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
 }
 
 .setting-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
 }
 
 .setting-group label {
-    color: var(--secondary-neon);
+    color: var(--text-muted);
     font-weight: 700;
-    font-size: 0.85rem;
-    text-shadow: 0 0 5px var(--secondary-neon);
+    font-size: 0.8rem;
 }
 
 textarea {
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--tertiary-neon);
-    color: #fff;
+    background: var(--surface-color);
+    border: 1px solid var(--border-strong);
+    color: var(--text-color);
     font-family: var(--font-main);
-    padding: 10px;
-    border-radius: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
     resize: none;
     outline: none;
-    box-shadow: inset 0 0 10px rgba(162, 0, 255, 0.2);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 440px;
 }
 
 textarea:focus {
     border-color: var(--primary-neon);
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
 }
 
 .save-btn {
-    margin-top: 5px;
+    margin-top: 4px;
 }
 
 .msg-text {
     text-align: center;
-    color: #00ff00;
+    color: #34d399;
     min-height: 1.2rem;
-    font-weight: bold;
-    text-shadow: 0 0 5px #00ff00;
+    font-weight: 700;
     font-size: 0.8rem;
 }
 
@@ -676,57 +544,60 @@ textarea:focus {
     justify-content: center;
     gap: 8px;
     margin-bottom: 0;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 5px 12px;
-    border-radius: 50px;
-    border: 1px solid rgba(162, 0, 255, 0.3);
+    background: var(--surface-color);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border-subtle);
 }
 
 .player-label {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #ccc;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
 }
 
 .player-count-val {
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: var(--secondary-neon);
-    width: 30px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--text-color);
+    min-width: 22px;
     text-align: center;
-    text-shadow: 0 0 5px var(--secondary-neon);
+    font-variant-numeric: tabular-nums;
 }
 
 .cnt-btn {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    border: 2px solid var(--secondary-neon);
-    background: transparent;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-hover);
     color: #fff;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background-color 0.15s;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.cnt-btn:active {
+    background: var(--primary-neon);
+    border-color: var(--primary-neon);
+}
+
 /* Finger Roulette */
 .finger-screen {
     justify-content: flex-start !important;
-    padding-top: clamp(50px, 8vh, 64px);
-    background:
-        radial-gradient(ellipse at center, rgba(0, 29, 43, 0.55) 0%, rgba(0, 8, 10, 0.88) 80%),
-        url('assets/drink_touch_roulette_spicy_art_1787296832739.jpg') center/cover;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    background: var(--bg-color);
 }
 
 #touch-title-neon {
     position: relative;
     z-index: 10;
     pointer-events: none;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 
 .touch-mode-tabs {
@@ -749,44 +620,42 @@ textarea:focus {
     position: relative;
     z-index: 10;
     text-align: center;
-    font-size: 1rem;
-    color: #fff;
-    text-shadow: 0 0 10px var(--secondary-neon);
+    font-size: 0.9rem;
+    color: var(--text-muted);
     pointer-events: none;
-    margin-top: 6px;
-    line-height: 1.3;
+    margin-top: 8px;
+    line-height: 1.4;
 }
 
 .finger-countdown {
     display: inline-block;
-    font-size: clamp(3.5rem, 22vw, 6rem);
+    font-size: clamp(3rem, 18vw, 5rem);
     font-weight: 900;
     color: var(--primary-neon);
-    text-shadow: 0 0 30px var(--primary-neon);
-    animation: countdown-pop 0.45s ease;
+    animation: countdown-pop 0.4s ease;
 }
 
 @keyframes countdown-pop {
-    0% { transform: scale(1.6); opacity: 0; }
+    0% { transform: scale(1.4); opacity: 0; }
     100% { transform: scale(1); opacity: 1; }
 }
 
 #screen-finger.flash {
-    animation: finger-flash 0.4s ease 3;
+    animation: finger-flash 0.35s ease 2;
 }
 
 @keyframes finger-flash {
-    0%, 100% { background-color: transparent; }
-    50% { background-color: rgba(255, 0, 85, 0.35); }
+    0%, 100% { background-color: var(--bg-color); }
+    50% { background-color: rgba(255, 77, 109, 0.18); }
 }
 
 .finger-circle {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 78px;
+    height: 78px;
     border-radius: 50%;
     transform: translate(-50%, -50%) scale(0);
-    animation: finger-pop 0.3s forwards;
+    animation: finger-pop 0.25s forwards;
     pointer-events: none;
     border: 3px solid #fff;
 }
@@ -796,34 +665,27 @@ textarea:focus {
 }
 
 .finger-circle.loser {
-    background: rgba(255, 0, 85, 0.5);
+    background: rgba(255, 77, 109, 0.35);
     border-color: var(--primary-neon);
-    box-shadow: 0 0 50px var(--primary-neon), inset 0 0 50px var(--primary-neon);
+    box-shadow: 0 0 28px rgba(255, 77, 109, 0.6);
     animation: finger-pulse 0.5s infinite alternate;
     z-index: 20;
 }
 
 @keyframes finger-pulse {
     from { transform: translate(-50%, -50%) scale(1); }
-    to { transform: translate(-50%, -50%) scale(1.2); }
+    to { transform: translate(-50%, -50%) scale(1.16); }
 }
 
 .shake {
-    animation: screen-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    animation: screen-shake 0.45s cubic-bezier(.36,.07,.19,.97) both;
 }
 
 @keyframes screen-shake {
     10%, 90% { transform: translate3d(-2px, 0, 0); }
-    20%, 80% { transform: translate3d(5px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-10px, 0, 0); }
-    40%, 60% { transform: translate3d(10px, 0, 0); }
-}
-
-/* ===== 💘 커플 탄생 정중앙 엠블럼 & 럭셔리 네온 빔 ===== */
-@keyframes couple-heart-thump {
-    0% { transform: translate(-50%, -50%) scale(0.92); filter: drop-shadow(0 0 15px #ff007f); }
-    50% { transform: translate(-50%, -50%) scale(1.16); filter: drop-shadow(0 0 35px #ff0055) drop-shadow(0 0 50px #ffd700); }
-    100% { transform: translate(-50%, -50%) scale(1.08); filter: drop-shadow(0 0 25px #ff00aa); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+    40%, 60% { transform: translate3d(8px, 0, 0); }
 }
 
 .couple-center-emblem {
@@ -835,41 +697,45 @@ textarea:focus {
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    animation: couple-heart-thump 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
+    animation: couple-heart-thump 0.75s ease-in-out infinite alternate;
+}
+
+@keyframes couple-heart-thump {
+    0% { transform: translate(-50%, -50%) scale(0.95); }
+    100% { transform: translate(-50%, -50%) scale(1.1); }
 }
 
 .couple-emblem-core {
     position: relative;
-    background: radial-gradient(circle, rgba(255, 0, 127, 0.85) 0%, rgba(20, 5, 25, 0.95) 85%);
+    background: var(--primary-neon);
     border: 2px solid #fff;
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 30px #ff007f, 0 0 50px rgba(255, 215, 0, 0.6);
 }
 
-/* ===== HOT 모드 (19금 벌칙 세트) ===== */
+/* ===== HOT 모드 ===== */
 .hot-row {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 14px;
+    padding: 14px;
     border-radius: 14px;
-    background: rgba(255, 0, 85, 0.07);
-    border: 1px solid rgba(255, 0, 85, 0.28);
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
 }
 
 .hot-text { flex: 1; min-width: 0; }
 
 .hot-name {
     display: block;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--text-color);
 }
 
 .hot-19 {
@@ -880,24 +746,24 @@ textarea:focus {
     background: var(--primary-neon);
     color: #fff;
     font-size: 0.62rem;
-    font-weight: 900;
+    font-weight: 800;
     vertical-align: middle;
 }
 
 .hot-desc {
     display: block;
     margin-top: 3px;
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: #9a9aa4;
-    line-height: 1.45;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    line-height: 1.4;
     word-break: keep-all;
 }
 
 .hot-switch {
     flex-shrink: 0;
-    width: 52px;
-    height: 30px;
+    width: 48px;
+    height: 28px;
     border: none;
     outline: none;
     cursor: pointer;
@@ -911,33 +777,29 @@ textarea:focus {
     position: absolute;
     top: 3px;
     left: 3px;
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: #fff;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
 .hot-switch.on {
-    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
-    box-shadow: 0 0 14px rgba(255, 0, 85, 0.5);
+    background: var(--primary-neon);
 }
 
-.hot-switch.on span { transform: translateX(22px); }
+.hot-switch.on span { transform: translateX(20px); }
 
 .hot-badge {
     display: inline-block;
     vertical-align: middle;
     margin-left: 6px;
-    padding: 3px 9px;
+    padding: 2px 8px;
     border-radius: 999px;
-    background: linear-gradient(120deg, var(--primary-neon), #ff6b9d);
+    background: var(--primary-neon);
     color: #fff;
-    font-size: 0.4em;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    text-shadow: none;
-    box-shadow: 0 0 14px rgba(255, 0, 85, 0.55);
+    font-size: 0.45em;
+    font-weight: 800;
 }
 
 .hot-badge.hidden { display: none; }
@@ -946,176 +808,142 @@ textarea:focus {
 .header-controls-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 4px;
 }
 
 .hot-toggle-btn {
-    border: 1.5px solid rgba(255, 0, 85, 0.5);
+    border: 1px solid var(--border-subtle);
     outline: none;
     cursor: pointer;
-    background: rgba(255, 0, 85, 0.18);
-    backdrop-filter: blur(8px);
+    background: var(--surface-color);
     border-radius: 999px;
-    padding: 5px 14px;
+    padding: 5px 12px;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     font-family: var(--font-main);
-    font-size: 0.78rem;
-    font-weight: 900;
-    color: #ffffff;
-    box-shadow: 0 0 14px rgba(255, 0, 85, 0.35);
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
 }
 
 .hot-toggle-btn:active {
-    transform: scale(0.94);
+    transform: scale(0.95);
 }
 
 body.hot {
-    --primary-neon: #ff0040;
-    --secondary-neon: #ff007f;
-    --tertiary-neon: #e60000;
+    --primary-neon: #e11d48;
 }
 
 body.hot .aurora-bg {
-    background: radial-gradient(circle at 15% 15%, rgba(255, 0, 64, 0.35) 0%, transparent 50%),
-                radial-gradient(circle at 85% 20%, rgba(255, 0, 128, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 50% 85%, rgba(230, 0, 0, 0.35) 0%, transparent 55%);
+    background: radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.14), transparent 60%);
 }
 
 body.hot .hot-toggle-btn {
-    background: linear-gradient(120deg, #ff0040, #ff007f);
-    border-color: #ff007f;
-    box-shadow: 0 0 22px rgba(255, 0, 64, 0.8);
+    background: var(--primary-neon);
+    border-color: var(--primary-neon);
     color: #fff;
-    animation: hot-pulse 1.2s infinite alternate;
-}
-
-@keyframes hot-pulse {
-    from { box-shadow: 0 0 14px rgba(255, 0, 64, 0.6); }
-    to { box-shadow: 0 0 28px rgba(255, 0, 64, 1), 0 0 12px #ff007f; }
 }
 
 /* Footer */
 .footer-copyright {
     position: absolute;
-    bottom: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
     left: 0;
     width: 100%;
     text-align: center;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.28);
+    font-size: 0.72rem;
     pointer-events: none;
     z-index: 100;
 }
 
 .gear-btn {
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid var(--border-subtle);
     outline: none;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
+    background: var(--surface-color);
     border-radius: 999px;
-    padding: 5px 12px;
+    padding: 5px 11px;
     display: inline-flex;
     align-items: center;
     gap: 4px;
     font-family: var(--font-main);
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.85);
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.3, 1);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: background-color 0.15s;
 }
-.gear-btn:active { transform: scale(0.94); }
-.gear-btn:hover { background: rgba(255, 255, 255, 0.16); }
-
-@media (prefers-reduced-motion: reduce) {
-    .aurora-bg,
-    .roulette-container::before,
-    .ad-marquee-content {
-        animation: none !important;
-    }
-}
+.gear-btn:active { transform: scale(0.95); }
+.gear-btn:hover { background: var(--surface-hover); color: #fff; }
 
 /* ===== GIJO Upgrade UI Styles ===== */
 #gijo-fx-canvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
     pointer-events: none;
     z-index: 9999;
 }
 
 .mode-selector-bar {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--surface-color);
     padding: 4px;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-    max-width: 92vw;
+    border: 1px solid var(--border-subtle);
+    width: 100%;
+    max-width: min(440px, 100%);
     overflow-x: auto;
     scrollbar-width: none;
 }
 .mode-selector-bar::-webkit-scrollbar { display: none; }
 
 .mode-tab-btn {
-    flex: 1;
-    min-width: fit-content;
-    padding: 6px 12px;
-    font-size: clamp(0.72rem, 2.5vw, 0.82rem);
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 7px 6px;
+    font-size: 0.76rem;
     font-weight: 700;
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted);
     cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.15s ease;
     font-family: var(--font-main);
 }
 .mode-tab-btn.active {
-    background: linear-gradient(135deg, var(--primary-neon), var(--tertiary-neon));
+    background: var(--surface-hover);
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 12px rgba(255, 0, 85, 0.5);
+    border: 1px solid var(--border-strong);
 }
 
 .roulette-pointer.tick-bounce {
-    animation: pointer-tick 0.12s ease-in-out;
+    animation: pointer-tick 0.1s ease-in-out;
 }
 @keyframes pointer-tick {
     0% { transform: translateX(-50%) rotate(0deg); }
-    40% { transform: translateX(-50%) rotate(18deg); }
+    40% { transform: translateX(-50%) rotate(16deg); }
     100% { transform: translateX(-50%) rotate(0deg); }
-}
-
-.finger-circle::after {
-    content: '';
-    position: absolute;
-    inset: -8px;
-    border-radius: 50%;
-    border: 2px dashed rgba(0, 243, 255, 0.6);
-    animation: aura-spin 1.5s linear infinite;
-}
-@keyframes aura-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
 }
 
 .love-mission-modal {
     position: fixed;
     inset: 0;
-    background: rgba(10, 5, 15, 0.88);
-    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1124,43 +952,41 @@ body.hot .hot-toggle-btn {
     z-index: 2000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
 }
 .love-mission-modal.show {
     opacity: 1;
     pointer-events: auto;
 }
 .love-mission-card {
-    background: linear-gradient(135deg, rgba(40, 10, 30, 0.95), rgba(20, 5, 20, 0.95));
-    border: 2px solid #ff007f;
-    box-shadow: 0 0 35px rgba(255, 0, 127, 0.6);
+    background: var(--surface-color);
+    border: 1px solid var(--primary-neon);
     border-radius: 20px;
-    padding: 24px;
+    padding: 24px 20px;
     text-align: center;
     max-width: 360px;
     width: 100%;
-    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: popIn 0.25s ease-out;
 }
 .love-mission-title {
-    font-size: 1.4rem;
-    font-weight: 900;
-    color: #ff007f;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-neon);
     margin-bottom: 12px;
-    text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
 }
 .love-mission-content {
     font-size: 1.05rem;
     line-height: 1.5;
-    color: #ffffff;
+    color: var(--text-color);
     margin-bottom: 18px;
     word-break: keep-all;
 }
 @keyframes popIn {
-    from { transform: scale(0.7); opacity: 0; }
+    from { transform: scale(0.9); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
-/* ===== DUO MENU (2-CARD VIP SHOWCASE) ===== */
+/* ===== SIMPLE 2-CARD MAIN MENU ===== */
 .duo-menu {
     width: 100%;
     flex: 1;
@@ -1169,92 +995,53 @@ body.hot .hot-toggle-btn {
     -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 6px 8px 24px;
+    gap: 10px;
+    padding: 16px 16px 36px;
 }
 
 .duo-card {
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    border: 1px solid var(--border-subtle);
     outline: none;
     cursor: pointer;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: space-between;
+    gap: 14px;
     font-family: var(--font-main);
-    background: linear-gradient(145deg, rgba(20, 16, 32, 0.92), rgba(8, 7, 18, 0.96));
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-    padding: clamp(14px, 3.5vw, 22px);
+    background: var(--surface-color);
+    border-radius: 18px;
+    padding: 18px 16px;
     text-align: left;
-    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.65);
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
-    min-height: clamp(130px, 24vh, 180px);
+    transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
 }
 
-.duo-card:hover, .duo-card:focus-visible {
-    transform: translateY(-3px) scale(1.01);
-}
-
-.duo-roulette:hover {
-    border-color: #00f3ff;
-    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.8), 0 0 28px rgba(0, 243, 255, 0.4);
-}
-
-.duo-touch:hover {
-    border-color: #ff0055;
-    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.8), 0 0 28px rgba(255, 0, 85, 0.45);
+.duo-card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-strong);
 }
 
 .duo-card:active {
     transform: scale(0.98);
 }
 
-.duo-card-glow {
-    position: absolute;
-    inset: -30%;
-    opacity: 0.18;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-.duo-roulette .duo-card-glow {
-    background: radial-gradient(circle at 80% 20%, #00f3ff, transparent 65%);
-}
-
-.duo-touch .duo-card-glow {
-    background: radial-gradient(circle at 80% 20%, #ff0055, #ffd700 40%, transparent 70%);
-}
-
-.duo-badge {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 10px;
-    font-size: 0.72rem;
-    font-weight: 800;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    letter-spacing: 0.03em;
-    margin-bottom: 8px;
-}
-
 .duo-body {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 10px;
+    flex: 1;
+    min-width: 0;
 }
 
 .duo-icon {
-    font-size: clamp(2.4rem, 8vw, 3.2rem);
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     line-height: 1;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.7));
     flex-shrink: 0;
 }
 
@@ -1263,145 +1050,53 @@ body.hot .hot-toggle-btn {
     min-width: 0;
 }
 
-.duo-en {
-    display: block;
-    font-size: clamp(0.72rem, 2.4vw, 0.85rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 2px;
-}
-
 .duo-kr {
     display: block;
-    font-size: clamp(1.2rem, 4.4vw, 1.45rem);
-    font-weight: 900;
-    color: #ffffff;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-
-.duo-roulette .duo-kr {
-    text-shadow: 0 0 14px rgba(0, 243, 255, 0.6);
-}
-
-.duo-touch .duo-kr {
-    text-shadow: 0 0 14px rgba(255, 0, 85, 0.6);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-color);
+    line-height: 1.25;
 }
 
 .duo-desc {
-    margin: 4px 0 6px 0;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.3;
-}
-
-.duo-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 4px;
-}
-
-.duo-chips span {
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.duo-action {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 8px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: #ffd700;
+    margin: 3px 0 0 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.35;
 }
 
 .duo-arrow {
-    font-size: 1.1rem;
-    transition: transform 0.2s;
+    font-size: 1rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
 }
 
-.duo-card:hover .duo-arrow {
-    transform: translateX(4px);
-}
-
-/* ===== ROULETTE SETUP CARD & MISSION TAGS ===== */
-.roulette-setup-card, .roulette-editor-card {
+/* ===== ROULETTE DIRECT INPUT EDITOR ===== */
+.roulette-editor-card {
     width: 100%;
     max-width: 440px;
-    background: rgba(14, 12, 24, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.22);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-color);
+    border: 1px solid var(--border-subtle);
     border-radius: 16px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    padding: 14px;
+    margin-bottom: 10px;
 }
 
-.setup-header, .editor-header {
+.editor-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin: 10px 0 8px;
 }
 
-.setup-title, .editor-title {
-    font-size: 0.85rem;
+.editor-title {
+    font-size: 0.88rem;
     font-weight: 800;
-    color: var(--secondary-neon);
-}
-
-.setup-sub {
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.65);
-}
-
-.roulette-stepper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    padding: 6px 12px;
-}
-
-.stepper-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    font-size: 1.3rem;
-    font-weight: 900;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-}
-
-.stepper-btn:active {
-    transform: scale(0.92);
-    background: var(--primary-neon);
-}
-
-.stepper-val {
-    font-size: 1.25rem;
-    font-weight: 900;
-    color: #ffd700;
-    min-width: 50px;
-    text-align: center;
+    color: var(--text-color);
 }
 
 .editor-header-actions {
@@ -1411,87 +1106,97 @@ body.hot .hot-toggle-btn {
 }
 
 .btn-shuffle {
-    background: rgba(255, 215, 0, 0.15);
-    border: 1px solid rgba(255, 215, 0, 0.45);
-    color: #ffd700;
-    font-size: 0.68rem;
-    font-weight: 800;
-    padding: 3px 8px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-color);
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 5px 10px;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.15s;
-}
-
-.btn-shuffle:hover {
-    background: rgba(255, 215, 0, 0.3);
-    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
 }
 
 .btn-clear-all {
     background: transparent;
-    border: 1px solid rgba(255, 0, 85, 0.4);
-    color: #ff5577;
-    font-size: 0.68rem;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: 0.74rem;
     font-weight: 700;
-    padding: 3px 8px;
+    padding: 5px 10px;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.15s;
 }
 
 .btn-clear-all:hover {
-    background: rgba(255, 0, 85, 0.2);
-    color: #fff;
+    color: var(--primary-neon);
+    border-color: var(--primary-neon);
 }
 
 .roulette-slice-info {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--secondary-neon);
-    text-shadow: 0 0 6px rgba(0, 243, 255, 0.4);
-    margin-bottom: 6px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 8px;
     text-align: left;
 }
 
 .mission-tag-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    max-height: 140px;
+    flex-direction: column;
+    gap: 7px;
+    flex: 1;
+    min-height: 120px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 6px 2px;
-    margin-bottom: 10px;
+    padding: 2px 0;
 }
 
 .mission-tag {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 6px;
-    background: rgba(0, 243, 255, 0.12);
-    border: 1px solid rgba(0, 243, 255, 0.35);
-    color: #fff;
-    font-size: 0.78rem;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    background: var(--bg-color);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-color);
+    font-size: 0.92rem;
     font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 14px;
-    transition: all 0.2s;
+    padding: 10px 12px;
+    border-radius: 12px;
     user-select: none;
 }
 
-.mission-tag:hover {
-    background: rgba(0, 243, 255, 0.2);
-    border-color: var(--secondary-neon);
+.mission-tag-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.mission-tag-num {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: var(--primary-neon);
+    min-width: 20px;
+    flex-shrink: 0;
+}
+
+.mission-tag-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .mission-tag-remove {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    color: #ff0055;
-    font-size: 0.85rem;
-    font-weight: 900;
-    width: 18px;
-    height: 18px;
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 800;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     cursor: pointer;
     display: inline-flex;
@@ -1499,34 +1204,44 @@ body.hot .hot-toggle-btn {
     justify-content: center;
     line-height: 1;
     padding: 0;
+    flex-shrink: 0;
 }
 
-.mission-tag-remove:hover {
-    background: #ff0055;
+.mission-tag-remove:hover,
+.mission-tag-remove:active {
+    background: var(--primary-neon);
     color: #fff;
+}
+
+.editor-empty-state {
+    text-align: center;
+    padding: 28px 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.5;
 }
 
 .mission-add-bar {
     display: flex;
     gap: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .mission-add-bar input {
     flex: 1;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
+    min-width: 0;
+    background: var(--bg-color);
+    border: 1.5px solid var(--border-strong);
+    border-radius: 12px;
     color: #fff;
-    padding: 8px 12px;
-    font-size: 0.82rem;
+    padding: 11px 12px;
+    font-size: 0.92rem;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.15s;
 }
 
 .mission-add-bar input:focus {
-    border-color: var(--secondary-neon);
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    border-color: var(--primary-neon);
 }
 
 @keyframes input-shake {
@@ -1537,19 +1252,18 @@ body.hot .hot-toggle-btn {
 
 .input-shake {
     animation: input-shake 0.35s ease;
-    border-color: #ff0055 !important;
+    border-color: var(--primary-neon) !important;
 }
 
 .mission-add-btn {
-    background: linear-gradient(135deg, var(--secondary-neon), #0088ff);
+    background: #fff;
     border: none;
-    color: #050510;
-    font-weight: 900;
-    font-size: 0.85rem;
-    padding: 0 14px;
-    border-radius: 10px;
+    color: #111318;
+    font-weight: 800;
+    font-size: 0.88rem;
+    padding: 0 16px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.15s;
     white-space: nowrap;
 }
 
@@ -1557,132 +1271,26 @@ body.hot .hot-toggle-btn {
     transform: scale(0.95);
 }
 
-/* Quick Penalty Basket (One-Tap Add) */
-.quick-penalty-tray {
+.editor-save-actions {
     width: 100%;
-    margin-bottom: 12px;
-    background: rgba(14, 12, 24, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 10px 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.45);
-    box-sizing: border-box;
-}
-
-.quick-tray-header {
+    max-width: 440px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
-.quick-tray-title {
-    font-size: 0.8rem;
-    font-weight: 800;
-    color: #ffd700;
-    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-}
-
-.quick-tray-tip {
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.65);
-}
-
-.quick-penalty-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    max-height: 125px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-right: 2px;
-}
-
-.quick-p-chip {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    color: #ffffff;
-    font-family: var(--font-main);
-    font-size: clamp(0.72rem, 2.3vw, 0.78rem);
-    font-weight: 700;
-    padding: 5px 9px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    user-select: none;
-}
-
-.quick-p-chip:hover {
-    transform: translateY(-1px) scale(1.03);
-}
-
-.quick-p-chip:active {
-    transform: scale(0.92);
-}
-
-.quick-p-chip.drink {
-    border-color: rgba(0, 243, 255, 0.45);
-    background: rgba(0, 243, 255, 0.12);
-}
-.quick-p-chip.drink:hover {
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-    background: rgba(0, 243, 255, 0.25);
-}
-
-.quick-p-chip.hot {
-    border-color: rgba(255, 0, 85, 0.45);
-    background: rgba(255, 0, 85, 0.14);
-}
-.quick-p-chip.hot:hover {
-    box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-    background: rgba(255, 0, 85, 0.28);
-}
-
-.quick-p-chip.fun {
-    border-color: rgba(255, 215, 0, 0.45);
-    background: rgba(255, 215, 0, 0.12);
-}
-.quick-p-chip.fun:hover {
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    background: rgba(255, 215, 0, 0.25);
-}
-
-.quick-p-chip.travel {
-    border-color: rgba(0, 255, 136, 0.45);
-    background: rgba(0, 255, 136, 0.12);
-}
-.quick-p-chip.travel:hover {
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-    background: rgba(0, 255, 136, 0.25);
-}
-
-.bulk-edit-details {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 4px;
-}
-
-.bulk-edit-details summary {
-    cursor: pointer;
-    padding: 4px 0;
-    font-weight: 700;
-    color: #ffd700;
-}
-
-.bulk-apply-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+.btn-save-only {
+    background: var(--surface-color);
+    border: 1.5px solid var(--border-strong);
     color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 4px;
+    font-weight: 800;
+}
+
+.btn-save-only.saved-flash {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
 }
 
 .roulette-top-nav {
@@ -1691,117 +1299,117 @@ body.hot .hot-toggle-btn {
     align-items: center;
     width: 100%;
     max-width: 440px;
-    margin-bottom: 6px;
+    flex-shrink: 0;
 }
 
 .btn-edit-missions {
-    background: rgba(255, 215, 0, 0.16);
-    border: 1px solid #ffd700;
-    color: #ffd700;
-    font-size: 0.78rem;
+    background: rgba(255, 77, 109, 0.14);
+    border: 1px solid rgba(255, 77, 109, 0.55);
+    color: #fff;
+    font-family: var(--font-main);
+    font-size: 0.82rem;
     font-weight: 800;
-    padding: 6px 12px;
-    border-radius: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.25);
+    transition: background-color 0.15s;
 }
 
-.btn-edit-missions:hover {
-    background: rgba(255, 215, 0, 0.3);
-    transform: translateY(-1px);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.45);
+.btn-edit-missions:hover,
+.btn-edit-missions:active {
+    background: rgba(255, 77, 109, 0.28);
 }
 
-/* Roulette Winner Dramatic Modal */
+/* Roulette Winner Modal — High-Impact Penalty Popup */
 .roulette-winner-modal {
     position: fixed;
     inset: 0;
-    background: rgba(10, 5, 20, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(5, 7, 12, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
-    padding: 20px;
+    z-index: 3000;
+    padding: 16px;
 }
 
 .roulette-winner-modal.show {
     display: flex;
-    animation: winner-modal-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: winner-modal-pop 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes winner-modal-pop {
-    0% { opacity: 0; transform: scale(0.7) translateY(20px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
+    0% { opacity: 0; transform: scale(0.88); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 .roulette-winner-card {
-    background: linear-gradient(145deg, rgba(35, 12, 38, 0.96), rgba(16, 12, 28, 0.98));
-    border: 2px solid var(--secondary-neon);
-    border-radius: 24px;
-    padding: 26px 20px;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 77, 109, 0.26), #181b24 68%);
+    border: 2px solid var(--primary-neon);
+    border-radius: 26px;
+    padding: 26px 20px 22px;
     text-align: center;
-    max-width: 380px;
+    max-width: 400px;
     width: 100%;
-    box-shadow: 0 0 45px rgba(0, 243, 255, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.15);
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 42px rgba(255, 77, 109, 0.35);
 }
 
 .roulette-winner-badge {
     display: inline-block;
-    padding: 4px 14px;
-    border-radius: 20px;
-    background: linear-gradient(90deg, #ff0055, #a200ff);
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: var(--primary-neon);
     color: #fff;
     font-weight: 900;
-    font-size: 0.82rem;
-    letter-spacing: 0.05em;
-    margin-bottom: 12px;
-    box-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(255, 77, 109, 0.45);
 }
 
 .roulette-winner-title {
-    font-size: clamp(1.4rem, 5.5vw, 1.85rem);
+    font-size: clamp(1.85rem, 8vw, 2.6rem);
     font-weight: 900;
-    color: #ffd700;
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px #000;
-    margin-bottom: 10px;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1.5px solid rgba(255, 255, 255, 0.16);
+    border-radius: 18px;
+    padding: 22px 16px;
+    margin: 2px 0 14px;
     line-height: 1.3;
     word-break: keep-all;
+    text-shadow: 0 2px 16px rgba(255, 77, 109, 0.5);
 }
 
 .roulette-winner-sub {
-    font-size: 0.86rem;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 20px;
-    line-height: 1.4;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    line-height: 1.45;
 }
 
 .roulette-winner-actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .btn-winner-remove {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 0, 85, 0.45);
-    color: #ff88aa;
+    background: var(--surface-hover);
+    border: 1px solid var(--border-strong);
+    color: var(--text-color);
     font-family: var(--font-main);
-    font-size: 0.82rem;
-    font-weight: 800;
-    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 12px;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 
 .btn-winner-remove:hover {
-    background: rgba(255, 0, 85, 0.25);
-    border-color: #ff0055;
+    border-color: var(--primary-neon);
     color: #fff;
 }
 
@@ -1809,8 +1417,8 @@ body.hot .hot-toggle-btn {
 .touch-penalty-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(8px);
     display: none;
     align-items: center;
     justify-content: center;
@@ -1820,48 +1428,46 @@ body.hot .hot-toggle-btn {
 
 .touch-penalty-modal.show {
     display: flex;
-    animation: penalty-fade-in 0.3s ease-out;
+    animation: penalty-fade-in 0.25s ease-out;
 }
 
 @keyframes penalty-fade-in {
-    from { opacity: 0; transform: scale(0.9); }
+    from { opacity: 0; transform: scale(0.94); }
     to { opacity: 1; transform: scale(1); }
 }
 
 .touch-penalty-card {
-    background: linear-gradient(145deg, rgba(30, 8, 20, 0.95), rgba(12, 10, 20, 0.98));
-    border: 2px solid #ff0055;
-    border-radius: 20px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-strong);
+    border-radius: 22px;
     padding: 24px 20px;
     text-align: center;
     max-width: 360px;
     width: 100%;
-    box-shadow: 0 0 35px rgba(255, 0, 85, 0.6);
 }
 
 .touch-penalty-badge {
     display: inline-block;
     padding: 4px 12px;
-    border-radius: 12px;
-    background: #ff0055;
-    color: #fff;
-    font-weight: 900;
-    font-size: 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 77, 109, 0.16);
+    color: var(--primary-neon);
+    font-weight: 800;
+    font-size: 0.76rem;
     margin-bottom: 12px;
 }
 
 .touch-penalty-title {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #ffd700;
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-color);
     margin-bottom: 8px;
     word-break: keep-all;
 }
 
 .touch-penalty-desc {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    color: var(--text-muted);
     margin-bottom: 18px;
     word-break: keep-all;
 }
@@ -1870,238 +1476,119 @@ body.hot .hot-toggle-btn {
 </head>
 <body>
     <div id="app">
-        <!-- 오로라 배경 — CSS(.aurora-bg / body.hot .aurora-bg)만 있고 요소가 없어서
-             메인 로비가 맨 검정이었습니다. 화면(z-index:1) 아래에 깔립니다. -->
         <div class="aurora-bg" aria-hidden="true"></div>
+
         <!-- Main Menu -->
         <section id="screen-main" class="screen active main-menu-screen">
             <div class="main-header">
                 <h1 class="neon-text title">GIJO Drink<span id="hot-badge" class="hot-badge hidden">19+</span></h1>
-                <div class="header-controls-row" style="justify-content:center;">
+                <div class="header-controls-row">
                     <div class="player-setup">
-                        <span class="player-label">인원수 · Players:</span>
+                        <span class="player-label">인원</span>
                         <button class="cnt-btn" onclick="app.changePlayerCount(-1)" aria-label="인원 줄이기">-</button>
                         <span id="player-count-display" class="player-count-val">4</span>
                         <button class="cnt-btn" onclick="app.changePlayerCount(1)" aria-label="인원 늘리기">+</button>
                     </div>
-                    <!-- HOT 모드 토글 — 설정 화면의 스위치와 같은 app.toggleHotMode() 를 씁니다.
-                         예전엔 설정 화면으로 가는 길 자체가 없어서 HOT 모드를 켤 방법이 없었습니다. -->
                     <button class="hot-toggle-btn" id="hot-toggle-btn" onclick="app.toggleHotMode()" aria-pressed="false">
-                        🔥 HOT 19+ <span id="hot-toggle-state">OFF</span>
+                        🔥 19+ <span id="hot-toggle-state">OFF</span>
                     </button>
                     <button class="gear-btn" onclick="app.navigate('settings')" aria-label="설정 · Settings">⚙️ 설정</button>
                 </div>
             </div>
-            <!-- GIJO TOUR VIP 네온 롤링 전광판 (자체 광고판) -->
-            <a class="ad-banner" href="https://gijotour.github.io/gijotalk/" target="_blank" rel="noopener">
-                <span class="ad-badge-tag">GIJO VIP</span>
-                <div class="ad-marquee-wrapper">
-                    <div class="ad-marquee-content">
-                        <span class="ad-marquee-item">🌴 <em>[GIJO TOUR 특가]</em> 베트남·필리핀 단독 최저가 골프 부킹 & 픽업 샌딩 투어!</span>
-                        <span class="ad-marquee-item">💆‍♂️ <em>[술자리 벌칙 혜택]</em> 지아이조 힐링 스파 마사지 패키지 10% 단독 할인 예약!</span>
-                        <span class="ad-marquee-item">✈️ <em>[실시간 케어]</em> 24시간 카카오톡 여행 컨시어지 서비스 즉시 연결 ➔</span>
-                        <!-- 롤링 반복용 복제본 -->
-                        <span class="ad-marquee-item">🌴 <em>[GIJO TOUR 특가]</em> 베트남·필리핀 단독 최저가 골프 부킹 & 픽업 샌딩 투어!</span>
-                        <span class="ad-marquee-item">💆‍♂️ <em>[술자리 벌칙 혜택]</em> 지아이조 힐링 스파 마사지 패키지 10% 단독 할인 예약!</span>
-                        <span class="ad-marquee-item">✈️ <em>[실시간 케어]</em> 24시간 카카오톡 여행 컨시어지 서비스 즉시 연결 ➔</span>
-                    </div>
-                </div>
-                <span class="ad-banner-cta">혜택보기 ➔</span>
-            </a>
+
             <div class="duo-menu">
-                <button class="duo-card duo-roulette" onclick="app.navigate('roulette-input')" aria-label="GIJO 미션 룰렛 · Mission Roulette">
-                    <div class="duo-card-glow"></div>
-                    <div class="duo-badge">🎯 2~12인 · Custom Party</div>
+                <button class="duo-card duo-roulette" onclick="app.navigate('roulette')" aria-label="GIJO 벌칙 룰렛 · Penalty Roulette">
                     <div class="duo-body">
-                        <div class="duo-icon">&#127919;</div>
+                        <div class="duo-icon">🎯</div>
                         <div class="duo-text">
-                            <span class="duo-en">GIJO Mission Roulette</span>
-                            <span class="duo-kr">GIJO 미션 룰렛</span>
-                            <p class="duo-desc">참가 인원 설정 &amp; 벌칙·미션 직접 편집</p>
-                            <div class="duo-chips">
-                                <span>#인원직접설정</span>
-                                <span>#미션자유편집</span>
-                                <span>#빠른프리셋</span>
-                            </div>
+                            <span class="duo-kr">벌칙 룰렛</span>
+                            <p class="duo-desc">직접 벌칙을 넣고 저장해서 크게 돌리기</p>
                         </div>
                     </div>
-                    <div class="duo-action">
-                        <span>인원 &amp; 미션 설정 후 시작</span>
-                        <span class="duo-arrow">&#10140;</span>
-                    </div>
+                    <span class="duo-arrow">&rsaquo;</span>
                 </button>
 
                 <button class="duo-card duo-touch" onclick="app.navigate('finger')" aria-label="러브 드링크 및 터치 룰렛 · Love Drink &amp; Touch Roulette">
-                    <div class="duo-card-glow"></div>
-                    <div class="duo-badge">🔥 2~6인 · 2 in 1 Mode</div>
                     <div class="duo-body">
-                        <div class="duo-icon">&#128070;&#128149;</div>
+                        <div class="duo-icon">👆</div>
                         <div class="duo-text">
-                            <span class="duo-en">Love Drink / Touch Roulette</span>
-                            <span class="duo-kr">러브 드링크 / 터치 룰렛</span>
-                            <p class="duo-desc">🍺 술게임 1인 벌칙 복불복 &amp; 💋 19+ 커플 러브 지령</p>
-                            <div class="duo-chips">
-                                <span>#옵션선택형</span>
-                                <span>#술자리복불복</span>
-                                <span>#19금러브미션</span>
-                            </div>
+                            <span class="duo-kr">터치 복불복</span>
+                            <p class="duo-desc">다같이 화면을 누르고 벌칙·커플 매칭 (2~6인)</p>
                         </div>
                     </div>
-                    <div class="duo-action">
-                        <span>모드 선택 후 터치 시작</span>
-                        <span class="duo-arrow">&#10140;</span>
-                    </div>
+                    <span class="duo-arrow">&rsaquo;</span>
                 </button>
-            </div>
-            <!-- Ad Banner Container — margin-bottom 은 절대 배치된 footer-copyright(bottom:10px)
-                 가 이 칸 위로 겹쳐 찍히지 않도록 남긴 자리입니다. -->
-            <div style="margin: 10px 6px 30px; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); border-radius: 16px; text-align: center; font-size: 0.75rem; color: #8899ac;">
-                <span style="background: rgba(255,255,255,0.15); padding: 2px 6px; border-radius: 6px; font-weight: bold; font-size: 0.65rem; margin-right: 6px;">AD</span>
-                <span>🌴 동남아 현지 투어 & 액티비티 특별 제휴 할인</span>
             </div>
         </section>
 
-        <!-- Roulette Input Screen -->
+        <!-- Roulette Direct Penalty Input Screen -->
         <section id="screen-roulette-input" class="screen hidden roulette-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Mission Roulette<br><span class="title-kr">인원 &amp; 미션 설정</span></h2>
-            <p class="subtitle">참가 인원을 설정하고 벌칙을 직접 추가·삭제하세요<span class="i18n-sub">Set players &amp; customize penalty missions</span></p>
-
-            <!-- 1. 인원수 설정 스텝퍼 -->
-            <div class="roulette-setup-card">
-                <div class="setup-header">
-                    <span class="setup-title">👥 참가 인원 수 · Players</span>
-                    <span class="setup-sub" id="roulette-player-sub">현재 4명 참여 중</span>
-                </div>
-                <div class="roulette-stepper">
-                    <button class="stepper-btn" onclick="app.changeRoulettePlayers(-1)" aria-label="인원 줄이기">-</button>
-                    <span id="roulette-player-display" class="stepper-val">4명</span>
-                    <button class="stepper-btn" onclick="app.changeRoulettePlayers(1)" aria-label="인원 늘리기">+</button>
-                </div>
+            <div class="roulette-top-nav" style="margin-bottom: 10px;">
+                <button class="btn-back" style="position: static;" onclick="app.navigate('roulette')">&larr; 룰렛으로</button>
+                <span style="font-size: 0.92rem; color: var(--text-color); font-weight: 800;">벌칙 직접 입력 · 저장</span>
+                <span style="width: 64px;"></span>
             </div>
 
-            <!-- 2. 빠른 프리셋 선택 -->
-            <div class="roulette-presets-container">
-                <div class="roulette-presets-title">⚡ 빠른 프리셋 테마 · Quick Presets</div>
-                <div class="roulette-preset-chips editor-presets">
-                    <button class="roulette-chip-btn active" data-preset="classic" onclick="app.loadRoulettePreset('classic')">🍹 기본 파티</button>
-                    <button class="roulette-chip-btn" data-preset="spicy" onclick="app.loadRoulettePreset('spicy')">🔥 19+ 스파이시</button>
-                    <button class="roulette-chip-btn" data-preset="king" onclick="app.loadRoulettePreset('king')">👑 왕게임 벌칙</button>
-                    <button class="roulette-chip-btn" data-preset="players" onclick="app.loadRoulettePreset('players')">👥 인원별 지목</button>
-                    <button class="roulette-chip-btn" data-preset="truth" onclick="app.loadRoulettePreset('truth')">🤫 진실게임</button>
-                    <button class="preset-chip" onclick="app.saveMyCustomPreset()">💾 내 설정 저장</button>
-                    <button class="preset-chip" id="btn-load-my-preset" onclick="app.loadMyCustomPreset()">📂 내 설정 불러오기</button>
-                </div>
-            </div>
-
-            <!-- 3. 원클릭 벌칙 바구니 (터치로 바로 담기) -->
-            <div class="quick-penalty-tray">
-                <div class="quick-tray-header">
-                    <span class="quick-tray-title">⚡ 터치로 바로 담는 인기 벌칙 바구니</span>
-                    <span class="quick-tray-tip">터치 즉시 룰렛에 추가!</span>
-                </div>
-                <div class="quick-penalty-chips">
-                    <!-- 🍺 술/벌주 -->
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('원샷! 🍺')">+ 원샷! 🍺</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('양옆 러브샷 🍻')">+ 양옆 러브샷 🍻</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('나 빼고 다 마셔 😎')">+ 나 빼고 다 마셔 😎</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('벌주 2잔! 💣')">+ 벌주 2잔 💣</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('물 한잔 휴식 💧')">+ 물 한잔 💧</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('흑기사권 (대신 마시기) 👑')">+ 흑기사권 👑</button>
-                    <button type="button" class="quick-p-chip drink" onclick="app.quickAddPenalty('다같이 건배! 🥂')">+ 다같이 건배 🥂</button>
-                    <!-- 🔥 19+ 로맨스 -->
-                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('💋 밀착 러브샷')">+ 💋 밀착 러브샷</button>
-                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('👀 10초 눈싸움')">+ 👀 10초 눈싸움</button>
-                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('🤫 귓속말 비밀고백')">+ 🤫 귓속말 고백</button>
-                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('🫂 5초 백허그')">+ 🫂 5초 백허그</button>
-                    <button type="button" class="quick-p-chip hot" onclick="app.quickAddPenalty('💖 손깍지 10초')">+ 💖 손깍지 10초</button>
-                    <!-- 🤪 꿀잼 미션 -->
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('애교 3초 🥰')">+ 애교 3초 🥰</button>
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('노래 1절 🎤')">+ 노래 1절 🎤</button>
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('댄스 5초 💃')">+ 댄스 5초 💃</button>
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('최근 검색어 1위 공개 📱')">+ 최근 검색어 📱</button>
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('엽기 셀카 찍기 📸')">+ 엽기 셀카 📸</button>
-                    <button type="button" class="quick-p-chip fun" onclick="app.quickAddPenalty('왕의 명령 복종 👑')">+ 왕의 명령 👑</button>
-                    <!-- 🌴 여행/동남아 파티 -->
-                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('팁 쏘기 50₱/2만동 💸')">+ 팁 쏘기 💸</button>
-                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('다음 차수 안주 쏘기 🍕')">+ 안주 쏘기 🍕</button>
-                    <button type="button" class="quick-p-chip travel" onclick="app.quickAddPenalty('Grab 부르기 담당 🚕')">+ Grab 부르기 🚕</button>
-                </div>
-            </div>
-
-            <!-- 4. 실시간 미션 태그 리스트 & 직접 수정 에디터 -->
             <div class="roulette-editor-card">
+                <div class="mission-add-bar">
+                    <input type="text" id="mission-new-input" placeholder="벌칙 직접 입력 (예: 원샷! / 노래 1절)" maxlength="30" onkeydown="if(event.key==='Enter'){event.preventDefault(); app.addCustomMission();}">
+                    <button type="button" class="mission-add-btn" onclick="app.addCustomMission()">+ 추가</button>
+                </div>
+
                 <div class="editor-header">
-                    <span class="editor-title">🎯 룰렛 미션 목록 (<span id="mission-count-badge">0</span>개)</span>
+                    <span class="editor-title">현재 벌칙 (<span id="mission-count-badge">0</span>개)</span>
                     <div class="editor-header-actions">
-                        <button type="button" class="btn-shuffle" onclick="app.shuffleMissions()" title="미션 배치 순서 섞기">🎲 섞기 · Shuffle</button>
-                        <button type="button" class="btn-clear-all" onclick="app.clearAllMissions()">전체 삭제</button>
+                        <button type="button" class="btn-shuffle" onclick="app.shuffleMissions()" title="순서 섞기">🎲 섞기</button>
+                        <button type="button" class="btn-clear-all" onclick="app.clearAllMissions()">전체 비우기</button>
                     </div>
                 </div>
-                <div class="roulette-slice-info" id="roulette-slice-info">🎯 총 6개 슬롯 (각 슬롯 약 60°)</div>
-                <div class="mission-tag-list" id="mission-tags-container">
-                    <!-- JS로 동적 렌더링 -->
-                </div>
 
-                <!-- 신규 미션 추가 인풋 -->
-                <div class="mission-add-bar">
-                    <input type="text" id="mission-new-input" placeholder="새 벌칙/미션 직접 입력 (예: 노래방 쏘기, 원샷)" maxlength="28" onkeydown="if(event.key==='Enter'){event.preventDefault(); app.addCustomMission();}">
-                    <button type="button" class="mission-add-btn" onclick="app.addCustomMission()">+ 담기</button>
-                </div>
-
-                <!-- 텍스트 일괄 편집 (복사/붙여넣기) -->
-                <details class="bulk-edit-details">
-                    <summary>📝 텍스트로 일괄 편집 / 직접 붙여넣기</summary>
-                    <textarea id="roulette-input-text" rows="3" placeholder="쉼표(,)로 구분하여 입력..."></textarea>
-                    <button class="bulk-apply-btn" onclick="app.applyBulkMissions()">일괄 적용</button>
-                </details>
+                <div class="mission-tag-list" id="mission-tags-container"></div>
+                <div class="roulette-slice-info" id="roulette-slice-info">최소 2개 이상 입력 후 저장하면 다음에도 유지됩니다.</div>
             </div>
 
-            <button class="btn neon-btn start-roulette-btn" style="margin-top:16px;" onclick="app.confirmRouletteMissions()">🎰 룰렛 시작! · Start Roulette</button>
+            <div class="editor-save-actions">
+                <button type="button" class="btn btn-save-only" id="btn-save-custom" onclick="app.saveMyCustomPreset()">💾 벌칙 저장하기</button>
+                <button type="button" class="btn neon-btn start-roulette-btn" onclick="app.confirmRouletteMissions()">🎯 저장하고 룰렛 돌리기</button>
+            </div>
         </section>
 
-        <!-- Roulette Screen -->
-        <section id="screen-roulette" class="screen hidden roulette-screen">
+        <!-- Roulette Play Screen (Max Viewport) -->
+        <section id="screen-roulette" class="screen hidden roulette-screen roulette-play-screen">
             <div class="roulette-top-nav">
-                <button class="btn-back" onclick="history.back()" style="position: static;">&larr; 뒤로 · Back</button>
-                <button type="button" class="btn-edit-missions" onclick="app.editFromWheel()">✏️ 인원 &amp; 미션 수정</button>
-            </div>
-            <h2 class="neon-text">GIJO Mission Roulette<br><span class="title-kr">미션 룰렛</span></h2>
-            <div class="mode-selector-bar">
-                <button class="mode-tab-btn" id="roulette-tab-custom" onclick="app.applyCustomRoulette()">⭐ 내 미션 · Custom</button>
-                <button class="mode-tab-btn active" id="roulette-tab-classic" onclick="app.setRoulettePreset('classic')">🍺 기본 · Classic</button>
-                <button class="mode-tab-btn" id="roulette-tab-hot" onclick="app.setRoulettePreset('hot')">🔥 19+ HOT · Adult</button>
-                <button class="mode-tab-btn" id="roulette-tab-truth" onclick="app.setRoulettePreset('truth')">🤫 진실 · Truth</button>
-                <button class="mode-tab-btn" id="roulette-tab-balance" onclick="app.setRoulettePreset('balance')">⚖️ 밸런스 · Balance</button>
-            </div>
-            <div class="roulette-container" onclick="app.spinRoulette()">
-                <div class="roulette-wheel-wrapper">
-                    <div class="roulette-wheel" id="roulette-wheel"></div>
-                </div>
-                <div class="roulette-pointer" id="roulette-pointer"></div>
-                <!-- 룰렛 중앙 SPIN 버튼 -->
-                <button class="roulette-center-hub" id="roulette-center-btn" onclick="event.stopPropagation(); app.spinRoulette()" title="룰렛 돌리기">
-                    <span class="roulette-center-hub-icon">🎯</span>
-                    <span class="roulette-center-hub-text">SPIN</span>
-                </button>
-            </div>
-            <!-- 하단 룰렛 돌리기 메인 버튼 및 결과창 -->
-            <button class="btn neon-btn" id="roulette-spin-btn" style="margin-top: 14px; width: 100%; font-size: 1.05rem;" onclick="app.spinRoulette()">
-                🎰 룰렛 돌리기 · SPIN!
-            </button>
-            <div id="roulette-result-card" class="roulette-result-card" style="margin-top: 10px; min-height: 48px; text-align: center;" aria-live="polite">
-                <div id="roulette-result" class="result-text font-black" style="font-size: 1.15rem; color: #00f3ff; text-shadow: 0 0 15px rgba(0,243,255,0.7);"></div>
+                <button class="btn-back" onclick="app.navigate('main')" style="position: static;">&larr; 메뉴</button>
+                <span class="roulette-header-title">🎯 벌칙 룰렛</span>
+                <button type="button" class="btn-edit-missions" onclick="app.editFromWheel()">✏️ 벌칙 입력·저장</button>
             </div>
 
-            <!-- Roulette Winner Dramatic Modal (당첨 팝업 모달) -->
+            <div class="roulette-stage">
+                <div class="roulette-container" onclick="app.spinRoulette()">
+                    <div class="roulette-wheel-wrapper">
+                        <div class="roulette-wheel" id="roulette-wheel"></div>
+                    </div>
+                    <div class="roulette-pointer" id="roulette-pointer"></div>
+                    <button class="roulette-center-hub" id="roulette-center-btn" onclick="event.stopPropagation(); app.spinRoulette()" title="룰렛 돌리기">
+                        <span class="roulette-center-hub-text">SPIN</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="roulette-bottom-bar">
+                <div class="roulette-count-hint" id="roulette-count-hint">벌칙 6개 · 룰렛이나 아래 버튼을 눌러 돌리세요</div>
+                <button class="btn neon-btn" id="roulette-spin-btn" onclick="app.spinRoulette()">
+                    🎯 룰렛 돌리기
+                </button>
+            </div>
+
+            <!-- Roulette Winner Modal -->
             <div class="roulette-winner-modal" id="roulette-winner-modal" onclick="app.closeRouletteWinner(false)">
                 <div class="roulette-winner-card" onclick="event.stopPropagation()">
-                    <div class="roulette-winner-badge">💥 룰렛 벌칙 당첨! · PENALTY 💥</div>
+                    <div class="roulette-winner-badge">🎉 당첨 벌칙 🎉</div>
                     <div class="roulette-winner-title font-black" id="roulette-winner-title">원샷! 🍺</div>
-                    <div class="roulette-winner-sub" id="roulette-winner-sub">피할 수 없다! 술자리의 룰을 따라 당당히 벌칙을 수행하세요! 🍻</div>
+                    <div class="roulette-winner-sub" id="roulette-winner-sub">피할 수 없는 오늘의 벌칙! 당당하게 수행하세요 🍻</div>
                     <div class="roulette-winner-actions">
-                        <button type="button" class="btn neon-btn" onclick="app.closeRouletteWinner(false)">🍻 벌칙 완료 · 다시 돌리기</button>
-                        <button type="button" class="btn-winner-remove" onclick="app.closeRouletteWinner(true)">❌ 이 벌칙 빼고 계속하기 (서바이벌)</button>
+                        <button type="button" class="btn neon-btn" onclick="app.closeRouletteWinner(false)">확인 · 다시 돌리기</button>
+                        <button type="button" class="btn-winner-remove" onclick="app.closeRouletteWinner(true)">이 벌칙 빼고 계속하기</button>
                     </div>
                 </div>
             </div>
@@ -2109,57 +1596,56 @@ body.hot .hot-toggle-btn {
 
         <!-- Finger Roulette Screen -->
         <section id="screen-finger" class="screen hidden finger-screen">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text" id="touch-title-neon">GIJO Touch &amp; Love<br><span class="title-kr">터치 룰렛 &amp; 러브 드링크</span></h2>
-            
-            <!-- 옵션 선택 탭 바: 술게임 복불복 vs 19+ 러브 드링크 -->
-            <div class="mode-selector-bar touch-mode-tabs" style="max-width: 440px; margin: 4px auto 10px auto;">
-                <button class="mode-tab-btn active" id="touch-tab-drink" onclick="app.setTouchMode('drink')">🍺 술게임 복불복 (1인 탈락)</button>
-                <button class="mode-tab-btn" id="touch-tab-love" onclick="app.setTouchMode('love')">💋 19+ 러브 드링크 (커플 매칭)</button>
+            <button class="btn-back" onclick="history.back()">&larr; 뒤로</button>
+            <h2 class="neon-text" id="touch-title-neon" style="margin-top: 32px;">터치 복불복</h2>
+
+            <div class="mode-selector-bar touch-mode-tabs" style="max-width: 340px; margin: 4px auto 8px auto;">
+                <button class="mode-tab-btn active" id="touch-tab-drink" onclick="app.setTouchMode('drink')">🍺 벌칙 복불복</button>
+                <button class="mode-tab-btn" id="touch-tab-love" onclick="app.setTouchMode('love')">💋 19+ 커플 매칭</button>
             </div>
 
-            <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!<span class="i18n-sub">Everyone touch and hold the screen! (Mobile/Tablet)</span></div>
+            <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!</div>
             <div id="finger-area" class="finger-area"></div>
 
-            <!-- Drinking Penalty Result Modal / Card (술게임 모드 당첨 시) -->
+            <!-- Drinking Penalty Modal -->
             <div class="touch-penalty-modal" id="touch-penalty-modal" onclick="app.closeTouchPenalty()">
                 <div class="touch-penalty-card">
-                    <div class="touch-penalty-badge">💥 복불복 당첨 · CHOSEN! 💥</div>
+                    <div class="touch-penalty-badge">복불복 당첨</div>
                     <div class="touch-penalty-title" id="touch-penalty-title">원샷 마셔라! 🍺</div>
                     <div class="touch-penalty-desc" id="touch-penalty-desc">술잔을 시원하게 비우세요!</div>
-                    <button class="btn neon-btn" onclick="app.closeTouchPenalty()">확인 · OK</button>
+                    <button class="btn neon-btn" onclick="app.closeTouchPenalty()">확인</button>
                 </div>
             </div>
 
-            <!-- Love Mission Modal (러브 드링크 모드 커플 매칭 시) -->
+            <!-- Love Mission Modal -->
             <div class="love-mission-modal" id="love-mission-modal" onclick="app.closeLoveMission()">
                 <div class="love-mission-card">
-                    <div class="love-mission-title">💘 19+ 커플 돌발 미션 · Love Mission 💘</div>
+                    <div class="love-mission-title">💘 19+ 커플 미션</div>
                     <div class="love-mission-content" id="love-mission-text">...</div>
-                    <button class="btn neon-btn" onclick="app.closeLoveMission()">확인 · OK</button>
+                    <button class="btn neon-btn" onclick="app.closeLoveMission()">확인</button>
                 </div>
             </div>
         </section>
 
         <!-- Settings Screen -->
         <section id="screen-settings" class="screen hidden">
-            <button class="btn-back" onclick="history.back()">&larr; 뒤로 · Back</button>
-            <h2 class="neon-text">GIJO Settings<br><span class="title-kr">설정</span></h2>
+            <button class="btn-back" onclick="history.back()">&larr; 뒤로</button>
+            <h2 class="neon-text" style="margin-top: 36px;">설정</h2>
             <div class="settings-container">
                 <div class="hot-row">
                     <div class="hot-text">
-                        <span class="hot-name">🔥 HOT 모드 <span class="hot-19">19+</span></span>
-                        <span class="hot-desc">성인 술자리용 19금 벌칙으로 교체<br>Swap in adult (18+) party penalties</span>
+                        <span class="hot-name">🔥 19+ HOT 모드</span>
+                        <span class="hot-desc">성인 술자리용 벌칙 세트로 전환합니다</span>
                     </div>
                     <button id="hot-switch" class="hot-switch" role="switch" aria-checked="false"
                             aria-label="HOT 모드" onclick="app.toggleHotMode()"><span></span></button>
                 </div>
 
                 <div class="setting-group">
-                    <label>룰렛 벌칙 · Roulette Missions (comma separated)</label>
+                    <label>커스텀 룰렛 벌칙 (쉼표로 구분)</label>
                     <textarea id="setting-roulette" rows="4"></textarea>
                 </div>
-                <button class="btn neon-btn save-btn" onclick="app.saveSettings()">저장 · Save Settings</button>
+                <button class="btn neon-btn save-btn" onclick="app.saveSettings()">저장하기</button>
                 <div id="settings-msg" class="msg-text"></div>
             </div>
         </section>
@@ -2168,7 +1654,7 @@ body.hot .hot-toggle-btn {
         <canvas id="gijo-fx-canvas"></canvas>
 
         <footer class="footer-copyright">
-            &copy; GIJO Labs. All rights reserved.
+            GIJO Labs
         </footer>
     </div>
     <script>
@@ -2665,11 +2151,24 @@ const app = {
         }
         this.updatePlayerDisplay();
 
+        const savedRaw = this.storeGet(ROULETTE_CUSTOM_STORAGE_KEY);
+        if (savedRaw) {
+            try {
+                const parsed = JSON.parse(savedRaw);
+                if (parsed && Array.isArray(parsed.items)) {
+                    const cleaned = parsed.items.map(s => String(s).trim()).filter(Boolean);
+                    if (cleaned.length >= 2) {
+                        this.currentMissions = [...cleaned];
+                        this.currentMissionRouletteOptions = [...cleaned];
+                        this.customRouletteOptions = [...cleaned];
+                    }
+                }
+            } catch (e) {}
+        }
+
         this.customRouletteText = this.storeGet('neonDrinks_customRoulette') || '';
         const sr = document.getElementById('setting-roulette');
         if (sr) sr.value = this.customRouletteText;
-        const ri = document.getElementById('roulette-input-text');
-        if (ri && !ri.value && this.customRouletteText) ri.value = this.customRouletteText;
     },
 
     applyHotModeVisuals() {
@@ -2696,7 +2195,6 @@ const app = {
         soundFX.playTada();
         haptics.buildUp();
         fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 40);
-        this.setRoulettePreset(this.hotMode ? 'hot' : 'classic');
     },
 
     changePlayerCount(delta) {
@@ -2745,127 +2243,96 @@ const app = {
         haptics.tick();
     },
 
-    saveMyCustomPreset() {
-        if (!this.currentMissions || this.currentMissions.length < 2) {
-            alert('최소 2개 이상의 미션/벌칙이 있어야 저장할 수 있습니다!');
-            return;
-        }
-        this.roulettePlayerCount = this.roulettePlayers;
+    autoSaveCustomMissions() {
+        if (!this.currentMissions || this.currentMissions.length < 2) return;
         this.currentMissionRouletteOptions = [...this.currentMissions];
+        this.customRouletteOptions = [...this.currentMissions];
         const payload = {
-            players: this.roulettePlayerCount,
-            items: this.currentMissionRouletteOptions
+            players: this.roulettePlayers,
+            items: this.currentMissions
         };
         this.storeSet(ROULETTE_CUSTOM_STORAGE_KEY, JSON.stringify(payload));
+    },
+
+    saveMyCustomPreset() {
+        if (!this.currentMissions || this.currentMissions.length < 2) {
+            alert('최소 2개 이상의 벌칙을 입력해주세요!');
+            const input = document.getElementById('mission-new-input');
+            if (input) input.focus();
+            return;
+        }
+        this.autoSaveCustomMissions();
         soundFX.init();
         soundFX.playTada();
         haptics.buildUp();
 
-        const saveBtn = document.querySelector('.editor-presets button[onclick*="saveMyCustomPreset"]');
+        const saveBtn = document.getElementById('btn-save-custom');
         if (saveBtn) {
             saveBtn.textContent = '✅ 저장 완료!';
             saveBtn.classList.add('saved-flash');
             clearTimeout(this._savePresetBtnTimer);
             this._savePresetBtnTimer = setTimeout(() => {
-                saveBtn.textContent = '💾 내 설정 저장';
+                saveBtn.textContent = '💾 벌칙 저장하기';
                 saveBtn.classList.remove('saved-flash');
             }, 1500);
         }
-        this.syncCustomPresetButtonState();
     },
 
-    loadMyCustomPreset() {
-        const raw = this.storeGet(ROULETTE_CUSTOM_STORAGE_KEY);
-        if (!raw) {
-            alert('저장된 내 커스텀 설정이 없습니다. 먼저 [💾 내 설정 저장]을 눌러주세요!');
-            return;
-        }
-        try {
-            const parsed = JSON.parse(raw);
-            if (!parsed || !Array.isArray(parsed.items) || parsed.items.length < 2) {
-                alert('저장된 설정 데이터가 올바르지 않습니다.');
-                return;
-            }
-            const savedPlayers = parseInt(parsed.players, 10);
-            if (!isNaN(savedPlayers)) {
-                this.roulettePlayers = Math.max(2, Math.min(12, savedPlayers));
-                this.roulettePlayerCount = this.roulettePlayers;
-                this.playerCount = this.roulettePlayers;
-                this.storeSet('neonDrinks_players', this.playerCount);
-                this.updatePlayerDisplay();
-                const display = document.getElementById('roulette-player-display');
-                const sub = document.getElementById('roulette-player-sub');
-                if (display) display.textContent = this.roulettePlayers + '명';
-                if (sub) sub.textContent = '현재 ' + this.roulettePlayers + '명 참여 중';
-            }
-            this.currentMissions = parsed.items.map(s => String(s).trim()).filter(Boolean);
-            this.currentMissionRouletteOptions = [...this.currentMissions];
-            this.customRouletteOptions = [...this.currentMissions];
-
-            document.querySelectorAll('.roulette-chip-btn').forEach(b => b.classList.remove('active'));
-            const loadBtn = document.getElementById('btn-load-my-preset');
-            if (loadBtn) loadBtn.classList.add('active');
-
-            this.renderMissionTags();
-            soundFX.init();
-            soundFX.playTada();
-            haptics.buildUp();
-        } catch (e) {
-            alert('저장된 설정을 불러오는 중 오류가 발생했습니다.');
-        }
-    },
-
-    syncCustomPresetButtonState() {
-        const loadBtn = document.getElementById('btn-load-my-preset');
-        if (!loadBtn) return;
-        const raw = this.storeGet(ROULETTE_CUSTOM_STORAGE_KEY);
-        let hasSaved = false;
-        if (raw) {
-            try {
-                const parsed = JSON.parse(raw);
-                hasSaved = Boolean(parsed && Array.isArray(parsed.items) && parsed.items.length >= 2);
-            } catch (e) {}
-        }
-        loadBtn.classList.toggle('has-saved', hasSaved);
-        loadBtn.disabled = !hasSaved;
-    },
+    syncCustomPresetButtonState() {},
 
     renderMissionTags() {
-        this.currentMissionRouletteOptions = [...this.currentMissions];
         const container = document.getElementById('mission-tags-container');
         const countBadge = document.getElementById('mission-count-badge');
-        const bulkText = document.getElementById('roulette-input-text');
         const sliceInfo = document.getElementById('roulette-slice-info');
         const count = this.currentMissions.length;
 
         if (countBadge) countBadge.textContent = count;
-        if (bulkText) bulkText.value = this.currentMissions.join(', ');
         if (sliceInfo) {
-            const sliceDeg = count > 0 ? (360 / count).toFixed(1).replace('.0', '') : 0;
-            sliceInfo.textContent = `🎯 총 ${count}개 슬롯 (각 슬롯 약 ${sliceDeg}°)`;
+            sliceInfo.textContent = count >= 2
+                ? `총 ${count}개 벌칙 · 추가·삭제 시 자동 저장되며 저장 버튼으로도 확정할 수 있습니다.`
+                : '최소 2개 이상 입력 후 저장하면 다음에도 그대로 유지됩니다.';
         }
 
         if (!container) return;
         container.innerHTML = '';
+        if (count === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'editor-empty-state';
+            empty.textContent = '등록된 벌칙이 없습니다.\n위 입력창에서 벌칙을 직접 추가해주세요!';
+            container.appendChild(empty);
+            return;
+        }
+
         this.currentMissions.forEach((m, idx) => {
             const tag = document.createElement('div');
             tag.className = 'mission-tag';
-            tag.innerHTML = `<span>${m}</span><button type="button" class="mission-tag-remove" onclick="app.removeMissionTag(${idx})" title="삭제">&times;</button>`;
+
+            const main = document.createElement('div');
+            main.className = 'mission-tag-main';
+
+            const num = document.createElement('span');
+            num.className = 'mission-tag-num';
+            num.textContent = `${idx + 1}.`;
+
+            const label = document.createElement('span');
+            label.className = 'mission-tag-label';
+            label.textContent = m;
+
+            main.appendChild(num);
+            main.appendChild(label);
+
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.className = 'mission-tag-remove';
+            del.setAttribute('aria-label', `${m} 삭제`);
+            del.title = '삭제';
+            del.innerHTML = '&times;';
+            del.onclick = () => this.removeMissionTag(idx);
+
+            tag.appendChild(main);
+            tag.appendChild(del);
             container.appendChild(tag);
         });
-    },
-
-    quickAddPenalty(text) {
-        if (!text) return;
-        this.currentMissions.push(text);
-        this.renderMissionTags();
-        soundFX.playSpark();
-        haptics.tick();
-
-        const container = document.getElementById('mission-tags-container');
-        if (container) {
-            container.scrollTop = container.scrollHeight;
-        }
     },
 
     shuffleMissions() {
@@ -2874,17 +2341,15 @@ const app = {
             const j = Math.floor(Math.random() * (i + 1));
             [this.currentMissions[i], this.currentMissions[j]] = [this.currentMissions[j], this.currentMissions[i]];
         }
+        this.autoSaveCustomMissions();
         this.renderMissionTags();
         soundFX.playCardFlip();
         haptics.tick();
     },
 
     removeMissionTag(index) {
-        if (this.currentMissions.length <= 2) {
-            alert('룰렛을 위해 최소 2개 이상의 미션/벌칙이 필요합니다!');
-            return;
-        }
         this.currentMissions.splice(index, 1);
+        this.autoSaveCustomMissions();
         this.renderMissionTags();
         soundFX.playTick();
         haptics.tick();
@@ -2905,6 +2370,7 @@ const app = {
         this.currentMissions.push(val);
         input.value = '';
         input.focus();
+        this.autoSaveCustomMissions();
         this.renderMissionTags();
         soundFX.playSpark();
         haptics.tick();
@@ -2918,30 +2384,20 @@ const app = {
     clearAllMissions() {
         this.currentMissions = [];
         this.renderMissionTags();
-        soundFX.playTick();
-        haptics.tick();
-    },
-
-    applyBulkMissions() {
-        const bulkText = document.getElementById('roulette-input-text');
-        if (!bulkText) return;
-        const items = bulkText.value.split(',').map(s => s.trim()).filter(Boolean);
-        if (items.length < 2) {
-            alert('최소 2개 이상의 벌칙을 쉼표로 구분하여 입력하세요!');
-            return;
-        }
-        this.currentMissions = items;
-        this.renderMissionTags();
+        const input = document.getElementById('mission-new-input');
+        if (input) input.focus();
         soundFX.playTick();
         haptics.tick();
     },
 
     confirmRouletteMissions() {
         if (!this.currentMissions || this.currentMissions.length < 2) {
-            alert('최소 2개 이상의 미션을 등록해주세요!');
+            alert('룰렛을 돌리려면 최소 2개 이상의 벌칙을 입력해주세요!');
+            const input = document.getElementById('mission-new-input');
+            if (input) input.focus();
             return;
         }
-        this.customRouletteOptions = [...this.currentMissions];
+        this.autoSaveCustomMissions();
         this.navigate('roulette');
     },
 
@@ -2950,27 +2406,7 @@ const app = {
         this.navigate('roulette-input');
     },
 
-    applyCustomRoulette() {
-        this.currentRoulettePreset = 'custom';
-        document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
-        const tabCustom = document.getElementById('roulette-tab-custom');
-        if (tabCustom) tabCustom.classList.add('active');
-
-        if (this.customRouletteOptions && this.customRouletteOptions.length >= 2) {
-            this.currentMissionRouletteOptions = [...this.customRouletteOptions];
-        } else if (this.currentMissions && this.currentMissions.length >= 2) {
-            this.currentMissionRouletteOptions = [...this.currentMissions];
-        }
-        this.updateRouletteWheel(this.currentMissionRouletteOptions);
-        this.clearRouletteResult();
-        soundFX.playTick();
-    },
-
     clearRouletteResult() {
-        const resultText = document.getElementById('roulette-result');
-        const resultCard = document.getElementById('roulette-result-card');
-        if (resultText) resultText.innerText = '';
-        if (resultCard) resultCard.classList.remove('has-result');
         const modal = document.getElementById('roulette-winner-modal');
         if (modal) modal.classList.remove('show');
     },
@@ -3024,18 +2460,20 @@ const app = {
             history.pushState({screen: screenId}, '', `#${screenId}`);
         }
 
-        // Screen Lifecycle Hooks
         if (screenId === 'roulette-input') {
-            this.changeRoulettePlayers(0);
             this.renderMissionTags();
-            this.syncCustomPresetButtonState();
         }
         if (screenId === 'roulette') {
-            if (this.customRouletteOptions) {
-                this.applyCustomRoulette();
-            } else {
-                this.setRoulettePreset(this.hotMode ? 'hot' : this.currentRoulettePreset);
+            if (!this.currentMissions || this.currentMissions.length < 2) {
+                if (this.customRouletteOptions && this.customRouletteOptions.length >= 2) {
+                    this.currentMissions = [...this.customRouletteOptions];
+                } else {
+                    this.currentMissions = [...ROULETTE_PRESETS.classic];
+                }
             }
+            this.currentMissionRouletteOptions = [...this.currentMissions];
+            this.updateRouletteWheel(this.currentMissionRouletteOptions);
+            this.clearRouletteResult();
         }
         if (screenId === 'finger') this.setupFingerRoulette();
     },
@@ -3043,31 +2481,24 @@ const app = {
     /* ============================================================
        1. MISSION ROULETTE LOGIC
        ============================================================ */
-    setRoulettePreset(presetName) {
-        if (!ROULETTE_PRESETS[presetName]) presetName = 'classic';
-        this.currentRoulettePreset = presetName;
-        document.querySelectorAll('.roulette-screen .mode-tab-btn').forEach(btn => btn.classList.remove('active'));
-        const activeTab = document.getElementById(`roulette-tab-${presetName}`);
-        if (activeTab) activeTab.classList.add('active');
-
-        this.currentMissionRouletteOptions = [...ROULETTE_PRESETS[presetName]];
-        this.updateRouletteWheel(this.currentMissionRouletteOptions);
-        this.clearRouletteResult();
-        soundFX.playTick();
-    },
+    setRoulettePreset(presetName) {},
 
     updateRouletteWheel(options) {
         const wheel = document.getElementById('roulette-wheel');
+        const hint = document.getElementById('roulette-count-hint');
+        if (hint) {
+            hint.textContent = `벌칙 ${options.length}개 · 룰렛이나 아래 버튼을 눌러 돌리세요`;
+        }
         if (!wheel) return;
         const oldLabels = wheel.querySelectorAll('.roulette-slice-label');
         oldLabels.forEach(el => el.remove());
 
-        const colors = ['#ff0055', '#a200ff', '#00f3ff', '#ffaa00', '#00ffaa', '#ff00aa', '#5500ff', '#ff7700'];
-        let gradient = [];
+        const colors = ['#ff4d6d', '#6366f1', '#0ea5e9', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#f97316'];
+        const gradient = [];
         const count = options.length;
         const angle = 360 / count;
-        
-        for(let i=0; i<count; i++) {
+
+        for (let i = 0; i < count; i++) {
             const color = colors[i % colors.length];
             gradient.push(`${color} ${i * angle}deg ${(i + 1) * angle}deg`);
 
@@ -3075,9 +2506,9 @@ const app = {
             label.className = 'roulette-slice-label';
             const rotateDeg = (i * angle) + (angle / 2);
             label.style.transform = `rotate(${rotateDeg}deg)`;
-            
+
             let text = options[i];
-            if (text.length > 9) text = text.substring(0, 8) + '..';
+            if (text.length > 13) text = text.substring(0, 12) + '..';
             label.innerText = text;
 
             wheel.appendChild(label);
@@ -3089,15 +2520,11 @@ const app = {
         if (this.isSpinning) return;
         const wheel = document.getElementById('roulette-wheel');
         const optionsToUse = this.currentMissionRouletteOptions;
-        if (!wheel || !optionsToUse || optionsToUse.length === 0) return;
+        if (!wheel || !optionsToUse || optionsToUse.length < 2) return;
         this.isSpinning = true;
 
         const pointer = document.getElementById('roulette-pointer');
-        const resultText = document.getElementById('roulette-result');
-        const resultCard = document.getElementById('roulette-result-card');
         const spinBtn = document.getElementById('roulette-spin-btn');
-        if (resultText) resultText.innerText = '돌아가는 중... 🎯';
-        if (resultCard) resultCard.classList.remove('has-result');
         if (spinBtn) spinBtn.disabled = true;
 
         const modal = document.getElementById('roulette-winner-modal');
@@ -3112,17 +2539,16 @@ const app = {
 
         wheel.style.transform = `rotate(${this.rouletteRotation}deg)`;
 
-        // Realistic deceleration ticking
         let currentInterval = 55;
         const startTime = Date.now();
-        const spinDuration = 4200;
+        const spinDuration = 3600;
 
         const runTick = () => {
             if (!this.isSpinning) return;
             const elapsed = Date.now() - startTime;
             if (elapsed >= spinDuration) return;
 
-            soundFX.playTick(elapsed > 3000);
+            soundFX.playTick(elapsed > 2500);
             haptics.tick();
             if (pointer) {
                 pointer.classList.remove('tick-bounce');
@@ -3131,7 +2557,7 @@ const app = {
             }
 
             const p = elapsed / spinDuration;
-            currentInterval = 55 + Math.pow(p, 2.5) * 420;
+            currentInterval = 55 + Math.pow(p, 2.5) * 400;
             this.rouletteTickTimer = setTimeout(runTick, currentInterval);
         };
         runTick();
@@ -3146,20 +2572,18 @@ const app = {
             const normalizedDegrees = this.rouletteRotation % 360;
             const segmentAngle = 360 / optionsToUse.length;
             const segmentIndex = Math.floor(((360 - normalizedDegrees) % 360) / segmentAngle);
-            const winner = optionsToUse[segmentIndex] || '당첨! Winner!';
+            const winner = optionsToUse[segmentIndex] || '당첨 벌칙!';
             this.lastRouletteWinner = winner;
 
-            if (resultText) resultText.innerHTML = `🎉 결과: ${winner}<span class="i18n-sub">Result</span>`;
-            if (resultCard) resultCard.classList.add('has-result');
             soundFX.playTada();
             haptics.buildUp();
 
             const rect = wheel.getBoundingClientRect();
-            fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 90);
+            fxEngine.confetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 100);
 
             setTimeout(() => {
                 this.openRouletteWinner(winner);
-            }, 350);
+            }, 200);
         }, spinDuration);
     },
 
@@ -3170,7 +2594,7 @@ const app = {
         if (!modal) return;
         if (title) title.textContent = winner;
         if (sub) {
-            sub.textContent = '피할 수 없다! 술자리의 룰을 따라 당당히 벌칙을 수행하세요! 🍻';
+            sub.textContent = '피할 수 없는 오늘의 벌칙! 당당하게 수행하세요 🍻';
         }
         modal.classList.add('show');
     },
@@ -3181,23 +2605,17 @@ const app = {
 
         if (removeThisPenalty && this.lastRouletteWinner) {
             if (this.currentMissionRouletteOptions.length <= 2) {
-                alert('룰렛 유지를 위해 최소 2개의 미션이 필요합니다! (더 이상 제외할 수 없습니다)');
+                alert('룰렛 유지를 위해 최소 2개의 벌칙이 필요합니다!');
                 return;
             }
             const idx = this.currentMissionRouletteOptions.indexOf(this.lastRouletteWinner);
             if (idx > -1) {
-                const removedItem = this.lastRouletteWinner;
                 this.currentMissionRouletteOptions.splice(idx, 1);
                 this.currentMissions = [...this.currentMissionRouletteOptions];
-                this.customRouletteOptions = [...this.currentMissionRouletteOptions];
+                this.autoSaveCustomMissions();
                 this.updateRouletteWheel(this.currentMissionRouletteOptions);
                 soundFX.playSpark();
                 haptics.tick();
-
-                const resultText = document.getElementById('roulette-result');
-                if (resultText) {
-                    resultText.innerHTML = `❌ '${removedItem}' 제외됨 (남은 ${this.currentMissionRouletteOptions.length}개)<span class="i18n-sub">Excluded from wheel</span>`;
-                }
             }
         }
     },
@@ -3226,11 +2644,7 @@ const app = {
         if (tabDrink) tabDrink.classList.toggle('active', mode === 'drink');
         if (tabLove) tabLove.classList.toggle('active', mode === 'love');
         if (title) {
-            if (mode === 'drink') {
-                title.innerHTML = 'GIJO Touch Drink<br><span class="title-kr">술게임 복불복 터치 룰렛</span>';
-            } else {
-                title.innerHTML = 'GIJO Love Drink<br><span class="title-kr">19+ 커플 러브 드링크</span>';
-            }
+            title.textContent = mode === 'drink' ? '터치 복불복' : '19+ 커플 매칭';
         }
         this.clearFingerTimers();
         const area = document.getElementById('finger-area');

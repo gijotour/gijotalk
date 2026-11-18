@@ -1,6 +1,5 @@
 import React from 'react';
 import { Country, Phrase } from '../types';
-import { Star } from 'lucide-react';
 import { PhraseCard } from './PhraseCard';
 
 interface Top10EssentialsProps {
@@ -77,29 +76,24 @@ export const Top10Essentials: React.FC<Top10EssentialsProps> = ({
   const rawList = ESSENTIALS_DATA[country.id] || ESSENTIALS_DATA.en;
 
   return (
-    <div className="bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-amber-100/30 border-2 border-amber-300/90 p-3.5 sm:p-4 rounded-3xl shadow-sm space-y-3">
-      {/* 10대 기본표현 섹션 헤더 */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-gradient-to-tr from-amber-600 to-orange-500 text-white rounded-2xl shadow-xs">
-            <Star className="w-5 h-5 fill-current" />
-          </div>
-          <div>
-            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <span>{country.name} 여행 필수 10대 기본 표현</span>
-              <span className="text-[10px] px-2.5 py-0.5 bg-amber-500 text-white rounded-full font-black shadow-xs">
-                TOP 10
-              </span>
-            </h2>
-            <p className="text-xs text-slate-700 font-bold mt-0.5">
-              공항·식당·호텔에서 바로 쓰는 1초 생존 표현
-            </p>
-          </div>
+    <div className="space-y-2.5">
+      {/* 심플 10대 기본표현 섹션 헤더 */}
+      <div className="flex items-center justify-between px-1">
+        <div>
+          <h2 className="text-sm font-black text-ink">
+            {country.name} 여행 필수 10대 기본 표현
+          </h2>
+          <p className="text-xs text-ink-mute font-medium mt-0.5">
+            공항·식당·호텔에서 바로 쓰는 1초 생존 표현
+          </p>
         </div>
+        <span className="text-[11px] px-2.5 py-0.5 bg-slate-900 text-white rounded-full font-bold shrink-0">
+          TOP 10
+        </span>
       </div>
 
       {/* 동일한 PhraseCard 템플릿으로 10대 표현 렌더링 */}
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {rawList.map((item, idx) => {
           const phraseObj: Phrase = {
             id: item.id,

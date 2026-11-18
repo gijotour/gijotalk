@@ -49,47 +49,41 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
 
   return (
     <div
-      className={`p-4 rounded-2xl border-2 shadow-xs ${
-        status.complete ? 'bg-emerald-50 border-emerald-200' : 'bg-white border-accent'
+      className={`p-3.5 rounded-2xl border ${
+        status.complete
+          ? 'bg-emerald-50/70 border-emerald-200/80'
+          : 'bg-white border-slate-200'
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div
-            className={`p-2.5 rounded-xl shrink-0 ${
-              status.complete ? 'bg-emerald-600 text-white' : 'bg-accent text-slate-900'
+            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+              status.complete ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-ink'
             }`}
           >
             {status.complete ? (
-              <CheckCircle2 className="w-5 h-5" />
+              <CheckCircle2 className="w-4 h-4" />
             ) : (
-              <CloudDownload className="w-5 h-5" />
+              <CloudDownload className="w-4 h-4" />
             )}
           </div>
 
           <div className="min-w-0">
-            <h4 className="text-xs font-bold text-slate-900">
+            <h4 className="text-xs font-bold text-ink truncate">
               {status.complete
-                ? `${country.flag} ${country.name} 오프라인 저장 완료`
-                : `${country.flag} ${country.name} 발음을 기기에 저장하기`}
+                ? `${country.flag} ${country.name} 발음 오프라인 저장 완료`
+                : `${country.flag} ${country.name} 발음 기기에 저장하기`}
             </h4>
-            <p className="text-xs text-slate-600 font-medium mt-0.5 leading-relaxed">
-              {status.complete ? (
-                <>
-                  {status.total}개 발음이 저장되어 있습니다. 이제 <b>인터넷 없이도</b> 그대로
-                  들립니다.
-                </>
-              ) : (
-                <>
-                  {status.total}개 발음 · 약 {estimatedSizeMB(country.id)} · 현지에서 데이터 없이
-                  쓰려면 <b>출국 전 Wi-Fi에서</b> 받아두세요.
-                </>
-              )}
+            <p className="text-[11px] text-ink-mute font-medium mt-0.5 truncate">
+              {status.complete
+                ? `${status.total}개 저장됨 · 데이터 없이 재생 가능`
+                : `${status.total}개 (${estimatedSizeMB(country.id)}) · 출국 전 Wi-Fi 권장`}
             </p>
 
             {!status.complete && status.cached > 0 && (
-              <p className="text-xs text-alert font-bold mt-1">
-                현재 {status.cached}/{status.total}개 ({pct}%) 저장됨
+              <p className="text-[11px] text-brand font-bold mt-0.5">
+                {status.cached}/{status.total}개 ({pct}%) 저장됨
               </p>
             )}
           </div>
@@ -99,11 +93,11 @@ export const OfflineAudioCard: React.FC<OfflineAudioCardProps> = ({ country, isO
           <button
             onClick={handleDownload}
             disabled={downloading || isOffline}
-            className="shrink-0 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
+            className="shrink-0 px-3.5 py-2 bg-slate-900 hover:bg-black disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-bold rounded-xl active:scale-95 transition-all flex items-center gap-1.5"
           >
             {downloading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 <span>{progress}%</span>
               </>
             ) : (

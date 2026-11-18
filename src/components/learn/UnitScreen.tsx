@@ -190,7 +190,7 @@ export const UnitScreen: React.FC<UnitScreenProps> = ({
         <div className="bg-accent-tint border-2 border-accent rounded-2xl p-4 text-center space-y-2 animate-in fade-in duration-200">
           <p className="text-lg font-black text-slate-900">다 배웠어요 🎉</p>
           <p className="text-xs font-bold text-slate-700">
-            {unit.title} 단원에 도장을 찍었어요. 보관함에서 복습해 볼까요?
+            {unit.title} 단원에 도장을 찍었어요. 내 단어장에서 복습해 볼까요?
           </p>
           <button
             type="button"

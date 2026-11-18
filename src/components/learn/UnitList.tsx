@@ -28,19 +28,21 @@ export const UnitList: React.FC<UnitListProps> = ({
 
   return (
     <section className="space-y-3" aria-label="단원 목록">
-      <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs">
-        <h2 className="text-sm font-extrabold text-slate-900">
-          {country.flag} {country.language} 배우기
-        </h2>
-        <p className="text-xs text-slate-500 font-bold mt-0.5">
-          한 단원에 단어 조금, 짧은 말 조금. 오늘은 어디부터 해볼까요?
-        </p>
-        <div className="mt-2 text-xs font-extrabold text-brand">
+      <div className="flex items-center justify-between px-1">
+        <div>
+          <h2 className="text-sm font-black text-ink">
+            {country.flag} {country.language} 배우기
+          </h2>
+          <p className="text-xs text-ink-mute font-medium mt-0.5">
+            한 단원에 단어·짧은 말·대화 3단계
+          </p>
+        </div>
+        <div className="text-xs font-bold text-brand bg-brand/10 px-2.5 py-1 rounded-full shrink-0">
           도장 {doneCount} / {VOCAB_UNITS.length}
         </div>
       </div>
 
-      <ul className="space-y-2.5">
+      <ul className="space-y-2">
         {VOCAB_UNITS.map((unit) => {
           const { seen, total } = unitProgress(country.id, unit.id, progress);
           const percent = total > 0 ? Math.round((seen / total) * 100) : 0;
@@ -51,33 +53,33 @@ export const UnitList: React.FC<UnitListProps> = ({
               <button
                 onClick={() => onOpenUnit(unit.id)}
                 aria-label={`${unit.title} 단원 열기`}
-                className="w-full min-h-[76px] text-left bg-white hover:border-brand-vivid border-2 border-slate-100 rounded-2xl p-3.5 shadow-xs active:scale-[0.99] transition-all flex items-center gap-3.5"
+                className="w-full min-h-[72px] text-left bg-white hover:border-slate-300 border border-slate-200/90 rounded-2xl p-3.5 active:scale-[0.99] transition-all flex items-center gap-3.5"
               >
-                <span className="text-4xl shrink-0 leading-none" aria-hidden="true">
+                <span className="text-3xl shrink-0 leading-none" aria-hidden="true">
                   {unit.emoji}
                 </span>
 
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2">
-                    <span className="text-sm font-black text-slate-900">{unit.title}</span>
+                    <span className="text-sm font-bold text-ink">{unit.title}</span>
                     {stamped && (
-                      <span className="px-2 py-0.5 bg-accent text-ink rounded-xl text-xs font-black">
+                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[11px] font-bold">
                         다 배웠어요 🎉
                       </span>
                     )}
                   </span>
-                  <span className="block text-xs text-slate-500 font-bold mt-0.5 truncate">
+                  <span className="block text-xs text-ink-mute font-medium mt-0.5 truncate">
                     {unit.description}
                   </span>
 
                   <span className="flex items-center gap-2 mt-2">
-                    <span className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <span className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                       <span
                         className="block h-full bg-brand-vivid rounded-full transition-all"
                         style={{ width: `${percent}%` }}
                       />
                     </span>
-                    <span className="text-xs font-extrabold text-ink-soft shrink-0">
+                    <span className="text-[11px] font-bold text-ink-mute shrink-0 tabular-nums">
                       {seen} / {total}
                     </span>
                   </span>

@@ -1,17 +1,6 @@
 import React from 'react';
 import { Modal } from './Modal';
-import {
-  Gamepad2,
-  PartyPopper,
-  Flame,
-  Sparkles,
-  Plane,
-  X,
-  ChevronRight,
-  WifiOff,
-  Dices,
-  Trophy,
-} from 'lucide-react';
+import { Gamepad2, PartyPopper, Trophy, X, ChevronRight, WifiOff } from 'lucide-react';
 
 interface GameHubModalProps {
   isOpen: boolean;
@@ -33,138 +22,91 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
       onClose={onClose}
       label="GIJO 게임 및 놀거리 라운지"
       variant="center"
-      panelClassName="bg-slate-900 border-2 border-purple-500/40 rounded-3xl p-4 sm:p-6 w-full max-w-lg max-h-[90dvh] overflow-y-auto shadow-2xl text-white relative animate-in zoom-in-95 duration-150"
+      panelClassName="bg-white border border-slate-200 rounded-3xl p-5 w-full max-w-md max-h-[90dvh] overflow-y-auto shadow-xl text-ink animate-in zoom-in-95 duration-150"
     >
-      {/* 배경 장식 글로우 */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-amber-600/20 rounded-full blur-3xl pointer-events-none" />
-
       {/* 헤더 */}
-      <div className="flex items-start justify-between gap-3 mb-4 sm:mb-5 relative z-10">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="p-2.5 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-2xl shadow-lg shadow-purple-500/30 shrink-0">
-            <Gamepad2 className="w-6 h-6 text-white" />
-          </div>
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="w-9 h-9 rounded-2xl bg-slate-100 text-ink flex items-center justify-center shrink-0">
+            <Gamepad2 className="w-5 h-5 text-brand" />
+          </span>
           <div className="min-w-0">
-            <h2 className="text-base sm:text-xl font-black tracking-tight text-white flex flex-wrap items-center gap-2">
-              <span>GIJO 게임 라운지</span>
-              <span className="text-[10px] px-2 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-black text-white uppercase tracking-wider">
-                HUB
-              </span>
+            <h2 className="text-base font-black tracking-tight text-ink">
+              GIJO 게임 라운지
             </h2>
-            <p className="text-xs text-slate-400 font-medium mt-0.5">
-              비행기 킬링타임 & 여행지 저녁 술자리 파티 게임
+            <p className="text-xs text-ink-mute font-medium mt-0.5">
+              오프라인으로 즐기는 파티 · 미니게임
             </p>
           </div>
         </div>
         <button
           onClick={onClose}
           aria-label="닫기"
-          className="p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors shrink-0"
+          className="p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-ink-soft hover:text-ink transition-colors shrink-0"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* 게임 목록 카드들 */}
-      <div className="space-y-3.5 sm:space-y-4 relative z-10">
-        {/* 1. GIJO Drink 카드 */}
-        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-purple-950/40 border border-purple-500/30 rounded-2xl p-3.5 sm:p-4 transition-all hover:border-purple-400/60 shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="p-1.5 bg-pink-500/20 text-pink-400 rounded-xl shrink-0">
-                <PartyPopper className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-1.5">
-                  <span>GIJO Drink</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 bg-pink-500/20 text-pink-300 border border-pink-500/30 rounded-full flex items-center gap-1">
-                    <Flame className="w-2.5 h-2.5 fill-pink-400 text-pink-400" />
-                    2~12인 술자리 파티
-                  </span>
-                </h3>
-              </div>
+      {/* 심플 2카드 선택 */}
+      <div className="space-y-2.5">
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            onOpenPartyGame();
+          }}
+          aria-label="GIJO Drink 시작하기"
+          className="w-full text-left bg-slate-50/70 hover:bg-slate-100/80 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5 transition-colors active:scale-[0.99]"
+        >
+          <span className="w-11 h-11 rounded-2xl bg-brand/10 text-brand flex items-center justify-center shrink-0">
+            <PartyPopper className="w-5 h-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-black text-ink">GIJO Drink</h3>
+              <span className="text-[11px] font-bold text-brand bg-brand/10 px-2 py-0.5 rounded-full">
+                2~12인
+              </span>
             </div>
+            <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
+              미션 룰렛 · 터치 복불복 · 19+ 커플
+            </p>
           </div>
+          <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+        </button>
 
-          <p className="text-xs text-slate-300 font-medium mb-3">
-            미션 룰렛 &amp; 19+ 러브 드링크 / 터치 룰렛. 인원과 벌칙을 직접 수정할 수 있는 현장 맞춤형 술게임!
-          </p>
-
-          <div className="grid grid-cols-2 gap-2 mb-3 text-[11px] text-slate-400">
-            <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
-              <Dices className="w-3.5 h-3.5 text-pink-400 shrink-0" />
-              <span className="truncate">미션 룰렛 &amp; 직접 수정</span>
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            onOpenArcade();
+          }}
+          aria-label="GIJO Arcade 시작하기"
+          className="w-full text-left bg-slate-50/70 hover:bg-slate-100/80 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5 transition-colors active:scale-[0.99]"
+        >
+          <span className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-black text-ink">GIJO Arcade</h3>
+              <span className="text-[11px] font-bold text-ink-soft bg-slate-200/70 px-2 py-0.5 rounded-full">
+                1인용
+              </span>
             </div>
-            <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-              <span className="truncate">19+ 러브 &amp; 터치 룰렛</span>
-            </div>
+            <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
+              777 슬롯 · 2048 퍼즐 · 플래피 버드
+            </p>
           </div>
-
-          <button
-            onClick={() => {
-              onClose();
-              onOpenPartyGame();
-            }}
-            className="w-full py-2.5 px-4 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-98 text-white rounded-xl font-black text-xs shadow-md shadow-pink-600/30 flex items-center justify-center gap-2 transition-all"
-          >
-            <span>🍹 GIJO Drink 시작하기</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* 2. GIJO Arcade 카드 */}
-        <div className="bg-gradient-to-br from-slate-800/95 via-slate-800/80 to-amber-950/40 border border-amber-500/30 rounded-2xl p-3.5 sm:p-4 transition-all hover:border-amber-400/60 shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="p-1.5 bg-amber-500/20 text-amber-400 rounded-xl shrink-0">
-                <Trophy className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-sm sm:text-base font-extrabold text-white flex flex-wrap items-center gap-1.5">
-                  <span>GIJO Arcade</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-full flex items-center gap-1">
-                    <Plane className="w-2.5 h-2.5 text-amber-400" />
-                    비행기 모드 1인용
-                  </span>
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          <p className="text-xs text-slate-300 font-medium mb-3">
-            화려한 777 잭팟 슬롯머신 &amp; GIJO Neon 2048 &amp; Flappy Bird. 데이터 없이 즐기는 몰입형 아케이드!
-          </p>
-
-          <div className="grid grid-cols-2 gap-2 mb-3 text-[11px] text-slate-400">
-            <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>화려한 777 슬롯머신</span>
-            </div>
-            <div className="bg-slate-900/60 rounded-xl p-2 border border-slate-700/50 flex items-center gap-1.5">
-              <Gamepad2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-              <span>Neon 2048 &amp; Flappy</span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => {
-              onClose();
-              onOpenArcade();
-            }}
-            className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-98 text-white rounded-xl font-black text-xs shadow-md shadow-amber-500/30 flex items-center justify-center gap-2 transition-all"
-          >
-            <span>🎰 GIJO Arcade 시작하기</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+          <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+        </button>
       </div>
 
-      {/* 안내 뱃지 */}
-      <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-center gap-2 text-[11px] text-slate-400 font-medium relative z-10">
-        <WifiOff className="w-3.5 h-3.5 text-emerald-400" />
-        <span>인터넷·데이터 연결 없이 100% 오프라인 동작</span>
+      {/* 안내 */}
+      <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-ink-mute font-medium">
+        <WifiOff className="w-3.5 h-3.5 text-emerald-600" />
+        <span>인터넷 없이 100% 오프라인 작동</span>
       </div>
     </Modal>
   );

@@ -1,70 +1,46 @@
 import React from 'react';
-import { GraduationCap, Languages, CalendarDays, Bookmark, ShieldAlert } from 'lucide-react';
+import { GraduationCap, Languages, CalendarDays, ShieldAlert } from 'lucide-react';
 
 /**
- * 탭을 5개에서 3개로 줄였다가, 일정표를 더해 4개, 배우기를 더해 다시 5개가 됐습니다.
- *
- * 없앤 것과 그 이유:
- *   · 카테고리  → 메인 화면의 카테고리 칩이 이미 같은 일을 합니다. 순수 중복이었습니다.
- *   · 연속듣기  → 기능 자체를 걷어냈습니다. 문장별 재생만으로 충분하다고 판단했습니다.
- *
- * 일정표를 탭으로 올린 이유:
- *   여행 중 조회 빈도가 회화만큼 높고 성격이 완전히 다릅니다. 회화 화면에 카드로
- *   끼워 넣으면 정작 회화 목록이 또 첫 화면 아래로 밀려납니다.
- *
- * 배우기를 맨 앞에 둔 이유(docs/VOCAB_PLAN.md):
- *   회화는 "필요할 때 찾아 쓰는" 화면이라 검색과 카테고리로 바로 들어갑니다.
- *   배우기는 "안 열면 안 하는" 화면입니다. 첫 화면이 아니면 아무도 안 엽니다.
+ * 하단 메인 메뉴 — 핵심 4개 탭으로 단순화.
+ * · 배우기 : 10단원 학습 + 내 단어장·복습 퀴즈 통합
+ * · 회화   : 현지 검색·카테고리 + 저장한 문장 필터 통합
+ * · 일정   : 여행 일정표 · Grab · 지도
+ * · 긴급   : 3초 현장 전광판
  */
-export type TabType = 'learn' | 'translate' | 'itinerary' | 'bookmarks' | 'emergency';
+export type TabType = 'learn' | 'translate' | 'itinerary' | 'emergency';
 
 interface BottomNavProps {
   activeTab: TabType;
   onChangeTab: (tab: TabType) => void;
   bookmarkCount: number;
+  vocabSavedCount?: number;
 }
 
 const TABS: Array<{
   id: TabType;
   label: string;
-  icon: React.ReactNode;
-  activeClass: string;
-  idleClass: string;
+  icon: (active: boolean) => React.ReactNode;
 }> = [
   {
     id: 'learn',
     label: '배우기',
-    icon: <GraduationCap className="w-6 h-6" />,
-    activeClass: 'bg-brand text-white',
-    idleClass: 'text-ink-soft hover:text-ink',
+    icon: (active) => <GraduationCap className="w-5 h-5" strokeWidth={active ? 2.4 : 1.9} />,
   },
   {
     id: 'translate',
     label: '회화',
-    icon: <Languages className="w-6 h-6" />,
-    activeClass: 'bg-brand text-white',
-    idleClass: 'text-ink-soft hover:text-ink',
+    icon: (active) => <Languages className="w-5 h-5" strokeWidth={active ? 2.4 : 1.9} />,
   },
   {
     id: 'itinerary',
     label: '일정',
-    icon: <CalendarDays className="w-6 h-6" />,
-    activeClass: 'bg-brand text-white',
-    idleClass: 'text-ink-soft hover:text-ink',
-  },
-  {
-    id: 'bookmarks',
-    label: '보관함',
-    icon: <Bookmark className="w-6 h-6" />,
-    activeClass: 'bg-brand text-white',
-    idleClass: 'text-ink-soft hover:text-ink',
+    icon: (active) => <CalendarDays className="w-5 h-5" strokeWidth={active ? 2.4 : 1.9} />,
   },
   {
     id: 'emergency',
     label: '긴급',
-    icon: <ShieldAlert className="w-6 h-6" />,
-    activeClass: 'bg-accent text-ink',
-    idleClass: 'text-alert hover:text-alert',
+    icon: (active) => <ShieldAlert className="w-5 h-5" strokeWidth={active ? 2.4 : 1.9} />,
   },
 ];
 
@@ -72,37 +48,53 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onChangeTab,
   bookmarkCount,
+  vocabSavedCount = 0,
 }) => {
-  // paddingBottom 에 safe-area 를 더해야 아이폰 홈 인디케이터에 버튼이 깔리지 않습니다.
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-orange-100 px-3 pt-2 shadow-[0_-8px_30px_rgba(0,0,0,0.06)]"
-      style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 pt-1.5"
+      style={{ paddingBottom: 'calc(0.4rem + env(safe-area-inset-bottom))' }}
       aria-label="주요 메뉴"
     >
       <div className="max-w-screen-md mx-auto flex justify-around items-center">
         {TABS.map((tab) => {
           const active = activeTab === tab.id;
+          const isEmergency = tab.id === 'emergency';
+          const badgeCount =
+            tab.id === 'learn' ? vocabSavedCount : tab.id === 'translate' ? bookmarkCount : 0;
+
           return (
             <button
               key={tab.id}
               onClick={() => onChangeTab(tab.id)}
               aria-current={active ? 'page' : undefined}
-              // 탭이 5개라도 한 칸이 44px 아래로 내려가지 않게 잡습니다.
-              // 흔들리는 차 안에서 누르는 앱이라 여백이 곧 기능입니다.
-              className={`flex-1 max-w-36 min-h-14 flex flex-col items-center justify-center gap-1 py-2 rounded-2xl transition-all active:scale-95 font-bold ${
-                active ? tab.activeClass : tab.idleClass
+              className={`relative flex-1 max-w-32 min-h-12 flex flex-col items-center justify-center gap-0.5 py-1.5 rounded-xl transition-colors active:scale-95 ${
+                active
+                  ? isEmergency
+                    ? 'text-alert font-black'
+                    : 'text-brand font-black'
+                  : isEmergency
+                  ? 'text-slate-500 hover:text-alert font-semibold'
+                  : 'text-slate-400 hover:text-slate-700 font-semibold'
               }`}
             >
+              {active && (
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-0 w-5 h-0.5 rounded-full ${
+                    isEmergency ? 'bg-alert' : 'bg-brand'
+                  }`}
+                />
+              )}
               <span className="relative">
-                {tab.icon}
-                {tab.id === 'bookmarks' && bookmarkCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 bg-accent text-ink text-xs font-bold min-w-5 px-1 rounded-full border-2 border-white">
-                    {bookmarkCount}
+                {tab.icon(active)}
+                {badgeCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2.5 bg-slate-900 text-white text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center leading-none border border-white">
+                    {badgeCount}
                   </span>
                 )}
               </span>
-              <span className="text-xs">{tab.label}</span>
+              <span className="text-[11px] leading-tight">{tab.label}</span>
             </button>
           );
         })}

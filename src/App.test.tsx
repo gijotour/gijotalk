@@ -33,16 +33,15 @@ const gotoTranslate = async (user: ReturnType<typeof userEvent.setup>) => {
  * 개별 유닛 테스트가 통과해도 조립이 틀리면 화면은 깨지므로, 조립을 검증합니다.
  */
 describe('App — 조립 검증', () => {
-  it('하단 탭이 5개고 배우기가 맨 앞이다', async () => {
+  it('하단 탭이 4개고 배우기가 맨 앞이다', async () => {
     await renderApp();
     const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
     const tabs = within(nav).getAllByRole('button');
-    expect(tabs).toHaveLength(5);
+    expect(tabs).toHaveLength(4);
     expect(tabs.map((t) => t.textContent)).toEqual([
       '배우기',
       '회화',
       '일정',
-      '보관함',
       '긴급',
     ]);
     // 배우기가 첫 화면입니다 — 안 열면 아무도 안 하는 화면이라 기본값으로 둡니다.
@@ -118,7 +117,7 @@ describe('App — 조립 검증', () => {
     await gotoTranslate(user);
 
     // 10대 기본 카테고리 칩 클릭
-    await user.click(screen.getByRole('button', { name: /10대 기본/ }));
+    await user.click(screen.getByRole('tab', { name: /10대 기본/ }));
     expect(screen.getByText(/공항·식당·호텔에서 바로 쓰는 1초 생존 표현/)).toBeInTheDocument();
 
     // 검색창에 검색어 입력 시 일반 회화 영역이 숨겨지지 않고 검색 결과 노출
@@ -147,7 +146,8 @@ describe('App — 조립 검증', () => {
     await user.click(screen.getByRole('button', { name: '긴급' }));
     expect(screen.getByText(/3초 긴급 현장 외치기 전광판 모드/)).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: '보관함' }));
+    await user.click(screen.getByRole('button', { name: '회화' }));
+    await user.click(screen.getByRole('tab', { name: /저장/ }));
     expect(screen.getByText(/아직 저장된 문장이 없습니다/)).toBeInTheDocument();
   });
 
@@ -187,7 +187,7 @@ describe('App — 조립 검증', () => {
     const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
     expect(within(nav).getByText('1')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /보관함/ }));
+    await user.click(screen.getByRole('tab', { name: /저장/ }));
     expect(screen.queryByText(/아직 저장된 문장이 없습니다/)).not.toBeInTheDocument();
   });
 });
@@ -224,11 +224,12 @@ describe('App — 모달이 공통 동작을 갖는다', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('헤더에서 1초 환율 및 팁·더치페이 계산기 모달이 열린다', async () => {
+  it('헤더 도구 메뉴에서 1초 환율 및 팁·더치페이 계산기 모달이 열린다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
-    await user.click(screen.getByRole('button', { name: '1초 환율 및 팁·더치페이 계산기' }));
+    await user.click(screen.getByRole('button', { name: '여행 도구 메뉴' }));
+    await user.click(screen.getByRole('menuitem', { name: '1초 환율 및 팁·더치페이 계산기' }));
     const dialog = screen.getByRole('dialog', { name: '1초 환율 및 팁·더치페이 계산기' });
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText(/한국 돈 환산/)).toBeInTheDocument();

@@ -98,13 +98,11 @@ describe('배우기 탭', () => {
     const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
     expect(within(nav).getByText('1')).toBeInTheDocument();
 
-    await user.click(within(nav).getByRole('button', { name: /보관함/ }));
+    await user.click(screen.getByRole('button', { name: '단원 목록으로 돌아가기' }));
+    await user.click(screen.getByRole('tab', { name: /내 단어장/ }));
     const shelf = screen.getByRole('region', { name: '내 단어장' });
     expect(within(shelf).getByText('내 단어장 (1)')).toBeInTheDocument();
     expect(within(shelf).getByText(first.meaning)).toBeInTheDocument();
-
-    // 기존 문장 보관함은 그대로 아래에 남아 있어야 합니다.
-    expect(screen.getByText(/아직 저장된 문장이 없습니다/)).toBeInTheDocument();
   });
 
   it('단원의 모든 단계를 보면 도장이 찍힌다', async () => {
@@ -142,12 +140,11 @@ describe('배우기 탭', () => {
 });
 
 describe('복습 퀴즈', () => {
-  it('보관함에서 열어 한 문제를 풀 수 있다', async () => {
+  it('내 단어장 탭에서 열어 한 문제를 풀 수 있다', async () => {
     const user = userEvent.setup();
     await renderApp();
 
-    const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
-    await user.click(within(nav).getByRole('button', { name: /보관함/ }));
+    await user.click(screen.getByRole('tab', { name: /내 단어장/ }));
     await user.click(screen.getByRole('button', { name: '복습하기' }));
 
     const quiz = screen.getByRole('region', { name: '복습 퀴즈' });
@@ -168,8 +165,7 @@ describe('복습 퀴즈', () => {
     const user = userEvent.setup();
     await renderApp();
 
-    const nav = screen.getByRole('navigation', { name: '주요 메뉴' });
-    await user.click(within(nav).getByRole('button', { name: /보관함/ }));
+    await user.click(screen.getByRole('tab', { name: /내 단어장/ }));
     await user.click(screen.getByRole('button', { name: '복습하기' }));
     await user.click(screen.getByRole('button', { name: '퀴즈 닫기' }));
 

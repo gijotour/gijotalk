@@ -13,10 +13,9 @@ import {
 
 import { Header } from './components/Header';
 import { InstallBanner } from './components/InstallBanner';
-import { OfflineAudioCard } from './components/OfflineAudioCard';
 import { PrivacyNotice, PrivacyToggle } from './components/PrivacyToggle';
 import { track } from './utils/analytics';
-import { CategoryChips } from './components/CategoryChips';
+import { CategoryChips, PhraseFilterCategory } from './components/CategoryChips';
 import { PhraseCard } from './components/PhraseCard';
 import { BillboardModal } from './components/BillboardModal';
 import { AITranslateModal } from './components/AITranslateModal';
@@ -34,8 +33,7 @@ import { hasItineraryLink } from './utils/itineraryLink';
 import { isUnlocked } from './utils/appLock';
 import { LockScreen } from './components/LockScreen';
 import { BottomNav, TabType } from './components/BottomNav';
-import { LearnTab } from './components/learn/LearnTab';
-import { VocabBookshelf } from './components/learn/VocabBookshelf';
+import { LearnTab, LearnSubTab } from './components/learn/LearnTab';
 import {
   getSavedVocabIds,
   toggleVocabId,
@@ -50,12 +48,10 @@ import {
 import {
   Search,
   Sparkles,
-  Bookmark,
   ShieldAlert,
   Maximize2,
   Camera,
   Languages,
-  Gamepad2,
 } from 'lucide-react';
 
 export default function App() {
@@ -63,20 +59,27 @@ export default function App() {
 
   // Country & Filter States
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId>('전체');
+  const [selectedCategory, setSelectedCategory] = useState<PhraseFilterCategory>('전체');
   const [searchQuery, setSearchQuery] = useState('');
-  // 첫 화면은 배우기입니다(docs/VOCAB_PLAN.md §6). 일정표 링크로 들어온
-  // 사람은 예외 — 그 링크를 연 이유가 일정 확인이므로 일정 탭이 먼저입니다.
-  // PWA 바로가기(?tab=emergency 등) 지원
+  const [learnSubTab, setLearnSubTab] = useState<LearnSubTab>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        if (new URLSearchParams(window.location.search).get('tab') === 'bookmarks') {
+          return 'bookshelf';
+        }
+      } catch {
+        // Ignored
+      }
+    }
+    return 'units';
+  });
   const [activeTab, setActiveTab] = useState<TabType>(() => {
     if (typeof window !== 'undefined') {
       try {
-        const param = new URLSearchParams(window.location.search).get('tab') as TabType;
-        if (
-          param &&
-          ['learn', 'translate', 'itinerary', 'bookmarks', 'emergency'].includes(param)
-        ) {
-          return param;
+        const param = new URLSearchParams(window.location.search).get('tab');
+        if (param === 'bookmarks') return 'learn';
+        if (param && ['learn', 'translate', 'itinerary', 'emergency'].includes(param)) {
+          return param as TabType;
         }
       } catch {
         // Ignored
@@ -221,8 +224,14 @@ export default function App() {
 
   const filteredPhrases = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    return countryPhrases.filter((p) => {
+    const baseList =
+      selectedCategory === '저장'
+        ? allPhrases.filter((p) => bookmarkedIds.includes(p.id))
+        : countryPhrases;
+
+    return baseList.filter((p) => {
       const matchesCategory =
+        selectedCategory === '저장' ||
         selectedCategory === '전체' ||
         selectedCategory === '10대 기본' ||
         p.category === selectedCategory;
@@ -234,7 +243,7 @@ export default function App() {
         (p.usageTip && p.usageTip.toLowerCase().includes(query));
       return matchesCategory && matchesSearch;
     });
-  }, [countryPhrases, selectedCategory, searchQuery]);
+  }, [allPhrases, countryPhrases, bookmarkedIds, selectedCategory, searchQuery]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<CategoryId, number> = {
@@ -339,7 +348,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-grow w-full max-w-screen-md mx-auto px-3 sm:px-6 py-4 space-y-4">
-        {/* TAB 1: 배우기 (첫 화면) */}
+        {/* TAB 1: 배우기 (단원 학습 + 내 단어장 통합) */}
         {activeTab === 'learn' && (
           <LearnTab
             country={selectedCountry}
@@ -348,17 +357,20 @@ export default function App() {
             onToggleSave={handleToggleVocabSave}
             progress={vocabProgress}
             onMarkSeen={handleVocabSeen}
+            onAnswer={handleVocabAnswer}
             unitDone={vocabUnitDone}
             onUnitDone={handleUnitDone}
             onOpenBillboard={setBillboardPhrase}
             isOffline={isOffline}
+            subTab={learnSubTab}
+            onChangeSubTab={setLearnSubTab}
           />
         )}
 
-        {/* TAB 2: 회화 / 번역 메인 뷰 */}
+        {/* TAB 2: 회화 / 검색 / 저장된 문장 */}
         {activeTab === 'translate' && (
-          <div className="space-y-4 animate-in fade-in duration-150">
-            {/* 검색 바 (비행기 아이콘 중복 제거 및 깔끔한 와이드 검색창) */}
+          <div className="space-y-3.5 animate-in fade-in duration-150">
+            {/* 심플 검색 바 */}
             <div className="flex items-center gap-2">
               <div className="relative flex-1 min-w-0">
                 <input
@@ -371,28 +383,28 @@ export default function App() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="회화 검색"
                   placeholder="원문 · 뜻 · 발음 검색"
-                  className="w-full bg-white border-2 border-slate-200 rounded-2xl pl-11 pr-16 py-3.5 text-base sm:text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-brand-vivid shadow-xs font-bold"
+                  className="w-full bg-white border border-slate-200 rounded-2xl pl-10 pr-16 py-3 text-base sm:text-xs text-ink placeholder-ink-mute focus:outline-none focus:border-ink font-medium"
                 />
-                <Search className="w-4 h-4 text-ink-mute absolute left-4 top-4.5" />
+                <Search className="w-4 h-4 text-ink-mute absolute left-3.5 top-3.5" />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-3 text-xs text-ink-soft hover:text-ink bg-slate-100 px-2.5 py-1.5 rounded-full font-bold"
+                    className="absolute right-2.5 top-2.5 text-xs text-ink-soft hover:text-ink bg-slate-100 px-2.5 py-1 rounded-full font-bold"
                   >
                     지우기
                   </button>
                 )}
               </div>
 
-              {/* 사진 번역 · AI (서버 필요) */}
+              {/* 사진 번역 · AI 질문 (서버 모드) */}
               {!IS_STATIC_BUILD && (
                 <button
                   onClick={() => setShowPhotoModal(true)}
                   aria-label="사진 찍어 번역하기"
                   title="사진 번역"
-                  className="w-12 h-12 shrink-0 flex items-center justify-center bg-ink hover:bg-black text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                  className="w-11 h-11 shrink-0 flex items-center justify-center bg-white hover:bg-slate-50 border border-slate-200 text-ink rounded-2xl active:scale-95 transition-colors"
                 >
-                  <Camera className="w-5 h-5" />
+                  <Camera className="w-4 h-4" />
                 </button>
               )}
               {!IS_STATIC_BUILD && (
@@ -400,50 +412,22 @@ export default function App() {
                   onClick={() => setShowAIAssistant(true)}
                   aria-label="AI에게 맞춤 표현 질문하기"
                   title="AI 질문"
-                  className="w-12 h-12 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl shadow-xs active:scale-95 transition-all"
+                  className="w-11 h-11 shrink-0 flex items-center justify-center bg-brand hover:bg-brand-hover text-white rounded-2xl active:scale-95 transition-colors"
                 >
-                  <Sparkles className="w-5 h-5" />
+                  <Sparkles className="w-4 h-4" />
                 </button>
               )}
             </div>
 
-            {/* 오프라인 언어 음성 다운로드 배너 */}
-            <OfflineAudioCard country={selectedCountry} isOffline={isOffline} />
-
-            {/* 🎮 GIJO 게임 라운지 퀵 런처 배너 */}
-            <div className="bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-purple-500/30 p-3 rounded-2xl flex items-center justify-between text-white shadow-xs">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="p-2 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-xl text-white shrink-0 shadow-xs">
-                  <Gamepad2 className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-black flex items-center gap-1.5 truncate">
-                    <span>GIJO 게임 &amp; 놀거리 라운지</span>
-                    <span className="text-[9px] px-1.5 py-0.5 bg-pink-500/80 text-white rounded-full font-bold shrink-0">
-                      OFFLINE
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-purple-200/80 font-medium truncate">
-                    술자리 미션 룰렛 &amp; 19+ 러브 · 777 슬롯머신 · Neon 2048
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowGameHub(true)}
-                className="ml-2 px-3 py-1.5 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-black text-xs rounded-xl shadow-xs active:scale-95 transition-all whitespace-nowrap shrink-0"
-              >
-                놀러가기 ▾
-              </button>
-            </div>
-
-            {/* 카테고리 칩 바 (10대 기본 칩 최우선 배치) */}
+            {/* 1줄 가로 스크롤 카테고리 + 저장 칩 */}
             <CategoryChips
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
               categoryCounts={categoryCounts}
+              savedCount={bookmarkedPhrases.length}
             />
 
-            {/* 🌟 [10대 필수 기본 표현] 첫 장(전체 뷰) 또는 '10대 기본' 카테고리 선택 시 최상단에 확실하게 노출 */}
+            {/* 필수 10대 기본 표현 */}
             {(selectedCategory === '전체' || selectedCategory === '10대 기본') && !searchQuery && (
               <>
                 <Top10Essentials
@@ -456,34 +440,31 @@ export default function App() {
                   onToggleBookmark={handleToggleBookmark}
                   onOpenMicPractice={setMicPracticePhrase}
                 />
-                {/* 상단 스폰서 배너 슬롯 */}
                 <AdBanner slotId="ad-slot-top-banner" format="banner" className="my-1" />
               </>
             )}
 
-            {/* 📋 일반 카테고리(호텔, 교통, 식당 등) 및 전체 회화 리스트 (검색 중일 때는 10대 기본 선택 상태여도 검색 결과 즉시 표시) */}
+            {/* 회화 목록 */}
             {(selectedCategory !== '10대 기본' || Boolean(searchQuery)) && (
               <>
                 {filteredPhrases.length > 0 ? (
-                  <div className="space-y-3">
-                    {/* 카테고리 리스트 헤더 */}
-                    <div className="bg-white p-3.5 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 bg-brand text-white rounded-xl text-xs font-black">
-                          {Boolean(searchQuery) ? '검색 결과' : selectedCategory}
-                        </span>
-                        <span className="text-xs font-extrabold text-slate-800">
-                          회화 목록 ({filteredPhrases.length}개)
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-slate-500 font-bold">터치 시 카드 형태로 펼쳐짐 ▾</span>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between px-1 pt-1">
+                      <span className="text-xs font-black text-ink">
+                        {Boolean(searchQuery)
+                          ? `검색 결과 (${filteredPhrases.length})`
+                          : `${selectedCategory} (${filteredPhrases.length})`}
+                      </span>
+                      <span className="text-[11px] text-ink-mute font-medium">
+                        터치하면 자세히 보기
+                      </span>
                     </div>
 
                     {filteredPhrases.map((phrase, idx) => (
                       <React.Fragment key={phrase.id}>
                         <PhraseCard
                           phrase={phrase}
-                          country={selectedCountry}
+                          country={selectedCategory === '저장' ? countryForPhrase(phrase) : selectedCountry}
                           speed={speed}
                           onSetSpeed={setSpeed}
                           isBookmarked={bookmarkedIds.includes(phrase.id)}
@@ -496,17 +477,25 @@ export default function App() {
                           index={idx}
                           defaultExpanded={idx === 0 && selectedCategory !== '전체'}
                         />
-                        {/* 8번째 카드 뒤 자연스러운 인피드 배너 */}
                         {idx === 7 && (
                           <AdBanner slotId="ad-slot-infeed-middle" format="banner" className="my-2" />
                         )}
                       </React.Fragment>
                     ))}
                   </div>
+                ) : selectedCategory === '저장' && !searchQuery ? (
+                  <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6">
+                    <h3 className="text-xs font-bold text-ink">
+                      아직 저장된 문장이 없습니다.
+                    </h3>
+                    <p className="text-xs text-ink-mute mt-1">
+                      자주 쓰는 문장을 눌러 저장하면 여기에 모입니다.
+                    </p>
+                  </div>
                 ) : (
-                  <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
-                    <Search className="w-10 h-10 text-ink-mute mx-auto mb-2" />
-                    <h3 className="text-xs font-bold text-slate-700">
+                  <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-6">
+                    <Search className="w-8 h-8 text-ink-mute mx-auto mb-2" />
+                    <h3 className="text-xs font-bold text-ink">
                       검색 조건에 일치하는 회화 문장이 없습니다.
                     </h3>
                     {IS_STATIC_BUILD ? (
@@ -520,7 +509,7 @@ export default function App() {
                         </p>
                         <button
                           onClick={() => setShowAIAssistant(true)}
-                          className="px-4 py-2 bg-brand text-white text-xs font-bold rounded-xl shadow-xs"
+                          className="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl"
                         >
                           AI 질문으로 생성하기
                         </button>
@@ -531,12 +520,11 @@ export default function App() {
               </>
             )}
 
-            {/* 사용 기록 안내 */}
             {!IS_STATIC_BUILD && <PrivacyNotice />}
           </div>
         )}
 
-        {/* TAB 2: 일정표 */}
+        {/* TAB 3: 일정표 */}
         {activeTab === 'itinerary' && (
           <ItineraryTab
             country={selectedCountry}
@@ -549,141 +537,77 @@ export default function App() {
           />
         )}
 
-        {/* TAB 4: 저장됨 (내 단어장 + 문장 북마크) */}
-        {activeTab === 'bookmarks' && (
-          <div className="space-y-4 animate-in fade-in duration-150">
-            {/* 위: 내 단어장 — 외울 것 */}
-            <VocabBookshelf
-              country={selectedCountry}
-              speed={speed}
-              savedIds={savedVocabIds}
-              onToggleSave={handleToggleVocabSave}
-              progress={vocabProgress}
-              onAnswer={handleVocabAnswer}
-            />
-
-            {/* 아래: 기존 문장 보관함 — 현장에서 보여줄 것 */}
-            <div className="bg-white p-4 rounded-2xl border-2 border-slate-100 shadow-xs flex items-center justify-between">
-              <div>
-                <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
-                  <Bookmark className="w-5 h-5 text-accent fill-current" />
-                  <span>내 보관함 ({bookmarkedPhrases.length})</span>
-                </h2>
-                <p className="text-xs text-slate-500 font-bold mt-0.5">
-                  현지에서 인터넷 없이 가장 자주 쓰는 나만의 문장
-                </p>
-              </div>
-            </div>
-
-            {bookmarkedPhrases.length > 0 ? (
-              <div className="space-y-3">
-                {bookmarkedPhrases.map((phrase, idx) => {
-                  return (
-                    <PhraseCard
-                      key={`bm-${phrase.id}`}
-                      phrase={phrase}
-                      country={countryForPhrase(phrase)}
-                      speed={speed}
-                      onSetSpeed={setSpeed}
-                      isBookmarked={true}
-                      onToggleBookmark={handleToggleBookmark}
-                      onOpenBillboard={setBillboardPhrase}
-                      onOpenMicPractice={setMicPracticePhrase}
-                      onDelete={
-                        isCustomPhrase(phrase.id) ? handleDeleteCustomPhrase : undefined
-                      }
-                      index={idx}
-                      defaultExpanded={true}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border-2 border-slate-100 p-6 shadow-xs">
-                <Bookmark className="w-10 h-10 text-ink-mute mx-auto mb-2" />
-                <h3 className="text-xs font-bold text-slate-700">
-                  아직 저장된 문장이 없습니다.
-                </h3>
-                <p className="text-xs text-ink-mute mt-1 mb-4">
-                  자주 쓰는 문장의 북마크(★)를 눌러 보관함에 추가하세요!
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
         {/* TAB 4: 긴급 전광판 핫 리스트 */}
         {activeTab === 'emergency' && (
-          <div className="space-y-4 animate-in fade-in duration-150">
-            <div className="bg-accent/20 border-2 border-accent/60 p-4 rounded-2xl text-slate-900 shadow-xs">
-              <div className="flex items-center gap-2 mb-1">
-                <ShieldAlert className="w-5 h-5 text-alert" />
-                <h2 className="font-extrabold text-sm text-slate-900">
+          <div className="space-y-3.5 animate-in fade-in duration-150">
+            <div className="bg-white border border-red-200 p-4 rounded-2xl flex items-start gap-3">
+              <span className="w-9 h-9 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                <ShieldAlert className="w-5 h-5" />
+              </span>
+              <div>
+                <h2 className="font-black text-sm text-ink">
                   3초 긴급 현장 외치기 전광판 모드
                 </h2>
+                <p className="text-xs font-medium text-ink-mute mt-0.5">
+                  카드를 누르면 화면 가득 큰 글씨로 바로 띄웁니다.
+                </p>
               </div>
-              <p className="text-xs font-bold text-slate-700">
-                운전기사나 현지 상인에게 휴대폰을 즉시 보여주고 큰 소리로 재생하세요!
-              </p>
             </div>
 
-            <h3 className="text-xs font-extrabold text-slate-900 px-1">
-              진짜 비상 ({criticalPhrases.length})
+            <h3 className="text-xs font-bold text-ink-mute px-1">
+              긴급 상황 ({criticalPhrases.length})
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {criticalPhrases.map((phrase) => (
-                <div
+                <button
+                  type="button"
                   key={`emerg-${phrase.id}`}
                   onClick={() => setBillboardPhrase(phrase)}
-                  className="bg-white hover:border-brand-vivid p-5 rounded-2xl border-2 border-slate-100 cursor-pointer transition-all active:scale-95 shadow-xs group relative overflow-hidden"
+                  className="text-left bg-white hover:border-red-300 p-4 rounded-2xl border border-slate-200 transition-colors active:scale-[0.98] group"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="px-2.5 py-0.5 bg-accent/30 text-alert text-xs font-bold rounded-xl">
-                      {phrase.category} • 긴급
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-[11px] font-bold text-red-600">
+                      긴급 전광판
                     </span>
-                    <Maximize2 className="w-4 h-4 text-brand group-hover:scale-110 transition-transform" />
+                    <Maximize2 className="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors" />
                   </div>
 
-                  <h3 className="text-xl font-black text-slate-900 font-['Montserrat'] tracking-tight italic">
+                  <h3 className="text-lg font-black text-ink font-display tracking-tight">
                     {phrase.original}
                   </h3>
-                  <p className="text-xs font-bold text-slate-700 mt-1">
+                  <p className="text-xs font-bold text-ink-soft mt-1">
                     {phrase.translation}
                   </p>
-                  <p className="text-xs font-bold text-alert mt-0.5">
+                  <p className="text-xs font-medium text-brand mt-0.5">
                     [{phrase.pronunciation}]
                   </p>
-
-                  <div className="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-brand font-bold">
-                    <span>1초 만에 전광판 실행</span>
-                    <span className="font-black">터치 ➔</span>
-                  </div>
-                </div>
+                </button>
               ))}
             </div>
 
             {situationalPhrases.length > 0 && (
               <>
-                <h3 className="text-xs font-extrabold text-slate-900 px-1 pt-2">
-                  상황별로 급한 말 ({situationalPhrases.length})
+                <h3 className="text-xs font-bold text-ink-mute px-1 pt-2">
+                  자주 쓰는 급한 표현 ({situationalPhrases.length})
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {situationalPhrases.map((phrase) => (
-                    <div
+                    <button
+                      type="button"
                       key={`urgent-${phrase.id}`}
                       onClick={() => setBillboardPhrase(phrase)}
-                      className="bg-white hover:border-brand-vivid p-4 rounded-2xl border-2 border-slate-100 cursor-pointer transition-all active:scale-95 shadow-xs"
+                      className="text-left bg-white hover:border-slate-300 p-4 rounded-2xl border border-slate-200 transition-colors active:scale-[0.98]"
                     >
-                      <span className="px-2.5 py-0.5 bg-slate-100 text-ink-soft text-xs font-bold rounded-xl">
+                      <span className="text-[11px] text-ink-mute font-bold">
                         {phrase.category}
                       </span>
-                      <h3 className="text-lg font-black text-slate-900 font-['Montserrat'] tracking-tight italic mt-2">
+                      <h3 className="text-base font-black text-ink font-display tracking-tight mt-1">
                         {phrase.original}
                       </h3>
-                      <p className="text-xs font-bold text-slate-700 mt-1">{phrase.translation}</p>
-                      <p className="text-xs font-bold text-alert mt-0.5">[{phrase.pronunciation}]</p>
-                    </div>
+                      <p className="text-xs font-bold text-ink-soft mt-1">{phrase.translation}</p>
+                      <p className="text-xs font-medium text-brand mt-0.5">[{phrase.pronunciation}]</p>
+                    </button>
                   ))}
                 </div>
               </>
@@ -691,28 +615,23 @@ export default function App() {
           </div>
         )}
 
-        {/* Footer */}
-        <footer className="pt-8 pb-4">
-          <div className="bg-white border-2 border-slate-100 py-3.5 px-6 rounded-2xl shadow-xs flex flex-col sm:flex-row items-center justify-between w-full text-xs text-ink-soft font-bold gap-2">
-            <div className="flex items-center gap-2">
+        {/* 심플 Footer */}
+        <footer className="pt-6 pb-4 text-center space-y-2">
+          <p className="text-xs text-ink-mute font-medium flex items-center justify-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5">
               <span
-                className={`w-2.5 h-2.5 rounded-full ${
+                className={`w-2 h-2 rounded-full ${
                   isOffline ? 'bg-accent' : 'bg-emerald-500'
                 }`}
               />
-              <span>GIJO Tour · {isOffline ? '오프라인' : '온라인'}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-ink">
-              <span className="text-blue-700 bg-blue-50 px-2 py-0.5 rounded-xl border border-blue-200">
-                지아이조 투어
-              </span>
-              <span>제공</span>
-            </div>
-            <span className="text-brand">{countryPhrases.length}개 현장회화 탑재</span>
-          </div>
+              GIJO Tour · {isOffline ? '오프라인' : '온라인'}
+            </span>
+            <span>·</span>
+            <span>{countryPhrases.length}개 현장회화</span>
+          </p>
 
           {!IS_STATIC_BUILD && (
-            <div className="mt-2 flex justify-center">
+            <div className="flex justify-center">
               <PrivacyToggle />
             </div>
           )}
@@ -723,7 +642,8 @@ export default function App() {
       <BottomNav
         activeTab={activeTab}
         onChangeTab={setActiveTab}
-        bookmarkCount={bookmarkedPhrases.length + savedVocabIds.length}
+        bookmarkCount={bookmarkedPhrases.length}
+        vocabSavedCount={savedVocabIds.length}
       />
 
       {/* MODAL 1: 3-Second Emergency Billboard */}

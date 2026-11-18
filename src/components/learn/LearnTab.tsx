@@ -6,8 +6,9 @@ import { OfflineAudioCard } from '../OfflineAudioCard';
 import { UnitList } from './UnitList';
 import { UnitScreen } from './UnitScreen';
 import { VocabBookshelf } from './VocabBookshelf';
+import { ScenarioChat } from './ScenarioChat';
 
-export type LearnSubTab = 'units' | 'bookshelf';
+export type LearnSubTab = 'units' | 'scenarios' | 'bookshelf';
 
 interface LearnTabProps {
   country: Country;
@@ -77,11 +78,11 @@ export const LearnTab: React.FC<LearnTabProps> = ({
 
   return (
     <div className="space-y-3.5 animate-in fade-in duration-150">
-      {/* 심플 세그먼트 전환: 단원 학습 / 내 단어장 */}
+      {/* 심플 세그먼트 전환: 단원 학습 / 만남 대화 / 내 단어장 */}
       <div
         role="tablist"
         aria-label="학습 메뉴 전환"
-        className="grid grid-cols-2 bg-slate-100 p-1 rounded-2xl border border-slate-200/70"
+        className="grid grid-cols-3 bg-slate-100 p-1 rounded-2xl border border-slate-200/70"
       >
         <button
           type="button"
@@ -95,6 +96,19 @@ export const LearnTab: React.FC<LearnTabProps> = ({
           }`}
         >
           단원 학습
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={subTab === 'scenarios'}
+          onClick={() => setSubTab('scenarios')}
+          className={`py-2 rounded-xl text-xs font-bold transition-all ${
+            subTab === 'scenarios'
+              ? 'bg-white text-ink shadow-xs'
+              : 'text-ink-soft hover:text-ink'
+          }`}
+        >
+          만남 대화
         </button>
         <button
           type="button"
@@ -126,6 +140,12 @@ export const LearnTab: React.FC<LearnTabProps> = ({
             onOpenUnit={setOpenUnitId}
           />
         </>
+      ) : subTab === 'scenarios' ? (
+        <ScenarioChat
+          country={country}
+          speed={speed}
+          onOpenBillboard={onOpenBillboard}
+        />
       ) : (
         <VocabBookshelf
           country={country}

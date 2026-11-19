@@ -718,7 +718,7 @@ textarea:focus {
     justify-content: center;
 }
 
-/* ===== HOT 모드 ===== */
+/* ===== (옛 HOT 모드 스타일 — 기능은 없앴다. 쓰이지 않는다) ===== */
 .hot-row {
     display: flex;
     align-items: center;
@@ -1481,7 +1481,7 @@ body.hot .hot-toggle-btn {
         <!-- Main Menu -->
         <section id="screen-main" class="screen active main-menu-screen">
             <div class="main-header">
-                <h1 class="neon-text title">GIJO Drink<span id="hot-badge" class="hot-badge hidden">19+</span></h1>
+                <h1 class="neon-text title">GIJO Drink</h1>
                 <div class="header-controls-row">
                     <div class="player-setup">
                         <span class="player-label">인원</span>
@@ -1489,9 +1489,6 @@ body.hot .hot-toggle-btn {
                         <span id="player-count-display" class="player-count-val">4</span>
                         <button class="cnt-btn" onclick="app.changePlayerCount(1)" aria-label="인원 늘리기">+</button>
                     </div>
-                    <button class="hot-toggle-btn" id="hot-toggle-btn" onclick="app.toggleHotMode()" aria-pressed="false">
-                        🔥 19+ <span id="hot-toggle-state">OFF</span>
-                    </button>
                     <button class="gear-btn" onclick="app.navigate('settings')" aria-label="설정 · Settings">⚙️ 설정</button>
                 </div>
             </div>
@@ -1601,7 +1598,7 @@ body.hot .hot-toggle-btn {
 
             <div class="mode-selector-bar touch-mode-tabs" style="max-width: 340px; margin: 4px auto 8px auto;">
                 <button class="mode-tab-btn active" id="touch-tab-drink" onclick="app.setTouchMode('drink')">🍺 벌칙 복불복</button>
-                <button class="mode-tab-btn" id="touch-tab-love" onclick="app.setTouchMode('love')">💋 19+ 커플 매칭</button>
+                <button class="mode-tab-btn" id="touch-tab-love" onclick="app.setTouchMode('love')">💋 커플 매칭</button>
             </div>
 
             <div class="finger-instructions" id="finger-msg">다같이 화면을 누르고 계세요!</div>
@@ -1620,7 +1617,7 @@ body.hot .hot-toggle-btn {
             <!-- Love Mission Modal -->
             <div class="love-mission-modal" id="love-mission-modal" onclick="app.closeLoveMission()">
                 <div class="love-mission-card">
-                    <div class="love-mission-title">💘 19+ 커플 미션</div>
+                    <div class="love-mission-title">💘 커플 미션</div>
                     <div class="love-mission-content" id="love-mission-text">...</div>
                     <button class="btn neon-btn" onclick="app.closeLoveMission()">확인</button>
                 </div>
@@ -1632,15 +1629,6 @@ body.hot .hot-toggle-btn {
             <button class="btn-back" onclick="history.back()">&larr; 뒤로</button>
             <h2 class="neon-text" style="margin-top: 36px;">설정</h2>
             <div class="settings-container">
-                <div class="hot-row">
-                    <div class="hot-text">
-                        <span class="hot-name">🔥 19+ HOT 모드</span>
-                        <span class="hot-desc">성인 술자리용 벌칙 세트로 전환합니다</span>
-                    </div>
-                    <button id="hot-switch" class="hot-switch" role="switch" aria-checked="false"
-                            aria-label="HOT 모드" onclick="app.toggleHotMode()"><span></span></button>
-                </div>
-
                 <div class="setting-group">
                     <label>커스텀 룰렛 벌칙 (쉼표로 구분)</label>
                     <textarea id="setting-roulette" rows="4"></textarea>
@@ -1969,16 +1957,6 @@ const ROULETTE_PRESETS = {
         '나 빼고 다 마셔 😎 (All But Me)',
         '물 한잔 마시기 💧 (Drink Water)'
     ],
-    hot: [
-        '💋 러브샷 or 2잔 (Love Shot)',
-        '👀 10초 아이콘택트 (Eye Contact)',
-        '🔥 밀착 러브샷 (Intimate Shot)',
-        '💬 귓속말 19금 칭찬 (Whisper)',
-        '📖 아찔했던 썰 45초 (Spicy Story)',
-        '🔞 매력 부위 고백 (Confess Body)',
-        '🫂 5초 백허그 or 2잔 (Back Hug)',
-        '🤫 귓속말 19금 진실 (Secret Truth)'
-    ],
     truth: [
         '📱 최근 검색어 1개 (Search History)',
         '💘 이상형 지목 (Ideal Type)',
@@ -2042,7 +2020,6 @@ const app = {
     ],
     currentScreen: 'main',
     playerCount: 4,
-    hotMode: false,
     
     // Roulette variables
     currentRoulettePreset: 'classic',
@@ -2141,8 +2118,8 @@ const app = {
     },
 
     loadSettings() {
-        this.hotMode = this.storeGet('neonDrinks_hot') === '1';
-        this.applyHotModeVisuals();
+        // HOT 모드는 없앴다. 예전에 켜 둔 기기에 남은 값을 끈다.
+        if (this.storeGet('neonDrinks_hot') === '1') this.storeSet('neonDrinks_hot', '0');
         const savedCount = parseInt(this.storeGet('neonDrinks_players'), 10);
         if (!isNaN(savedCount)) {
             this.playerCount = Math.max(2, Math.min(20, savedCount));
@@ -2169,32 +2146,6 @@ const app = {
         this.customRouletteText = this.storeGet('neonDrinks_customRoulette') || '';
         const sr = document.getElementById('setting-roulette');
         if (sr) sr.value = this.customRouletteText;
-    },
-
-    applyHotModeVisuals() {
-        const on = this.hotMode;
-        document.body.classList.toggle('hot', on);
-        const badge = document.getElementById('hot-badge');
-        if (badge) badge.classList.toggle('hidden', !on);
-        const sw = document.getElementById('hot-switch');
-        if (sw) {
-            sw.setAttribute('aria-checked', on ? 'true' : 'false');
-            sw.classList.toggle('on', on);
-        }
-        const tb = document.getElementById('hot-toggle-btn');
-        if (tb) tb.setAttribute('aria-pressed', on ? 'true' : 'false');
-        const ts = document.getElementById('hot-toggle-state');
-        if (ts) ts.innerText = on ? 'ON' : 'OFF';
-    },
-
-    toggleHotMode() {
-        this.hotMode = !this.hotMode;
-        this.storeSet('neonDrinks_hot', this.hotMode ? '1' : '0');
-        this.applyHotModeVisuals();
-        soundFX.init();
-        soundFX.playTada();
-        haptics.buildUp();
-        fxEngine.confetti(window.innerWidth / 2, window.innerHeight / 2, 40);
     },
 
     changePlayerCount(delta) {
@@ -2227,8 +2178,7 @@ const app = {
 
     loadRoulettePreset(name) {
         let list;
-        if (name === 'spicy') list = [...ROULETTE_PRESETS.hot];
-        else if (name === 'king') list = [...KING_GAME_PENALTIES];
+        if (name === 'king') list = [...KING_GAME_PENALTIES];
         else if (name === 'players') list = Array.from({ length: this.roulettePlayers }, (_, i) => `${i + 1}번 마셔라! 🍺 (Player ${i + 1})`);
         else if (name === 'truth') list = [...ROULETTE_PRESETS.truth];
         else list = [...ROULETTE_PRESETS.classic];
@@ -2626,7 +2576,7 @@ const app = {
     fingerIdleMessage() {
         const pcHint = this.isMouseOnlyDevice() ? ' · PC: 클릭하여 손가락 배치' : '';
         if (this.touchMode === 'love') {
-            return `💖 운명의 19+ 커플 매칭! 손가락을 올려주세요!<span class="i18n-sub">Everyone touch and hold for 19+ couple match!${pcHint}</span>`;
+            return `💖 운명의 커플 매칭! 손가락을 올려주세요!<span class="i18n-sub">Everyone touch and hold for couple match!${pcHint}</span>`;
         }
         return `🍺 다같이 화면을 누르고 계세요! (2~6인)<span class="i18n-sub">Everyone touch and hold the screen!${pcHint}</span>`;
     },
@@ -2644,7 +2594,7 @@ const app = {
         if (tabDrink) tabDrink.classList.toggle('active', mode === 'drink');
         if (tabLove) tabLove.classList.toggle('active', mode === 'love');
         if (title) {
-            title.textContent = mode === 'drink' ? '터치 복불복' : '19+ 커플 매칭';
+            title.textContent = mode === 'drink' ? '터치 복불복' : '커플 매칭';
         }
         this.clearFingerTimers();
         const area = document.getElementById('finger-area');
@@ -3009,7 +2959,7 @@ const app = {
         haptics.buildUp();
         fxEngine.heartBurst(areaRect.left + midX, areaRect.top + midY, 35);
 
-        this.setFingerMessage('💖 19+ 커플 매칭 완료! 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check your love mission!</span>');
+        this.setFingerMessage('💖 커플 매칭 완료! 미션을 확인하세요! 💖<span class="i18n-sub">Couple matched! Check your love mission!</span>');
 
         this.fingerResultTimer = setTimeout(() => {
             if (this.currentScreen === 'finger') this.showLoveMission();

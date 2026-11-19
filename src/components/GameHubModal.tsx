@@ -70,7 +70,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              미션 룰렛 · 터치 복불복 · 19+ 커플
+              미션 룰렛 · 터치 복불복 · 커플 매칭
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />

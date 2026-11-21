@@ -6757,6 +6757,2095 @@ body.hot .slots-jackpot-topper {
     .cr-log-item { font-size: 0.65rem; line-height: 1.22; }
 }
 
+/* ===== 비디오 포커 · Video Poker (.vp- 접두사 전용) ===== */
+.vp-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.vp-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.vp-hud {
+    padding: 5px 8px;
+    gap: 6px;
+}
+
+.vp-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+}
+
+.vp-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.vp-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.vp-rules-btn {
+    min-height: 44px;
+    min-width: 56px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.vp-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.vp-en {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    letter-spacing: 0.01em;
+}
+
+.vp-rules-btn .vp-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.82);
+}
+
+.vp-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 8px 5px;
+    padding: 7px 8px;
+    border-radius: 16px;
+    background: radial-gradient(ellipse at 50% 45%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.vp-paytable {
+    background: rgba(0, 0, 0, 0.44);
+    border: 1px solid rgba(212, 175, 55, 0.44);
+    border-radius: 10px;
+    padding: 3px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-shrink: 0;
+}
+
+.vp-pay-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 1.5px 7px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    font-size: 0.68rem;
+    line-height: 1.24;
+    color: rgba(241, 245, 249, 0.86);
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.vp-pay-name {
+    font-weight: 800;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vp-pay-name .vp-en {
+    font-size: 0.55rem;
+    color: rgba(226, 232, 240, 0.58);
+}
+
+.vp-pay-mult {
+    font-weight: 900;
+    color: #fde68a;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.vp-pay-row.vp-pay-active {
+    background: linear-gradient(90deg, rgba(250, 204, 21, 0.28) 0%, rgba(217, 119, 6, 0.34) 100%);
+    border-color: #fde047;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.28);
+}
+
+.vp-pay-row.vp-pay-active .vp-pay-name .vp-en {
+    color: rgba(254, 249, 195, 0.9);
+}
+
+.vp-pay-row.vp-pay-active .vp-pay-mult {
+    color: #fef08a;
+}
+
+.vp-cards-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+}
+
+.vp-cards-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    width: 100%;
+    align-items: end;
+    perspective: 780px;
+}
+
+.vp-slot {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    position: relative;
+    transition: transform 0.14s ease;
+}
+
+.vp-slot:disabled {
+    cursor: default;
+}
+
+.vp-slot:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.vp-hold-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 17px;
+    padding: 0 6px;
+    border-radius: 999px;
+    font-size: 0.56rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: rgba(248, 250, 252, 0.35);
+    background: rgba(0, 0, 0, 0.26);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 0.15s, transform 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+
+.vp-slot.vp-can-hold .vp-hold-tag {
+    opacity: 0.55;
+    transform: translateY(0);
+}
+
+.vp-slot.vp-held .vp-hold-tag {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+    border-color: #fef9c3;
+    color: #111318;
+    box-shadow: 0 2px 8px rgba(250, 204, 21, 0.45);
+}
+
+.vp-card {
+    width: 100%;
+    max-width: 68px;
+    aspect-ratio: 62 / 90;
+    position: relative;
+    border-radius: 8px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.vp-slot.vp-held .vp-card {
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 2px #fde047, 0 6px 14px rgba(250, 204, 21, 0.38);
+}
+
+.vp-slot.vp-rec .vp-card {
+    outline: 2px dashed #38bdf8;
+    outline-offset: 2px;
+}
+
+.vp-slot.vp-rec.vp-held .vp-card {
+    outline-color: #fde047;
+}
+
+.vp-card-deal {
+    animation: vp-deal-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vp-deal-in {
+    0% { opacity: 0; transform: translateY(-16px) scale(0.88); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.vp-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vp-card.vp-facedown .vp-card-inner {
+    transform: rotateY(180deg);
+}
+
+.vp-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.vp-card-front {
+    background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid rgba(15, 23, 42, 0.24);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.42);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3px 4px;
+}
+
+.vp-card-front.vp-red { color: #dc2626; }
+.vp-card-front.vp-black { color: #111827; }
+
+.vp-card-corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: flex-start;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.vp-card-corner-bot {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.vp-card-rank {
+    font-size: clamp(0.82rem, 3.6vw, 0.98rem);
+    letter-spacing: -0.05em;
+}
+
+.vp-card-suit-sm {
+    font-size: clamp(0.62rem, 2.7vw, 0.72rem);
+    margin-top: 1px;
+}
+
+.vp-card-suit-lg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.5rem, 6.4vw, 1.9rem);
+    line-height: 1;
+    opacity: 0.92;
+    pointer-events: none;
+}
+
+.vp-card-back {
+    transform: rotateY(180deg);
+    background-color: #1d3573;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px);
+    border: 2.5px solid #ffffff;
+    box-shadow: inset 0 0 0 1.5px #d4af37, 0 4px 10px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vp-card-back-emblem {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #172554;
+    border: 1.5px solid #d4af37;
+    color: #fde68a;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vp-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.vp-hand-box {
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(212, 175, 55, 0.44);
+    border-radius: 10px;
+    padding: 5px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-height: 40px;
+}
+
+.vp-hand-box.vp-hand-win {
+    border-color: rgba(52, 211, 153, 0.8);
+    background: rgba(6, 78, 59, 0.65);
+}
+
+.vp-hand-box.vp-hand-big {
+    border-color: #fde047;
+    background: rgba(146, 64, 14, 0.62);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.28);
+}
+
+.vp-hand-box.vp-hand-none {
+    border-color: rgba(148, 163, 184, 0.36);
+    background: rgba(15, 23, 42, 0.48);
+}
+
+.vp-hand-main {
+    font-size: clamp(0.84rem, 3.6vw, 0.96rem);
+    font-weight: 900;
+    color: #fef08a;
+    line-height: 1.24;
+    word-break: keep-all;
+}
+
+.vp-hand-box.vp-hand-none .vp-hand-main {
+    color: #e2e8f0;
+}
+
+.vp-hand-box.vp-hand-win .vp-hand-main {
+    color: #a7f3d0;
+}
+
+.vp-hand-sub {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.72);
+    line-height: 1.2;
+}
+
+.vp-msg-box {
+    background: rgba(0, 0, 0, 0.36);
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    border-radius: 10px;
+    padding: 5px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-height: 40px;
+}
+
+.vp-msg-box.vp-msg-win {
+    border-color: rgba(52, 211, 153, 0.75);
+    background: rgba(6, 78, 59, 0.6);
+}
+
+.vp-msg-box.vp-msg-big {
+    border-color: #fde047;
+    background: rgba(146, 64, 14, 0.58);
+}
+
+.vp-msg-box.vp-msg-lose {
+    border-color: rgba(248, 113, 113, 0.7);
+    background: rgba(127, 29, 29, 0.56);
+}
+
+.vp-msg-box.vp-msg-push {
+    border-color: rgba(251, 191, 36, 0.62);
+    background: rgba(30, 41, 59, 0.62);
+}
+
+.vp-msg-box.vp-msg-tip {
+    border-color: rgba(56, 189, 248, 0.65);
+    background: rgba(12, 42, 58, 0.6);
+}
+
+.vp-msg-main {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.26;
+    word-break: keep-all;
+}
+
+.vp-msg-sub {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.72);
+    line-height: 1.2;
+    word-break: keep-all;
+}
+
+.vp-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 8px 3px;
+    flex-shrink: 0;
+}
+
+.vp-bet-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vp-bet-btn {
+    min-height: 44px;
+    min-width: 54px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.vp-bet-btn.vp-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.vp-bet-btn:active:not(:disabled) { transform: scale(0.96); }
+.vp-bet-btn:disabled { opacity: 0.38; cursor: default; }
+
+.vp-help-btn {
+    min-height: 44px;
+    flex: 1;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    color: #cbd5e1;
+    font-family: var(--font-main);
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    gap: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.vp-help-btn.vp-on {
+    background: rgba(52, 211, 153, 0.16);
+    border-color: rgba(52, 211, 153, 0.65);
+    color: #a7f3d0;
+}
+
+.vp-help-btn:active { transform: scale(0.97); }
+
+.vp-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.vp-btn {
+    min-height: 46px;
+    min-width: 0;
+    flex: 1;
+    padding: 5px 8px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.vp-btn:active:not(:disabled) { transform: scale(0.97); }
+.vp-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+
+.vp-btn-deal {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.vp-btn-draw {
+    background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+    border-color: #6ee7b7;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.vp-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.vp-btn-deal .vp-en,
+.vp-btn-refill .vp-en {
+    color: rgba(15, 23, 42, 0.74);
+}
+
+.vp-btn-draw .vp-en {
+    color: rgba(236, 253, 245, 0.86);
+}
+
+.vp-hidden {
+    display: none !important;
+}
+
+.vp-hint {
+    text-align: center;
+    font-size: 0.64rem;
+    line-height: 1.22;
+    color: var(--text-muted);
+    padding: 1px 12px 4px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.vp-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.76rem;
+}
+
+.vp-guide-table th,
+.vp-guide-table td {
+    border: 1px solid var(--line);
+    padding: 4px 6px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.vp-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+@media (max-height: 660px) {
+    .vp-table { padding: 5px 7px; gap: 4px; }
+    .vp-paytable { padding: 2px 4px; gap: 0; }
+    .vp-pay-row { padding: 1px 6px; font-size: 0.64rem; line-height: 1.18; }
+    .vp-pay-name .vp-en { font-size: 0.52rem; }
+    .vp-slot { min-height: 84px; gap: 2px; }
+    .vp-hold-tag { height: 15px; font-size: 0.52rem; }
+    .vp-hand-box, .vp-msg-box { padding: 4px 7px; min-height: 34px; }
+    .vp-hand-main { font-size: 0.82rem; }
+    .vp-msg-main { font-size: 0.76rem; }
+    .vp-hand-sub, .vp-msg-sub { font-size: 0.56rem; }
+}
+
+/* ===== 카지노 홀덤 · Casino Hold'em (.he- 접두사 전용) ===== */
+.he-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.he-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.he-hud {
+    padding: 5px 8px;
+    gap: 6px;
+}
+
+.he-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+}
+
+.he-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.he-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.he-rules-btn {
+    min-height: 44px;
+    min-width: 56px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.he-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.he-en {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    letter-spacing: 0.01em;
+}
+
+.he-rules-btn .he-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.82);
+}
+
+.he-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 8px 5px;
+    padding: 6px 8px;
+    border-radius: 16px;
+    background: radial-gradient(ellipse at 50% 45%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.he-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.he-zone-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    min-height: 20px;
+}
+
+.he-zone-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    flex: 1;
+}
+
+.he-zone-label {
+    font-size: 0.76rem;
+    font-weight: 900;
+    color: #f8fafc;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.he-zone-label .he-en {
+    font-size: 0.58rem;
+    color: rgba(248, 250, 252, 0.64);
+}
+
+.he-rank-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #fde68a;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.he-rank-pill.he-rank-win {
+    border-color: rgba(52, 211, 153, 0.8);
+    background: rgba(6, 78, 59, 0.7);
+    color: #a7f3d0;
+}
+
+.he-rank-pill.he-rank-big {
+    border-color: #fde047;
+    background: rgba(146, 64, 14, 0.72);
+    color: #fef08a;
+}
+
+.he-rank-pill.he-rank-dnq {
+    border-color: rgba(251, 191, 36, 0.5);
+    background: rgba(30, 41, 59, 0.72);
+    color: #e2e8f0;
+}
+
+.he-qual-tag {
+    display: inline-block;
+    padding: 0 5px;
+    border-radius: 999px;
+    font-size: 0.56rem;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.he-qual-yes {
+    background: rgba(52, 211, 153, 0.24);
+    color: #a7f3d0;
+}
+
+.he-qual-no {
+    background: rgba(251, 191, 36, 0.24);
+    color: #fde68a;
+}
+
+.he-deck-pill {
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(226, 232, 240, 0.76);
+    font-size: 0.56rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.he-mult-tag {
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+    color: #111318;
+    font-size: 0.6rem;
+    font-weight: 900;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.he-hole-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 2px 4px 6px;
+    perspective: 720px;
+}
+
+.he-board-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 5px 5px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.24);
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    flex-shrink: 0;
+}
+
+.he-board-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.he-board-title {
+    font-size: 0.66rem;
+    font-weight: 800;
+    color: rgba(248, 250, 252, 0.84);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.he-board-title .he-en {
+    font-size: 0.54rem;
+    color: rgba(248, 250, 252, 0.58);
+}
+
+.he-streets {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.he-street-tag {
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(226, 232, 240, 0.52);
+    font-size: 0.54rem;
+    font-weight: 800;
+    line-height: 1.3;
+    white-space: nowrap;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.he-street-tag.he-street-on {
+    background: rgba(212, 175, 55, 0.26);
+    border-color: rgba(253, 224, 71, 0.72);
+    color: #fef08a;
+}
+
+.he-board-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    width: 100%;
+    padding: 2px 1px 5px;
+    perspective: 720px;
+}
+
+.he-board-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+}
+
+.he-slot-tag {
+    font-size: 0.5rem;
+    font-weight: 800;
+    color: rgba(253, 230, 138, 0.7);
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.he-card-slot {
+    width: 52px;
+    aspect-ratio: 52 / 72;
+    position: relative;
+}
+
+.he-board-slot .he-card-slot {
+    width: 100%;
+    max-width: 54px;
+}
+
+.he-card-empty {
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    border: 1.5px dashed rgba(212, 175, 55, 0.34);
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(253, 230, 138, 0.36);
+    font-size: 0.56rem;
+    font-weight: 800;
+}
+
+.he-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: 7px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
+}
+
+.he-card-deal {
+    animation: he-deal-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes he-deal-in {
+    0% { opacity: 0; transform: translateY(-14px) scale(0.88); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.he-card.he-best-player {
+    box-shadow: 0 0 0 2.5px #34d399, 0 0 12px rgba(52, 211, 153, 0.62);
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+.he-card.he-best-dealer {
+    box-shadow: 0 0 0 2.5px #fb7185, 0 0 12px rgba(251, 113, 133, 0.58);
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+.he-card.he-best-both {
+    box-shadow: 0 0 0 2px #34d399, 0 0 0 4.5px #fb7185, 0 0 14px rgba(250, 204, 21, 0.55);
+    transform: translateY(-2px);
+    z-index: 3;
+}
+
+.he-card.he-card-dim {
+    opacity: 0.44;
+    filter: saturate(0.55);
+}
+
+.he-use-badge {
+    position: absolute;
+    left: 50%;
+    bottom: -7px;
+    transform: translateX(-50%);
+    padding: 0 5px;
+    border-radius: 999px;
+    font-size: 0.5rem;
+    font-weight: 900;
+    line-height: 1.35;
+    white-space: nowrap;
+    z-index: 4;
+    pointer-events: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.he-use-p {
+    background: #10b981;
+    color: #052e16;
+    border: 1px solid #a7f3d0;
+}
+
+.he-use-d {
+    background: #f43f5e;
+    color: #ffffff;
+    border: 1px solid #fecdd3;
+}
+
+.he-use-b {
+    background: #f59e0b;
+    color: #111318;
+    border: 1px solid #fef08a;
+}
+
+.he-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.he-card.he-facedown .he-card-inner {
+    transform: rotateY(180deg);
+}
+
+.he-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 7px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.he-card-front {
+    background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid rgba(15, 23, 42, 0.24);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.42);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2px 3px;
+}
+
+.he-card-front.he-red { color: #dc2626; }
+.he-card-front.he-black { color: #111827; }
+
+.he-card-corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: flex-start;
+    line-height: 0.96;
+    font-weight: 900;
+}
+
+.he-card-corner-bot {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.he-card-rank {
+    font-size: clamp(0.76rem, 3.2vw, 0.9rem);
+    letter-spacing: -0.05em;
+}
+
+.he-card-suit-sm {
+    font-size: clamp(0.56rem, 2.3vw, 0.66rem);
+    margin-top: 1px;
+}
+
+.he-card-suit-lg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.25rem, 5.4vw, 1.55rem);
+    line-height: 1;
+    opacity: 0.92;
+    pointer-events: none;
+}
+
+.he-card-back {
+    transform: rotateY(180deg);
+    background-color: #1d3573;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px);
+    border: 2px solid #ffffff;
+    box-shadow: inset 0 0 0 1.5px #d4af37, 0 3px 8px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.he-card-back-emblem {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #172554;
+    border: 1.5px solid #d4af37;
+    color: #fde68a;
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.he-msg-box {
+    background: rgba(0, 0, 0, 0.42);
+    border: 1px solid rgba(212, 175, 55, 0.36);
+    border-radius: 10px;
+    padding: 5px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    min-height: 40px;
+    flex-shrink: 0;
+}
+
+.he-msg-box.he-msg-win {
+    border-color: rgba(52, 211, 153, 0.78);
+    background: rgba(6, 78, 59, 0.64);
+}
+
+.he-msg-box.he-msg-big {
+    border-color: #fde047;
+    background: rgba(146, 64, 14, 0.64);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.25);
+}
+
+.he-msg-box.he-msg-lose {
+    border-color: rgba(248, 113, 113, 0.72);
+    background: rgba(127, 29, 29, 0.58);
+}
+
+.he-msg-box.he-msg-push {
+    border-color: rgba(251, 191, 36, 0.62);
+    background: rgba(30, 41, 59, 0.64);
+}
+
+.he-msg-box.he-msg-tip {
+    border-color: rgba(56, 189, 248, 0.68);
+    background: rgba(12, 42, 58, 0.64);
+}
+
+.he-msg-main {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.24;
+    word-break: keep-all;
+}
+
+.he-msg-sub {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    line-height: 1.18;
+    word-break: keep-all;
+}
+
+.he-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 8px 3px;
+    flex-shrink: 0;
+}
+
+.he-bet-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.he-bet-btn {
+    min-height: 44px;
+    min-width: 54px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.he-bet-btn.he-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.he-bet-btn:active:not(:disabled) { transform: scale(0.96); }
+.he-bet-btn:disabled { opacity: 0.38; cursor: default; }
+
+.he-help-btn {
+    min-height: 44px;
+    flex: 1;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    color: #cbd5e1;
+    font-family: var(--font-main);
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    gap: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.he-help-btn.he-on {
+    background: rgba(52, 211, 153, 0.16);
+    border-color: rgba(52, 211, 153, 0.65);
+    color: #a7f3d0;
+}
+
+.he-help-btn:active { transform: scale(0.97); }
+
+.he-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.he-btn {
+    min-height: 46px;
+    min-width: 0;
+    flex: 1;
+    padding: 5px 8px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.he-btn:active:not(:disabled) { transform: scale(0.97); }
+.he-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+
+.he-btn-deal {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.he-btn-call {
+    background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+    border-color: #6ee7b7;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.he-btn-fold {
+    background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+    border-color: rgba(248, 113, 113, 0.55);
+    color: #f8fafc;
+}
+
+.he-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.he-btn-deal .he-en,
+.he-btn-refill .he-en {
+    color: rgba(15, 23, 42, 0.74);
+}
+
+.he-btn-call .he-en {
+    color: rgba(236, 253, 245, 0.88);
+}
+
+.he-btn-fold .he-en {
+    color: rgba(226, 232, 240, 0.76);
+}
+
+.he-hidden {
+    display: none !important;
+}
+
+.he-hint {
+    text-align: center;
+    font-size: 0.64rem;
+    line-height: 1.22;
+    color: var(--text-muted);
+    padding: 1px 12px 4px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.he-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.76rem;
+}
+
+.he-guide-table th,
+.he-guide-table td {
+    border: 1px solid var(--line);
+    padding: 4px 6px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.he-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+@media (max-height: 660px) {
+    .he-hud { padding: 4px 8px; }
+    .he-table { padding: 5px 7px; gap: 3px; }
+    .he-zone { gap: 2px; }
+    .he-board-zone { padding: 3px 5px 4px; gap: 2px; }
+    .he-card-slot { width: 47px; }
+    .he-board-slot .he-card-slot { max-width: 49px; }
+    .he-hole-row { padding: 1px 4px 5px; gap: 8px; }
+    .he-board-row { gap: 4px; padding: 1px 1px 5px; }
+    .he-msg-box { padding: 4px 7px; min-height: 36px; }
+    .he-msg-main { font-size: 0.74rem; }
+    .he-msg-sub { font-size: 0.55rem; }
+    .he-controls { gap: 4px; padding: 0 8px 2px; }
+    .he-btn { min-height: 44px; font-size: 0.88rem; }
+    .he-hint { font-size: 0.6rem; padding: 1px 10px 3px; }
+}
+
+/* ===== 빅휠 · Big Wheel (.bw- 접두사 전용) ===== */
+.bw-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.bw-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    overflow: hidden;
+}
+
+.bw-hud {
+    padding: 4px 8px;
+    gap: 6px;
+}
+
+.bw-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.bw-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.bw-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.bw-rules-btn {
+    min-height: 44px;
+    min-width: 54px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.bw-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.bw-en {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.76);
+    letter-spacing: 0.01em;
+}
+
+.bw-rules-btn .bw-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.84);
+}
+
+.bw-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 8px 5px;
+    padding: 7px 8px;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 50% 45%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.bw-stage {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.bw-wheel-outer {
+    position: relative;
+    padding-top: 6px;
+    flex-shrink: 0;
+}
+
+.bw-pointer {
+    position: absolute;
+    left: 50%;
+    top: -1px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 17px solid #fde047;
+    transform: translateX(-50%);
+    transform-origin: 50% 2px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.85));
+    z-index: 6;
+    pointer-events: none;
+    transition: transform 0.05s ease-out;
+}
+
+.bw-pointer::after {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: -15px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 10px solid #dc2626;
+}
+
+.bw-pointer.bw-pointer-tick {
+    transform: translateX(-50%) rotate(-14deg);
+}
+
+.bw-wheel-wrap {
+    position: relative;
+    width: clamp(152px, 43vw, 184px);
+    height: clamp(152px, 43vw, 184px);
+    flex-shrink: 0;
+    border-radius: 50%;
+    padding: 5px;
+    background: radial-gradient(circle at 30% 25%, #f5d469 0%, #b8860b 52%, #5c3d07 100%);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.62), inset 0 0 0 1.5px rgba(255, 248, 220, 0.48);
+}
+
+.bw-wheel-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #111827;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.72);
+}
+
+.bw-wheel-rotor {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    will-change: transform;
+}
+
+.bw-wheel-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.bw-seg-lbl {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4px;
+    font-size: 0.43rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.78);
+}
+
+.bw-seg-lbl.bw-seg-1 {
+    color: #111827;
+    text-shadow: none;
+}
+
+.bw-seg-lbl.bw-seg-logo {
+    color: #fde047;
+}
+
+.bw-wheel-ring {
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    border: 1px solid rgba(254, 240, 138, 0.36);
+    pointer-events: none;
+}
+
+.bw-wheel-hub {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 46%;
+    height: 46%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #1e293b 0%, #0f172a 100%);
+    border: 2.5px solid #d4af37;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.76), inset 0 0 8px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.16s, border-color 0.16s;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.bw-wheel-hub.bw-hub-1 {
+    background: radial-gradient(circle at 35% 30%, #facc15 0%, #a16207 100%);
+    border-color: #fef9c3;
+}
+
+.bw-wheel-hub.bw-hub-1 .bw-hub-val { color: #111827; text-shadow: none; }
+.bw-wheel-hub.bw-hub-1 .bw-hub-meta { color: #1f2937; }
+
+.bw-wheel-hub.bw-hub-2 {
+    background: radial-gradient(circle at 35% 30%, #3b82f6 0%, #1e3a8a 100%);
+    border-color: #bfdbfe;
+}
+
+.bw-wheel-hub.bw-hub-5 {
+    background: radial-gradient(circle at 35% 30%, #ef4444 0%, #991b1b 100%);
+    border-color: #fecaca;
+}
+
+.bw-wheel-hub.bw-hub-10 {
+    background: radial-gradient(circle at 35% 30%, #22c55e 0%, #14532d 100%);
+    border-color: #bbf7d0;
+}
+
+.bw-wheel-hub.bw-hub-20 {
+    background: radial-gradient(circle at 35% 30%, #8b5cf6 0%, #4c1d95 100%);
+    border-color: #e9d5ff;
+}
+
+.bw-wheel-hub.bw-hub-joker {
+    background: radial-gradient(circle at 35% 30%, #ec4899 0%, #831843 100%);
+    border-color: #fbcfe8;
+}
+
+.bw-wheel-hub.bw-hub-logo {
+    background: radial-gradient(circle at 35% 30%, #334155 0%, #090d16 100%);
+    border-color: #fde047;
+}
+
+.bw-wheel-hub.bw-hub-logo .bw-hub-val {
+    color: #fde047;
+}
+
+.bw-wheel-hub.bw-hub-pop {
+    animation: bw-hub-bounce 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes bw-hub-bounce {
+    0% { transform: translate(-50%, -50%) scale(0.82); }
+    60% { transform: translate(-50%, -50%) scale(1.12); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.bw-hub-val {
+    font-size: clamp(1.15rem, 5vw, 1.55rem);
+    font-weight: 900;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.bw-hub-meta {
+    margin-top: 2px;
+    font-size: 0.56rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.94);
+    letter-spacing: 0.01em;
+    text-align: center;
+}
+
+.bw-side-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.bw-recent-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.92);
+}
+
+.bw-recent-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.bw-hist-dot {
+    height: 25px;
+    border-radius: 50%;
+    font-size: 0.62rem;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    box-sizing: border-box;
+    color: #ffffff;
+}
+
+.bw-hist-1 { background: #eab308; border: 1.5px solid #fef08a; color: #111827; }
+.bw-hist-2 { background: #2563eb; border: 1.5px solid #93c5fd; }
+.bw-hist-5 { background: #dc2626; border: 1.5px solid #fca5a5; }
+.bw-hist-10 { background: #16a34a; border: 1.5px solid #86efac; }
+.bw-hist-20 { background: #7c3aed; border: 1.5px solid #d8b4fe; }
+.bw-hist-joker { background: #db2777; border: 1.5px solid #fbcfe8; }
+.bw-hist-logo { background: #111827; border: 1.5px solid #fde047; color: #fde047; }
+
+.bw-hist-empty {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.28);
+}
+
+.bw-hist-latest {
+    box-shadow: 0 0 0 2px #fde047, 0 0 8px rgba(250, 204, 21, 0.7);
+}
+
+.bw-legend-pill {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: rgba(248, 250, 252, 0.84);
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 999px;
+    padding: 3px 7px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bw-result-box {
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.44);
+    border: 1px solid rgba(212, 175, 55, 0.44);
+    border-radius: 12px;
+    padding: 6px 9px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 46px;
+    justify-content: center;
+}
+
+.bw-res-head {
+    font-size: 0.76rem;
+    font-weight: 900;
+    color: #fef08a;
+    line-height: 1.24;
+    word-break: keep-all;
+}
+
+.bw-res-detail {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(241, 245, 249, 0.88);
+    line-height: 1.28;
+    word-break: keep-all;
+    max-height: 36px;
+    overflow-y: auto;
+}
+
+.bw-res-detail.bw-tone-win { color: #6ee7b7; }
+.bw-res-detail.bw-tone-lose { color: #fca5a5; }
+.bw-res-detail.bw-tone-even { color: #fde68a; }
+
+.bw-board {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.bw-row-top {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.bw-row-bot {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.bw-spot {
+    position: relative;
+    min-height: 52px;
+    border-radius: 11px;
+    font-family: var(--font-main);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px 3px;
+    line-height: 1.08;
+    transition: transform 0.08s, box-shadow 0.16s, border-color 0.16s;
+}
+
+.bw-spot:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.bw-spot:disabled {
+    opacity: 0.56;
+    cursor: default;
+    transform: none;
+}
+
+.bw-spot-1 {
+    background: linear-gradient(180deg, #eab308 0%, #a16207 100%);
+    border: 1.5px solid #fef08a;
+    color: #111827;
+}
+
+.bw-spot-1 .bw-spot-info { color: rgba(17, 24, 39, 0.86); }
+.bw-spot-1 .bw-en { color: rgba(17, 24, 39, 0.72); }
+
+.bw-spot-2 {
+    background: linear-gradient(180deg, #2563eb 0%, #1e3a8a 100%);
+    border: 1.5px solid #93c5fd;
+}
+
+.bw-spot-5 {
+    background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+    border: 1.5px solid #fca5a5;
+}
+
+.bw-spot-10 {
+    background: linear-gradient(180deg, #16a34a 0%, #14532d 100%);
+    border: 1.5px solid #86efac;
+}
+
+.bw-spot-20 {
+    background: linear-gradient(180deg, #7c3aed 0%, #4c1d95 100%);
+    border: 1.5px solid #d8b4fe;
+}
+
+.bw-spot-joker {
+    background: linear-gradient(180deg, #db2777 0%, #831843 100%);
+    border: 1.5px solid #fbcfe8;
+}
+
+.bw-spot-logo {
+    background: linear-gradient(180deg, #27272a 0%, #09090b 100%);
+    border: 1.5px solid #fde047;
+    color: #fef08a;
+}
+
+.bw-spot-name {
+    font-size: 0.92rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
+    white-space: nowrap;
+}
+
+.bw-spot-sym {
+    font-size: 0.66rem;
+    opacity: 0.9;
+}
+
+.bw-spot-info {
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: rgba(254, 249, 195, 0.92);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+}
+
+.bw-spot.bw-has-bet {
+    box-shadow: inset 0 0 0 2px #fde047, 0 0 10px rgba(250, 204, 21, 0.42);
+}
+
+.bw-spot.bw-spot-win {
+    box-shadow: 0 0 0 2.5px #fde047, 0 0 18px rgba(250, 204, 21, 0.9);
+    z-index: 2;
+}
+
+.bw-chip-badge {
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    min-width: 20px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+    border: 1.5px solid #ffffff;
+    color: #111318;
+    font-size: 0.58rem;
+    font-weight: 900;
+    line-height: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+}
+
+.bw-spot.bw-has-bet .bw-chip-badge {
+    display: inline-flex;
+}
+
+.bw-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 8px 3px;
+    flex-shrink: 0;
+}
+
+.bw-chip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bw-unit-btn {
+    min-height: 44px;
+    min-width: 54px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.bw-unit-btn.bw-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.bw-unit-btn:active:not(:disabled) { transform: scale(0.96); }
+.bw-unit-btn:disabled { opacity: 0.38; cursor: default; }
+
+.bw-clear-btn {
+    min-height: 44px;
+    flex: 1;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    color: #f1f5f9;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+}
+
+.bw-clear-btn:active:not(:disabled) { transform: scale(0.97); }
+.bw-clear-btn:disabled { opacity: 0.36; cursor: default; }
+
+.bw-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.bw-btn {
+    min-height: 46px;
+    flex: 1;
+    padding: 5px 8px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 900;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.bw-btn:active:not(:disabled) { transform: scale(0.97); }
+.bw-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+
+.bw-btn-spin {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.bw-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.bw-btn-spin .bw-en,
+.bw-btn-refill .bw-en {
+    color: rgba(15, 23, 42, 0.76);
+}
+
+.bw-hidden {
+    display: none !important;
+}
+
+.bw-hint {
+    text-align: center;
+    font-size: 0.64rem;
+    line-height: 1.24;
+    color: var(--text-muted);
+    padding: 1px 10px 4px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.bw-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.78rem;
+}
+
+.bw-guide-table th,
+.bw-guide-table td {
+    border: 1px solid var(--line);
+    padding: 5px 7px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.bw-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+@media (max-height: 660px) {
+    .bw-hud { padding: 3px 8px; }
+    .bw-table { margin: 0 8px 4px; padding: 6px 7px; gap: 5px; }
+    .bw-wheel-wrap { width: 156px; height: 156px; }
+    .bw-result-box { padding: 5px 8px; min-height: 42px; }
+    .bw-res-head { font-size: 0.74rem; }
+    .bw-res-detail { font-size: 0.68rem; }
+    .bw-board { gap: 5px; }
+    .bw-spot { min-height: 48px; }
+    .bw-controls { gap: 4px; padding: 0 8px 2px; }
+    .bw-btn { min-height: 44px; font-size: 0.9rem; }
+    .bw-hint { font-size: 0.6rem; padding: 1px 10px 3px; }
+}
+
 /* ===== 카지노 룰 연습 — 아케이드와 첫 화면을 나눈다(.mode-casino) ===== */
 body:not(.mode-casino) .portal-item.pi-casino,
 body.mode-casino .portal-item.pi-arcade { display: none; }
@@ -7040,6 +9129,48 @@ body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122
                             <span class="portal-best-pill" data-best="craps">BEST 0</span>
                         </span>
                         <span class="portal-item-desc">주사위 두 개, 패스 라인 배우기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item vp-portal-item">
+                <button class="portal-item-main" data-go="videopoker" aria-label="비디오 포커 · Video Poker">
+                    <span class="portal-item-icon">🎞️</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">비디오 포커</span>
+                            <span class="portal-best-pill" data-best="videopoker">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">다섯 장 포커 족보 익히기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item he-portal-item">
+                <button class="portal-item-main" data-go="holdem" aria-label="카지노 홀덤 · Casino Hold'em">
+                    <span class="portal-item-icon">🤠</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">카지노 홀덤</span>
+                            <span class="portal-best-pill" data-best="holdem">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">텍사스 홀덤 방식으로 딜러와 겨루기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item bw-portal-item">
+                <button class="portal-item-main" data-go="bigwheel" aria-label="빅휠 · Big Wheel">
+                    <span class="portal-item-icon">🎡</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">빅휠</span>
+                            <span class="portal-best-pill" data-best="bigwheel">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">큰 바퀴가 멈출 칸 맞히기 — 규칙을 배우는 연습판</span>
                     </span>
                     <span class="portal-item-arrow">&#8594;</span>
                 </button>
@@ -7808,6 +9939,203 @@ body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122
         </div>
 
         <p class="cr-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 비디오 포커 ===== -->
+    <section id="scr-videopoker" class="screen hidden vp-screen">
+        <div class="hud vp-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="vp-rules-btn" id="vp-rules-btn" aria-label="비디오 포커 규칙 보기 · Video Poker Rules">규칙<span class="vp-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>50</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="vp-table">
+            <div class="vp-paytable" id="vp-paytable" aria-label="비디오 포커 배당표 · Paytable">
+                <div class="vp-pay-row" data-vp-cat="9"><span class="vp-pay-name">로열 플러시 <span class="vp-en">Royal Flush</span></span><span class="vp-pay-mult">250배</span></div>
+                <div class="vp-pay-row" data-vp-cat="8"><span class="vp-pay-name">스트레이트 플러시 <span class="vp-en">Straight Flush</span></span><span class="vp-pay-mult">50배</span></div>
+                <div class="vp-pay-row" data-vp-cat="7"><span class="vp-pay-name">포카드 <span class="vp-en">Four of a Kind</span></span><span class="vp-pay-mult">25배</span></div>
+                <div class="vp-pay-row" data-vp-cat="6"><span class="vp-pay-name">풀하우스 <span class="vp-en">Full House</span></span><span class="vp-pay-mult">9배</span></div>
+                <div class="vp-pay-row" data-vp-cat="5"><span class="vp-pay-name">플러시 <span class="vp-en">Flush</span></span><span class="vp-pay-mult">6배</span></div>
+                <div class="vp-pay-row" data-vp-cat="4"><span class="vp-pay-name">스트레이트 <span class="vp-en">Straight</span></span><span class="vp-pay-mult">4배</span></div>
+                <div class="vp-pay-row" data-vp-cat="3"><span class="vp-pay-name">트리플 <span class="vp-en">Three of a Kind</span></span><span class="vp-pay-mult">3배</span></div>
+                <div class="vp-pay-row" data-vp-cat="2"><span class="vp-pay-name">투 페어 <span class="vp-en">Two Pair</span></span><span class="vp-pay-mult">2배</span></div>
+                <div class="vp-pay-row" data-vp-cat="1"><span class="vp-pay-name">J 이상 원 페어 <span class="vp-en">Jacks or Better</span></span><span class="vp-pay-mult">1배</span></div>
+            </div>
+
+            <div class="vp-cards-wrap">
+                <div class="vp-cards-row" id="vp-cards-row" aria-label="내 카드 다섯 장 · Five Cards"></div>
+            </div>
+
+            <div class="vp-info" aria-live="polite">
+                <div class="vp-hand-box" id="vp-hand-box">
+                    <div class="vp-hand-main" id="vp-hand-main">잭스 오어 베터 · 5장 포커 연습</div>
+                    <div class="vp-hand-sub" id="vp-hand-sub">Jacks or Better — Learn 5-card poker hands</div>
+                </div>
+                <div class="vp-msg-box" id="vp-msg-box">
+                    <div class="vp-msg-main" id="vp-msg-main">배팅을 고르고 딜을 누르세요</div>
+                    <div class="vp-msg-sub" id="vp-msg-sub">Choose your bet and press Deal</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="vp-controls">
+            <div class="vp-bet-row">
+                <button type="button" class="vp-bet-btn" data-vp-bet="10">10</button>
+                <button type="button" class="vp-bet-btn vp-selected" data-vp-bet="50">50</button>
+                <button type="button" class="vp-bet-btn" data-vp-bet="100">100</button>
+                <button type="button" class="vp-help-btn vp-on" id="vp-help-btn" aria-pressed="true">도움말 켜짐<span class="vp-en">Help ON</span></button>
+            </div>
+            <div class="vp-act-row" id="vp-bet-actions">
+                <button type="button" class="vp-btn vp-btn-deal" id="vp-deal-btn">딜<span class="vp-en">Deal</span></button>
+                <button type="button" class="vp-btn vp-btn-refill vp-hidden" id="vp-refill-btn">칩 다시 받기<span class="vp-en">Refill 1000</span></button>
+            </div>
+            <div class="vp-act-row vp-hidden" id="vp-hold-actions">
+                <button type="button" class="vp-btn vp-btn-draw" id="vp-draw-btn">드로우<span class="vp-en" id="vp-draw-en">Draw · 5장 교체</span></button>
+            </div>
+        </div>
+
+        <p class="vp-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 카지노 홀덤 ===== -->
+    <section id="scr-holdem" class="screen hidden he-screen">
+        <div class="hud he-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="he-rules-btn" id="he-rules-btn" aria-label="카지노 홀덤 규칙 보기 · Casino Hold'em Rules">규칙<span class="he-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>50</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="he-table">
+            <div class="he-zone he-dealer-zone">
+                <div class="he-zone-head">
+                    <div class="he-zone-title">
+                        <span class="he-zone-label">딜러<span class="he-en">Dealer</span></span>
+                        <span class="he-rank-pill" id="he-dealer-rank">-</span>
+                    </div>
+                    <span class="he-deck-pill">52장 매 판 섞음</span>
+                </div>
+                <div class="he-hole-row" id="he-dealer-cards" aria-label="딜러 카드 두 장 · Dealer Cards"></div>
+            </div>
+
+            <div class="he-board-zone">
+                <div class="he-board-head">
+                    <span class="he-board-title">공용 카드 <span class="he-en">Community</span></span>
+                    <div class="he-streets" aria-label="진행 단계 · Streets">
+                        <span class="he-street-tag" id="he-st-flop">플랍 Flop</span>
+                        <span class="he-street-tag" id="he-st-turn">턴 Turn</span>
+                        <span class="he-street-tag" id="he-st-river">리버 River</span>
+                    </div>
+                </div>
+                <div class="he-board-row" id="he-board-cards" aria-label="공용 카드 다섯 칸 · Community Cards"></div>
+            </div>
+
+            <div class="he-msg-box" id="he-msg-box" aria-live="polite">
+                <div class="he-msg-main" id="he-msg-main">앤티를 고르고 딜을 누르세요</div>
+                <div class="he-msg-sub" id="he-msg-sub">Choose your Ante and press Deal · 딜러 자격 4 원 페어 이상</div>
+            </div>
+
+            <div class="he-zone he-player-zone">
+                <div class="he-zone-head">
+                    <div class="he-zone-title">
+                        <span class="he-zone-label">나<span class="he-en">Player</span></span>
+                        <span class="he-rank-pill" id="he-player-rank">-</span>
+                    </div>
+                    <span class="he-mult-tag he-hidden" id="he-mult-tag">앤티 ×2</span>
+                </div>
+                <div class="he-hole-row" id="he-player-cards" aria-label="내 카드 두 장 · Player Cards"></div>
+            </div>
+        </div>
+
+        <div class="he-controls">
+            <div class="he-bet-row">
+                <button type="button" class="he-bet-btn" data-he-ante="10">10</button>
+                <button type="button" class="he-bet-btn he-selected" data-he-ante="50">50</button>
+                <button type="button" class="he-bet-btn" data-he-ante="100">100</button>
+                <button type="button" class="he-help-btn he-on" id="he-help-btn" aria-pressed="true">도움말 켜짐<span class="he-en">Help ON</span></button>
+            </div>
+            <div class="he-act-row" id="he-bet-actions">
+                <button type="button" class="he-btn he-btn-deal" id="he-deal-btn">딜<span class="he-en">Deal</span></button>
+                <button type="button" class="he-btn he-btn-refill he-hidden" id="he-refill-btn">칩 다시 받기<span class="he-en">Refill 1000</span></button>
+            </div>
+            <div class="he-act-row he-hidden" id="he-choice-actions">
+                <button type="button" class="he-btn he-btn-call" id="he-call-btn">콜<span class="he-en" id="he-call-en">Call (+100)</span></button>
+                <button type="button" class="he-btn he-btn-fold" id="he-fold-btn">폴드<span class="he-en">Fold</span></button>
+            </div>
+        </div>
+
+        <p class="he-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 빅휠 ===== -->
+    <section id="scr-bigwheel" class="screen hidden bw-screen">
+        <div class="hud bw-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="bw-rules-btn" id="bw-rules-btn" aria-label="빅휠 규칙 보기 · Big Wheel Rules">규칙<span class="bw-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="bw-table">
+            <div class="bw-stage">
+                <div class="bw-wheel-outer">
+                    <div class="bw-pointer" id="bw-pointer" aria-hidden="true"></div>
+                    <div class="bw-wheel-wrap" aria-label="빅휠 54칸 바퀴 · Big Wheel 54 Segments">
+                        <div class="bw-wheel-inner">
+                            <div class="bw-wheel-rotor" id="bw-wheel-rotor">
+                                <div class="bw-wheel-labels" id="bw-wheel-labels"></div>
+                            </div>
+                            <div class="bw-wheel-ring"></div>
+                            <div class="bw-wheel-hub" id="bw-wheel-hub">
+                                <span class="bw-hub-val" id="bw-hub-val">?</span>
+                                <span class="bw-hub-meta" id="bw-hub-meta">54칸 바퀴</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bw-side-info">
+                    <div class="bw-recent-head">
+                        <span>최근 10회</span>
+                        <span class="bw-en">Recent 10</span>
+                    </div>
+                    <div class="bw-recent-grid" id="bw-recent" aria-label="최근 10회 결과 · Recent 10 results"></div>
+                    <div class="bw-legend-pill">54칸 · 배당 클수록 칸 적음</div>
+                </div>
+            </div>
+
+            <div class="bw-result-box" id="bw-result-box" aria-live="polite">
+                <div class="bw-res-head" id="bw-res-head">아래 칸을 눌러 칩을 올리세요 (여러 곳 가능)</div>
+                <div class="bw-res-detail" id="bw-res-detail">Tap spots to place chips and press Spin</div>
+            </div>
+
+            <div class="bw-board" id="bw-board" aria-label="빅휠 배팅판 · Big Wheel Betting Board"></div>
+        </div>
+
+        <div class="bw-controls">
+            <div class="bw-chip-row">
+                <button type="button" class="bw-unit-btn" data-bw-unit="10">10</button>
+                <button type="button" class="bw-unit-btn bw-selected" data-bw-unit="50">50</button>
+                <button type="button" class="bw-unit-btn" data-bw-unit="100">100</button>
+                <button type="button" class="bw-clear-btn" id="bw-clear-btn">지우기<span class="bw-en">Clear</span></button>
+            </div>
+            <div class="bw-act-row">
+                <button type="button" class="bw-btn bw-btn-spin" id="bw-spin-btn">돌리기<span class="bw-en">Spin</span></button>
+                <button type="button" class="bw-btn bw-btn-refill bw-hidden" id="bw-refill-btn">칩 다시 받기<span class="bw-en">Refill 1000</span></button>
+            </div>
+        </div>
+
+        <p class="bw-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
     </section>
 
 </div>
@@ -18421,6 +20749,2222 @@ class Craps {
 }
 
 
+/* ============================================================
+   공용 5장 포커 족보 판정 (비디오 포커 · 카지노 홀덤 공용)
+   ============================================================ */
+
+const PK_RANK_MAP = {
+    '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8,
+    '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14
+};
+
+function pkRankVal(rank) {
+    return PK_RANK_MAP[String(rank)] || 0;
+}
+
+function pkEval5(cards) {
+    const vals = cards.map(c => pkRankVal(c.rank)).sort((a, b) => b - a);
+    const isFlush = cards.length === 5 && cards.every(c => c.sym === cards[0].sym);
+
+    const freq = new Map();
+    for (let i = 0; i < vals.length; i++) {
+        freq.set(vals[i], (freq.get(vals[i]) || 0) + 1);
+    }
+    const groups = Array.from(freq.entries()).sort((a, b) => (b[1] - a[1]) || (b[0] - a[0]));
+
+    let isStraight = false;
+    let straightHigh = 0;
+    let straightTb = null;
+    if (groups.length === 5) {
+        if (vals[0] - vals[4] === 4) {
+            isStraight = true;
+            straightHigh = vals[0];
+            straightTb = [vals[0], vals[1], vals[2], vals[3], vals[4]];
+        } else if (vals[0] === 14 && vals[1] === 5 && vals[2] === 4 && vals[3] === 3 && vals[4] === 2) {
+            isStraight = true;
+            straightHigh = 5;
+            straightTb = [5, 4, 3, 2, 1];
+        }
+    }
+
+    if (isFlush && isStraight) {
+        if (straightHigh === 14) {
+            return { cat: 9, name: '로열 플러시', nameEn: 'Royal Flush', tiebreak: [14, 13, 12, 11, 10] };
+        }
+        return { cat: 8, name: '스트레이트 플러시', nameEn: 'Straight Flush', tiebreak: straightTb };
+    }
+    if (groups[0][1] === 4) {
+        return { cat: 7, name: '포카드', nameEn: 'Four of a Kind', tiebreak: [groups[0][0], groups[1][0]] };
+    }
+    if (groups[0][1] === 3 && groups[1][1] === 2) {
+        return { cat: 6, name: '풀하우스', nameEn: 'Full House', tiebreak: [groups[0][0], groups[1][0]] };
+    }
+    if (isFlush) {
+        return { cat: 5, name: '플러시', nameEn: 'Flush', tiebreak: vals.slice() };
+    }
+    if (isStraight) {
+        return { cat: 4, name: '스트레이트', nameEn: 'Straight', tiebreak: straightTb };
+    }
+    if (groups[0][1] === 3) {
+        return { cat: 3, name: '트리플', nameEn: 'Three of a Kind', tiebreak: [groups[0][0], groups[1][0], groups[2][0]] };
+    }
+    if (groups[0][1] === 2 && groups[1][1] === 2) {
+        return { cat: 2, name: '투 페어', nameEn: 'Two Pair', tiebreak: [groups[0][0], groups[1][0], groups[2][0]] };
+    }
+    if (groups[0][1] === 2) {
+        return { cat: 1, name: '원 페어', nameEn: 'One Pair', tiebreak: [groups[0][0], groups[1][0], groups[2][0], groups[3][0]] };
+    }
+    return { cat: 0, name: '하이 카드', nameEn: 'High Card', tiebreak: vals.slice() };
+}
+
+function pkCompare(a, b) {
+    if (a.cat !== b.cat) return a.cat - b.cat;
+    const len = Math.max(a.tiebreak.length, b.tiebreak.length);
+    for (let i = 0; i < len; i++) {
+        const av = a.tiebreak[i] || 0;
+        const bv = b.tiebreak[i] || 0;
+        if (av !== bv) return av - bv;
+    }
+    return 0;
+}
+
+
+/* ============================================================
+   비디오 포커 · Video Poker (잭스 오어 베터 규칙 연습판)
+   ============================================================ */
+
+const VP_SUITS = [
+    { sym: '♠', red: false },
+    { sym: '♥', red: true },
+    { sym: '♦', red: true },
+    { sym: '♣', red: false }
+];
+const VP_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const VP_START_CHIPS = 1000;
+
+const VP_PAYTABLE = [
+    { cat: 9, kr: '로열 플러시', en: 'Royal Flush', mult: 250 },
+    { cat: 8, kr: '스트레이트 플러시', en: 'Straight Flush', mult: 50 },
+    { cat: 7, kr: '포카드', en: 'Four of a Kind', mult: 25 },
+    { cat: 6, kr: '풀하우스', en: 'Full House', mult: 9 },
+    { cat: 5, kr: '플러시', en: 'Flush', mult: 6 },
+    { cat: 4, kr: '스트레이트', en: 'Straight', mult: 4 },
+    { cat: 3, kr: '트리플', en: 'Three of a Kind', mult: 3 },
+    { cat: 2, kr: '투 페어', en: 'Two Pair', mult: 2 },
+    { cat: 1, kr: 'J 이상 원 페어', en: 'Jacks or Better', mult: 1 }
+];
+
+function vpValLabel(v) {
+    if (v === 14) return 'A';
+    if (v === 13) return 'K';
+    if (v === 12) return 'Q';
+    if (v === 11) return 'J';
+    return String(v);
+}
+
+function vpGetPayout(ev) {
+    if (!ev) return null;
+    if (ev.cat >= 2) {
+        return VP_PAYTABLE.find(p => p.cat === ev.cat) || null;
+    }
+    if (ev.cat === 1 && ev.tiebreak[0] >= 11) {
+        return VP_PAYTABLE.find(p => p.cat === 1) || null;
+    }
+    return null;
+}
+
+function vpFormatHand(ev) {
+    const tb = ev.tiebreak;
+    const pay = vpGetPayout(ev);
+    if (ev.cat === 9) {
+        return { kr: '로열 플러시 — 250배', en: 'Royal Flush — 250x', pay };
+    }
+    if (ev.cat === 8) {
+        const hi = vpValLabel(tb[0]);
+        return { kr: `스트레이트 플러시 (${hi} 하이) — 50배`, en: `Straight Flush (${hi} High) — 50x`, pay };
+    }
+    if (ev.cat === 7) {
+        const q = vpValLabel(tb[0]);
+        return { kr: `포카드 (${q}) — 25배`, en: `Four of a Kind (${q}s) — 25x`, pay };
+    }
+    if (ev.cat === 6) {
+        const t = vpValLabel(tb[0]);
+        const p = vpValLabel(tb[1]);
+        return { kr: `풀하우스 (${t}·${p}) — 9배`, en: `Full House (${t}s full of ${p}s) — 9x`, pay };
+    }
+    if (ev.cat === 5) {
+        const hi = vpValLabel(tb[0]);
+        return { kr: `플러시 (${hi} 하이) — 6배`, en: `Flush (${hi} High) — 6x`, pay };
+    }
+    if (ev.cat === 4) {
+        const hi = vpValLabel(tb[0]);
+        return { kr: `스트레이트 (${hi} 하이) — 4배`, en: `Straight (${hi} High) — 4x`, pay };
+    }
+    if (ev.cat === 3) {
+        const t = vpValLabel(tb[0]);
+        return { kr: `트리플 (${t}) — 3배`, en: `Three of a Kind (${t}s) — 3x`, pay };
+    }
+    if (ev.cat === 2) {
+        const p1 = vpValLabel(tb[0]);
+        const p2 = vpValLabel(tb[1]);
+        return { kr: `투 페어 (${p1}·${p2}) — 2배`, en: `Two Pair (${p1}s & ${p2}s) — 2x`, pay };
+    }
+    if (ev.cat === 1) {
+        const p = vpValLabel(tb[0]);
+        if (tb[0] >= 11) {
+            return { kr: `원 페어 (${p}) — J 이상이라 1배`, en: `One Pair (${p}s) — Jacks or Better · 1x`, pay };
+        }
+        return { kr: `원 페어 (${p}) — 10 이하 페어는 배당 없음`, en: `One Pair (${p}s) — Under Jacks, no payout`, pay: null };
+    }
+    const hi = vpValLabel(tb[0]);
+    return { kr: `하이 카드 (${hi} 하이) — 배당 없음`, en: `High Card (${hi} High) — No payout`, pay: null };
+}
+
+function vpFormatResult(ev, bet) {
+    const tb = ev.tiebreak;
+    const pay = vpGetPayout(ev);
+    if (pay) {
+        const win = bet * pay.mult;
+        let label = ev.name;
+        if (ev.cat === 7) label = `포카드 (${vpValLabel(tb[0])})`;
+        else if (ev.cat === 6) label = `풀하우스 (${vpValLabel(tb[0])}·${vpValLabel(tb[1])})`;
+        else if (ev.cat === 3) label = `트리플 (${vpValLabel(tb[0])})`;
+        else if (ev.cat === 2) label = `투 페어 (${vpValLabel(tb[0])}·${vpValLabel(tb[1])})`;
+        else if (ev.cat === 1) label = `원 페어 (${vpValLabel(tb[0])})`;
+        return {
+            kr: `${label} → ${pay.mult}배 +${win}`,
+            en: `${ev.nameEn} → ${pay.mult}x (+${win} · return ${bet + win})`,
+            tone: pay.mult >= 25 ? 'big' : 'win',
+            win
+        };
+    }
+    if (ev.cat === 1) {
+        const p = vpValLabel(tb[0]);
+        return {
+            kr: `원 페어 (${p}, 10 이하) → −${bet}`,
+            en: `One Pair (${p}s, under Jacks) → −${bet}`,
+            tone: 'lose',
+            win: 0
+        };
+    }
+    return {
+        kr: `하이 카드 → −${bet}`,
+        en: `High Card → −${bet}`,
+        tone: 'lose',
+        win: 0
+    };
+}
+
+function vpRecommendHold(cards, ev) {
+    const tb = ev.tiebreak;
+    const pay = vpGetPayout(ev);
+
+    // 1. 이미 배당 족보 (투 페어 이상 · J 이상 페어)
+    if (pay) {
+        if (ev.cat === 9 || ev.cat === 8 || ev.cat === 6 || ev.cat === 5 || ev.cat === 4) {
+            return {
+                indices: [0, 1, 2, 3, 4],
+                kr: `추천: 완성된 ${ev.name} — 5장 모두 남기세요`,
+                en: `Tip: Hold all 5 cards (${ev.nameEn})`
+            };
+        }
+        if (ev.cat === 7) {
+            const q = tb[0];
+            const idx = [];
+            cards.forEach((c, i) => { if (pkRankVal(c.rank) === q) idx.push(i); });
+            return {
+                indices: idx,
+                kr: `추천: ${vpValLabel(q)} 포카드 4장을 남기세요`,
+                en: `Tip: Hold four ${vpValLabel(q)}s`
+            };
+        }
+        if (ev.cat === 3) {
+            const t = tb[0];
+            const idx = [];
+            cards.forEach((c, i) => { if (pkRankVal(c.rank) === t) idx.push(i); });
+            return {
+                indices: idx,
+                kr: `추천: ${vpValLabel(t)} 트리플 3장을 남기세요`,
+                en: `Tip: Hold three ${vpValLabel(t)}s`
+            };
+        }
+        if (ev.cat === 2) {
+            const p1 = tb[0], p2 = tb[1];
+            const idx = [];
+            cards.forEach((c, i) => {
+                const v = pkRankVal(c.rank);
+                if (v === p1 || v === p2) idx.push(i);
+            });
+            return {
+                indices: idx,
+                kr: `추천: ${vpValLabel(p1)}·${vpValLabel(p2)} 투 페어를 남기세요`,
+                en: `Tip: Hold Two Pair (${vpValLabel(p1)}s & ${vpValLabel(p2)}s)`
+            };
+        }
+        const p = tb[0];
+        const idx = [];
+        cards.forEach((c, i) => { if (pkRankVal(c.rank) === p) idx.push(i); });
+        return {
+            indices: idx,
+            kr: `추천: ${vpValLabel(p)} 페어(J 이상)를 남기세요`,
+            en: `Tip: Hold high pair (${vpValLabel(p)}s)`
+        };
+    }
+
+    // 2. 같은 무늬 4장 (플러시 드로우)
+    const suitMap = new Map();
+    cards.forEach((c, i) => {
+        if (!suitMap.has(c.sym)) suitMap.set(c.sym, []);
+        suitMap.get(c.sym).push(i);
+    });
+    for (const [sym, idx] of suitMap.entries()) {
+        if (idx.length === 4) {
+            return {
+                indices: idx,
+                kr: `추천: 같은 무늬(${sym}) 4장을 남기세요 (플러시 노리기)`,
+                en: `Tip: Hold 4 suited (${sym}) for Flush draw`
+            };
+        }
+    }
+
+    // 3. 낮은 페어 (10 이하 원 페어)
+    if (ev.cat === 1) {
+        const p = tb[0];
+        const idx = [];
+        cards.forEach((c, i) => { if (pkRankVal(c.rank) === p) idx.push(i); });
+        return {
+            indices: idx,
+            kr: `추천: ${vpValLabel(p)} 페어를 남기세요`,
+            en: `Tip: Hold pair of ${vpValLabel(p)}s`
+        };
+    }
+
+    // 4. 이어진 4장 (양쪽 열린 스트레이트 드로우: 2-3-4-5 ~ 10-J-Q-K)
+    const sorted = cards.map((c, idx) => ({ v: pkRankVal(c.rank), idx })).sort((a, b) => a.v - b.v);
+    for (let start = 1; start >= 0; start--) {
+        const low = sorted[start].v;
+        const high = sorted[start + 3].v;
+        if (high - low === 3 && low >= 2 && high <= 13) {
+            const idx = sorted.slice(start, start + 4).map(x => x.idx).sort((a, b) => a - b);
+            return {
+                indices: idx,
+                kr: `추천: 이어진 4장(${vpValLabel(low)}~${vpValLabel(high)})을 남기세요 (스트레이트 노리기)`,
+                en: `Tip: Hold 4 consecutive (${vpValLabel(low)}-${vpValLabel(high)}) for Open Straight`
+            };
+        }
+    }
+
+    // 5. J 이상 높은 카드들 (J · Q · K · A)
+    const highCards = [];
+    cards.forEach((c, i) => {
+        const v = pkRankVal(c.rank);
+        if (v >= 11) highCards.push({ i, v });
+    });
+    if (highCards.length > 0) {
+        const idx = highCards.map(x => x.i);
+        const labels = highCards.slice().sort((a, b) => b.v - a.v).map(x => vpValLabel(x.v)).join('·');
+        return {
+            indices: idx,
+            kr: `추천: J 이상 높은 카드(${labels})를 남기세요`,
+            en: `Tip: Hold high card(s) (${labels})`
+        };
+    }
+
+    // 6. 아무것도 없으면 전부 교체
+    return {
+        indices: [],
+        kr: '추천: 남길 카드 없음 — 5장 모두 교체하세요',
+        en: 'Tip: Discard all 5 cards and draw new ones'
+    };
+}
+
+class VideoPoker {
+    constructor() {
+        this.id = 'videopoker';
+        this.screen = document.getElementById('scr-videopoker');
+        this.running = false;
+        this.busy = false;
+        this.phase = 'bet'; // 'bet' | 'deal' | 'hold' | 'draw'
+        this.chips = VP_START_CHIPS;
+        this.selectedBet = 50;
+        this.currentBet = 0;
+        this.helpOn = true;
+        this.deck = [];
+        this.hand = [];
+        this.held = [false, false, false, false, false];
+        this.recIndices = [];
+        this._binds = [];
+        this._timers = [];
+        this._runSeq = 0;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+    }
+
+    wait(ms, seq) {
+        return new Promise((resolve) => {
+            const id = setTimeout(() => {
+                this._timers = this._timers.filter(t => t !== id);
+                resolve(this.running && seq === this._runSeq);
+            }, ms);
+            this._timers.push(id);
+        });
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoVideoPoker_credits') || String(VP_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : VP_START_CHIPS;
+            const savedHelp = localStorage.getItem('gijoVideoPoker_help');
+            this.helpOn = savedHelp === null ? true : savedHelp === '1';
+        } catch {
+            this.chips = VP_START_CHIPS;
+            this.helpOn = true;
+        }
+    }
+
+    saveChips() {
+        try { localStorage.setItem('gijoVideoPoker_credits', String(this.chips)); } catch {}
+    }
+
+    saveHelp() {
+        try { localStorage.setItem('gijoVideoPoker_help', this.helpOn ? '1' : '0'); } catch {}
+    }
+
+    buildShuffledDeck() {
+        const deck = [];
+        for (let s = 0; s < VP_SUITS.length; s++) {
+            for (let r = 0; r < VP_RANKS.length; r++) {
+                deck.push({ rank: VP_RANKS[r], sym: VP_SUITS[s].sym, red: VP_SUITS[s].red });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = (Math.random() * (i + 1)) | 0;
+            const tmp = deck[i];
+            deck[i] = deck[j];
+            deck[j] = tmp;
+        }
+        return deck;
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this.phase = 'bet';
+        this.currentBet = 0;
+        this.deck = [];
+        this.hand = [];
+        this.held = [false, false, false, false, false];
+        this.recIndices = [];
+
+        store.setBest(this.id, this.chips);
+        this.renderBackSlots();
+        this.bindInput();
+        this.highlightPaytable(null);
+        this.updateHud();
+        this.updateHelpBtn();
+        this.updateControls();
+
+        this.setHandBanner('잭스 오어 베터 · 5장 포커 연습', 'Jacks or Better — Learn 5-card poker hands', '');
+        if (this.chips < this.selectedBet) {
+            this.setMsg('칩이 배팅액보다 적어요 · 칩을 다시 받으세요', 'Not enough chips for this bet — refill for free', 'push');
+        } else {
+            this.setMsg('배팅을 고르고 딜을 누르세요', 'Choose your bet and press Deal', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        if (this.phase === 'deal' && this.currentBet > 0) {
+            this.chips += this.currentBet;
+            this.currentBet = 0;
+        }
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('vp-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('videopoker');
+        });
+        this.screen.querySelectorAll('[data-vp-bet]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy || this.phase !== 'bet') return;
+                sfx.init();
+                this.selectedBet = parseInt(btn.getAttribute('data-vp-bet'), 10);
+                sfx.blip(580, 0.04, 'triangle', 0.04);
+                this.updateHud();
+                this.updateControls();
+                if (this.chips < this.selectedBet) {
+                    this.setMsg('칩이 배팅액보다 적어요 · 칩을 다시 받으세요', 'Not enough chips — refill for free', 'push');
+                }
+            });
+        });
+        this.on(document.getElementById('vp-help-btn'), 'click', () => {
+            sfx.init();
+            this.helpOn = !this.helpOn;
+            this.saveHelp();
+            this.updateHelpBtn();
+            sfx.blip(this.helpOn ? 680 : 440, 0.05, 'triangle', 0.04);
+            if (this.phase === 'hold' && !this.busy) {
+                this.applyRecVisuals();
+                this.renderHoldPrompt();
+            }
+        });
+        this.on(document.getElementById('vp-deal-btn'), 'click', () => {
+            sfx.init();
+            this.startDeal();
+        });
+        this.on(document.getElementById('vp-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+        this.on(document.getElementById('vp-draw-btn'), 'click', () => {
+            sfx.init();
+            this.startDraw();
+        });
+        const row = document.getElementById('vp-cards-row');
+        this.on(row, 'click', (e) => {
+            const slot = e.target.closest('[data-vp-slot]');
+            if (!slot) return;
+            const idx = parseInt(slot.getAttribute('data-vp-slot'), 10);
+            if (Number.isFinite(idx)) this.toggleHold(idx);
+        });
+    }
+
+    updateHud() {
+        this.setStat('chips', this.chips);
+        this.setStat('bet', this.currentBet > 0 ? this.currentBet : this.selectedBet);
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateHelpBtn() {
+        const btn = document.getElementById('vp-help-btn');
+        if (!btn) return;
+        btn.classList.toggle('vp-on', this.helpOn);
+        btn.setAttribute('aria-pressed', this.helpOn ? 'true' : 'false');
+        btn.innerHTML = this.helpOn
+            ? '도움말 켜짐<span class="vp-en">Help ON</span>'
+            : '도움말 꺼짐<span class="vp-en">Help OFF</span>';
+    }
+
+    highlightPaytable(payCat) {
+        const pt = document.getElementById('vp-paytable');
+        if (!pt) return;
+        pt.querySelectorAll('.vp-pay-row').forEach((row) => {
+            const cat = parseInt(row.getAttribute('data-vp-cat'), 10);
+            row.classList.toggle('vp-pay-active', payCat !== null && cat === payCat);
+        });
+    }
+
+    setHandBanner(kr, en, tone = '') {
+        const box = document.getElementById('vp-hand-box');
+        const main = document.getElementById('vp-hand-main');
+        const sub = document.getElementById('vp-hand-sub');
+        if (box) {
+            box.classList.remove('vp-hand-win', 'vp-hand-big', 'vp-hand-none');
+            if (tone) box.classList.add(`vp-hand-${tone}`);
+        }
+        if (main) main.textContent = kr;
+        if (sub) sub.textContent = en || '';
+    }
+
+    setMsg(kr, en, tone = '') {
+        const box = document.getElementById('vp-msg-box');
+        const main = document.getElementById('vp-msg-main');
+        const sub = document.getElementById('vp-msg-sub');
+        if (box) {
+            box.classList.remove('vp-msg-win', 'vp-msg-big', 'vp-msg-lose', 'vp-msg-push', 'vp-msg-tip');
+            if (tone) box.classList.add(`vp-msg-${tone}`);
+        }
+        if (main) main.textContent = kr;
+        if (sub) sub.textContent = en || '';
+    }
+
+    updateControls() {
+        const inBet = this.phase === 'bet';
+        const needRefill = inBet && this.chips < this.selectedBet;
+
+        this.screen.querySelectorAll('[data-vp-bet]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-vp-bet'), 10);
+            btn.classList.toggle('vp-selected', v === this.selectedBet);
+            btn.disabled = this.busy || !inBet;
+        });
+
+        const betRow = document.getElementById('vp-bet-actions');
+        const holdRow = document.getElementById('vp-hold-actions');
+        const dealBtn = document.getElementById('vp-deal-btn');
+        const refillBtn = document.getElementById('vp-refill-btn');
+        const drawBtn = document.getElementById('vp-draw-btn');
+        const drawEn = document.getElementById('vp-draw-en');
+
+        if (betRow) betRow.classList.toggle('vp-hidden', !inBet);
+        if (holdRow) holdRow.classList.toggle('vp-hidden', inBet);
+
+        if (dealBtn) {
+            dealBtn.classList.toggle('vp-hidden', needRefill);
+            dealBtn.disabled = this.busy || !inBet || needRefill;
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('vp-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+        if (drawBtn) {
+            drawBtn.disabled = this.busy || this.phase !== 'hold';
+        }
+        if (drawEn) {
+            const swapCount = this.held.filter(h => !h).length;
+            drawEn.textContent = swapCount === 0
+                ? 'Draw · 그대로 승부'
+                : `Draw · ${swapCount}장 교체`;
+        }
+
+        const canHold = this.phase === 'hold' && !this.busy;
+        const row = document.getElementById('vp-cards-row');
+        if (row) {
+            row.querySelectorAll('[data-vp-slot]').forEach((slot) => {
+                slot.disabled = !canHold;
+                slot.classList.toggle('vp-can-hold', canHold);
+            });
+        }
+    }
+
+    cardInnerHtml(card) {
+        const colorCls = card.red ? 'vp-red' : 'vp-black';
+        return (
+            `<div class="vp-card-inner">` +
+                `<div class="vp-card-face vp-card-front ${colorCls}">` +
+                    `<div class="vp-card-corner"><span class="vp-card-rank">${card.rank}</span><span class="vp-card-suit-sm">${card.sym}</span></div>` +
+                    `<div class="vp-card-suit-lg">${card.sym}</div>` +
+                    `<div class="vp-card-corner vp-card-corner-bot"><span class="vp-card-rank">${card.rank}</span><span class="vp-card-suit-sm">${card.sym}</span></div>` +
+                `</div>` +
+                `<div class="vp-card-face vp-card-back"><div class="vp-card-back-emblem">♠</div></div>` +
+            `</div>`
+        );
+    }
+
+    backOnlyHtml() {
+        return (
+            `<div class="vp-card-inner">` +
+                `<div class="vp-card-face vp-card-front vp-black"></div>` +
+                `<div class="vp-card-face vp-card-back"><div class="vp-card-back-emblem">♠</div></div>` +
+            `</div>`
+        );
+    }
+
+    renderBackSlots() {
+        const row = document.getElementById('vp-cards-row');
+        if (!row) return;
+        let html = '';
+        for (let i = 0; i < 5; i++) {
+            html +=
+                `<button type="button" class="vp-slot" data-vp-slot="${i}" aria-label="카드 ${i + 1}" disabled>` +
+                    `<span class="vp-hold-tag">HOLD</span>` +
+                    `<div class="vp-card vp-facedown">${this.backOnlyHtml()}</div>` +
+                `</button>`;
+        }
+        row.innerHTML = html;
+    }
+
+    setSlotCard(index, card, faceDown, animateDeal) {
+        const slot = this.screen.querySelector(`[data-vp-slot="${index}"]`);
+        if (!slot) return;
+        const cardEl = slot.querySelector('.vp-card');
+        if (!cardEl) return;
+        cardEl.className = 'vp-card' + (animateDeal ? ' vp-card-deal' : '') + (faceDown ? ' vp-facedown' : '');
+        cardEl.innerHTML = this.cardInnerHtml(card);
+        slot.setAttribute('aria-label', `${card.rank}${card.sym} ${this.held[index] ? '홀드됨' : '선택 안 됨'}`);
+    }
+
+    flipSlotFaceUp(index) {
+        const slot = this.screen.querySelector(`[data-vp-slot="${index}"]`);
+        if (!slot) return;
+        const cardEl = slot.querySelector('.vp-card');
+        if (!cardEl) return;
+        // 강제 리플로우로 뒷면 → 앞면 250ms 회전이 매번 부드럽게 보이게 합니다.
+        void cardEl.offsetWidth;
+        cardEl.classList.remove('vp-facedown');
+    }
+
+    syncSlotHeldVisual(index) {
+        const slot = this.screen.querySelector(`[data-vp-slot="${index}"]`);
+        if (!slot) return;
+        const isHeld = !!this.held[index];
+        slot.classList.toggle('vp-held', isHeld);
+        slot.setAttribute('aria-pressed', isHeld ? 'true' : 'false');
+        const c = this.hand[index];
+        if (c) {
+            slot.setAttribute('aria-label', `${c.rank}${c.sym} ${isHeld ? '홀드됨' : '교체 예정'}`);
+        }
+    }
+
+    applyRecVisuals() {
+        const showRec = this.phase === 'hold' && this.helpOn;
+        for (let i = 0; i < 5; i++) {
+            const slot = this.screen.querySelector(`[data-vp-slot="${i}"]`);
+            if (!slot) continue;
+            slot.classList.toggle('vp-rec', showRec && this.recIndices.includes(i));
+        }
+    }
+
+    clearRecVisuals() {
+        for (let i = 0; i < 5; i++) {
+            const slot = this.screen.querySelector(`[data-vp-slot="${i}"]`);
+            if (slot) slot.classList.remove('vp-rec');
+        }
+    }
+
+    toggleHold(index) {
+        if (this.busy || this.phase !== 'hold') return;
+        if (index < 0 || index >= 5) return;
+        sfx.init();
+        this.held[index] = !this.held[index];
+        this.syncSlotHeldVisual(index);
+        this.updateControls();
+        sfx.blip(this.held[index] ? 700 : 460, 0.045, 'triangle', 0.045);
+        vibe(10);
+    }
+
+    renderHoldPrompt() {
+        if (this.hand.length !== 5) return;
+        const ev = pkEval5(this.hand);
+        if (this.helpOn) {
+            const rec = vpRecommendHold(this.hand, ev);
+            this.recIndices = rec.indices;
+            this.applyRecVisuals();
+            this.setMsg(rec.kr, rec.en, 'tip');
+        } else {
+            this.clearRecVisuals();
+            this.setMsg('남길 카드를 눌러 HOLD한 뒤 드로우를 누르세요', 'Tap cards to HOLD, then press Draw', '');
+        }
+    }
+
+    refillChips() {
+        if (this.busy || this.phase !== 'bet') return;
+        this.chips = VP_START_CHIPS;
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateHud();
+        this.updateControls();
+        this.setMsg('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 play chips', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    async startDeal() {
+        if (this.busy || this.phase !== 'bet') return;
+        if (this.chips < this.selectedBet) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'deal';
+        this.currentBet = this.selectedBet;
+        this.chips -= this.currentBet;
+        this.saveChips();
+
+        this.deck = this.buildShuffledDeck();
+        this.hand = [];
+        this.held = [false, false, false, false, false];
+        this.recIndices = [];
+
+        this.highlightPaytable(null);
+        this.renderBackSlots();
+        this.updateHud();
+        this.updateControls();
+        this.setHandBanner('52장 새 벌에서 카드를 나눠 주는 중…', 'Dealing 5 cards from a fresh 52-card deck…', '');
+        this.setMsg('카드를 확인하세요', 'Dealing cards…', '');
+
+        for (let i = 0; i < 5; i++) {
+            const card = this.deck.pop();
+            this.hand.push(card);
+            this.setSlotCard(i, card, true, true);
+            this.flipSlotFaceUp(i);
+            sfx.blip(480 + i * 35, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(110, seq))) return;
+        }
+        if (!(await this.wait(140, seq))) return;
+
+        const ev = pkEval5(this.hand);
+        const fmt = vpFormatHand(ev);
+        const rec = vpRecommendHold(this.hand, ev);
+        this.recIndices = rec.indices;
+
+        this.phase = 'hold';
+        this.busy = false;
+        this.highlightPaytable(fmt.pay ? fmt.pay.cat : null);
+        this.setHandBanner(fmt.kr, fmt.en, fmt.pay ? (fmt.pay.mult >= 25 ? 'big' : 'win') : 'none');
+        this.renderHoldPrompt();
+        this.updateControls();
+    }
+
+    async startDraw() {
+        if (this.busy || this.phase !== 'hold') return;
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'draw';
+        this.clearRecVisuals();
+        this.updateControls();
+
+        const toReplace = [];
+        for (let i = 0; i < 5; i++) {
+            if (!this.held[i]) toReplace.push(i);
+        }
+
+        if (toReplace.length > 0) {
+            this.setMsg(`홀드하지 않은 ${toReplace.length}장을 바꾸는 중…`, `Replacing ${toReplace.length} card(s)…`, '');
+            for (let k = 0; k < toReplace.length; k++) {
+                const i = toReplace[k];
+                const newCard = this.deck.pop();
+                this.hand[i] = newCard;
+                this.setSlotCard(i, newCard, true, true);
+                this.flipSlotFaceUp(i);
+                sfx.blip(520 + k * 40, 0.045, 'triangle', 0.045);
+                if (!(await this.wait(120, seq))) return;
+            }
+            if (!(await this.wait(160, seq))) return;
+        } else {
+            if (!(await this.wait(120, seq))) return;
+        }
+
+        const ev = pkEval5(this.hand);
+        const fmt = vpFormatHand(ev);
+        const res = vpFormatResult(ev, this.currentBet);
+        const bet = this.currentBet;
+
+        if (fmt.pay) {
+            this.chips += bet + res.win;
+            store.setBest(this.id, this.chips);
+            if (fmt.pay.mult >= 25) {
+                sfx.blip(880, 0.08, 'triangle', 0.06);
+                setTimeout(() => { if (this.running && seq === this._runSeq) sfx.blip(1174, 0.14, 'triangle', 0.06); }, 95);
+                vibe([25, 35, 35]);
+            } else {
+                sfx.good();
+                vibe(20);
+            }
+        } else {
+            sfx.hit();
+            vibe(15);
+        }
+
+        this.saveChips();
+        this.currentBet = 0;
+        this.phase = 'bet';
+        this.busy = false;
+
+        this.highlightPaytable(fmt.pay ? fmt.pay.cat : null);
+        this.setHandBanner(fmt.kr, fmt.en, fmt.pay ? (fmt.pay.mult >= 25 ? 'big' : 'win') : 'none');
+        this.setMsg(res.kr, res.en, res.tone);
+        this.updateHud();
+        this.updateControls();
+    }
+}
+
+
+/* ============================================================
+   카지노 홀덤 · Casino Hold'em (텍사스 홀덤 딜러 대결 연습판)
+   ============================================================ */
+
+const HE_SUITS = [
+    { sym: '♠', red: false },
+    { sym: '♥', red: true },
+    { sym: '♦', red: true },
+    { sym: '♣', red: false }
+];
+const HE_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const HE_START_CHIPS = 1000;
+const HE_SLOT_TAGS = ['플랍', '플랍', '플랍', '턴', '리버'];
+
+/** 7장 중 21가지 5장 조합을 pkEval5 / pkCompare 로 평가해 최고 5장을 고르는 순수 함수 */
+function heBest5(cards7) {
+    const n = cards7.length;
+    let bestEv = null;
+    let bestCards = null;
+    for (let a = 0; a < n - 4; a++) {
+        for (let b = a + 1; b < n - 3; b++) {
+            for (let c = b + 1; c < n - 2; c++) {
+                for (let d = c + 1; d < n - 1; d++) {
+                    for (let e = d + 1; e < n; e++) {
+                        const comb = [cards7[a], cards7[b], cards7[c], cards7[d], cards7[e]];
+                        const ev = pkEval5(comb);
+                        if (!bestEv || pkCompare(ev, bestEv) > 0) {
+                            bestEv = ev;
+                            bestCards = comb;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return { ev: bestEv, cards: bestCards || [] };
+}
+
+function heValLabel(v) {
+    if (v === 14 || v === 1) return 'A';
+    if (v === 13) return 'K';
+    if (v === 12) return 'Q';
+    if (v === 11) return 'J';
+    return String(v);
+}
+
+function heDealerQualifies(ev) {
+    if (!ev) return false;
+    return ev.cat >= 2 || (ev.cat === 1 && ev.tiebreak[0] >= 4);
+}
+
+function heAnteMult(ev) {
+    if (!ev) return 1;
+    if (ev.cat === 9) return 100;
+    if (ev.cat === 8) return 20;
+    if (ev.cat === 7) return 10;
+    if (ev.cat === 6) return 3;
+    if (ev.cat === 5) return 2;
+    return 1;
+}
+
+function heFormatHand(ev) {
+    if (!ev) return { kr: '-', en: '-' };
+    const tb = ev.tiebreak;
+    if (ev.cat === 9) return { kr: '로열 플러시', en: 'Royal Flush' };
+    if (ev.cat === 8) return { kr: `스트레이트 플러시 (${heValLabel(tb[0])})`, en: `Straight Flush (${heValLabel(tb[0])})` };
+    if (ev.cat === 7) return { kr: `포카드 (${heValLabel(tb[0])})`, en: `Four of a Kind (${heValLabel(tb[0])}s)` };
+    if (ev.cat === 6) return { kr: `풀하우스 (${heValLabel(tb[0])}·${heValLabel(tb[1])})`, en: `Full House (${heValLabel(tb[0])}·${heValLabel(tb[1])})` };
+    if (ev.cat === 5) return { kr: `플러시 (${heValLabel(tb[0])})`, en: `Flush (${heValLabel(tb[0])} High)` };
+    if (ev.cat === 4) return { kr: `스트레이트 (${heValLabel(tb[0])})`, en: `Straight (${heValLabel(tb[0])} High)` };
+    if (ev.cat === 3) return { kr: `트리플 (${heValLabel(tb[0])})`, en: `Three of a Kind (${heValLabel(tb[0])}s)` };
+    if (ev.cat === 2) return { kr: `투 페어 (${heValLabel(tb[0])}·${heValLabel(tb[1])})`, en: `Two Pair (${heValLabel(tb[0])}·${heValLabel(tb[1])})` };
+    if (ev.cat === 1) return { kr: `원 페어 (${heValLabel(tb[0])})`, en: `One Pair (${heValLabel(tb[0])}s)` };
+    return { kr: `하이 카드 (${heValLabel(tb[0])})`, en: `High Card (${heValLabel(tb[0])})` };
+}
+
+function heFlopAdvice(player2, flop3, canCall) {
+    const cards5 = player2.concat(flop3);
+    const ev = pkEval5(cards5);
+    const fmt = heFormatHand(ev);
+    const noChipKr = !canCall ? ' (칩 부족으로 콜 불가 · 폴드)' : '';
+    const noChipEn = !canCall ? ' (Not enough chips to Call)' : '';
+
+    // 1. 원 페어 이상
+    if (ev.cat >= 1) {
+        return {
+            action: 'call',
+            kr: `지금 ${fmt.kr} → 기본은 콜${noChipKr}`,
+            en: `Made ${fmt.en} → Call${noChipEn}`
+        };
+    }
+
+    // 2. 같은 무늬 4장 (플러시 드로우)
+    const suitCount = new Map();
+    for (let i = 0; i < cards5.length; i++) {
+        const s = cards5[i].sym;
+        suitCount.set(s, (suitCount.get(s) || 0) + 1);
+    }
+    for (const [sym, cnt] of suitCount.entries()) {
+        if (cnt === 4) {
+            return {
+                action: 'call',
+                kr: `같은 무늬(${sym}) 4장 · 플러시 드로우 → 기본은 콜${noChipKr}`,
+                en: `4 suited (${sym}) Flush Draw → Call${noChipEn}`
+            };
+        }
+    }
+
+    // 3. 이어진 4장 (스트레이트 드로우)
+    const rawVals = Array.from(new Set(cards5.map(c => pkRankVal(c.rank))));
+    const extVals = rawVals.slice();
+    if (extVals.includes(14)) extVals.push(1);
+    extVals.sort((a, b) => a - b);
+    for (let i = extVals.length - 4; i >= 0; i--) {
+        if (extVals[i + 3] - extVals[i] === 3) {
+            const lo = heValLabel(extVals[i]);
+            const hi = heValLabel(extVals[i + 3]);
+            return {
+                action: 'call',
+                kr: `이어진 4장 (${lo}~${hi}) · 스트레이트 드로우 → 기본은 콜${noChipKr}`,
+                en: `4 consecutive (${lo}-${hi}) Straight Draw → Call${noChipEn}`
+            };
+        }
+    }
+
+    // 4. 내 두 장 중 하나라도 Q 이상
+    const highHole = player2
+        .filter(c => pkRankVal(c.rank) >= 12)
+        .sort((a, b) => pkRankVal(b.rank) - pkRankVal(a.rank));
+    if (highHole.length > 0) {
+        const labels = highHole.map(c => c.rank).join('·');
+        return {
+            action: 'call',
+            kr: `내 카드에 Q 이상 (${labels}) → 기본은 콜${noChipKr}`,
+            en: `Hole card Q+ (${labels}) → Call${noChipEn}`
+        };
+    }
+
+    // 5. 그 외에는 폴드
+    return {
+        action: 'fold',
+        kr: `지금 ${fmt.kr} · 드로우 없음 → 기본은 폴드`,
+        en: `${fmt.en}, no draw or Q+ hole card → Fold`
+    };
+}
+
+class CasinoHoldem {
+    constructor() {
+        this.id = 'holdem';
+        this.screen = document.getElementById('scr-holdem');
+        this.running = false;
+        this.busy = false;
+        this.phase = 'bet'; // 'bet' | 'deal' | 'choice' | 'reveal'
+        this.chips = HE_START_CHIPS;
+        this.selectedAnte = 50;
+        this.anteBet = 0;
+        this.callBet = 0;
+        this.helpOn = true;
+        this.deck = [];
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.board = [];
+        this.dealerRevealed = false;
+        this.pBest = null;
+        this.dBest = null;
+        this._binds = [];
+        this._timers = [];
+        this._runSeq = 0;
+    }
+
+    getDisplayBet() {
+        if (this.anteBet > 0) return this.anteBet + this.callBet;
+        return this.selectedAnte;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+    }
+
+    wait(ms, seq) {
+        return new Promise((resolve) => {
+            const id = setTimeout(() => {
+                this._timers = this._timers.filter(t => t !== id);
+                resolve(this.running && seq === this._runSeq);
+            }, ms);
+            this._timers.push(id);
+        });
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoHoldem_credits') || String(HE_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : HE_START_CHIPS;
+            const savedHelp = localStorage.getItem('gijoHoldem_help');
+            this.helpOn = savedHelp === null ? true : savedHelp === '1';
+        } catch {
+            this.chips = HE_START_CHIPS;
+            this.helpOn = true;
+        }
+    }
+
+    saveChips() {
+        try { localStorage.setItem('gijoHoldem_credits', String(this.chips)); } catch {}
+    }
+
+    saveHelp() {
+        try { localStorage.setItem('gijoHoldem_help', this.helpOn ? '1' : '0'); } catch {}
+    }
+
+    buildShuffledDeck() {
+        const deck = [];
+        for (let s = 0; s < HE_SUITS.length; s++) {
+            for (let r = 0; r < HE_RANKS.length; r++) {
+                deck.push({ rank: HE_RANKS[r], sym: HE_SUITS[s].sym, red: HE_SUITS[s].red });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = (Math.random() * (i + 1)) | 0;
+            const tmp = deck[i];
+            deck[i] = deck[j];
+            deck[j] = tmp;
+        }
+        return deck;
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this.phase = 'bet';
+        this.anteBet = 0;
+        this.callBet = 0;
+        this.deck = [];
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.board = [];
+        this.dealerRevealed = false;
+        this.pBest = null;
+        this.dBest = null;
+
+        store.setBest(this.id, this.chips);
+        this.bindInput();
+        this.renderEmptyTable();
+        this.updateStreets(0);
+        this.updateRankPills();
+        this.updateHud();
+        this.updateHelpBtn();
+        this.updateControls();
+
+        if (this.chips < this.selectedAnte) {
+            this.setMsg('칩이 앤티보다 적어요 · 칩을 다시 받으세요', 'Not enough chips for this Ante — refill for free', 'push');
+        } else {
+            this.setMsg('앤티를 고르고 딜을 누르세요', 'Choose your Ante and press Deal · 딜러 자격 4 원 페어 이상', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        if (this.phase === 'deal' && this.anteBet > 0) {
+            this.chips += this.anteBet;
+            this.anteBet = 0;
+        }
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('he-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('holdem');
+        });
+        this.screen.querySelectorAll('[data-he-ante]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy || this.phase !== 'bet') return;
+                sfx.init();
+                this.selectedAnte = parseInt(btn.getAttribute('data-he-ante'), 10);
+                this.anteBet = 0;
+                this.callBet = 0;
+                sfx.blip(580, 0.04, 'triangle', 0.04);
+                this.updateHud();
+                this.updateControls();
+                if (this.chips < this.selectedAnte) {
+                    this.setMsg('칩이 앤티보다 적어요 · 칩을 다시 받으세요', 'Not enough chips — refill for free', 'push');
+                }
+            });
+        });
+        this.on(document.getElementById('he-help-btn'), 'click', () => {
+            sfx.init();
+            this.helpOn = !this.helpOn;
+            this.saveHelp();
+            this.updateHelpBtn();
+            sfx.blip(this.helpOn ? 680 : 440, 0.05, 'triangle', 0.04);
+            if (this.phase === 'choice' && !this.busy) {
+                this.renderChoiceMessage();
+            }
+        });
+        this.on(document.getElementById('he-deal-btn'), 'click', () => {
+            sfx.init();
+            this.startRound();
+        });
+        this.on(document.getElementById('he-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+        this.on(document.getElementById('he-call-btn'), 'click', () => {
+            sfx.init();
+            this.playerCall();
+        });
+        this.on(document.getElementById('he-fold-btn'), 'click', () => {
+            sfx.init();
+            this.playerFold();
+        });
+    }
+
+    updateHud() {
+        this.setStat('chips', this.chips);
+        this.setStat('bet', this.getDisplayBet());
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateHelpBtn() {
+        const btn = document.getElementById('he-help-btn');
+        if (!btn) return;
+        btn.classList.toggle('he-on', this.helpOn);
+        btn.setAttribute('aria-pressed', this.helpOn ? 'true' : 'false');
+        btn.innerHTML = this.helpOn
+            ? '도움말 켜짐<span class="he-en">Help ON</span>'
+            : '도움말 꺼짐<span class="he-en">Help OFF</span>';
+    }
+
+    setMsg(kr, en, tone = '') {
+        const box = document.getElementById('he-msg-box');
+        const main = document.getElementById('he-msg-main');
+        const sub = document.getElementById('he-msg-sub');
+        if (box) {
+            box.classList.remove('he-msg-win', 'he-msg-big', 'he-msg-lose', 'he-msg-push', 'he-msg-tip');
+            if (tone) box.classList.add(`he-msg-${tone}`);
+        }
+        if (main) main.textContent = kr;
+        if (sub) sub.textContent = en || '';
+    }
+
+    updateStreets(boardCount) {
+        const flop = document.getElementById('he-st-flop');
+        const turn = document.getElementById('he-st-turn');
+        const river = document.getElementById('he-st-river');
+        if (flop) flop.classList.toggle('he-street-on', boardCount >= 3);
+        if (turn) turn.classList.toggle('he-street-on', boardCount >= 4);
+        if (river) river.classList.toggle('he-street-on', boardCount >= 5);
+    }
+
+    updateControls() {
+        const inBet = this.phase === 'bet';
+        const needRefill = inBet && this.chips < this.selectedAnte;
+
+        this.screen.querySelectorAll('[data-he-ante]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-he-ante'), 10);
+            btn.classList.toggle('he-selected', v === this.selectedAnte);
+            btn.disabled = this.busy || !inBet;
+        });
+
+        const betRow = document.getElementById('he-bet-actions');
+        const choiceRow = document.getElementById('he-choice-actions');
+        const dealBtn = document.getElementById('he-deal-btn');
+        const refillBtn = document.getElementById('he-refill-btn');
+        const callBtn = document.getElementById('he-call-btn');
+        const callEn = document.getElementById('he-call-en');
+        const foldBtn = document.getElementById('he-fold-btn');
+
+        if (betRow) betRow.classList.toggle('he-hidden', !inBet);
+        if (choiceRow) choiceRow.classList.toggle('he-hidden', inBet);
+
+        if (dealBtn) {
+            dealBtn.classList.toggle('he-hidden', needRefill);
+            dealBtn.disabled = this.busy || !inBet || needRefill;
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('he-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+
+        const callCost = (this.anteBet || this.selectedAnte) * 2;
+        const canAct = this.phase === 'choice' && !this.busy;
+        const canCall = canAct && this.chips >= callCost;
+        if (callBtn) callBtn.disabled = !canCall;
+        if (callEn) {
+            callEn.textContent = (this.phase === 'choice' && this.chips < callCost)
+                ? 'Call (칩 부족)'
+                : `Call (+${callCost})`;
+        }
+        if (foldBtn) foldBtn.disabled = !canAct;
+    }
+
+    cardInnerHtml(card) {
+        const colorCls = card.red ? 'he-red' : 'he-black';
+        return (
+            `<div class="he-card-inner">` +
+                `<div class="he-card-face he-card-front ${colorCls}">` +
+                    `<div class="he-card-corner"><span class="he-card-rank">${card.rank}</span><span class="he-card-suit-sm">${card.sym}</span></div>` +
+                    `<div class="he-card-suit-lg">${card.sym}</div>` +
+                    `<div class="he-card-corner he-card-corner-bot"><span class="he-card-rank">${card.rank}</span><span class="he-card-suit-sm">${card.sym}</span></div>` +
+                `</div>` +
+                `<div class="he-card-face he-card-back"><div class="he-card-back-emblem">♠</div></div>` +
+            `</div>`
+        );
+    }
+
+    renderEmptyTable() {
+        const dWrap = document.getElementById('he-dealer-cards');
+        const pWrap = document.getElementById('he-player-cards');
+        const bWrap = document.getElementById('he-board-cards');
+
+        if (dWrap) {
+            dWrap.innerHTML =
+                `<div class="he-card-slot" data-he-dslot="0"><div class="he-card-empty">딜러</div></div>` +
+                `<div class="he-card-slot" data-he-dslot="1"><div class="he-card-empty">딜러</div></div>`;
+        }
+        if (pWrap) {
+            pWrap.innerHTML =
+                `<div class="he-card-slot" data-he-pslot="0"><div class="he-card-empty">나</div></div>` +
+                `<div class="he-card-slot" data-he-pslot="1"><div class="he-card-empty">나</div></div>`;
+        }
+        if (bWrap) {
+            let html = '';
+            for (let i = 0; i < 5; i++) {
+                html +=
+                    `<div class="he-board-slot">` +
+                        `<span class="he-slot-tag">${HE_SLOT_TAGS[i]}</span>` +
+                        `<div class="he-card-slot" data-he-bslot="${i}"><div class="he-card-empty">${HE_SLOT_TAGS[i]}</div></div>` +
+                    `</div>`;
+            }
+            bWrap.innerHTML = html;
+        }
+    }
+
+    placeCard(slotSelector, card, faceDown) {
+        const slot = this.screen.querySelector(slotSelector);
+        if (!slot) return null;
+        const cardEl = document.createElement('div');
+        cardEl.className = 'he-card he-card-deal' + (faceDown ? ' he-facedown' : '');
+        cardEl.innerHTML = this.cardInnerHtml(card);
+        slot.innerHTML = '';
+        slot.appendChild(cardEl);
+        return cardEl;
+    }
+
+    flipCardUp(cardEl) {
+        if (!cardEl) return;
+        void cardEl.offsetWidth;
+        cardEl.classList.remove('he-facedown');
+    }
+
+    updateRankPills() {
+        const dPill = document.getElementById('he-dealer-rank');
+        const pPill = document.getElementById('he-player-rank');
+        const mTag = document.getElementById('he-mult-tag');
+
+        if (dPill) {
+            dPill.classList.remove('he-rank-win', 'he-rank-big', 'he-rank-dnq');
+            if (this.dealerHand.length < 2) {
+                dPill.textContent = '-';
+            } else if (!this.dealerRevealed) {
+                dPill.textContent = '비공개';
+            } else if (this.dBest && this.dBest.ev) {
+                const qual = heDealerQualifies(this.dBest.ev);
+                const fmt = heFormatHand(this.dBest.ev);
+                if (!qual) dPill.classList.add('he-rank-dnq');
+                dPill.innerHTML = qual
+                    ? `${fmt.kr}<span class="he-qual-tag he-qual-yes">자격</span>`
+                    : `${fmt.kr}<span class="he-qual-tag he-qual-no">자격 미달</span>`;
+            }
+        }
+
+        if (pPill) {
+            pPill.classList.remove('he-rank-win', 'he-rank-big', 'he-rank-dnq');
+            let pEv = null;
+            if (this.pBest && this.pBest.ev) {
+                pEv = this.pBest.ev;
+            } else if (this.playerHand.length === 2 && this.board.length >= 3) {
+                const combined = this.playerHand.concat(this.board);
+                pEv = combined.length === 5 ? pkEval5(combined) : heBest5(combined).ev;
+            }
+
+            if (!pEv) {
+                pPill.textContent = '-';
+                if (mTag) mTag.classList.add('he-hidden');
+            } else {
+                const fmt = heFormatHand(pEv);
+                const mult = heAnteMult(pEv);
+                pPill.textContent = fmt.kr;
+                if (mult >= 10) pPill.classList.add('he-rank-big');
+                else if (pEv.cat >= 1) pPill.classList.add('he-rank-win');
+                if (mTag) {
+                    if (mult > 1) {
+                        mTag.textContent = `앤티 ×${mult}`;
+                        mTag.classList.remove('he-hidden');
+                    } else {
+                        mTag.classList.add('he-hidden');
+                    }
+                }
+            }
+        }
+    }
+
+    applyBestHighlights(pBestCards, dBestCards) {
+        const pSet = new Set(pBestCards || []);
+        const dSet = new Set(dBestCards || []);
+
+        const mark = (selector, inP, inD, showBadge) => {
+            const cardEl = this.screen.querySelector(`${selector} .he-card`);
+            if (!cardEl) return;
+            cardEl.classList.remove('he-best-player', 'he-best-dealer', 'he-best-both', 'he-card-dim');
+            const old = cardEl.querySelector('.he-use-badge');
+            if (old) old.remove();
+
+            if (inP && inD) {
+                cardEl.classList.add('he-best-both');
+                if (showBadge) {
+                    const b = document.createElement('span');
+                    b.className = 'he-use-badge he-use-b';
+                    b.textContent = '나·딜';
+                    cardEl.appendChild(b);
+                }
+            } else if (inP) {
+                cardEl.classList.add('he-best-player');
+                if (showBadge) {
+                    const b = document.createElement('span');
+                    b.className = 'he-use-badge he-use-p';
+                    b.textContent = '나';
+                    cardEl.appendChild(b);
+                }
+            } else if (inD) {
+                cardEl.classList.add('he-best-dealer');
+                if (showBadge) {
+                    const b = document.createElement('span');
+                    b.className = 'he-use-badge he-use-d';
+                    b.textContent = '딜러';
+                    cardEl.appendChild(b);
+                }
+            } else {
+                cardEl.classList.add('he-card-dim');
+            }
+        };
+
+        for (let i = 0; i < this.dealerHand.length; i++) {
+            mark(`[data-he-dslot="${i}"]`, false, dSet.has(this.dealerHand[i]), false);
+        }
+        for (let i = 0; i < this.playerHand.length; i++) {
+            mark(`[data-he-pslot="${i}"]`, pSet.has(this.playerHand[i]), false, false);
+        }
+        for (let i = 0; i < this.board.length; i++) {
+            mark(`[data-he-bslot="${i}"]`, pSet.has(this.board[i]), dSet.has(this.board[i]), true);
+        }
+    }
+
+    renderChoiceMessage() {
+        const callCost = this.anteBet * 2;
+        const canCall = this.chips >= callCost;
+        if (this.helpOn && this.playerHand.length === 2 && this.board.length === 3) {
+            const adv = heFlopAdvice(this.playerHand, this.board, canCall);
+            this.setMsg(adv.kr, adv.en, 'tip');
+        } else if (!canCall) {
+            this.setMsg(
+                `칩이 모자라 콜(+${callCost}) 불가 · 폴드를 누르세요`,
+                'Not enough chips to Call — press Fold',
+                'push'
+            );
+        } else {
+            this.setMsg(
+                `콜(+${callCost})로 끝까지 가거나 폴드(포기)를 고르세요`,
+                `Choose Call (+${callCost}) to see Turn & River, or Fold`,
+                ''
+            );
+        }
+    }
+
+    refillChips() {
+        if (this.busy || this.phase !== 'bet') return;
+        this.chips = HE_START_CHIPS;
+        this.anteBet = 0;
+        this.callBet = 0;
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateHud();
+        this.updateControls();
+        this.setMsg('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 play chips', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    async startRound() {
+        if (this.busy || this.phase !== 'bet') return;
+        if (this.chips < this.selectedAnte) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'deal';
+        this.anteBet = this.selectedAnte;
+        this.callBet = 0;
+        this.chips -= this.anteBet;
+        this.saveChips();
+
+        this.deck = this.buildShuffledDeck();
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.board = [];
+        this.dealerRevealed = false;
+        this.pBest = null;
+        this.dBest = null;
+
+        this.renderEmptyTable();
+        this.updateStreets(0);
+        this.updateRankPills();
+        this.updateHud();
+        this.updateControls();
+        this.setMsg('52장 새 벌을 섞어 카드를 나눕니다…', 'Shuffling fresh 52-card deck — dealing Hole & Flop…', '');
+        vibe(10);
+
+        // 내 카드 2장(앞면) · 딜러 카드 2장(뒷면) 차례로 배부
+        for (let i = 0; i < 2; i++) {
+            const pCard = this.deck.pop();
+            this.playerHand.push(pCard);
+            const pEl = this.placeCard(`[data-he-pslot="${i}"]`, pCard, true);
+            this.flipCardUp(pEl);
+            sfx.blip(520 + i * 35, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(120, seq))) return;
+
+            const dCard = this.deck.pop();
+            this.dealerHand.push(dCard);
+            this.placeCard(`[data-he-dslot="${i}"]`, dCard, true);
+            sfx.blip(410 + i * 25, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(120, seq))) return;
+        }
+
+        // 공용 카드 3장(플랍, 앞면) 차례로 배부
+        for (let i = 0; i < 3; i++) {
+            const bCard = this.deck.pop();
+            this.board.push(bCard);
+            const bEl = this.placeCard(`[data-he-bslot="${i}"]`, bCard, true);
+            this.flipCardUp(bEl);
+            this.updateStreets(this.board.length);
+            sfx.blip(580 + i * 40, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(130, seq))) return;
+        }
+        if (!(await this.wait(120, seq))) return;
+
+        this.phase = 'choice';
+        this.busy = false;
+        this.updateRankPills();
+        this.updateControls();
+        this.renderChoiceMessage();
+    }
+
+    playerFold() {
+        if (this.busy || this.phase !== 'choice') return;
+        const ante = this.anteBet;
+        sfx.hit();
+        vibe(25);
+        this.finishRound(
+            'lose',
+            `폴드(포기) → 앤티 −${ante}`,
+            `Folded — Ante −${ante} (턴·리버 및 딜러 카드 비공개)`
+        );
+    }
+
+    async playerCall() {
+        if (this.busy || this.phase !== 'choice') return;
+        const callCost = this.anteBet * 2;
+        if (this.chips < callCost) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'reveal';
+        this.callBet = callCost;
+        this.chips -= this.callBet;
+        this.saveChips();
+        this.updateHud();
+        this.updateControls();
+        sfx.blip(660, 0.05, 'triangle', 0.05);
+        this.setMsg('콜! 턴과 리버를 깔고 딜러 카드를 엽니다…', 'Call! Dealing Turn & River, then revealing Dealer…', 'tip');
+
+        // 턴(3) · 리버(4) 차례로 깔기
+        for (let i = 3; i < 5; i++) {
+            if (!(await this.wait(160, seq))) return;
+            const bCard = this.deck.pop();
+            this.board.push(bCard);
+            const bEl = this.placeCard(`[data-he-bslot="${i}"]`, bCard, true);
+            this.flipCardUp(bEl);
+            this.updateStreets(this.board.length);
+            this.updateRankPills();
+            sfx.blip(620 + (i - 3) * 65, 0.045, 'triangle', 0.045);
+        }
+
+        // 딜러 카드 2장 열기
+        for (let i = 0; i < 2; i++) {
+            if (!(await this.wait(180, seq))) return;
+            const dEl = this.screen.querySelector(`[data-he-dslot="${i}"] .he-card`);
+            this.flipCardUp(dEl);
+            sfx.blip(500 + i * 60, 0.045, 'triangle', 0.045);
+        }
+        if (!(await this.wait(260, seq))) return;
+
+        this.dealerRevealed = true;
+        this.settleShowdown(seq);
+    }
+
+    settleShowdown(seq) {
+        const ante = this.anteBet;
+        const call = this.callBet;
+
+        this.pBest = heBest5(this.playerHand.concat(this.board));
+        this.dBest = heBest5(this.dealerHand.concat(this.board));
+        this.updateRankPills();
+        this.applyBestHighlights(this.pBest.cards, this.dBest.cards);
+
+        const pEv = this.pBest.ev;
+        const dEv = this.dBest.ev;
+        const pFmt = heFormatHand(pEv);
+        const dFmt = heFormatHand(dEv);
+        const qualified = heDealerQualifies(dEv);
+        const aMult = heAnteMult(pEv);
+        const anteWin = ante * aMult;
+        const anteLabel = aMult > 1 ? `앤티(${aMult}배) +${anteWin}` : `앤티 +${anteWin}`;
+        const anteLabelEn = aMult > 1 ? `Ante(${aMult}x) +${anteWin}` : `Ante +${anteWin}`;
+
+        let payout = 0;
+        let tone = 'push';
+        let kr = '';
+        let en = '';
+
+        if (!qualified) {
+            payout = ante + anteWin + call;
+            tone = aMult >= 3 ? 'big' : 'win';
+            kr = `딜러 ${dFmt.kr} → 자격 미달 · ${anteLabel}, 콜 돌려받기`;
+            en = `Dealer ${dFmt.en} (No Qualify) · ${anteLabelEn}, Call Push`;
+            if (aMult >= 10) {
+                sfx.blip(880, 0.08, 'triangle', 0.06);
+                setTimeout(() => { if (this.running && seq === this._runSeq) sfx.blip(1174, 0.14, 'triangle', 0.06); }, 95);
+                vibe([25, 35, 35]);
+            } else {
+                sfx.good();
+                vibe(25);
+            }
+        } else {
+            const cmp = pkCompare(pEv, dEv);
+            if (cmp > 0) {
+                payout = ante + anteWin + call * 2;
+                tone = aMult >= 3 ? 'big' : 'win';
+                kr = `내 ${pFmt.kr} > 딜러 ${dFmt.kr} → ${anteLabel}, 콜 +${call}`;
+                en = `Your ${pFmt.en} > Dealer ${dFmt.en} · ${anteLabelEn}, Call +${call}`;
+                if (aMult >= 10) {
+                    sfx.blip(880, 0.08, 'triangle', 0.06);
+                    setTimeout(() => { if (this.running && seq === this._runSeq) sfx.blip(1174, 0.14, 'triangle', 0.06); }, 95);
+                    vibe([25, 35, 35]);
+                } else {
+                    sfx.good();
+                    vibe([0, 30, 30, 30]);
+                }
+            } else if (cmp < 0) {
+                payout = 0;
+                tone = 'lose';
+                kr = `내 ${pFmt.kr} < 딜러 ${dFmt.kr} → 앤티 −${ante}, 콜 −${call}`;
+                en = `Dealer ${dFmt.en} > Your ${pFmt.en} · Ante −${ante}, Call −${call}`;
+                sfx.hit();
+                vibe(30);
+            } else {
+                payout = ante + call;
+                tone = 'push';
+                kr = `내 ${pFmt.kr} = 딜러 ${dFmt.kr} → 무승부 · 앤티·콜 돌려받기`;
+                en = `Exact Tie (${pFmt.en}) · Ante & Call Push`;
+                sfx.blip(540, 0.06, 'triangle', 0.05);
+                vibe(15);
+            }
+        }
+
+        if (payout > 0) {
+            this.chips += payout;
+            store.setBest(this.id, this.chips);
+        }
+        this.finishRound(tone, kr, en);
+    }
+
+    finishRound(tone, kr, en) {
+        this.saveChips();
+        this.anteBet = 0;
+        this.callBet = 0;
+        this.phase = 'bet';
+        this.busy = false;
+        this.setMsg(kr, en, tone);
+        this.updateHud();
+        this.updateControls();
+    }
+}
+
+/* ============================================================
+   빅휠 · 머니 휠 (Big Wheel 54칸, 규칙 연습판 · DOM)
+   ============================================================ */
+const BW_START_CHIPS = 1000;
+const BW_MAX_HISTORY = 10;
+const BW_SPIN_MS = 4000;
+
+const BW_SPOT_DEFS = [
+    { key: '1',     kr: '1',         en: '1',     sym: '●', wheelText: '1',  histText: '1',  hubText: '1',     mult: 1,  count: 24, color: '#eab308', row: 'top' },
+    { key: '2',     kr: '2',         en: '2',     sym: '◆', wheelText: '2',  histText: '2',  hubText: '2',     mult: 2,  count: 15, color: '#2563eb', row: 'top' },
+    { key: '5',     kr: '5',         en: '5',     sym: '▲', wheelText: '5',  histText: '5',  hubText: '5',     mult: 5,  count: 7,  color: '#dc2626', row: 'top' },
+    { key: '10',    kr: '10',        en: '10',    sym: '■', wheelText: '10', histText: '10', hubText: '10',    mult: 10, count: 4,  color: '#16a34a', row: 'top' },
+    { key: '20',    kr: '20',        en: '20',    sym: '✦', wheelText: '20', histText: '20', hubText: '20',    mult: 20, count: 2,  color: '#7c3aed', row: 'bot' },
+    { key: 'joker', kr: '조커',      en: 'Joker', sym: '🃏', wheelText: 'J',  histText: 'J',  hubText: '🃏',    mult: 40, count: 1,  color: '#db2777', row: 'bot' },
+    { key: 'logo',  kr: '로고(GIJO)', en: 'GIJO',  sym: '★', wheelText: 'G',  histText: 'G',  hubText: 'GIJO',  mult: 40, count: 1,  color: '#111827', row: 'bot' }
+];
+
+const BW_SPOT_MAP = {};
+BW_SPOT_DEFS.forEach(d => { BW_SPOT_MAP[d.key] = d; });
+
+// 54칸 고정 배열: 1(24), 2(15), 5(7), 10(4), 20(2), joker(1), logo(1) — 같은 칸이 몰리지 않게 배치
+const BW_WHEEL_ORDER = [
+    'joker', '1', '2', '5', '1', '2', '10', '1', '2',
+    '1', '5', '1', '2', '20', '1', '2', '1', '5',
+    '1', '2', '1', '10', '1', '2', '1', '5', '1',
+    'logo', '1', '2', '1', '2', '1', '10', '1', '5',
+    '1', '2', '1', '2', '20', '1', '2', '5', '1',
+    '2', '1', '10', '1', '2', '1', '5', '1', '2'
+];
+
+function bwIndexFromDeg(deg) {
+    const n = BW_WHEEL_ORDER.length;
+    const seg = 360 / n;
+    const norm = (((-deg) % 360) + 360) % 360;
+    return Math.floor((norm + seg / 2) / seg) % n;
+}
+
+class BigWheel {
+    constructor() {
+        this.id = 'bigwheel';
+        this.screen = document.getElementById('scr-bigwheel');
+        this.running = false;
+        this.busy = false;
+        this.chips = BW_START_CHIPS;
+        this.chipUnit = 50;
+        this.bets = {};
+        this.history = [];
+        this.lastWinner = null;
+        this.wheelDeg = 0;
+        this._activeBetTotal = 0;
+        this._binds = [];
+        this._timers = [];
+        this._raf = null;
+        this._runSeq = 0;
+        this._boardBuilt = false;
+        this._wheelPainted = false;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+        if (this._raf) {
+            cancelAnimationFrame(this._raf);
+            this._raf = null;
+        }
+        const ptr = document.getElementById('bw-pointer');
+        if (ptr) ptr.classList.remove('bw-pointer-tick');
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoBigWheel_credits') || String(BW_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : BW_START_CHIPS;
+            const savedHist = localStorage.getItem('gijoBigWheel_history');
+            if (savedHist) {
+                const parsed = JSON.parse(savedHist);
+                if (Array.isArray(parsed)) {
+                    this.history = parsed
+                        .map(v => String(v))
+                        .filter(v => Object.prototype.hasOwnProperty.call(BW_SPOT_MAP, v))
+                        .slice(-BW_MAX_HISTORY);
+                }
+            }
+        } catch {
+            this.chips = BW_START_CHIPS;
+            this.history = [];
+        }
+    }
+
+    saveChips() {
+        try { localStorage.setItem('gijoBigWheel_credits', String(this.chips)); } catch {}
+    }
+
+    saveHistory() {
+        try { localStorage.setItem('gijoBigWheel_history', JSON.stringify(this.history)); } catch {}
+    }
+
+    getTotalBet() {
+        let sum = 0;
+        const keys = Object.keys(this.bets);
+        for (let i = 0; i < keys.length; i++) sum += this.bets[keys[i]];
+        return sum;
+    }
+
+    paintWheel() {
+        if (this._wheelPainted) return;
+        const rotor = document.getElementById('bw-wheel-rotor');
+        const labelsWrap = document.getElementById('bw-wheel-labels');
+        if (!rotor) return;
+
+        const n = BW_WHEEL_ORDER.length;
+        const seg = 360 / n;
+        const half = (seg / 2).toFixed(4);
+        const stops = [];
+        let lblHtml = '';
+
+        for (let i = 0; i < n; i++) {
+            const key = BW_WHEEL_ORDER[i];
+            const def = BW_SPOT_MAP[key];
+            const a0 = (i * seg).toFixed(4);
+            const a1 = ((i + 1) * seg).toFixed(4);
+            stops.push(`${def.color} ${a0}deg ${a1}deg`);
+            lblHtml += `<span class="bw-seg-lbl bw-seg-${key}" style="transform:rotate(${(i * seg).toFixed(4)}deg)">${def.wheelText}</span>`;
+        }
+
+        const dividers = `repeating-conic-gradient(from -${half}deg, rgba(254, 240, 138, 0.56) 0deg 0.55deg, transparent 0.55deg ${seg.toFixed(4)}deg)`;
+        const wedges = `conic-gradient(from -${half}deg, ${stops.join(', ')})`;
+        rotor.style.background = `${dividers}, ${wedges}`;
+        if (labelsWrap) labelsWrap.innerHTML = lblHtml;
+        this._wheelPainted = true;
+    }
+
+    buildBoard() {
+        if (this._boardBuilt) return;
+        const board = document.getElementById('bw-board');
+        if (!board) return;
+
+        const mkBtn = (d) => {
+            const nameHtml = (d.key === 'joker')
+                ? `<span class="bw-spot-name">${d.sym} 조커 <span class="bw-en">Joker</span></span>`
+                : (d.key === 'logo')
+                    ? `<span class="bw-spot-name">${d.sym} 로고 <span class="bw-en">GIJO</span></span>`
+                    : `<span class="bw-spot-name"><span class="bw-spot-sym">${d.sym}</span>${d.kr}</span>`;
+            return `<button type="button" class="bw-spot bw-spot-${d.key}" data-bw-bet="${d.key}" aria-label="${d.kr} ${d.en} ${d.mult}배 ${d.count}/54칸">` +
+                nameHtml +
+                `<span class="bw-spot-info">${d.mult}배 · ${d.count}/54칸</span>` +
+                `<span class="bw-chip-badge"></span>` +
+                `</button>`;
+        };
+
+        const topHtml = BW_SPOT_DEFS.filter(d => d.row === 'top').map(mkBtn).join('');
+        const botHtml = BW_SPOT_DEFS.filter(d => d.row === 'bot').map(mkBtn).join('');
+        board.innerHTML = `<div class="bw-row-top">${topHtml}</div><div class="bw-row-bot">${botHtml}</div>`;
+        this._boardBuilt = true;
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this.bets = {};
+        this._activeBetTotal = 0;
+        this.lastWinner = this.history.length > 0 ? this.history[this.history.length - 1] : null;
+
+        this.paintWheel();
+        this.buildBoard();
+        this.applyWheelAngle(this.wheelDeg);
+
+        store.setBest(this.id, this.chips);
+        this.bindInput();
+        this.renderRecent();
+        this.updateHub(this.lastWinner, false);
+        this.updateBoardUI(null);
+        this.updateHud();
+        this.updateControls();
+
+        if (this.chips < this.chipUnit) {
+            this.setResult('칩이 부족해요 · 칩을 다시 받거나 단위를 줄이세요', 'Refill 1000 or choose a smaller chip unit', 'even');
+        } else {
+            this.setResult('아래 칸을 눌러 칩을 올리세요 (여러 곳 가능)', 'Tap spots to place chips and press Spin', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        if (this.busy && this._activeBetTotal > 0) {
+            this.chips += this._activeBetTotal;
+            this._activeBetTotal = 0;
+        }
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('bw-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('bigwheel');
+        });
+        this.on(document.getElementById('bw-board'), 'click', (e) => {
+            if (this.busy) return;
+            const btn = e.target.closest('[data-bw-bet]');
+            if (!btn) return;
+            sfx.init();
+            this.placeBet(btn.getAttribute('data-bw-bet'));
+        });
+        this.screen.querySelectorAll('[data-bw-unit]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy) return;
+                sfx.init();
+                this.chipUnit = parseInt(btn.getAttribute('data-bw-unit'), 10);
+                sfx.blip(600, 0.04, 'triangle', 0.04);
+                this.updateControls();
+                if (this.getTotalBet() === 0 && this.chips < this.chipUnit) {
+                    this.setResult('칩이 선택한 단위보다 적어요 · 칩을 다시 받으세요', 'Chips below selected unit — Refill 1000', 'even');
+                }
+            });
+        });
+        this.on(document.getElementById('bw-clear-btn'), 'click', () => {
+            if (this.busy) return;
+            sfx.init();
+            this.clearBets();
+        });
+        this.on(document.getElementById('bw-spin-btn'), 'click', () => {
+            sfx.init();
+            this.spin();
+        });
+        this.on(document.getElementById('bw-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+    }
+
+    setResult(head, detail, tone = '') {
+        const hEl = document.getElementById('bw-res-head');
+        const dEl = document.getElementById('bw-res-detail');
+        if (hEl) hEl.textContent = head;
+        if (dEl) {
+            dEl.textContent = detail;
+            dEl.className = 'bw-res-detail' + (tone ? ` bw-tone-${tone}` : '');
+        }
+    }
+
+    applyWheelAngle(deg) {
+        const rotor = document.getElementById('bw-wheel-rotor');
+        if (rotor) rotor.style.transform = `rotate(${deg.toFixed(4)}deg)`;
+    }
+
+    updateHub(key, pop = false, spinning = false) {
+        const hub = document.getElementById('bw-wheel-hub');
+        const valEl = document.getElementById('bw-hub-val');
+        const metaEl = document.getElementById('bw-hub-meta');
+        if (!hub || !valEl || !metaEl) return;
+
+        hub.classList.remove('bw-hub-1', 'bw-hub-2', 'bw-hub-5', 'bw-hub-10', 'bw-hub-20', 'bw-hub-joker', 'bw-hub-logo', 'bw-hub-pop');
+        if (!key || !BW_SPOT_MAP[key]) {
+            valEl.textContent = '?';
+            metaEl.textContent = '54칸 바퀴';
+            return;
+        }
+        const def = BW_SPOT_MAP[key];
+        hub.classList.add(`bw-hub-${key}`);
+        valEl.textContent = def.hubText;
+        metaEl.textContent = spinning ? '도는 중' : `${def.mult}배 · ${def.count}/54`;
+        if (pop) {
+            void hub.offsetWidth;
+            hub.classList.add('bw-hub-pop');
+        }
+    }
+
+    renderRecent() {
+        const wrap = document.getElementById('bw-recent');
+        if (!wrap) return;
+        let html = '';
+        const recent = this.history.slice(-BW_MAX_HISTORY);
+        for (let i = 0; i < BW_MAX_HISTORY; i++) {
+            const key = recent[i];
+            if (!key || !BW_SPOT_MAP[key]) {
+                html += '<span class="bw-hist-dot bw-hist-empty">·</span>';
+            } else {
+                const def = BW_SPOT_MAP[key];
+                const latest = (i === recent.length - 1) ? ' bw-hist-latest' : '';
+                html += `<span class="bw-hist-dot bw-hist-${key}${latest}" title="${def.kr} (${def.mult}배)">${def.histText}</span>`;
+            }
+        }
+        wrap.innerHTML = html;
+    }
+
+    updateHud() {
+        const totalBet = this.busy ? this._activeBetTotal : this.getTotalBet();
+        const shownChips = this.busy ? this.chips : Math.max(0, this.chips - totalBet);
+        this.setStat('chips', shownChips);
+        this.setStat('bet', totalBet);
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateBoardUI(winKey = null) {
+        const board = document.getElementById('bw-board');
+        if (!board) return;
+        board.querySelectorAll('[data-bw-bet]').forEach((btn) => {
+            const key = btn.getAttribute('data-bw-bet');
+            const amt = this.bets[key] || 0;
+            btn.classList.toggle('bw-has-bet', amt > 0);
+            btn.classList.toggle('bw-spot-win', winKey !== null && key === winKey);
+            btn.disabled = this.busy;
+            const badge = btn.querySelector('.bw-chip-badge');
+            if (badge) badge.textContent = amt > 0 ? String(amt) : '';
+        });
+    }
+
+    updateControls() {
+        const totalBet = this.getTotalBet();
+        const needRefill = !this.busy && totalBet === 0 && this.chips < this.chipUnit;
+
+        this.screen.querySelectorAll('[data-bw-unit]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-bw-unit'), 10);
+            btn.classList.toggle('bw-selected', v === this.chipUnit);
+            btn.disabled = this.busy;
+        });
+
+        const clearBtn = document.getElementById('bw-clear-btn');
+        const spinBtn = document.getElementById('bw-spin-btn');
+        const refillBtn = document.getElementById('bw-refill-btn');
+
+        if (clearBtn) clearBtn.disabled = this.busy || totalBet === 0;
+        if (spinBtn) {
+            spinBtn.classList.toggle('bw-hidden', needRefill);
+            spinBtn.disabled = this.busy || totalBet === 0 || needRefill;
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('bw-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+    }
+
+    placeBet(key) {
+        if (!BW_SPOT_MAP[key]) return;
+        const totalBet = this.getTotalBet();
+        if (totalBet + this.chipUnit > this.chips) {
+            sfx.hit();
+            vibe(20);
+            this.setResult('가진 칩을 넘겨 걸 수 없어요', `남은 칩 ${Math.max(0, this.chips - totalBet)} · 단위(${this.chipUnit})를 줄이거나 지우세요`, 'lose');
+            return;
+        }
+        this.bets[key] = (this.bets[key] || 0) + this.chipUnit;
+        sfx.blip(660, 0.04, 'triangle', 0.045);
+        this.updateBoardUI(null);
+        this.updateHud();
+        this.updateControls();
+
+        const entries = BW_SPOT_DEFS
+            .filter(d => this.bets[d.key] > 0)
+            .map(d => `${d.kr} ${this.bets[d.key]}`);
+        const newTotal = this.getTotalBet();
+        this.setResult(`총 ${newTotal}칩 거는 중 · 돌리기를 누르세요`, entries.join(', '), '');
+    }
+
+    clearBets() {
+        if (this.getTotalBet() === 0) return;
+        this.bets = {};
+        sfx.blip(400, 0.05, 'triangle', 0.04);
+        this.updateBoardUI(null);
+        this.updateHud();
+        this.updateControls();
+        this.setResult('배팅을 모두 비웠습니다', '칸을 눌러 다시 칩을 올리세요 · Bets cleared', '');
+    }
+
+    refillChips() {
+        if (this.busy) return;
+        this.chips = BW_START_CHIPS;
+        this.bets = {};
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateBoardUI(null);
+        this.updateHud();
+        this.updateControls();
+        this.setResult('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 chips · 배팅판 칸을 눌러 시작하세요', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    spin() {
+        if (this.busy) return;
+        const totalBet = this.getTotalBet();
+        if (totalBet <= 0 || totalBet > this.chips) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this._activeBetTotal = totalBet;
+        const lockedBets = Object.assign({}, this.bets);
+        this.chips -= totalBet;
+        this.saveChips();
+
+        // 54칸 중 하나를 고르게 뽑아, 그 칸의 정중앙이 위쪽 바늘(0deg)에 멈추도록 각도를 정한다.
+        const n = BW_WHEEL_ORDER.length;
+        const seg = 360 / n;
+        const targetIdx = Math.floor(Math.random() * n);
+        const targetNorm = (((360 - targetIdx * seg) % 360) + 360) % 360;
+        const startNorm = ((this.wheelDeg % 360) + 360) % 360;
+        const deltaToTarget = (targetNorm - startNorm + 360) % 360;
+        const extraTurns = 5 + Math.floor(Math.random() * 3);
+        const wheelStart = this.wheelDeg;
+        const wheelDelta = 360 * extraTurns + deltaToTarget;
+        const wheelEnd = wheelStart + wheelDelta;
+
+        this.updateBoardUI(null);
+        this.updateHud();
+        this.updateControls();
+        this.setResult('큰 바퀴가 도는 중…', 'Wheel spinning — 위쪽 바늘이 멈출 칸을 지켜보세요', '');
+
+        const startTs = performance.now();
+        const ptr = document.getElementById('bw-pointer');
+        let lastIdx = bwIndexFromDeg(wheelStart);
+        let lastSoundTs = 0;
+
+        const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+        const step = (now) => {
+            if (!this.running || seq !== this._runSeq) return;
+            const t = Math.min(1, (now - startTs) / BW_SPIN_MS);
+            const curDeg = wheelStart + wheelDelta * easeOutQuart(t);
+            this.applyWheelAngle(curDeg);
+
+            const curIdx = bwIndexFromDeg(curDeg);
+            if (curIdx !== lastIdx) {
+                lastIdx = curIdx;
+                this.updateHub(BW_WHEEL_ORDER[curIdx], false, true);
+                if (ptr) {
+                    ptr.classList.add('bw-pointer-tick');
+                    const tid = setTimeout(() => {
+                        if (this.running && seq === this._runSeq && ptr) ptr.classList.remove('bw-pointer-tick');
+                    }, 48);
+                    this._timers.push(tid);
+                }
+                if (now - lastSoundTs > 36) {
+                    lastSoundTs = now;
+                    sfx.blip(720 - t * 240, 0.018, 'triangle', 0.022);
+                }
+            }
+
+            if (t < 1) {
+                this._raf = requestAnimationFrame(step);
+            } else {
+                this._raf = null;
+                if (ptr) ptr.classList.remove('bw-pointer-tick');
+                this.wheelDeg = ((wheelEnd % 360) + 360) % 360;
+                this.applyWheelAngle(this.wheelDeg);
+                // 멈춘 각도에서 바늘이 가리키는 칸을 직접 계산해 정산과 100% 일치시킨다.
+                const settledIdx = bwIndexFromDeg(this.wheelDeg);
+                const winnerKey = BW_WHEEL_ORDER[settledIdx];
+                this.settleRound(winnerKey, lockedBets, totalBet);
+            }
+        };
+
+        this._raf = requestAnimationFrame(step);
+    }
+
+    settleRound(winnerKey, lockedBets, totalBet) {
+        const winDef = BW_SPOT_MAP[winnerKey];
+        let totalReturn = 0;
+        const parts = [];
+
+        for (let i = 0; i < BW_SPOT_DEFS.length; i++) {
+            const def = BW_SPOT_DEFS[i];
+            const stake = lockedBets[def.key] || 0;
+            if (stake <= 0) continue;
+            if (def.key === winnerKey) {
+                const profit = stake * def.mult;
+                totalReturn += stake + profit;
+                parts.unshift(`${def.kr} 에 건 ${stake} 은 ${def.mult}배 +${profit}`);
+            } else {
+                parts.push(`${def.kr} 에 건 ${stake} 은 −${stake}`);
+            }
+        }
+
+        this.chips += totalReturn;
+        this._activeBetTotal = 0;
+        this.bets = {};
+        this.lastWinner = winnerKey;
+
+        this.history.push(winnerKey);
+        if (this.history.length > BW_MAX_HISTORY) {
+            this.history = this.history.slice(-BW_MAX_HISTORY);
+        }
+        this.saveHistory();
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+
+        const net = totalReturn - totalBet;
+        const netStr = net > 0 ? `+${net}` : (net < 0 ? `−${Math.abs(net)}` : '0');
+        const head = `${winDef.kr} 에 멈춤 · ${winDef.mult}배 (${winDef.count}/54칸)`;
+        const detail = `→ ${parts.join(', ')} (합계 ${netStr})`;
+        const tone = net > 0 ? 'win' : (net < 0 ? 'lose' : 'even');
+
+        this.busy = false;
+        this.updateHub(winnerKey, true, false);
+        this.renderRecent();
+        this.updateBoardUI(winnerKey);
+        this.updateHud();
+        this.updateControls();
+        this.setResult(head, detail, tone);
+
+        if (net > 0) {
+            sfx.good();
+            vibe([0, 35, 35, 35]);
+        } else if (net === 0) {
+            sfx.blip(520, 0.08, 'triangle', 0.05);
+        } else {
+            sfx.hit();
+            vibe(35);
+        }
+    }
+}
+
+
 const games = {
     slots: new Slots(),
     block: new BlockDrop(),
@@ -18439,7 +22983,10 @@ const games = {
     sicbo: new SicBo(),
     dragontiger: new DragonTiger(),
     threecard: new ThreeCardPoker(),
-    craps: new Craps()
+    craps: new Craps(),
+    videopoker: new VideoPoker(),
+    holdem: new CasinoHoldem(),
+    bigwheel: new BigWheel()
 };
 
 let current = null;
@@ -18949,6 +23496,154 @@ const ARCADE_GUIDES = {
                 </ul>
             </div>
         `
+    },
+    videopoker: {
+        badge: 'CARD GUIDE · VIDEO POKER',
+        title: '비디오 포커 규칙 안내 · Video Poker Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 한 줄 요약 · Summary</div>
+                <p><b>다섯 장 포커 족보</b>를 익히는 <b>잭스 오어 베터(Jacks or Better)</b> 연습판입니다. 처음 받은 5장 중 남길 카드를 고르고, 나머지만 <b>딱 한 번</b> 새 카드로 바꿔 최종 족보대로 배당을 받습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">▶️ 진행 순서 · How to Play</div>
+                <ul>
+                    <li><b>1. 배팅 &amp; 딜(Deal)</b>: 10 / 50 / 100 중 배팅을 고르고 <b>딜</b>을 누르면 52장 한 벌에서 5장을 받습니다.</li>
+                    <li><b>2. 홀드(HOLD)</b>: 남길 카드를 눌러 <b>HOLD</b> 표시를 켭니다(다시 누르면 해제). 0장~5장 모두 자유입니다.</li>
+                    <li><b>3. 드로우(Draw) &amp; 정산</b>: <b>드로우</b>를 누르면 HOLD하지 않은 카드만 새 카드로 바뀌고 최종 5장의 족보로 바로 정산합니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🃏 5장 족보 &amp; 배당 표 · Hand Rankings &amp; Payouts (높은 순)</div>
+                <table class="vp-guide-table">
+                    <tr><th>족보</th><th>예시 카드</th><th>배수</th></tr>
+                    <tr><td><b>로열 플러시</b><br>Royal Flush</td><td>♠10 ♠J ♠Q ♠K ♠A</td><td><b>250배</b></td></tr>
+                    <tr><td><b>스트레이트 플러시</b><br>Straight Flush</td><td>♥5 ♥6 ♥7 ♥8 ♥9</td><td><b>50배</b></td></tr>
+                    <tr><td><b>포카드</b><br>Four of a Kind</td><td>♠K ♥K ♦K ♣K ♠4</td><td><b>25배</b></td></tr>
+                    <tr><td><b>풀하우스</b><br>Full House</td><td>♠Q ♥Q ♦Q ♣7 ♠7</td><td><b>9배</b></td></tr>
+                    <tr><td><b>플러시</b><br>Flush</td><td>♦A ♦J ♦8 ♦5 ♦2</td><td><b>6배</b></td></tr>
+                    <tr><td><b>스트레이트</b><br>Straight</td><td>♠6 ♥7 ♦8 ♣9 ♠10</td><td><b>4배</b></td></tr>
+                    <tr><td><b>트리플</b><br>Three of a Kind</td><td>♠9 ♥9 ♦9 ♣K ♠3</td><td><b>3배</b></td></tr>
+                    <tr><td><b>투 페어</b><br>Two Pair</td><td>♠K ♥K ♦8 ♣8 ♠2</td><td><b>2배</b></td></tr>
+                    <tr><td><b>J 이상 원 페어</b><br>Jacks or Better</td><td>♠J ♥J ♦9 ♣5 ♠2</td><td><b>1배</b></td></tr>
+                </table>
+                <p style="margin-top:6px;">배당을 받으면 <b>건 칩 + 배수만큼</b> 돌려받습니다(예: 50칩 걸고 1배면 50 + 50 = 100칩 돌려받아 +50). <b>A</b>는 <b>10-J-Q-K-A</b>와 <b>A-2-3-4-5</b> 모두 스트레이트가 되지만, <b>K-A-2-3-4</b>는 스트레이트가 아닙니다.</p>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">⚠️ 중요! 10 이하 페어는 배당이 없다 · Jacks or Better</div>
+                <ul>
+                    <li><b>2 ~ 10 원 페어와 하이 카드는 배당이 없습니다(건 칩을 잃음).</b> 원 페어는 반드시 <b>J · Q · K · A 페어</b>일 때만 1배를 받습니다.</li>
+                    <li>52장 한 벌을 매 판 새로 섞습니다.</li>
+                    <li><b>도움말 켜기</b>를 켜면 딜 직후 추천 홀드 카드에 <b>점선 테두리</b>와 한 줄 팁을 보여 줍니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
+    },
+    holdem: {
+        badge: 'CARD GUIDE · CASINO HOLD\'EM',
+        title: '카지노 홀덤 규칙 안내 · Casino Hold\'em Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 한 줄 요약 · Summary</div>
+                <p><b>텍사스 홀덤</b> 방식으로 딜러와 1:1로 겨루는 연습판입니다. <b>내 카드 2장 + 공용 카드 5장</b> 가운데 <b>가장 좋은 5장</b>으로 포커 족보를 만들어 딜러보다 높으면 이깁니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">▶️ 진행 순서 · How to Play (플랍 · 턴 · 리버)</div>
+                <ul>
+                    <li><b>1. 앤티(Ante) &amp; 딜(Deal)</b>: 10 / 50 / 100 중 앤티를 고르고 <b>딜</b>을 누르면 <b>나 2장(앞면)</b>, <b>딜러 2장(뒷면)</b>, 공용 카드 3장인 <b>플랍(Flop · 처음 깔리는 3장)</b>이 열립니다.</li>
+                    <li><b>2. 콜(Call) 또는 폴드(Fold)</b>: 내 2장과 플랍 3장을 보고 선택합니다. <b>콜</b>은 <b>앤티의 2배</b>를 더 걸고 끝까지 가며, <b>폴드</b>는 포기하고 앤티를 잃습니다.</li>
+                    <li><b>3. 턴 · 리버 &amp; 승부</b>: 콜을 누르면 공용 카드 4번째인 <b>턴(Turn)</b>과 마지막 5번째인 <b>리버(River)</b>가 차례로 깔리고 딜러 카드 2장이 열려 최종 족보를 겨룹니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🧩 「7장 중 5장」 고르기 · Best 5 of 7</div>
+                <p>나와 딜러는 각자 <b>자기 카드 2장 + 가운데 공용 카드 5장 = 모두 7장</b>을 씁니다. 이 7장 중 어떤 5장을 골라 조합해도 되며(내 카드 2장 다 쓰기, 1장만 쓰기, 공용 5장만 쓰기 모두 가능), <b>가장 높은 5장 족보</b>가 자동 선택되어 테두리로 표시됩니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🃏 다섯 장 족보 표 · 5-Card Hand Rankings (높은 순)</div>
+                <table class="he-guide-table">
+                    <tr><th>순위 · 족보</th><th>설명</th><th>예시</th></tr>
+                    <tr><td><b>1. 로열 플러시</b><br>Royal Flush</td><td>같은 무늬 10·J·Q·K·A</td><td>♠10 ♠J ♠Q ♠K ♠A</td></tr>
+                    <tr><td><b>2. 스트레이트 플러시</b><br>Straight Flush</td><td>같은 무늬로 숫자 5장 연속</td><td>♥5 ♥6 ♥7 ♥8 ♥9</td></tr>
+                    <tr><td><b>3. 포카드</b><br>Four of a Kind</td><td>같은 숫자 4장</td><td>♠K ♥K ♦K ♣K ♠4</td></tr>
+                    <tr><td><b>4. 풀하우스</b><br>Full House</td><td>같은 숫자 3장 + 2장</td><td>♠Q ♥Q ♦Q ♣7 ♠7</td></tr>
+                    <tr><td><b>5. 플러시</b><br>Flush</td><td>숫자 무관 같은 무늬 5장</td><td>♦A ♦J ♦8 ♦5 ♦2</td></tr>
+                    <tr><td><b>6. 스트레이트</b><br>Straight</td><td>무늬 무관 숫자 5장 연속</td><td>♠6 ♥7 ♦8 ♣9 ♠10</td></tr>
+                    <tr><td><b>7. 트리플</b><br>Three of a Kind</td><td>같은 숫자 3장</td><td>♠9 ♥9 ♦9 ♣K ♠3</td></tr>
+                    <tr><td><b>8. 투 페어</b><br>Two Pair</td><td>같은 숫자 2장씩 두 쌍</td><td>♠K ♥K ♦8 ♣8 ♠2</td></tr>
+                    <tr><td><b>9. 원 페어</b><br>One Pair</td><td>같은 숫자 2장 한 쌍</td><td>♠9 ♥9 ♦A ♣6 ♠2</td></tr>
+                    <tr><td><b>10. 하이 카드</b><br>High Card</td><td>위 족보 없음 (가장 높은 카드)</td><td>♠A ♥J ♦9 ♣5 ♠2</td></tr>
+                </table>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">⚖️ 딜러 자격 · 정산 · 앤티 배당표</div>
+                <ul>
+                    <li><b>딜러 자격</b>: 딜러의 최종 5장 족보가 <b>4 원 페어 이상</b>(4·4 페어 이상 또는 투 페어 이상)이어야 겨룹니다.</li>
+                    <li><b>딜러 자격 미달</b>(하이 카드 · 2/3 원 페어): <b>앤티는 아래 배당표대로 이기고</b>, <b>콜 칩은 그대로 돌려받습니다</b>.</li>
+                    <li><b>딜러 자격 있음</b>: 내가 높으면 <b>앤티는 배당표대로, 콜은 1배 승</b> / 딜러가 높으면 앤티·콜 모두 패 / 완전히 같으면 모두 돌려받습니다.</li>
+                </ul>
+                <table class="he-guide-table">
+                    <tr><th>내 최종 족보</th><th>앤티 배당</th></tr>
+                    <tr><td>로열 플러시</td><td><b>100배</b></td></tr>
+                    <tr><td>스트레이트 플러시</td><td><b>20배</b></td></tr>
+                    <tr><td>포카드</td><td><b>10배</b></td></tr>
+                    <tr><td>풀하우스</td><td><b>3배</b></td></tr>
+                    <tr><td>플러시</td><td><b>2배</b></td></tr>
+                    <tr><td>스트레이트 이하 (스트레이트 · 트리플 · 투 페어 · 원 페어 · 하이 카드)</td><td><b>1배</b></td></tr>
+                </table>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">💡 연습판 안내 · Practice Notes</div>
+                <ul>
+                    <li>52장 한 벌을 매 판 새로 섞습니다.</li>
+                    <li><b>AA 보너스</b> 등 곁배팅은 <b>이 연습판에는 없음</b>.</li>
+                    <li><b>도움말 켜기</b>를 켜면 플랍 직후 기본 기준(원 페어 이상 · 플러시/스트레이트 드로우 · 내 카드 Q 이상이면 콜)을 알려 줍니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
+    },
+    bigwheel: {
+        badge: 'WHEEL GUIDE · BIG WHEEL',
+        title: '빅휠 규칙 안내 · Big Wheel Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎡 한 줄 요약 · Summary</div>
+                <p><b>빅휠(Big Wheel)</b>은 <b>머니 휠 · 빅 식스</b>라고도 부르는, 카지노에서 가장 단순한 게임입니다. <b>54칸</b>으로 나뉜 큰 바퀴를 돌려 위쪽 바늘이 멈출 칸을 맞히면 그 칸의 배당을 받습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">📊 칸 수 · 배당 · 맞힐 확률 표 (배당이 큰 칸일수록 칸 수가 적다)</div>
+                <p>바퀴는 모두 <b>54칸</b>이며, <b>배당이 큰 칸일수록 바퀴에 들어 있는 칸 수가 적어</b> 맞히기 어렵습니다.</p>
+                <table class="bw-guide-table">
+                    <tr><th>걸 곳</th><th>칸 수 / 54</th><th>배당</th><th>맞힐 확률</th></tr>
+                    <tr><td><b>● 1</b></td><td>24칸</td><td><b>1배</b></td><td>44.4%</td></tr>
+                    <tr><td><b>◆ 2</b></td><td>15칸</td><td><b>2배</b></td><td>27.8%</td></tr>
+                    <tr><td><b>▲ 5</b></td><td>7칸</td><td><b>5배</b></td><td>13.0%</td></tr>
+                    <tr><td><b>■ 10</b></td><td>4칸</td><td><b>10배</b></td><td>7.4%</td></tr>
+                    <tr><td><b>✦ 20</b></td><td>2칸</td><td><b>20배</b></td><td>3.7%</td></tr>
+                    <tr><td><b>🃏 조커 (Joker)</b></td><td>1칸</td><td><b>40배</b></td><td>1.9%</td></tr>
+                    <tr><td><b>★ 로고 (GIJO)</b></td><td>1칸</td><td><b>40배</b></td><td>1.9%</td></tr>
+                </table>
+                <p style="margin-top:6px;">멈춘 칸과 같은 곳에 건 칩만 <b>건 칩 + 배당</b>을 돌려받고, 다른 곳에 건 칩은 잃습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">▶️ 진행 순서 · How to Play</div>
+                <ul>
+                    <li><b>1. 칩 올리기</b>: 칩 단위(10 / 50 / 100)를 고르고 아래 7칸 중 원하는 곳을 눌러 칩을 올립니다(한 판에 여러 곳 가능).</li>
+                    <li><b>2. 지우기</b>: 잘못 올렸으면 <b>지우기(Clear)</b>로 배팅을 한 번에 비울 수 있습니다.</li>
+                    <li><b>3. 돌리기(Spin)</b>: 바퀴가 약 4초 돌다 감속해 멈추면 위쪽 바늘이 가리키는 칸으로 바로 정산합니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">💡 연습판 안내 · Practice Notes</div>
+                <ul>
+                    <li>54칸 중 하나를 매 판 똑같은 확률로 뽑습니다.</li>
+                    <li>배팅 버튼마다 <b>배당</b>과 <b>칸 수/54</b>를 함께 표시해 규칙과 확률 감각을 쉽게 익힐 수 있습니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
     }
 };
 
@@ -18982,7 +23677,7 @@ paintHot();
 // 같은 파일이지만 목록·제목·색이 다르다. 주소 ?mode=casino 로 바로 열 수 있고,
 // 카지노 게임을 #play= 로 바로 열어도 카지노 쪽으로 들어간다(뒤로 가면 카지노 첫 화면).
 // 카지노 게임을 더하면 아래 CASINO_IDS 에 id 를 넣는다.
-const CASINO_IDS = ['blackjack', 'baccarat', 'roulette', 'sicbo', 'dragontiger', 'threecard', 'craps'];
+const CASINO_IDS = ['blackjack', 'baccarat', 'roulette', 'sicbo', 'dragontiger', 'threecard', 'craps', 'videopoker', 'holdem', 'bigwheel'];
 document.querySelectorAll('[data-go]').forEach(btn => {
     const item = btn.closest('.portal-item');
     if (item) item.classList.add(CASINO_IDS.includes(btn.getAttribute('data-go')) ? 'pi-casino' : 'pi-arcade');

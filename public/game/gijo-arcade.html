@@ -239,76 +239,154 @@ body.hot .slots-screen {
     background: radial-gradient(ellipse at 50% 24%, rgba(255, 45, 120, 0.2), rgba(168, 85, 247, 0.1) 46%, #11070d 84%);
 }
 
+#scr-slots .hud {
+    padding: 6px 10px;
+}
+
+#scr-slots .hint {
+    padding: 2px 12px 6px;
+    font-size: 0.64rem;
+    line-height: 1.28;
+}
+
 .slots-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    gap: clamp(6px, 1.2vh, 10px);
-    padding: 0 10px 8px;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 0 10px 4px;
     width: 100%;
     max-width: 100%;
     min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
 }
 
-/* 릴 창 — 3D 드럼 릴 + 황금 캐비닛 프레임 + 중앙 페이라인 포인터 */
+/* 릴 창 — 크롬/금색 두꺼운 캐비닛 베젤 + 원통 음영(::before) + 유리 반사(::after) */
 .reels-frame {
     position: relative;
     width: 100%;
-    aspect-ratio: 5 / 3.2;
-    max-height: 100%;
-    flex: 0 1 auto;
+    height: clamp(172px, 33vh, 250px);
+    max-height: calc((100vw - 20px) * 0.65);
+    flex: 0 0 auto;
     min-height: 0;
     border-radius: 18px;
-    padding: 8px;
-    background: linear-gradient(180deg, #1f2433 0%, #12151e 100%);
-    border: 1.5px solid rgba(245, 158, 11, 0.6);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 24px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    padding: 10px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.08) 14%, rgba(0, 0, 0, 0.34) 50%, rgba(255, 255, 255, 0.24) 86%, rgba(0, 0, 0, 0.56) 100%),
+        linear-gradient(135deg, #fff8cc 0%, #f59e0b 14%, #8a5607 28%, #f1f5f9 44%, #94a3b8 52%, #fde047 68%, #78350f 84%, #fef3c7 100%);
+    border: 2px solid #fef08a;
+    box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.72),
+        0 0 22px rgba(245, 158, 11, 0.24),
+        inset 0 2px 3px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 5px rgba(42, 22, 2, 0.88),
+        inset 0 0 0 3px rgba(28, 18, 5, 0.68);
     overflow: hidden;
 }
 
-.reels-frame::before,
+/* 원통 드럼 입체 음영 — 위·아래 가장자리 어둡고 가운데 밝게 */
+.reels-frame::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 10px;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        rgba(4, 7, 15, 0.74) 0%,
+        rgba(10, 14, 24, 0.26) 16%,
+        rgba(255, 255, 255, 0.14) 36%,
+        rgba(255, 255, 255, 0.26) 50%,
+        rgba(255, 255, 255, 0.12) 64%,
+        rgba(10, 14, 24, 0.28) 84%,
+        rgba(4, 7, 15, 0.78) 100%
+    );
+    box-shadow:
+        inset 0 12px 18px -6px rgba(0, 0, 0, 0.84),
+        inset 0 -12px 18px -6px rgba(0, 0, 0, 0.88),
+        inset 0 0 0 1px rgba(255, 245, 200, 0.34);
+}
+
+/* 전면 유리 반사 한 줄 */
 .reels-frame::after {
     content: '';
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    z-index: 6;
+    inset: 10px;
+    border-radius: 10px;
+    z-index: 5;
     pointer-events: none;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
+    background: linear-gradient(
+        166deg,
+        rgba(255, 255, 255, 0.24) 0%,
+        rgba(255, 255, 255, 0.06) 15%,
+        rgba(255, 255, 255, 0.36) 18.5%,
+        rgba(255, 255, 255, 0.0) 21.2%,
+        transparent 100%
+    );
 }
-.reels-frame::before { left: 2px; border-left: 7px solid var(--gold); }
-.reels-frame::after { right: 2px; border-right: 7px solid var(--gold); }
 
 body.hot .reels-frame {
-    border-color: var(--primary-neon);
-    background: linear-gradient(180deg, #271320 0%, #150b12 100%);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65), 0 0 26px rgba(255, 45, 120, 0.22);
+    border-color: #fda4af;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.44) 0%, rgba(255, 255, 255, 0.06) 14%, rgba(0, 0, 0, 0.38) 50%, rgba(255, 210, 226, 0.2) 86%, rgba(0, 0, 0, 0.58) 100%),
+        linear-gradient(135deg, #ffe4e6 0%, #ff2d78 16%, #700926 32%, #f1f5f9 48%, #e11d48 68%, #4c0519 85%, #fbcfe8 100%);
+    box-shadow:
+        0 10px 26px rgba(0, 0, 0, 0.76),
+        0 0 26px rgba(255, 45, 120, 0.3),
+        inset 0 2px 3px rgba(255, 255, 255, 0.72),
+        inset 0 -3px 5px rgba(56, 4, 22, 0.88),
+        inset 0 0 0 3px rgba(32, 6, 16, 0.72);
 }
 
-body.hot .reels-frame::before { border-left-color: var(--primary-neon); }
-body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
-
+/* 릴 사이 금속(크롬) 칸막이 */
 .reels {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+    gap: 4px;
     height: 100%;
+    padding: 2px;
+    border-radius: 10px;
+    background: linear-gradient(
+        180deg,
+        #1e293b 0%,
+        #94a3b8 14%,
+        #f8fafc 34%,
+        #cbd5e1 50%,
+        #f1f5f9 68%,
+        #64748b 86%,
+        #0f172a 100%
+    );
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.72);
 }
 
+/* 릴 칸 — 아이보리~은색 세로 그라데이션 */
 .reel {
     position: relative;
     overflow: hidden;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: linear-gradient(180deg, #050609 0%, #141824 22%, #1d2334 50%, #141824 78%, #050609 100%);
-    box-shadow: inset 0 10px 16px -8px rgba(0, 0, 0, 0.85), inset 0 -10px 16px -8px rgba(0, 0, 0, 0.85);
+    border-radius: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.7);
+    border-left: 1px solid rgba(15, 23, 42, 0.55);
+    border-right: 1px solid rgba(255, 255, 255, 0.55);
+    background: linear-gradient(
+        180deg,
+        #8e98a8 0%,
+        #cfd5df 14%,
+        #f7f3e7 32%,
+        #fffdf7 50%,
+        #f4efe0 68%,
+        #c8ced9 86%,
+        #828b9c 100%
+    );
+    box-shadow:
+        inset 0 10px 14px -6px rgba(10, 14, 24, 0.56),
+        inset 0 -10px 14px -6px rgba(10, 14, 24, 0.6),
+        inset 2px 0 3px rgba(15, 23, 42, 0.24),
+        inset -2px 0 3px rgba(15, 23, 42, 0.22);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -317,8 +395,11 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
 }
 
 .reel.hot-hit {
-    border-color: rgba(250, 204, 21, 0.85);
-    box-shadow: inset 0 0 16px rgba(250, 204, 21, 0.28);
+    border-color: rgba(250, 204, 21, 0.92);
+    box-shadow:
+        inset 0 0 16px rgba(250, 204, 21, 0.42),
+        inset 0 10px 14px -6px rgba(10, 14, 24, 0.52),
+        inset 0 -10px 14px -6px rgba(10, 14, 24, 0.56);
 }
 
 @keyframes reel-bounce {
@@ -338,6 +419,7 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
 }
 
 .sym {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -345,30 +427,105 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
     font-size: clamp(1.8rem, 8.8vw, 2.7rem);
     line-height: 1;
     user-select: none;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+    filter: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.42));
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.reel.spinning .reel-strip { filter: blur(2px); }
+.sym-inner {
+    position: relative;
+    z-index: 1;
+    display: block;
+    height: 80%;
+    aspect-ratio: 1 / 1;
+    max-width: 90%;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
 
-/* 당첨된 심볼만 튀어오르게 */
+.slot-sym {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+/* 도는 중인 릴 — Y 방향 세로 번짐 느낌(살짝의 blur + 세로 늘어짐·잔상 + 투명도) */
+.reel.spinning .reel-strip {
+    filter: blur(1.4px);
+    opacity: 0.86;
+}
+
+.reel.spinning .sym-inner {
+    transform: scaleY(1.24) scaleX(0.94);
+    opacity: 0.9;
+    filter: drop-shadow(0 -6px 3px rgba(15, 23, 42, 0.22)) drop-shadow(0 6px 3px rgba(15, 23, 42, 0.22));
+}
+
+.reel.spinning::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.16) 0px,
+        rgba(255, 255, 255, 0) 6px,
+        rgba(15, 23, 42, 0.07) 12px
+    );
+}
+
+/* 당첨 심볼 — 금빛 후광 맥박 효과 */
 .sym.win {
-    animation: sym-win 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
-    filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+    animation: sym-win 0.72s ease-in-out infinite alternate;
     z-index: 5;
 }
 
+.sym.win::before {
+    content: '';
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        circle,
+        rgba(255, 248, 196, 0.95) 0%,
+        rgba(255, 208, 0, 0.68) 42%,
+        rgba(245, 158, 11, 0.24) 68%,
+        rgba(245, 158, 11, 0) 80%
+    );
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.75);
+    animation: sym-win-halo 0.72s ease-in-out infinite alternate;
+}
+
 @keyframes sym-win {
-    from { transform: scale(1) rotate(-3deg); }
-    to   { transform: scale(1.3) rotate(3deg); }
+    from {
+        transform: scale(1.02) rotate(-2deg);
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.85)) drop-shadow(0 0 16px rgba(245, 158, 11, 0.55));
+    }
+    to {
+        transform: scale(1.2) rotate(2deg);
+        filter: drop-shadow(0 0 18px #ffd700) drop-shadow(0 0 32px rgba(255, 215, 0, 0.92));
+    }
+}
+
+@keyframes sym-win-halo {
+    from {
+        transform: scale(0.76);
+        opacity: 0.55;
+    }
+    to {
+        transform: scale(1.28);
+        opacity: 1;
+    }
 }
 
 /* 페이라인 표시 */
 .payline-layer {
     position: absolute;
-    inset: 8px;
+    inset: 10px;
     pointer-events: none;
-    z-index: 3;
+    z-index: 6;
 }
 
 .payline-layer svg { width: 100%; height: 100%; overflow: visible; }
@@ -385,8 +542,58 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
 
 @keyframes line-in { to { opacity: 0.95; } }
 
-/* 배당표 — 위쪽 빈 공간을 채우면서, 뭐가 얼마인지 알려줍니다.
-   SYMBOLS 배열에서 만들어내므로 배당을 고치면 여기도 같이 바뀝니다. */
+/* 배당표 — 기본 접힘, 44px 단추로 펼침(릴 높이를 밀지 않도록 띄워서 표시) */
+.slots-paytable-wrap {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+    z-index: 12;
+}
+
+.slots-paytable-toggle {
+    list-style: none;
+    height: 44px;
+    min-height: 44px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-radius: 11px;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    background: linear-gradient(180deg, rgba(44, 34, 16, 0.92) 0%, rgba(22, 18, 12, 0.96) 100%);
+    box-shadow: inset 0 1px 0 rgba(254, 240, 138, 0.24), 0 2px 8px rgba(0, 0, 0, 0.35);
+    color: #fde68a;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.slots-paytable-toggle::-webkit-details-marker { display: none; }
+.slots-paytable-toggle::marker { content: ''; }
+
+.slots-paytable-caret {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    transition: transform 0.2s ease;
+}
+
+.slots-paytable-wrap[open] .slots-paytable-caret {
+    transform: rotate(180deg);
+}
+
+body.hot .slots-paytable-toggle {
+    border-color: rgba(255, 77, 109, 0.55);
+    background: linear-gradient(180deg, rgba(48, 16, 30, 0.92) 0%, rgba(24, 10, 18, 0.96) 100%);
+    color: #fda4af;
+}
+
+body.hot .slots-paytable-caret {
+    color: #ff4d6d;
+}
+
 .paytable {
     flex-shrink: 0;
     display: flex;
@@ -395,7 +602,17 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
     gap: 5px;
     padding: 10px 8px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.035);
+    background: rgba(14, 17, 26, 0.97);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.82);
+}
+
+.slots-paytable-wrap[open] .paytable {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    z-index: 25;
 }
 
 .pt-row {
@@ -418,7 +635,27 @@ body.hot .reels-frame::after { border-right-color: var(--primary-neon); }
 .pt-chip b { color: #ffd700; font-weight: 900; }
 body.hot .pt-chip b { color: #ff8fb1; }
 
-.pt-sym { font-size: 1rem; line-height: 1; }
+.pt-sym {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.pt-ico {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    vertical-align: -3px;
+}
+
+.fever-ico {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.14em;
+}
 
 .pt-note {
     font-size: 0.63rem;
@@ -459,7 +696,8 @@ body.hot .pt-chip b { color: #ff8fb1; }
 .bi-confetti {
     position: absolute;
     top: -14%;
-    font-size: clamp(1.1rem, 5vw, 1.7rem);
+    width: clamp(22px, 6vw, 34px);
+    height: clamp(22px, 6vw, 34px);
     animation: bi-fall 2.4s linear infinite;
     opacity: 0.95;
 }
@@ -477,9 +715,17 @@ body.hot .pt-chip b { color: #ff8fb1; }
 }
 
 .bi-chilis {
-    font-size: clamp(1.7rem, 9vw, 2.6rem);
-    letter-spacing: 0.1em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     animation: bi-shake 0.4s ease-in-out infinite alternate;
+}
+
+.bi-chili-ico {
+    display: inline-block;
+    width: clamp(32px, 9.5vw, 48px);
+    height: clamp(32px, 9.5vw, 48px);
 }
 
 @keyframes bi-shake {
@@ -806,20 +1052,21 @@ body.hot .fever-title { color: #ff2d78; text-shadow: 0 0 24px #ff2d78, 0 3px 0 r
 /* 결과 줄 */
 .slots-msg {
     text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 800;
     color: #ffd700;
-    min-height: 1.5rem;
+    line-height: 1.22;
+    min-height: 1.85rem;
     flex-shrink: 0;
     word-break: keep-all;
 }
 
 .slots-msg .i18n-sub {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     font-weight: 600;
     color: rgba(255,255,255,0.55);
-    margin-top: 2px;
+    margin-top: 1px;
 }
 
 /* 큰 당첨 연출 */
@@ -871,7 +1118,7 @@ body.hot .bigwin-title { text-shadow: 0 0 22px #ff2d78, 0 3px 0 rgba(0,0,0,0.5);
     top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 4;
+    z-index: 7;
     padding: 5px 14px;
     border-radius: 999px;
     background: linear-gradient(120deg, #a020f0, #ff2d78);
@@ -1056,7 +1303,30 @@ canvas {
 
 /* 화면 흔들림·파티클을 줄여달라는 기기 설정을 존중합니다(멀미 방지). */
 @media (prefers-reduced-motion: reduce) {
-    .ad-marquee-content, .sym.win, .bi-chilis, .fever-title, .autospin-btn.on { animation: none !important; }
+    .ad-marquee-content,
+    .sym.win,
+    .sym.win::before,
+    .bi-chilis,
+    .fever-title,
+    .autospin-btn.on,
+    .slots-jackpot-topper::before,
+    .slots-jackpot-topper::after,
+    .jackpot-marquee-title,
+    .spin-btn.fever-ready,
+    .reel.landed {
+        animation: none !important;
+    }
+    .slots-jackpot-topper::before,
+    .slots-jackpot-topper::after {
+        opacity: 0.85 !important;
+    }
+    .sym.win {
+        filter: drop-shadow(0 0 14px #ffd700);
+    }
+    .sym.win::before {
+        opacity: 0.82;
+        transform: scale(1);
+    }
 }
 
 .footer-note {
@@ -1228,16 +1498,72 @@ canvas {
     justify-content: space-between;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(110deg, #1b1710 0%, #2a2010 50%, #1b1710 100%);
-    background-size: 200% 100%;
-    border: 1px solid rgba(245, 158, 11, 0.55);
+    background:
+        linear-gradient(180deg, rgba(255, 250, 215, 0.24) 0%, rgba(255, 255, 255, 0.02) 26%, rgba(0, 0, 0, 0.36) 54%, rgba(253, 224, 71, 0.14) 100%),
+        linear-gradient(110deg, #1b1306 0%, #442f0b 26%, #6a4c14 50%, #3d2909 74%, #181005 100%);
+    border: 2px solid #eab308;
     border-radius: 13px;
-    padding: 8px 13px;
-    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.14), inset 0 1px 0 rgba(253, 224, 71, 0.18);
+    padding: 9px 15px;
+    box-shadow:
+        0 5px 16px rgba(0, 0, 0, 0.56),
+        0 0 18px rgba(245, 158, 11, 0.22),
+        inset 0 1px 0 rgba(255, 251, 214, 0.62),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.72),
+        inset 0 0 0 2px rgba(40, 24, 4, 0.8);
     flex-shrink: 0;
 }
 
+/* 잭팟 판 가장자리 깜빡이는 전구 줄 (홀수/짝수 교대 점멸) */
+.slots-jackpot-topper::before,
+.slots-jackpot-topper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+        radial-gradient(circle at center, #fffef0 0 1.4px, #fde047 2px, rgba(245, 158, 11, 0.45) 3px, transparent 3.6px),
+        radial-gradient(circle at center, #fffef0 0 1.4px, #fde047 2px, rgba(245, 158, 11, 0.45) 3px, transparent 3.6px);
+    background-size: 16px 6px, 16px 6px;
+    background-repeat: repeat-x, repeat-x;
+}
+
+.slots-jackpot-topper::before {
+    background-position: 0 1px, 8px calc(100% - 1px);
+    animation: jackpot-bulbs-a 1.1s ease-in-out infinite alternate;
+}
+
+.slots-jackpot-topper::after {
+    background-position: 8px 1px, 0 calc(100% - 1px);
+    animation: jackpot-bulbs-b 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes jackpot-bulbs-a {
+    0%   { opacity: 1; }
+    100% { opacity: 0.22; }
+}
+
+@keyframes jackpot-bulbs-b {
+    0%   { opacity: 0.22; }
+    100% { opacity: 1; }
+}
+
+body.hot .slots-jackpot-topper {
+    border-color: #ff4d6d;
+    background:
+        linear-gradient(180deg, rgba(255, 228, 236, 0.22) 0%, rgba(255, 255, 255, 0.02) 26%, rgba(0, 0, 0, 0.38) 54%, rgba(255, 77, 109, 0.18) 100%),
+        linear-gradient(110deg, #1f0812 0%, #4c0d24 28%, #6d1236 50%, #440b20 74%, #1c0710 100%);
+    box-shadow:
+        0 5px 16px rgba(0, 0, 0, 0.58),
+        0 0 18px rgba(255, 45, 120, 0.28),
+        inset 0 1px 0 rgba(255, 228, 236, 0.52),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.74),
+        inset 0 0 0 2px rgba(48, 6, 20, 0.82);
+}
+
 .jackpot-marquee-title {
+    position: relative;
+    z-index: 2;
     font-size: 0.76rem;
     font-weight: 900;
     background: linear-gradient(90deg, #fde047, #f59e0b, #fff7cc, #f59e0b);
@@ -1256,6 +1582,8 @@ canvas {
 }
 
 .jackpot-amount-box {
+    position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1266,10 +1594,10 @@ canvas {
 }
 
 .jackpot-num {
-    font-size: 1.08rem;
+    font-size: 1.04rem;
     font-weight: 900;
     color: #fef08a;
-    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.55), 0 1px 2px rgba(0, 0, 0, 0.8);
     font-variant-numeric: tabular-nums;
 }
 
@@ -1279,8 +1607,8 @@ canvas {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 7px 11px;
-    border-radius: 12px;
+    padding: 5px 10px;
+    border-radius: 11px;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     flex-shrink: 0;
@@ -1340,8 +1668,13 @@ canvas {
 }
 
 .reels-frame.tension-pulse {
-    border-color: #fde047;
-    box-shadow: 0 0 32px rgba(245, 158, 11, 0.5);
+    border-color: #fef08a;
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.72),
+        0 0 34px rgba(245, 158, 11, 0.62),
+        inset 0 2px 3px rgba(255, 255, 255, 0.85),
+        inset 0 -3px 5px rgba(42, 22, 2, 0.88),
+        inset 0 0 0 3px rgba(28, 18, 5, 0.68);
 }
 
 .slots-goal-pill {
@@ -1350,11 +1683,11 @@ canvas {
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding: 6px 11px;
+    padding: 4px 10px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border-subtle);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     color: var(--text-muted);
     flex-shrink: 0;
@@ -6736,7 +7069,13 @@ body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122
                 </div>
             </div>
 
-            <div class="paytable" id="paytable"></div>
+            <details class="slots-paytable-wrap" id="slots-paytable-wrap">
+                <summary class="slots-paytable-toggle">
+                    <span>배당표 · Paytable</span>
+                    <span class="slots-paytable-caret" aria-hidden="true">&#9662;</span>
+                </summary>
+                <div class="paytable" id="paytable"></div>
+            </details>
 
             <div class="reels-frame" id="reels-frame">
                 <div class="reels" id="reels"></div>
@@ -9213,6 +9552,148 @@ const SYMBOLS = [
     { id: 'chili',   ch: '🌶️', weight: 4,  pay: [0, 0, 0, 0, 0], scatter: true }
 ];
 
+const _SLOT_SVG_BODY = {
+    seven:
+        '<circle cx="50" cy="50" r="45" fill="url(#slots-star-glow)"/>' +
+        '<path d="M21,18 L86,18 L86,31 C71,48 61,68 57,91 L33,91 C38,67 49,47 64,32 L32,32 L29,37 L17,37 Z" fill="#3a0d00" opacity="0.65"/>' +
+        '<path d="M18,13 L83,13 L83,26 C68,43 58,64 54,87 L30,87 C35,63 46,43 61,28 L29,28 L26,33 L14,33 Z" fill="url(#slots-gold)" stroke="#4a1c00" stroke-width="4" stroke-linejoin="round"/>' +
+        '<path d="M21,16.5 L79,16.5 L79,25 C64.5,41.5 54.5,62 50.8,83.5 L34.2,83.5 C38.8,61 49.5,41.5 64.5,25.5 L27.5,25.5 L24.5,30 L17.5,30 Z" fill="url(#slots-red-7)" stroke="#ffe894" stroke-width="1.8" stroke-linejoin="round"/>' +
+        '<path d="M21,16.5 L79,16.5 L79,25 C64.5,41.5 54.5,62 50.8,83.5 L34.2,83.5 C38.8,61 49.5,41.5 64.5,25.5 L27.5,25.5 L24.5,30 L17.5,30 Z" fill="url(#slots-shade-b)"/>' +
+        '<ellipse cx="44" cy="21" rx="22" ry="4.2" fill="url(#slots-shine)" opacity="0.88"/>' +
+        '<path d="M62,33 C52,47 44,62 40,78" fill="none" stroke="#ff949e" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>' +
+        '<path d="M84,11 L86.2,16.5 L92,18.5 L86.2,20.5 L84,26 L81.8,20.5 L76,18.5 L81.8,16.5 Z" fill="#fffbe0"/>' +
+        '<path d="M16,10 L17.4,13.5 L21,15 L17.4,16.5 L16,20 L14.6,16.5 L11,15 L14.6,13.5 Z" fill="#fff8c4"/>',
+
+    cherry:
+        '<path d="M35,52 C38,34 48,22 57,15 C56,28 58,39 65,47" fill="none" stroke="#3b2008" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M35,52 C38,34 48,22 57,15 C56,28 58,39 65,47" fill="none" stroke="#9e6d24" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="M55,17 C65,9 82,12 88,24 C77,32 62,30 55,17 Z" fill="url(#slots-leaf)" stroke="#093810" stroke-width="2.6" stroke-linejoin="round"/>' +
+        '<path d="M58,18 C67,16 76,19 83,23" fill="none" stroke="#b9ff8a" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>' +
+        '<ellipse cx="70" cy="18" rx="8" ry="3" transform="rotate(14 70 18)" fill="url(#slots-shine)" opacity="0.55"/>' +
+        '<circle cx="34" cy="69" r="22" fill="url(#slots-cherry)" stroke="#3d0009" stroke-width="3"/>' +
+        '<circle cx="34" cy="69" r="19.5" fill="none" stroke="#ff7a8a" stroke-width="1.2" opacity="0.45"/>' +
+        '<path d="M15,73 A22,22 0 0,0 53,73 A24,18 0 0,1 15,73 Z" fill="#2b0006" opacity="0.42"/>' +
+        '<ellipse cx="26" cy="59" rx="7.5" ry="4.5" transform="rotate(-32 26 59)" fill="url(#slots-shine)" opacity="0.9"/>' +
+        '<circle cx="66" cy="63" r="22.5" fill="url(#slots-cherry)" stroke="#3d0009" stroke-width="3"/>' +
+        '<circle cx="66" cy="63" r="20" fill="none" stroke="#ff8291" stroke-width="1.3" opacity="0.5"/>' +
+        '<path d="M46.5,67 A22.5,22.5 0 0,0 85.5,67 A24,18 0 0,1 46.5,67 Z" fill="#2b0006" opacity="0.42"/>' +
+        '<ellipse cx="58" cy="53" rx="8" ry="4.8" transform="rotate(-32 58 53)" fill="url(#slots-shine)" opacity="0.92"/>' +
+        '<ellipse cx="76" cy="75" rx="4.5" ry="2.2" transform="rotate(-35 76 75)" fill="#ff8f9c" opacity="0.45"/>',
+
+    lemon:
+        '<path d="M62,25 C71,12 85,12 90,22 C81,31 70,32 62,25 Z" fill="url(#slots-leaf)" stroke="#093810" stroke-width="2.5" stroke-linejoin="round"/>' +
+        '<path d="M65,24 C73,20 80,20 86,22" fill="none" stroke="#b9ff8a" stroke-width="1.4" stroke-linecap="round"/>' +
+        '<path d="M14,70 C10,66 13,59 17,54 C21,34 40,20 62,21 C68,21 76,19 80,24 C84,29 81,35 79,41 C77,64 58,82 35,83 C27,83 18,75 14,70 Z" fill="url(#slots-lemon)" stroke="#593200" stroke-width="3.2" stroke-linejoin="round"/>' +
+        '<path d="M19,67 C18,62 20,57 22,53 C25,36 42,24 61,25 C67,25 73,24 76,27 C78,30 76,35 75,40 C73,60 56,77 36,78 C29,78 22,72 19,67 Z" fill="none" stroke="#ffffb8" stroke-width="1.8" opacity="0.65"/>' +
+        '<path d="M18,72 C34,85 68,78 79,44 C73,68 48,84 22,76 Z" fill="#5e3200" opacity="0.42"/>' +
+        '<ellipse cx="42" cy="39" rx="14" ry="7.2" transform="rotate(-28 42 39)" fill="url(#slots-shine)" opacity="0.9"/>' +
+        '<circle cx="56" cy="58" r="1.4" fill="#a86a00" opacity="0.45"/><circle cx="64" cy="48" r="1.3" fill="#a86a00" opacity="0.45"/>' +
+        '<circle cx="48" cy="67" r="1.5" fill="#a86a00" opacity="0.45"/><circle cx="34" cy="64" r="1.3" fill="#a86a00" opacity="0.4"/>',
+
+    cocktail:
+        '<path d="M11,42 C14,76 47,94 79,80 C86,77 91,71 93,64 L54,20 Z" fill="url(#slots-melon-rind)" stroke="#063010" stroke-width="3.2" stroke-linejoin="round"/>' +
+        '<path d="M16,44 C20,71 48,86 75,75 C81,72 85,68 87,63 L53,24 Z" fill="#eaffdf"/>' +
+        '<path d="M21,45 C25,67 49,79 72,70 C77,68 81,64 83,60 L52,25 Z" fill="url(#slots-melon-flesh)" stroke="#8c0620" stroke-width="1.8" stroke-linejoin="round"/>' +
+        '<path d="M23,46 C27,65 49,76 71,68" fill="none" stroke="#ff9cb0" stroke-width="1.6" opacity="0.55"/>' +
+        '<path d="M13,47 C19,77 50,91 81,77 C85,75 89,71 91,66 C80,82 44,92 18,67 Z" fill="#041f09" opacity="0.42"/>' +
+        '<ellipse cx="46" cy="40" rx="13" ry="5.5" transform="rotate(-22 46 40)" fill="url(#slots-shine)" opacity="0.8"/>' +
+        '<ellipse cx="38" cy="54" rx="2.4" ry="4" transform="rotate(24 38 54)" fill="#240b08"/><circle cx="37.4" cy="52.8" r="0.8" fill="#fff" opacity="0.7"/>' +
+        '<ellipse cx="50" cy="59" rx="2.4" ry="4" transform="rotate(6 50 59)" fill="#240b08"/><circle cx="49.5" cy="57.7" r="0.8" fill="#fff" opacity="0.7"/>' +
+        '<ellipse cx="63" cy="58" rx="2.4" ry="4" transform="rotate(-14 63 58)" fill="#240b08"/><circle cx="62.5" cy="56.8" r="0.8" fill="#fff" opacity="0.7"/>' +
+        '<ellipse cx="54" cy="47" rx="2.2" ry="3.6" transform="rotate(-5 54 47)" fill="#240b08"/><circle cx="53.5" cy="45.8" r="0.7" fill="#fff" opacity="0.7"/>' +
+        '<ellipse cx="71" cy="52" rx="2.1" ry="3.5" transform="rotate(-28 71 52)" fill="#240b08"/><circle cx="70.6" cy="50.8" r="0.7" fill="#fff" opacity="0.7"/>',
+
+    lips:
+        '<circle cx="50" cy="14" r="6.5" fill="none" stroke="url(#slots-gold)" stroke-width="4.5"/>' +
+        '<circle cx="50" cy="14" r="6.5" fill="none" stroke="#4a2200" stroke-width="1.2"/>' +
+        '<ellipse cx="50" cy="77" rx="34" ry="11" fill="#3a1900" stroke="#4a2200" stroke-width="2.5"/>' +
+        '<circle cx="50" cy="83" r="9.5" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="2.5"/>' +
+        '<ellipse cx="47" cy="80" rx="3.2" ry="2.2" transform="rotate(-25 47 80)" fill="url(#slots-shine)" opacity="0.85"/>' +
+        '<path d="M50,18 C32,18 24,33 22,52 C20,64 14,70 12,75 C12,82 30,86 50,86 C70,86 88,82 88,75 C86,70 80,64 78,52 C76,33 68,18 50,18 Z" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="3.2" stroke-linejoin="round"/>' +
+        '<path d="M50,21.5 C34.5,21.5 27,35 25.2,52.5 C23.5,63.5 18.5,69.5 16.5,73.5 C22,78.5 36,81.5 50,81.5 C64,81.5 78,78.5 83.5,73.5 C81.5,69.5 76.5,63.5 74.8,52.5 C73,35 65.5,21.5 50,21.5 Z" fill="none" stroke="#fff5ba" stroke-width="1.8" opacity="0.72"/>' +
+        '<path d="M18,68 C30,75 70,75 82,68" fill="none" stroke="url(#slots-gold-dark)" stroke-width="4" stroke-linecap="round"/>' +
+        '<path d="M19,66.5 C30,73 70,73 81,66.5" fill="none" stroke="#fff6b8" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>' +
+        '<path d="M14,76 C26,84 74,84 86,76 C84,82 68,86 50,86 C32,86 16,82 14,76 Z" fill="#472000" opacity="0.45"/>' +
+        '<ellipse cx="36" cy="42" rx="7.5" ry="15" transform="rotate(14 36 42)" fill="url(#slots-shine)" opacity="0.82"/>',
+
+    gem:
+        '<polygon points="27,16 73,16 92,38 50,89 8,38" fill="url(#slots-gem-dark)" stroke="#041c4a" stroke-width="3.4" stroke-linejoin="round"/>' +
+        '<polygon points="27,16 73,16 67,38 33,38" fill="url(#slots-gem-light)"/>' +
+        '<polygon points="27,16 33,38 8,38" fill="url(#slots-gem-top)"/>' +
+        '<polygon points="73,16 92,38 67,38" fill="url(#slots-gem-mid)"/>' +
+        '<polygon points="8,38 33,38 50,89" fill="url(#slots-gem-top)"/>' +
+        '<polygon points="33,38 67,38 50,89" fill="url(#slots-gem-mid)"/>' +
+        '<polygon points="67,38 92,38 50,89" fill="url(#slots-gem-dark)"/>' +
+        '<polyline points="27,16 33,38 50,89 67,38 73,16" fill="none" stroke="#c8f8ff" stroke-width="1.5" opacity="0.85"/>' +
+        '<line x1="8" y1="38" x2="92" y2="38" stroke="#e4fdff" stroke-width="1.8" opacity="0.9"/>' +
+        '<polygon points="29,18.5 71,18.5 88.5,38 50,85 11.5,38" fill="none" stroke="#bdf6ff" stroke-width="1.4" opacity="0.65"/>' +
+        '<ellipse cx="38" cy="27" rx="11" ry="4.5" transform="rotate(-12 38 27)" fill="url(#slots-shine)" opacity="0.9"/>' +
+        '<path d="M25,10 L27,15 L32,17 L27,19 L25,24 L23,19 L18,17 L23,15 Z" fill="#ffffff"/>',
+
+    dancer:
+        '<rect x="7" y="24" width="86" height="56" rx="13" fill="#3a1800" opacity="0.7"/>' +
+        '<rect x="6" y="20" width="88" height="56" rx="13" fill="url(#slots-gold)" stroke="#472000" stroke-width="3.2"/>' +
+        '<rect x="9.5" y="23.5" width="81" height="49" rx="10" fill="none" stroke="#fff7c2" stroke-width="1.6" opacity="0.8"/>' +
+        '<rect x="13" y="27" width="74" height="42" rx="7" fill="url(#slots-bar-bg)" stroke="#6e3c00" stroke-width="2"/>' +
+        '<rect x="15.5" y="29.5" width="69" height="37" rx="5.5" fill="none" stroke="#ffd866" stroke-width="1.1" opacity="0.7"/>' +
+        '<path d="M14,34 C14,29 18,28 24,28 L76,28 C82,28 86,29 86,34 L86,47 L14,47 Z" fill="url(#slots-gloss-v)" opacity="0.5"/>' +
+        '<circle cx="19" cy="33" r="1.7" fill="#ffe98a"/><circle cx="81" cy="33" r="1.7" fill="#ffe98a"/>' +
+        '<circle cx="19" cy="63" r="1.7" fill="#ffe98a"/><circle cx="81" cy="63" r="1.7" fill="#ffe98a"/>' +
+        '<text x="50" y="57.5" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="27" letter-spacing="1.2" fill="#2b1200" stroke="#2b1200" stroke-width="4.5" stroke-linejoin="round" dy="1.8">BAR</text>' +
+        '<text x="50" y="57.5" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="27" letter-spacing="1.2" fill="url(#slots-gold-v)" stroke="#fff6b8" stroke-width="0.9">BAR</text>' +
+        '<ellipse cx="32" cy="24" rx="18" ry="2.6" fill="url(#slots-shine)" opacity="0.85"/>',
+
+    bunny:
+        '<path d="M22,64 C24,38 38,30 50,30 C62,30 76,38 78,64 Z" fill="url(#slots-velvet)" stroke="#3d0210" stroke-width="2.5"/>' +
+        '<path d="M16,74 L10,36 L32,51 L50,24 L68,51 L90,36 L84,74 Z" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="3.2" stroke-linejoin="round"/>' +
+        '<path d="M19.5,70 L14.8,42 L33,54.5 L50,29 L67,54.5 L85.2,42 L80.5,70 Z" fill="none" stroke="#fff6ba" stroke-width="1.6" opacity="0.78"/>' +
+        '<rect x="14" y="68" width="72" height="16" rx="5" fill="url(#slots-gold-v)" stroke="#4a2200" stroke-width="3"/>' +
+        '<rect x="17" y="70.5" width="66" height="11" rx="3" fill="none" stroke="#fff6ba" stroke-width="1.3" opacity="0.72"/>' +
+        '<path d="M16,79 L84,79 L84,83 C84,84 82,84 80,84 L20,84 C18,84 16,84 16,83 Z" fill="#4a2000" opacity="0.45"/>' +
+        '<circle cx="10" cy="34" r="5" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="2"/><circle cx="8.6" cy="32.4" r="1.5" fill="#fff" opacity="0.85"/>' +
+        '<circle cx="50" cy="21" r="6" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="2"/><circle cx="48.2" cy="19" r="1.8" fill="#fff" opacity="0.9"/>' +
+        '<circle cx="90" cy="34" r="5" fill="url(#slots-gold-rad)" stroke="#4a2200" stroke-width="2"/><circle cx="88.6" cy="32.4" r="1.5" fill="#fff" opacity="0.85"/>' +
+        '<ellipse cx="50" cy="76" rx="6.5" ry="5" fill="url(#slots-ruby)" stroke="#4d0010" stroke-width="1.6"/><ellipse cx="48" cy="74.3" rx="2.2" ry="1.3" fill="#fff" opacity="0.85"/>' +
+        '<circle cx="30" cy="76" r="4.3" fill="url(#slots-gem-top)" stroke="#052259" stroke-width="1.5"/><circle cx="28.7" cy="74.7" r="1.3" fill="#fff" opacity="0.85"/>' +
+        '<circle cx="70" cy="76" r="4.3" fill="url(#slots-leaf)" stroke="#083b10" stroke-width="1.5"/><circle cx="68.7" cy="74.7" r="1.3" fill="#fff" opacity="0.85"/>' +
+        '<ellipse cx="38" cy="48" rx="9" ry="4" transform="rotate(-24 38 48)" fill="url(#slots-shine)" opacity="0.72"/>',
+
+    wild:
+        '<circle cx="50" cy="50" r="46" fill="url(#slots-star-glow)"/>' +
+        '<polygon points="50,8 62.5,33.5 91,37.8 70.5,57.8 75.4,86 50,72.6 24.6,86 29.5,57.8 9,37.8 37.5,33.5" fill="url(#slots-gold-rad)" stroke="#4d2200" stroke-width="3.4" stroke-linejoin="round"/>' +
+        '<polygon points="50,13.5 60.5,35.5 85,39.2 67.2,56.5 71.5,80.8 50,69.2 28.5,80.8 32.8,56.5 15,39.2 39.5,35.5" fill="none" stroke="#fff7c4" stroke-width="1.7" opacity="0.82"/>' +
+        '<polyline points="50,10 50,51 90,38.5" fill="none" stroke="#fff6be" stroke-width="1.2" opacity="0.55"/>' +
+        '<polyline points="50,51 74,84" fill="none" stroke="#7a3d00" stroke-width="1.4" opacity="0.45"/>' +
+        '<polyline points="50,51 26,84" fill="none" stroke="#7a3d00" stroke-width="1.4" opacity="0.45"/>' +
+        '<ellipse cx="40" cy="34" rx="13" ry="5.5" transform="rotate(-24 40 34)" fill="url(#slots-shine)" opacity="0.82"/>' +
+        '<rect x="11" y="42" width="78" height="24" rx="8" fill="url(#slots-red-7)" stroke="#4a1600" stroke-width="2.6"/>' +
+        '<rect x="13.5" y="44.2" width="73" height="19.6" rx="6" fill="none" stroke="#ffe588" stroke-width="1.3" opacity="0.85"/>' +
+        '<text x="50" y="60.5" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19.5" letter-spacing="0.8" fill="#360800" stroke="#360800" stroke-width="3.6" stroke-linejoin="round" dy="1">WILD</text>' +
+        '<text x="50" y="60.5" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="19.5" letter-spacing="0.8" fill="#fffbe0" stroke="#ffd54f" stroke-width="0.6">WILD</text>',
+
+    chili:
+        '<ellipse cx="52" cy="54" rx="40" ry="40" fill="#542700" stroke="#361600" stroke-width="2.5"/>' +
+        '<circle cx="49" cy="49" r="40" fill="url(#slots-gold)" stroke="#4a2200" stroke-width="3.2"/>' +
+        '<circle cx="49" cy="49" r="36.8" fill="none" stroke="#fff7c2" stroke-width="1.8" opacity="0.85"/>' +
+        '<circle cx="49" cy="49" r="32.5" fill="url(#slots-coin-inner)" stroke="#6e3a00" stroke-width="2"/>' +
+        '<circle cx="49" cy="49" r="29.2" fill="none" stroke="#ffe98a" stroke-width="1.4" stroke-dasharray="3.2 3.2" opacity="0.85"/>' +
+        '<path d="M16,65 A36,36 0 0,0 82,65 A40,26 0 0,1 16,65 Z" fill="#472000" opacity="0.4"/>' +
+        '<ellipse cx="36" cy="30" rx="14" ry="6.5" transform="rotate(-26 36 30)" fill="url(#slots-shine)" opacity="0.82"/>' +
+        '<polygon points="49,24 51,28.5 56,29 52.3,32.2 53.3,37 49,34.4 44.7,37 45.7,32.2 42,29 47,28.5" fill="#fff7bf" stroke="#6e3a00" stroke-width="0.9"/>' +
+        '<polygon points="49,64 50.6,67.5 54.4,68 51.6,70.4 52.4,74 49,72 45.6,74 46.4,70.4 43.6,68 47.4,67.5" fill="#fff7bf" stroke="#6e3a00" stroke-width="0.9"/>' +
+        '<text x="49" y="55" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="17" letter-spacing="0.4" fill="#3a1600" stroke="#3a1600" stroke-width="3.8" stroke-linejoin="round" dy="1.2">BONUS</text>' +
+        '<text x="49" y="55" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="17" letter-spacing="0.4" fill="#fffbe0" stroke="#ffd859" stroke-width="0.6">BONUS</text>'
+};
+
+const _SLOT_SVG_CACHE = {};
+function slotSymbolSvg(id) {
+    if (_SLOT_SVG_CACHE[id]) return _SLOT_SVG_CACHE[id];
+    const body = _SLOT_SVG_BODY[id] || '';
+    const svg = `<svg class="slot-sym" viewBox="0 0 100 100" aria-hidden="true">${body}</svg>`;
+    _SLOT_SVG_CACHE[id] = svg;
+    return svg;
+}
+
 const SYM_BY_ID = Object.fromEntries(SYMBOLS.map(s => [s.id, s]));
 
 /** 가중치를 펼친 릴 스트립. 릴마다 따로 섞어 같은 패턴이 반복돼 보이지 않게 합니다.
@@ -9378,12 +9859,14 @@ class Slots {
         const rows = SYMBOLS
             .filter(sym => !sym.scatter && sym.pay[4] > 0)
             .sort((a, b) => b.pay[4] - a.pay[4])
-            .map(sym => `<span class="pt-chip"><span class="pt-sym">${sym.ch}</span><b>${sym.pay[4]}</b></span>`)
+            .map(sym => `<span class="pt-chip"><span class="pt-sym">${slotSymbolSvg(sym.id)}</span><b>${sym.pay[4]}</b></span>`)
             .join('');
+        const wIco = `<span class="pt-ico">${slotSymbolSvg('wild')}</span>`;
+        const bIco = `<span class="pt-ico">${slotSymbolSvg('chili')}</span>`;
         document.getElementById('paytable').innerHTML =
             `<div class="pt-row">${rows}</div>` +
-            `<div class="pt-note">5개 일치 · 베팅 10 기준 &nbsp;|&nbsp; 🔥 모든 심볼 대체 &nbsp;|&nbsp; 🌶️ 3개 = 스파이시 보너스!` +
-            `<br>5-of-a-kind at bet 10 · 🔥 wild · 🌶️ x3 = SPICY BONUS</div>`;
+            `<div class="pt-note">5개 일치 · 베팅 10 기준 &nbsp;|&nbsp; ${wIco} 모든 심볼 대체 &nbsp;|&nbsp; ${bIco} 3개 = 보너스 게임!` +
+            `<br>5-of-a-kind at bet 10 · ${wIco} wild · ${bIco} x3 = BONUS GAME</div>`;
     }
 
     exit() {
@@ -9482,9 +9965,11 @@ class Slots {
     updateFreeBadge() {
         const b = document.getElementById('free-badge');
         if (this.freeSpins > 0) {
+            const bIco = `<span class="pt-ico">${slotSymbolSvg('chili')}</span>`;
+            const wIco = `<span class="pt-ico">${slotSymbolSvg('wild')}</span>`;
             b.innerHTML =
-                `🌶️ 보너스 <b>${this.freeSpins}</b>회 남음 &nbsp;·&nbsp; 배수 <b>x${this.bonusMult}</b>` +
-                (this.stickyWilds.length ? ` &nbsp;·&nbsp; 🔥<b>${this.stickyWilds.length}</b>` : '');
+                `${bIco} 보너스 <b>${this.freeSpins}</b>회 남음 &nbsp;·&nbsp; 배수 <b>x${this.bonusMult}</b>` +
+                (this.stickyWilds.length ? ` &nbsp;·&nbsp; ${wIco}<b>${this.stickyWilds.length}</b>` : '');
             b.classList.remove('hidden');
         } else {
             b.classList.add('hidden');
@@ -9521,7 +10006,7 @@ class Slots {
             const frag = [];
             for (let i = -1; i <= ROWS_VISIBLE; i++) {
                 const id = strip[(((this.pos[r] + i) % strip.length) + strip.length) % strip.length];
-                frag.push(`<div class="sym" data-row="${i}">${SYM_BY_ID[id].ch}</div>`);
+                frag.push(`<div class="sym" data-row="${i}" data-sym="${id}"><span class="sym-inner">${slotSymbolSvg(id)}</span></div>`);
             }
             this.stripEls[r].innerHTML = frag.join('');
             this.layoutStrip(r);
@@ -9560,7 +10045,8 @@ class Slots {
         this.stickyWilds.forEach(({ r, row }) => {
             const cell = this.stripEls[r].querySelectorAll('.sym')[row + 1];
             if (cell) {
-                cell.textContent = SYM_BY_ID.wild.ch;
+                cell.dataset.sym = 'wild';
+                cell.innerHTML = `<span class="sym-inner">${slotSymbolSvg('wild')}</span>`;
                 cell.classList.add('sticky');
             }
         });
@@ -9767,7 +10253,10 @@ class Slots {
         const cells = this.stripEls[r].querySelectorAll('.sym');
         cells.forEach((el, i) => {
             const id = strip[(((this.pos[r] + i - 1) % strip.length) + strip.length) % strip.length];
-            el.textContent = SYM_BY_ID[id].ch;
+            if (el.dataset.sym !== id) {
+                el.dataset.sym = id;
+                el.innerHTML = `<span class="sym-inner">${slotSymbolSvg(id)}</span>`;
+            }
         });
     }
 
@@ -9815,7 +10304,7 @@ class Slots {
             if (lips > 0 && this.bonusMult < BONUS_MAX_MULT) {
                 const before = this.bonusMult;
                 this.bonusMult = Math.min(BONUS_MAX_MULT, this.bonusMult + 1);
-                bonusNotes.push(`💋 배수 x${before} → x${this.bonusMult}`);
+                bonusNotes.push(`<span class="pt-ico">${slotSymbolSvg('lips')}</span> 배수 x${before} → x${this.bonusMult}`);
             }
 
             // 🔥 는 그 자리에 고정되어 남은 스핀 내내 유지.
@@ -9835,14 +10324,14 @@ class Slots {
             if (dancers > 0) {
                 const tip = dancers * this.bet * 3;
                 total += tip;
-                bonusNotes.push(`💃 팁 · Tip +${tip}`);
+                bonusNotes.push(`<span class="pt-ico">${slotSymbolSvg('dancer')}</span> 팁 · Tip +${tip}`);
             }
 
             // 🌶️ 3개 이상이면 스핀 추가 (리트리거). 2개로 두면 거의 매번 걸려
             // 라운드가 끝나지 않습니다. 남은 스핀에도 상한을 둡니다.
             if (scatterCount >= 3 && this.freeSpins < BONUS_MAX_SPINS) {
                 this.freeSpins = Math.min(BONUS_MAX_SPINS, this.freeSpins + 5);
-                bonusNotes.push('🌶️ 스핀 +5 · 5 more spins!');
+                bonusNotes.push(`<span class="pt-ico">${slotSymbolSvg('chili')}</span> 스핀 +5 · 5 more spins!`);
             }
 
             this.bonusTotal += total;
@@ -9967,9 +10456,10 @@ class Slots {
         const frame = document.getElementById('reels-frame');
         const el = document.createElement('div');
         el.className = 'fever-banner';
+        const s7 = `<span class="fever-ico">${slotSymbolSvg('seven')}</span>`;
         el.innerHTML =
             `<div class="fever-core">` +
-            `<div class="fever-title">🎰 JACKPOT FEVER 🎰</div>` +
+            `<div class="fever-title">${s7} JACKPOT FEVER ${s7}</div>` +
             `<div class="fever-kr">777 확률 3배! · Triple odds for ${this.feverSpinsLeft} spins</div>` +
             `<div class="fever-en">777 &amp; Wild odds x3 — next ${this.feverSpinsLeft} spins</div>` +
             `</div>`;
@@ -10077,19 +10567,20 @@ class Slots {
         const frame = document.getElementById('reels-frame');
         const el = document.createElement('div');
         el.className = 'bonus-intro';
-        // 💋🔥🍸 를 흩뿌려 화려하게 — 위치·지연을 조금씩 달리해 한꺼번에 튀지 않게 합니다.
+        const confettiIds = ['lips', 'wild', 'cocktail', 'chili', 'dancer', 'bunny', 'gem'];
         const confetti = Array.from({ length: 18 }, (_, i) => {
-            const ch = ['💋', '🔥', '🍸', '🌶️', '💃', '👯', '💎'][i % 7];
+            const symSvg = slotSymbolSvg(confettiIds[i % confettiIds.length]);
             const left = (i * 5.6 + (i % 3) * 4) % 96;
             const delay = (i % 9) * 0.12;
-            return `<span class="bi-confetti" style="left:${left}%;animation-delay:${delay}s">${ch}</span>`;
+            return `<span class="bi-confetti" style="left:${left}%;animation-delay:${delay}s">${symSvg}</span>`;
         }).join('');
+        const bonusCoin = `<span class="bi-chili-ico">${slotSymbolSvg('chili')}</span>`;
         el.innerHTML =
             `<div class="bi-confetti-layer">${confetti}</div>` +
             `<div class="bi-core">` +
-            `<div class="bi-chilis">🌶️🌶️🌶️</div>` +
-            `<div class="bi-title">SPICY BONUS</div>` +
-            `<div class="bi-kr">스파이시 보너스! · Spicy Bonus!</div>` +
+            `<div class="bi-chilis">${bonusCoin}${bonusCoin}${bonusCoin}</div>` +
+            `<div class="bi-title">BONUS GAME</div>` +
+            `<div class="bi-kr">보너스 게임! · Bonus Game!</div>` +
             `<div class="bi-sub">프리스핀 10회 · 배수 x2 시작<br>10 free spins · starts at x2</div>` +
             `</div>`;
         frame.appendChild(el);
@@ -10108,7 +10599,7 @@ class Slots {
         frame.appendChild(el);
         sfx.good();
         vibe([0, 80, 60, 140]);
-        this.setMsg(`🌶️ 보너스 종료 · 총 +${won}`, `Bonus over — you won ${won} credits`);
+        this.setMsg(`<span class="pt-ico">${slotSymbolSvg('chili')}</span> 보너스 종료 · 총 +${won}`, `Bonus over — you won ${won} credits`);
 
         this.after(() => {
             el.remove();
@@ -18528,5 +19019,140 @@ refreshBests();
 if (deepLink && games[deepLink]) show(deepLink);
 </script>
 <!-- 설치 단추와 서비스워커 등록은 뺐다. 이 사본은 GIJO Talk 앱이 설치·캐시를 맡는다(public/sw.js). -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none" aria-hidden="true">
+<defs>
+    <linearGradient id="slots-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fff9c4"/>
+        <stop offset="22%" stop-color="#ffd54f"/>
+        <stop offset="48%" stop-color="#d48806"/>
+        <stop offset="74%" stop-color="#7a4400"/>
+        <stop offset="100%" stop-color="#ffe082"/>
+    </linearGradient>
+    <linearGradient id="slots-gold-v" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#fff8bf"/>
+        <stop offset="22%" stop-color="#ffcf40"/>
+        <stop offset="52%" stop-color="#c87c04"/>
+        <stop offset="78%" stop-color="#6e3b00"/>
+        <stop offset="100%" stop-color="#ffe37d"/>
+    </linearGradient>
+    <radialGradient id="slots-gold-rad" cx="34%" cy="28%" r="70%">
+        <stop offset="0%" stop-color="#fffce0"/>
+        <stop offset="26%" stop-color="#ffda47"/>
+        <stop offset="60%" stop-color="#c97b04"/>
+        <stop offset="86%" stop-color="#7a4000"/>
+        <stop offset="100%" stop-color="#d49322"/>
+    </radialGradient>
+    <linearGradient id="slots-gold-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffe98a"/>
+        <stop offset="35%" stop-color="#b86d00"/>
+        <stop offset="70%" stop-color="#592e00"/>
+        <stop offset="100%" stop-color="#d6951a"/>
+    </linearGradient>
+    <radialGradient id="slots-coin-inner" cx="38%" cy="30%" r="68%">
+        <stop offset="0%" stop-color="#fff4b0"/>
+        <stop offset="30%" stop-color="#f5b818"/>
+        <stop offset="68%" stop-color="#9c5600"/>
+        <stop offset="100%" stop-color="#5e2f00"/>
+    </radialGradient>
+    <linearGradient id="slots-red-7" x1="15%" y1="0%" x2="85%" y2="100%">
+        <stop offset="0%" stop-color="#ff8a92"/>
+        <stop offset="22%" stop-color="#ff1e34"/>
+        <stop offset="58%" stop-color="#c4001c"/>
+        <stop offset="86%" stop-color="#6b000f"/>
+        <stop offset="100%" stop-color="#a8001a"/>
+    </linearGradient>
+    <radialGradient id="slots-cherry" cx="32%" cy="28%" r="68%">
+        <stop offset="0%" stop-color="#ffa1a8"/>
+        <stop offset="22%" stop-color="#ff2438"/>
+        <stop offset="60%" stop-color="#b50018"/>
+        <stop offset="88%" stop-color="#5c000b"/>
+        <stop offset="100%" stop-color="#3a0007"/>
+    </radialGradient>
+    <radialGradient id="slots-ruby" cx="32%" cy="28%" r="68%">
+        <stop offset="0%" stop-color="#ffb8c6"/>
+        <stop offset="30%" stop-color="#ff1744"/>
+        <stop offset="74%" stop-color="#9b0020"/>
+        <stop offset="100%" stop-color="#4d0010"/>
+    </radialGradient>
+    <radialGradient id="slots-lemon" cx="34%" cy="26%" r="70%">
+        <stop offset="0%" stop-color="#ffffd9"/>
+        <stop offset="25%" stop-color="#ffee38"/>
+        <stop offset="62%" stop-color="#e6ad00"/>
+        <stop offset="88%" stop-color="#9c6300"/>
+        <stop offset="100%" stop-color="#704300"/>
+    </radialGradient>
+    <linearGradient id="slots-leaf" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#a9f570"/>
+        <stop offset="38%" stop-color="#3cc437"/>
+        <stop offset="78%" stop-color="#167a1e"/>
+        <stop offset="100%" stop-color="#0b4710"/>
+    </linearGradient>
+    <linearGradient id="slots-melon-rind" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#5ee86b"/>
+        <stop offset="45%" stop-color="#1b9e32"/>
+        <stop offset="85%" stop-color="#0b571a"/>
+        <stop offset="100%" stop-color="#063810"/>
+    </linearGradient>
+    <radialGradient id="slots-melon-flesh" cx="45%" cy="30%" r="72%">
+        <stop offset="0%" stop-color="#ff8fa3"/>
+        <stop offset="30%" stop-color="#ff2e55"/>
+        <stop offset="72%" stop-color="#c70e33"/>
+        <stop offset="100%" stop-color="#78051c"/>
+    </radialGradient>
+    <linearGradient id="slots-gem-light" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="42%" stop-color="#9df3ff"/>
+        <stop offset="100%" stop-color="#2db9f8"/>
+    </linearGradient>
+    <linearGradient id="slots-gem-top" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#e8fcff"/>
+        <stop offset="45%" stop-color="#6be8ff"/>
+        <stop offset="100%" stop-color="#19a8f5"/>
+    </linearGradient>
+    <linearGradient id="slots-gem-mid" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#7ef0ff"/>
+        <stop offset="45%" stop-color="#1496e8"/>
+        <stop offset="100%" stop-color="#0a47a8"/>
+    </linearGradient>
+    <linearGradient id="slots-gem-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1e78d6"/>
+        <stop offset="55%" stop-color="#083482"/>
+        <stop offset="100%" stop-color="#04184a"/>
+    </linearGradient>
+    <linearGradient id="slots-bar-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#3d2b18"/>
+        <stop offset="22%" stop-color="#1c140c"/>
+        <stop offset="58%" stop-color="#0c0906"/>
+        <stop offset="86%" stop-color="#24180c"/>
+        <stop offset="100%" stop-color="#140d06"/>
+    </linearGradient>
+    <radialGradient id="slots-velvet" cx="45%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#ff4769"/>
+        <stop offset="45%" stop-color="#b80d32"/>
+        <stop offset="85%" stop-color="#5e0418"/>
+        <stop offset="100%" stop-color="#33010c"/>
+    </radialGradient>
+    <radialGradient id="slots-shine" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.94"/>
+        <stop offset="55%" stop-color="#ffffff" stop-opacity="0.34"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="slots-gloss-v" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+        <stop offset="52%" stop-color="#ffffff" stop-opacity="0.12"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="slots-shade-b" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+        <stop offset="60%" stop-color="#000000" stop-opacity="0.1"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0.48"/>
+    </linearGradient>
+    <radialGradient id="slots-star-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#fff099" stop-opacity="0.62"/>
+        <stop offset="58%" stop-color="#ffa800" stop-opacity="0.2"/>
+        <stop offset="100%" stop-color="#ff8000" stop-opacity="0"/>
+    </radialGradient>
+</defs>
+</svg>
 </body>
 </html>

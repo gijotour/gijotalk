@@ -96,7 +96,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              777 슬롯 · 2048 퍼즐 · 플래피 버드
+              카지노 룰 연습 · 퍼즐 · 아케이드 15종
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />

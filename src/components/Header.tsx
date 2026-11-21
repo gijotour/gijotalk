@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
             setOpenMenu(null);
             (onOpenGameHub ?? onOpenPartyGame)?.();
           }}
-          aria-label="GIJO 게임 라운지 (술게임 & 아케이드)"
+          aria-label="GIJO 게임 라운지 (파티 게임 & 아케이드)"
           className="flex items-center justify-center gap-1.5 px-2.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 text-ink rounded-full text-xs font-bold transition-colors active:scale-95 shrink-0 whitespace-nowrap"
           title="GIJO 게임 라운지"
         >

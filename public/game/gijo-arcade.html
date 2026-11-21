@@ -1964,6 +1964,117 @@ canvas {
     margin-left: -26px;
 }
 
+.bj-split-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
+
+.bj-split-hand {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 5px 4px 6px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 2px solid rgba(255, 255, 255, 0.14);
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s, opacity 0.18s;
+}
+
+.bj-split-hand.bj-hand-active {
+    border-color: #fde047;
+    background: rgba(212, 175, 55, 0.16);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.34);
+}
+
+.bj-split-hand.bj-hand-dim {
+    opacity: 0.72;
+}
+
+.bj-split-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 0 2px;
+    min-width: 0;
+}
+
+.bj-split-label {
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #f8fafc;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.08;
+    gap: 1px;
+    white-space: nowrap;
+}
+
+.bj-split-label .bj-en {
+    font-size: 0.56rem;
+}
+
+.bj-split-score {
+    padding: 2px 7px;
+    font-size: 0.78rem;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.bj-split-score .bj-soft-tag {
+    font-size: 0.56rem;
+    padding: 1px 4px;
+}
+
+.bj-split-cards {
+    min-height: 74px;
+    padding: 2px 1px;
+    overflow: hidden;
+}
+
+.bj-split-cards .bj-card {
+    width: 50px;
+    height: 72px;
+}
+
+.bj-split-cards .bj-card + .bj-card {
+    margin-left: -20px;
+}
+
+.bj-split-cards.bj-cards-tight .bj-card + .bj-card {
+    margin-left: -29px;
+}
+
+.bj-split-cards.bj-cards-xtight .bj-card + .bj-card {
+    margin-left: -34px;
+}
+
+.bj-split-cards .bj-card-face {
+    border-radius: 7px;
+}
+
+.bj-split-cards .bj-card-front {
+    padding: 3px 4px;
+}
+
+.bj-split-cards .bj-card-rank {
+    font-size: 0.78rem;
+}
+
+.bj-split-cards .bj-card-suit-sm {
+    font-size: 0.62rem;
+}
+
+.bj-split-cards .bj-card-suit-lg {
+    font-size: 1.45rem;
+}
+
 .bj-card-deal {
     animation: bj-deal-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -2196,13 +2307,14 @@ canvas {
 .bj-act-row {
     display: flex;
     align-items: stretch;
-    gap: 6px;
+    gap: 5px;
 }
 
 .bj-btn {
     min-height: 48px;
+    min-width: 0;
     flex: 1;
-    padding: 6px 8px;
+    padding: 6px 4px;
     border-radius: 13px;
     border: 1.5px solid transparent;
     display: inline-flex;
@@ -2211,9 +2323,10 @@ canvas {
     justify-content: center;
     gap: 1px;
     font-family: var(--font-main);
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     font-weight: 900;
     line-height: 1.1;
+    white-space: nowrap;
     cursor: pointer;
     transition: transform 0.1s, opacity 0.15s;
 }
@@ -2250,6 +2363,12 @@ canvas {
 .bj-btn-double {
     background: linear-gradient(180deg, #6366f1 0%, #4338ca 100%);
     border-color: #a5b4fc;
+    color: #ffffff;
+}
+
+.bj-btn-split {
+    background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 100%);
+    border-color: #7dd3fc;
     color: #ffffff;
 }
 
@@ -4813,13 +4932,29 @@ canvas {
             </div>
 
             <div class="bj-zone">
-                <div class="bj-zone-head">
+                <div class="bj-zone-head" id="bj-player-single-head">
                     <div class="bj-zone-title">
                         <span class="bj-zone-label">나<span class="bj-en">Player</span></span>
                         <span class="bj-score-pill" id="bj-player-score">-</span>
                     </div>
                 </div>
                 <div class="bj-cards" id="bj-player-cards"></div>
+                <div class="bj-split-wrap bj-hidden" id="bj-split-wrap">
+                    <div class="bj-split-hand" id="bj-split-hand-0">
+                        <div class="bj-split-head">
+                            <span class="bj-split-label">첫째 손<span class="bj-en">Hand 1</span></span>
+                            <span class="bj-score-pill bj-split-score" id="bj-split-score-0">-</span>
+                        </div>
+                        <div class="bj-cards bj-split-cards" id="bj-split-cards-0"></div>
+                    </div>
+                    <div class="bj-split-hand" id="bj-split-hand-1">
+                        <div class="bj-split-head">
+                            <span class="bj-split-label">둘째 손<span class="bj-en">Hand 2</span></span>
+                            <span class="bj-score-pill bj-split-score" id="bj-split-score-1">-</span>
+                        </div>
+                        <div class="bj-cards bj-split-cards" id="bj-split-cards-1"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -4835,9 +4970,10 @@ canvas {
                 <button type="button" class="bj-btn bj-btn-refill bj-hidden" id="bj-refill-btn">칩 다시 받기<span class="bj-en">Refill 1000</span></button>
             </div>
             <div class="bj-act-row bj-hidden" id="bj-play-actions">
-                <button type="button" class="bj-btn bj-btn-hit" id="bj-hit-btn">히트<span class="bj-en">Hit · 한 장 더</span></button>
-                <button type="button" class="bj-btn bj-btn-stand" id="bj-stand-btn">스탠드<span class="bj-en">Stand · 멈춤</span></button>
-                <button type="button" class="bj-btn bj-btn-double" id="bj-double-btn">더블<span class="bj-en">Double · 2배</span></button>
+                <button type="button" class="bj-btn bj-btn-hit" id="bj-hit-btn">히트<span class="bj-en">Hit</span></button>
+                <button type="button" class="bj-btn bj-btn-stand" id="bj-stand-btn">스탠드<span class="bj-en">Stand</span></button>
+                <button type="button" class="bj-btn bj-btn-double" id="bj-double-btn">더블<span class="bj-en">Double</span></button>
+                <button type="button" class="bj-btn bj-btn-split" id="bj-split-btn">스플릿<span class="bj-en">Split</span></button>
             </div>
         </div>
 
@@ -10662,9 +10798,9 @@ const BJ_DECKS = 6;
 const BJ_RESHUFFLE_AT = 60;
 const BJ_START_CHIPS = 1000;
 
-/* 6덱 · 딜러 소프트 17 스탠드(S17) 기준 표준 기본 전략 표 (스플릿 제외)
+/* 6덱 · 딜러 소프트 17 스탠드(S17) · 스플릿 뒤 더블 가능(DAS) 기준 표준 기본 전략 표
    열 순서(딜러 보이는 카드): 2, 3, 4, 5, 6, 7, 8, 9, 10(J·Q·K), A(11)
-   H=히트, S=스탠드, D=더블(불가 시 히트), Ds=더블(불가 시 스탠드) */
+   H=히트, S=스탠드, D=더블(불가 시 히트), Ds=더블(불가 시 스탠드), P=스플릿 */
 const BJ_HARD_STRATEGY = {
     8:  ['H','H','H','H','H','H','H','H','H','H'],
     9:  ['H','D','D','D','D','H','H','H','H','H'],
@@ -10691,10 +10827,26 @@ const BJ_SOFT_STRATEGY = {
     21: ['S','S','S','S','S','S','S','S','S','S']
 };
 
+const BJ_PAIR_STRATEGY = {
+    2:  ['P','P','P','P','P','P', null, null, null, null],
+    3:  ['P','P','P','P','P','P', null, null, null, null],
+    4:  [null, null, null, 'P','P', null, null, null, null, null],
+    6:  ['P','P','P','P','P', null, null, null, null, null],
+    7:  ['P','P','P','P','P','P', null, null, null, null],
+    8:  ['P','P','P','P','P','P','P','P','P','P'],
+    9:  ['P','P','P','P','P', null, 'P','P', null, null],
+    11: ['P','P','P','P','P','P','P','P','P','P']
+};
+
 function bjCardValue(rank) {
     if (rank === 'A') return 11;
     if (rank === 'J' || rank === 'Q' || rank === 'K') return 10;
     return parseInt(rank, 10);
+}
+
+function bjIsPair(cards) {
+    return Array.isArray(cards) && cards.length === 2
+        && bjCardValue(cards[0].rank) === bjCardValue(cards[1].rank);
 }
 
 function bjEvalHand(cards) {
@@ -10717,10 +10869,24 @@ function bjEvalHand(cards) {
     };
 }
 
-function bjStrategyAdvice(playerCards, dealerUpcard, canDouble) {
-    const ev = bjEvalHand(playerCards);
+function bjStrategyAdvice(playerCards, dealerUpcard, canDouble, canSplit = false, handLabel = null) {
     const upVal = bjCardValue(dealerUpcard.rank);
     const col = Math.max(0, Math.min(9, upVal - 2));
+    const dText = dealerUpcard.rank === 'A' ? 'A' : String(upVal);
+
+    if (canSplit && bjIsPair(playerCards)) {
+        const pairVal = bjCardValue(playerCards[0].rank);
+        const pairRow = BJ_PAIR_STRATEGY[pairVal];
+        if (pairRow && pairRow[col] === 'P') {
+            const pairName = pairVal === 11 ? 'A' : String(pairVal);
+            return {
+                kr: `${pairName} 두 장, 딜러 ${dText} → 기본 전략은 스플릿`,
+                en: `Pair of ${pairName}s vs Dealer ${dText} — Basic strategy: Split`
+            };
+        }
+    }
+
+    const ev = bjEvalHand(playerCards);
     let code = 'S';
     if (ev.soft) {
         const key = Math.max(12, Math.min(21, ev.total));
@@ -10744,7 +10910,12 @@ function bjStrategyAdvice(playerCards, dealerUpcard, canDouble) {
 
     const pTextKr = ev.soft ? `소프트 ${ev.total}` : String(ev.total);
     const pTextEn = ev.soft ? `Soft ${ev.total}` : String(ev.total);
-    const dText = dealerUpcard.rank === 'A' ? 'A' : String(upVal);
+    if (handLabel) {
+        return {
+            kr: `${handLabel.kr} ${pTextKr}, 딜러 ${dText} → 기본 전략은 ${kr}`,
+            en: `${handLabel.en} ${pTextEn} vs Dealer ${dText} — Basic strategy: ${en}`
+        };
+    }
     return {
         kr: `내 합 ${pTextKr}, 딜러 ${dText} → 기본 전략은 ${kr}`,
         en: `Your ${pTextEn} vs Dealer ${dText} — Basic strategy: ${en}`
@@ -10763,12 +10934,36 @@ class Blackjack {
         this.currentBet = 50;
         this.helpOn = true;
         this.shoe = [];
-        this.playerHand = [];
+        this.hands = [];
+        this.activeHand = 0;
+        this.isSplit = false;
         this.dealerHand = [];
         this.dealerHidden = false;
         this._binds = [];
         this._timers = [];
         this._runSeq = 0;
+    }
+
+    get playerHand() {
+        return this.hands[this.activeHand] ? this.hands[this.activeHand].cards : [];
+    }
+
+    currentHand() {
+        return this.hands[this.activeHand] || null;
+    }
+
+    getTotalBet() {
+        if (this.phase === 'bet') return this.selectedBet;
+        return this.hands.reduce((sum, h) => sum + h.bet, 0);
+    }
+
+    canDoubleHand(h) {
+        return !!h && !h.splitAces && h.cards.length === 2 && this.chips >= h.bet;
+    }
+
+    canSplitNow() {
+        return !this.isSplit && this.hands.length === 1
+            && bjIsPair(this.hands[0].cards) && this.chips >= this.hands[0].bet;
     }
 
     setStat(name, value) {
@@ -10857,7 +11052,9 @@ class Blackjack {
         this.busy = false;
         this.phase = 'bet';
         this.currentBet = this.selectedBet;
-        this.playerHand = [];
+        this.hands = [];
+        this.activeHand = 0;
+        this.isSplit = false;
         this.dealerHand = [];
         this.dealerHidden = false;
         if (this.shoe.length < BJ_RESHUFFLE_AT) {
@@ -10940,11 +11137,15 @@ class Blackjack {
             sfx.init();
             this.playerDouble();
         });
+        this.on(document.getElementById('bj-split-btn'), 'click', () => {
+            sfx.init();
+            this.playerSplit();
+        });
     }
 
     updateHud() {
         this.setStat('chips', this.chips);
-        this.setStat('bet', this.phase === 'bet' ? this.selectedBet : this.currentBet);
+        this.setStat('bet', this.getTotalBet());
         this.setStat('bestval', store.best(this.id));
     }
 
@@ -10975,6 +11176,26 @@ class Blackjack {
         if (sub) sub.textContent = en || '';
     }
 
+    setSplitView(on) {
+        const sHead = document.getElementById('bj-player-single-head');
+        const sCards = document.getElementById('bj-player-cards');
+        const splitWrap = document.getElementById('bj-split-wrap');
+        if (sHead) sHead.classList.toggle('bj-hidden', on);
+        if (sCards) sCards.classList.toggle('bj-hidden', on);
+        if (splitWrap) splitWrap.classList.toggle('bj-hidden', !on);
+    }
+
+    updateSplitHighlight() {
+        for (let i = 0; i < 2; i++) {
+            const box = document.getElementById(`bj-split-hand-${i}`);
+            if (!box) continue;
+            const active = this.isSplit && this.phase === 'player' && i === this.activeHand;
+            const dim = this.isSplit && this.phase === 'player' && i !== this.activeHand;
+            box.classList.toggle('bj-hand-active', active);
+            box.classList.toggle('bj-hand-dim', dim);
+        }
+    }
+
     updateControls() {
         const inBet = this.phase === 'bet';
         const needRefill = inBet && this.chips < this.selectedBet;
@@ -10992,6 +11213,7 @@ class Blackjack {
         const hitBtn = document.getElementById('bj-hit-btn');
         const standBtn = document.getElementById('bj-stand-btn');
         const doubleBtn = document.getElementById('bj-double-btn');
+        const splitBtn = document.getElementById('bj-split-btn');
 
         if (betRow) betRow.classList.toggle('bj-hidden', !inBet);
         if (playRow) playRow.classList.toggle('bj-hidden', inBet);
@@ -11005,11 +11227,14 @@ class Blackjack {
             refillBtn.disabled = this.busy || !needRefill;
         }
 
-        const canAct = this.phase === 'player' && !this.busy;
-        const canDouble = canAct && this.playerHand.length === 2 && this.chips >= this.currentBet;
-        if (hitBtn) hitBtn.disabled = !canAct;
+        const hand = this.currentHand();
+        const canAct = this.phase === 'player' && !this.busy && !!hand;
+        const canDouble = canAct && this.canDoubleHand(hand);
+        const canSplit = canAct && this.canSplitNow();
+        if (hitBtn) hitBtn.disabled = !canAct || !!(hand && hand.splitAces);
         if (standBtn) standBtn.disabled = !canAct;
         if (doubleBtn) doubleBtn.disabled = !canDouble;
+        if (splitBtn) splitBtn.disabled = !canSplit;
     }
 
     createCardEl(card, faceDown = false) {
@@ -11028,35 +11253,67 @@ class Blackjack {
         return wrap;
     }
 
+    applyCardDensity(container, count, isSplit) {
+        if (!container) return;
+        if (isSplit) {
+            container.classList.toggle('bj-cards-tight', count >= 4 && count < 6);
+            container.classList.toggle('bj-cards-xtight', count >= 6);
+        } else {
+            container.classList.toggle('bj-cards-tight', count >= 5);
+            container.classList.remove('bj-cards-xtight');
+        }
+    }
+
     renderEmptyHands() {
+        this.setSplitView(false);
+        this.updateSplitHighlight();
         const dWrap = document.getElementById('bj-dealer-cards');
         const pWrap = document.getElementById('bj-player-cards');
         if (dWrap) {
-            dWrap.classList.remove('bj-cards-tight');
+            dWrap.classList.remove('bj-cards-tight', 'bj-cards-xtight');
             dWrap.innerHTML = '<div class="bj-cards-empty">딜러 카드 자리 · Dealer</div>';
         }
         if (pWrap) {
-            pWrap.classList.remove('bj-cards-tight');
+            pWrap.classList.remove('bj-cards-tight', 'bj-cards-xtight');
             pWrap.innerHTML = '<div class="bj-cards-empty">내 카드 자리 · Player</div>';
+        }
+        for (let i = 0; i < 2; i++) {
+            const sw = document.getElementById(`bj-split-cards-${i}`);
+            if (sw) { sw.innerHTML = ''; sw.classList.remove('bj-cards-tight', 'bj-cards-xtight'); }
         }
         this.updateScores();
     }
 
-    appendCard(target, card, faceDown = false) {
-        const container = document.getElementById(target === 'dealer' ? 'bj-dealer-cards' : 'bj-player-cards');
-        const hand = target === 'dealer' ? this.dealerHand : this.playerHand;
-        hand.push(card);
+    appendCard(target, card, faceDown = false, handIndex = null) {
+        if (target === 'dealer') {
+            this.dealerHand.push(card);
+            const container = document.getElementById('bj-dealer-cards');
+            if (container) {
+                const empty = container.querySelector('.bj-cards-empty');
+                if (empty) empty.remove();
+                container.appendChild(this.createCardEl(card, faceDown));
+                this.applyCardDensity(container, this.dealerHand.length, false);
+            }
+            this.updateScores();
+            sfx.blip(420, 0.04, 'triangle', 0.04);
+            return;
+        }
+        const idx = handIndex !== null ? handIndex : this.activeHand;
+        const hand = this.hands[idx];
+        if (!hand) return;
+        hand.cards.push(card);
+        const container = document.getElementById(this.isSplit ? `bj-split-cards-${idx}` : 'bj-player-cards');
         if (container) {
             const empty = container.querySelector('.bj-cards-empty');
             if (empty) empty.remove();
             container.appendChild(this.createCardEl(card, faceDown));
-            container.classList.toggle('bj-cards-tight', hand.length >= 5);
+            this.applyCardDensity(container, hand.cards.length, this.isSplit);
         }
         this.updateScores();
-        sfx.blip(target === 'dealer' ? 420 : 540, 0.04, 'triangle', 0.04);
+        sfx.blip(540, 0.04, 'triangle', 0.04);
     }
 
-    renderScorePill(el, cards) {
+    renderScorePill(el, cards, allowBlackjack = true) {
         if (!el) return;
         el.classList.remove('bj-score-bust', 'bj-score-bj');
         if (!cards || cards.length === 0) {
@@ -11065,7 +11322,7 @@ class Blackjack {
         }
         const ev = bjEvalHand(cards);
         if (ev.bust) el.classList.add('bj-score-bust');
-        else if (ev.isBlackjack) el.classList.add('bj-score-bj');
+        else if (allowBlackjack && ev.isBlackjack) el.classList.add('bj-score-bj');
         el.innerHTML = ev.soft
             ? `${ev.total}<span class="bj-soft-tag">소프트</span>`
             : String(ev.total);
@@ -11073,17 +11330,29 @@ class Blackjack {
 
     updateScores() {
         const dVisible = this.dealerHidden ? this.dealerHand.slice(0, 1) : this.dealerHand;
-        this.renderScorePill(document.getElementById('bj-dealer-score'), dVisible);
-        this.renderScorePill(document.getElementById('bj-player-score'), this.playerHand);
+        this.renderScorePill(document.getElementById('bj-dealer-score'), dVisible, true);
+        if (this.isSplit) {
+            this.renderScorePill(document.getElementById('bj-split-score-0'), this.hands[0] ? this.hands[0].cards : [], false);
+            this.renderScorePill(document.getElementById('bj-split-score-1'), this.hands[1] ? this.hands[1].cards : [], false);
+        } else {
+            this.renderScorePill(document.getElementById('bj-player-score'), this.hands[0] ? this.hands[0].cards : [], true);
+        }
     }
 
     renderPlayerTurnMessage() {
-        if (this.helpOn && this.playerHand.length >= 2 && this.dealerHand.length >= 1) {
-            const canDouble = this.playerHand.length === 2 && this.chips >= this.currentBet;
-            const adv = bjStrategyAdvice(this.playerHand, this.dealerHand[0], canDouble);
+        const hand = this.currentHand();
+        const handLabel = this.isSplit
+            ? (this.activeHand === 0 ? { kr: '첫째 손', en: 'Hand 1' } : { kr: '둘째 손', en: 'Hand 2' })
+            : null;
+        if (this.helpOn && hand && hand.cards.length >= 2 && this.dealerHand.length >= 1) {
+            const canDouble = this.canDoubleHand(hand);
+            const canSplit = this.canSplitNow();
+            const adv = bjStrategyAdvice(hand.cards, this.dealerHand[0], canDouble, canSplit, handLabel);
             this.setCenterMsg(adv.kr, adv.en, 'tip');
+        } else if (handLabel) {
+            this.setCenterMsg(`${handLabel.kr} 차례 · 히트 · 스탠드 · 더블 중 선택하세요`, `${handLabel.en} turn — Choose Hit, Stand, or Double`, '');
         } else {
-            this.setCenterMsg('히트 · 스탠드 · 더블 중 선택하세요', 'Choose Hit, Stand, or Double', '');
+            this.setCenterMsg('히트 · 스탠드 · 더블 · 스플릿 중 선택하세요', 'Choose Hit, Stand, Double, or Split', '');
         }
     }
 
@@ -11118,15 +11387,24 @@ class Blackjack {
             reshuffled = true;
         }
 
-        this.playerHand = [];
+        this.isSplit = false;
+        this.activeHand = 0;
+        this.hands = [{ cards: [], bet: this.currentBet, splitAces: false }];
         this.dealerHand = [];
         this.dealerHidden = true;
         this.phase = 'player';
 
+        this.setSplitView(false);
+        this.updateSplitHighlight();
+
         const dWrap = document.getElementById('bj-dealer-cards');
         const pWrap = document.getElementById('bj-player-cards');
-        if (dWrap) { dWrap.innerHTML = ''; dWrap.classList.remove('bj-cards-tight'); }
-        if (pWrap) { pWrap.innerHTML = ''; pWrap.classList.remove('bj-cards-tight'); }
+        if (dWrap) { dWrap.innerHTML = ''; dWrap.classList.remove('bj-cards-tight', 'bj-cards-xtight'); }
+        if (pWrap) { pWrap.innerHTML = ''; pWrap.classList.remove('bj-cards-tight', 'bj-cards-xtight'); }
+        for (let i = 0; i < 2; i++) {
+            const sw = document.getElementById(`bj-split-cards-${i}`);
+            if (sw) { sw.innerHTML = ''; sw.classList.remove('bj-cards-tight', 'bj-cards-xtight'); }
+        }
 
         this.updateHud();
         this.updateShoePill();
@@ -11138,27 +11416,27 @@ class Blackjack {
             ''
         );
 
-        this.appendCard('player', this.drawCard(), false);
+        this.appendCard('player', this.drawCard(), false, 0);
         if (!(await this.wait(220, seq))) return;
         this.appendCard('dealer', this.drawCard(), false);
         if (!(await this.wait(220, seq))) return;
-        this.appendCard('player', this.drawCard(), false);
+        this.appendCard('player', this.drawCard(), false, 0);
         if (!(await this.wait(220, seq))) return;
         this.appendCard('dealer', this.drawCard(), true);
         if (!(await this.wait(260, seq))) return;
 
-        const pEval = bjEvalHand(this.playerHand);
+        const pEval = bjEvalHand(this.hands[0].cards);
         if (pEval.isBlackjack) {
             await this.revealDealerHole(seq);
             if (!this.running || seq !== this._runSeq) return;
             const dEval = bjEvalHand(this.dealerHand);
             if (dEval.isBlackjack) {
-                this.chips += this.currentBet;
+                this.chips += this.hands[0].bet;
                 sfx.blip(520, 0.09, 'triangle', 0.05);
                 this.finishRound('push', '둘 다 블랙잭 → 무승부 (배팅 돌려받기)', 'Both Blackjack — Push (bet returned)');
             } else {
-                const profit = Math.floor(this.currentBet * 1.5);
-                this.chips += this.currentBet + profit;
+                const profit = Math.floor(this.hands[0].bet * 1.5);
+                this.chips += this.hands[0].bet + profit;
                 sfx.good();
                 vibe([0, 40, 40, 60]);
                 this.finishRound('bj', `블랙잭! 배팅의 1.5배 +${profit}`, `Blackjack! Pays 3:2 (+${profit})`);
@@ -11171,27 +11449,150 @@ class Blackjack {
         this.renderPlayerTurnMessage();
     }
 
+    async playerSplit() {
+        if (this.busy || this.phase !== 'player' || !this.canSplitNow()) return;
+        const seq = this._runSeq;
+        this.busy = true;
+
+        const baseHand = this.hands[0];
+        const bet = baseHand.bet;
+        const c0 = baseHand.cards[0];
+        const c1 = baseHand.cards[1];
+        const isAces = c0.rank === 'A' && c1.rank === 'A';
+
+        this.chips -= bet;
+        this.saveChips();
+
+        this.isSplit = true;
+        this.activeHand = 0;
+        this.hands = [
+            { cards: [c0], bet, splitAces: isAces },
+            { cards: [c1], bet, splitAces: isAces }
+        ];
+
+        this.setSplitView(true);
+        for (let i = 0; i < 2; i++) {
+            const sw = document.getElementById(`bj-split-cards-${i}`);
+            if (sw) {
+                sw.innerHTML = '';
+                sw.classList.remove('bj-cards-tight', 'bj-cards-xtight');
+                sw.appendChild(this.createCardEl(this.hands[i].cards[0], false));
+            }
+        }
+        this.updateHud();
+        this.updateScores();
+        this.updateSplitHighlight();
+        this.updateControls();
+        sfx.blip(660, 0.06, 'triangle', 0.05);
+
+        this.setCenterMsg(
+            isAces ? 'A 스플릿 · 손마다 한 장씩 받습니다' : '두 손으로 나누고 카드를 한 장씩 받습니다',
+            isAces ? 'Split Aces — dealing one card each' : 'Splitting — dealing one card to each hand',
+            'tip'
+        );
+
+        if (!(await this.wait(240, seq))) return;
+        this.appendCard('player', this.drawCard(), false, 0);
+        if (!(await this.wait(240, seq))) return;
+        this.appendCard('player', this.drawCard(), false, 1);
+        if (!(await this.wait(280, seq))) return;
+
+        if (isAces) {
+            this.setCenterMsg('A 스플릿 완료 · 딜러 차례로 넘어갑니다', 'Split Aces complete — Dealer turn...', 'tip');
+            if (!(await this.wait(360, seq))) return;
+            this.playDealerTurn(seq);
+            return;
+        }
+
+        await this.enterSplitHand(0, seq);
+    }
+
+    async enterSplitHand(idx, seq) {
+        this.activeHand = idx;
+        this.updateSplitHighlight();
+        const ev = bjEvalHand(this.hands[idx].cards);
+        if (ev.total === 21) {
+            if (idx === 0) {
+                this.setCenterMsg('첫째 손 21! 둘째 손으로 넘어갑니다', 'Hand 1 has 21! Moving to Hand 2', 'tip');
+                if (!(await this.wait(360, seq))) return;
+                await this.enterSplitHand(1, seq);
+            } else {
+                this.setCenterMsg('둘째 손 21! 딜러 차례로 넘어갑니다', 'Hand 2 has 21! Dealer turn...', 'tip');
+                if (!(await this.wait(360, seq))) return;
+                this.playDealerTurn(seq);
+            }
+            return;
+        }
+        this.busy = false;
+        this.updateControls();
+        this.renderPlayerTurnMessage();
+    }
+
+    async advanceSplitOrDealer(seq) {
+        if (this.activeHand === 0) {
+            await this.enterSplitHand(1, seq);
+            return;
+        }
+        const anyAlive = this.hands.some(h => !bjEvalHand(h.cards).bust);
+        if (!anyAlive) {
+            this.resolveSplitHands(false);
+        } else {
+            this.playDealerTurn(seq);
+        }
+    }
+
     async playerHit() {
         if (this.busy || this.phase !== 'player') return;
+        const hand = this.currentHand();
+        if (!hand || hand.splitAces) return;
         const seq = this._runSeq;
         this.busy = true;
         this.updateControls();
 
-        this.appendCard('player', this.drawCard(), false);
+        this.appendCard('player', this.drawCard(), false, this.activeHand);
         if (!(await this.wait(260, seq))) return;
 
-        const pEval = bjEvalHand(this.playerHand);
+        const pEval = bjEvalHand(hand.cards);
         if (pEval.bust) {
             sfx.hit();
             vibe(35);
-            this.finishRound('lose', `내 ${pEval.total} 버스트 → 패배 −${this.currentBet}`, `Bust (${pEval.total}) — Lose −${this.currentBet}`);
+            if (!this.isSplit) {
+                this.finishRound('lose', `내 ${pEval.total} 버스트 → 패배 −${hand.bet}`, `Bust (${pEval.total}) — Lose −${hand.bet}`);
+                return;
+            }
+            if (this.activeHand === 0) {
+                this.setCenterMsg(`첫째 손 ${pEval.total} 버스트 · 둘째 손 차례`, `Hand 1 busts (${pEval.total}) — Hand 2 turn`, 'lose');
+                if (!(await this.wait(420, seq))) return;
+                await this.enterSplitHand(1, seq);
+            } else {
+                const firstAlive = !bjEvalHand(this.hands[0].cards).bust;
+                if (!firstAlive) {
+                    this.resolveSplitHands(false);
+                } else {
+                    this.setCenterMsg(`둘째 손 ${pEval.total} 버스트 · 딜러 차례로 넘어갑니다`, `Hand 2 busts (${pEval.total}) — Dealer turn...`, 'lose');
+                    if (!(await this.wait(380, seq))) return;
+                    this.playDealerTurn(seq);
+                }
+            }
             return;
         }
 
         if (pEval.total === 21) {
-            this.setCenterMsg('합 21! 딜러 차례로 넘어갑니다', '21! Dealer turn...', 'tip');
-            if (!(await this.wait(320, seq))) return;
-            this.playDealerTurn(seq);
+            if (!this.isSplit) {
+                this.setCenterMsg('합 21! 딜러 차례로 넘어갑니다', '21! Dealer turn...', 'tip');
+                if (!(await this.wait(320, seq))) return;
+                this.playDealerTurn(seq);
+                return;
+            }
+            if (this.activeHand === 0) {
+                this.setCenterMsg('첫째 손 21! 둘째 손으로 넘어갑니다', 'Hand 1 has 21! Moving to Hand 2', 'tip');
+                if (!(await this.wait(340, seq))) return;
+                await this.enterSplitHand(1, seq);
+            } else {
+                this.setCenterMsg('둘째 손 21! 딜러 차례로 넘어갑니다', 'Hand 2 has 21! Dealer turn...', 'tip');
+                if (!(await this.wait(340, seq))) return;
+                this.playDealerTurn(seq);
+            }
             return;
         }
 
@@ -11202,34 +11603,61 @@ class Blackjack {
 
     async playerDouble() {
         if (this.busy || this.phase !== 'player') return;
-        if (this.playerHand.length !== 2 || this.chips < this.currentBet) return;
+        const hand = this.currentHand();
+        if (!this.canDoubleHand(hand)) return;
         const seq = this._runSeq;
         this.busy = true;
-        this.chips -= this.currentBet;
-        this.currentBet *= 2;
+        this.chips -= hand.bet;
+        hand.bet *= 2;
+        if (!this.isSplit) this.currentBet = hand.bet;
         this.saveChips();
         this.updateHud();
         this.updateControls();
         sfx.blip(720, 0.06, 'triangle', 0.05);
 
-        this.appendCard('player', this.drawCard(), false);
+        this.appendCard('player', this.drawCard(), false, this.activeHand);
         if (!(await this.wait(320, seq))) return;
 
-        const pEval = bjEvalHand(this.playerHand);
-        if (pEval.bust) {
-            sfx.hit();
-            vibe(40);
-            this.finishRound('lose', `더블 후 내 ${pEval.total} 버스트 → 패배 −${this.currentBet}`, `Doubled bust (${pEval.total}) — Lose −${this.currentBet}`);
+        const pEval = bjEvalHand(hand.cards);
+        if (!this.isSplit) {
+            if (pEval.bust) {
+                sfx.hit();
+                vibe(40);
+                this.finishRound('lose', `더블 후 내 ${pEval.total} 버스트 → 패배 −${hand.bet}`, `Doubled bust (${pEval.total}) — Lose −${hand.bet}`);
+                return;
+            }
+            this.playDealerTurn(seq);
             return;
         }
 
-        this.playDealerTurn(seq);
+        if (pEval.bust) {
+            sfx.hit();
+            vibe(40);
+            if (this.activeHand === 0) {
+                this.setCenterMsg(`첫째 손 더블 후 ${pEval.total} 버스트 · 둘째 손 차례`, `Hand 1 doubled bust (${pEval.total}) — Hand 2 turn`, 'lose');
+                if (!(await this.wait(420, seq))) return;
+            } else if (!bjEvalHand(this.hands[0].cards).bust) {
+                this.setCenterMsg(`둘째 손 더블 후 ${pEval.total} 버스트 · 딜러 차례`, `Hand 2 doubled bust (${pEval.total}) — Dealer turn`, 'lose');
+                if (!(await this.wait(380, seq))) return;
+            }
+        } else if (this.activeHand === 0) {
+            this.setCenterMsg('첫째 손 더블 완료 · 둘째 손 차례', 'Hand 1 doubled — Hand 2 turn', 'tip');
+            if (!(await this.wait(280, seq))) return;
+        }
+        await this.advanceSplitOrDealer(seq);
     }
 
-    playerStand() {
+    async playerStand() {
         if (this.busy || this.phase !== 'player') return;
         sfx.blip(500, 0.05, 'triangle', 0.04);
-        this.playDealerTurn(this._runSeq);
+        if (!this.isSplit) {
+            this.playDealerTurn(this._runSeq);
+            return;
+        }
+        const seq = this._runSeq;
+        this.busy = true;
+        this.updateControls();
+        await this.advanceSplitOrDealer(seq);
     }
 
     async revealDealerHole(seq) {
@@ -11248,6 +11676,7 @@ class Blackjack {
     async playDealerTurn(seq) {
         this.phase = 'dealer';
         this.busy = true;
+        this.updateSplitHighlight();
         this.updateControls();
         this.setCenterMsg('딜러 차례 · 숨은 카드를 엽니다', 'Dealer turn — revealing hole card', 'tip');
 
@@ -11260,32 +11689,103 @@ class Blackjack {
             if (!(await this.wait(220, seq))) return;
         }
 
-        const p = bjEvalHand(this.playerHand);
+        if (this.isSplit) {
+            this.resolveSplitHands(true);
+            return;
+        }
+
+        const hand = this.hands[0];
+        const p = bjEvalHand(hand.cards);
         const d = bjEvalHand(this.dealerHand);
 
         if (d.bust) {
-            this.chips += this.currentBet * 2;
+            this.chips += hand.bet * 2;
             sfx.good();
             vibe([0, 35, 35, 35]);
-            this.finishRound('win', `딜러 ${d.total} 버스트 → 승리 +${this.currentBet}`, `Dealer busts (${d.total}) — Win +${this.currentBet}`);
+            this.finishRound('win', `딜러 ${d.total} 버스트 → 승리 +${hand.bet}`, `Dealer busts (${d.total}) — Win +${hand.bet}`);
         } else if (d.isBlackjack && !p.isBlackjack) {
             sfx.hit();
             vibe(35);
-            this.finishRound('lose', `딜러 블랙잭 → 패배 −${this.currentBet}`, `Dealer Blackjack — Lose −${this.currentBet}`);
+            this.finishRound('lose', `딜러 블랙잭 → 패배 −${hand.bet}`, `Dealer Blackjack — Lose −${hand.bet}`);
         } else if (p.total > d.total) {
-            this.chips += this.currentBet * 2;
+            this.chips += hand.bet * 2;
             sfx.good();
             vibe([0, 35, 35, 35]);
-            this.finishRound('win', `내 ${p.total} > 딜러 ${d.total} → 승리 +${this.currentBet}`, `Your ${p.total} beats Dealer ${d.total} — Win +${this.currentBet}`);
+            this.finishRound('win', `내 ${p.total} > 딜러 ${d.total} → 승리 +${hand.bet}`, `Your ${p.total} beats Dealer ${d.total} — Win +${hand.bet}`);
         } else if (p.total < d.total) {
             sfx.hit();
             vibe(35);
-            this.finishRound('lose', `내 ${p.total} < 딜러 ${d.total} → 패배 −${this.currentBet}`, `Your ${p.total} < Dealer ${d.total} — Lose −${this.currentBet}`);
+            this.finishRound('lose', `내 ${p.total} < 딜러 ${d.total} → 패배 −${hand.bet}`, `Your ${p.total} < Dealer ${d.total} — Lose −${hand.bet}`);
         } else {
-            this.chips += this.currentBet;
+            this.chips += hand.bet;
             sfx.blip(520, 0.08, 'triangle', 0.05);
             this.finishRound('push', `내 ${p.total} = 딜러 ${d.total} → 무승부 (배팅 돌려받기)`, `Push at ${p.total} — Bet returned`);
         }
+    }
+
+    resolveSplitHands(dealerPlayed) {
+        const d = dealerPlayed ? bjEvalHand(this.dealerHand) : null;
+        let totalPayout = 0;
+        let totalNet = 0;
+        const partsKr = [];
+        const partsEn = [];
+
+        for (let i = 0; i < this.hands.length; i++) {
+            const h = this.hands[i];
+            const ev = bjEvalHand(h.cards);
+            const bet = h.bet;
+            const nameKr = i === 0 ? '첫째 손' : '둘째 손';
+            const nameEn = i === 0 ? 'Hand 1' : 'Hand 2';
+
+            if (ev.bust) {
+                totalNet -= bet;
+                partsKr.push(`${nameKr} ${ev.total} 버스트 → −${bet}`);
+                partsEn.push(`${nameEn} ${ev.total} Bust −${bet}`);
+            } else if (d && d.isBlackjack) {
+                totalNet -= bet;
+                partsKr.push(`${nameKr} ${ev.total} < 딜러 블랙잭 → −${bet}`);
+                partsEn.push(`${nameEn} ${ev.total} vs Dealer BJ −${bet}`);
+            } else if (d && d.bust) {
+                totalPayout += bet * 2;
+                totalNet += bet;
+                partsKr.push(`${nameKr} ${ev.total}, 딜러 ${d.total} 버스트 → +${bet}`);
+                partsEn.push(`${nameEn} ${ev.total} (Dealer Bust) +${bet}`);
+            } else if (d && ev.total > d.total) {
+                totalPayout += bet * 2;
+                totalNet += bet;
+                partsKr.push(`${nameKr} ${ev.total} > 딜러 ${d.total} → +${bet}`);
+                partsEn.push(`${nameEn} ${ev.total} > ${d.total} +${bet}`);
+            } else if (d && ev.total < d.total) {
+                totalNet -= bet;
+                partsKr.push(`${nameKr} ${ev.total} < 딜러 ${d.total} → −${bet}`);
+                partsEn.push(`${nameEn} ${ev.total} < ${d.total} −${bet}`);
+            } else {
+                totalPayout += bet;
+                partsKr.push(`${nameKr} ${ev.total} = 딜러 ${d ? d.total : ev.total} → 무승부`);
+                partsEn.push(`${nameEn} ${ev.total} Push`);
+            }
+        }
+
+        this.chips += totalPayout;
+        const netStr = totalNet > 0 ? `+${totalNet}` : (totalNet < 0 ? `−${Math.abs(totalNet)}` : '0');
+        let tone = 'push';
+        if (totalNet > 0) {
+            tone = 'win';
+            sfx.good();
+            vibe([0, 35, 35, 35]);
+        } else if (totalNet < 0) {
+            tone = 'lose';
+            sfx.hit();
+            vibe(35);
+        } else {
+            sfx.blip(520, 0.08, 'triangle', 0.05);
+        }
+
+        this.finishRound(
+            tone,
+            `${partsKr.join(' · ')} (합계 ${netStr})`,
+            `${partsEn.join(' · ')} (Net ${netStr})`
+        );
     }
 
     finishRound(tone, kr, en) {
@@ -11293,6 +11793,7 @@ class Blackjack {
         store.setBest(this.id, this.chips);
         this.phase = 'bet';
         this.busy = false;
+        this.updateSplitHighlight();
         this.updateHud();
         this.updateControls();
         this.setCenterMsg(kr, en, tone);
@@ -13361,9 +13862,18 @@ const ARCADE_GUIDES = {
                 <div class="guide-sec-title">▶️ 진행 순서 · How to Play</div>
                 <ul>
                     <li><b>1. 배팅 &amp; 딜</b>: 10 / 50 / 100 중 고르고 <b>딜(Deal)</b>을 누르면 나 2장(앞면), 딜러 2장(1장 뒷면)을 받습니다.</li>
-                    <li><b>2. 내 차례</b>: <b>히트</b>(한 장 더), <b>스탠드</b>(멈춤), <b>더블</b>(배팅 2배·한 장만 받고 멈춤, 첫 두 장일 때만) 중 고릅니다.</li>
+                    <li><b>2. 내 차례</b>: <b>히트</b>(한 장 더), <b>스탠드</b>(멈춤), <b>더블</b>(배팅 2배·한 장만 받고 멈춤, 첫 두 장일 때만), <b>스플릿</b>(같은 값 두 장을 두 손으로 나누기) 중 고릅니다.</li>
                     <li><b>3. 버스트</b>: 내 합이 21을 넘으면 바로 집니다.</li>
                     <li><b>4. 딜러 차례</b>: 숨은 카드를 열고 합이 <b>17 이상</b>(소프트 17 포함)이 될 때까지 카드를 받습니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">✂️ 스플릿 · Split</div>
+                <ul>
+                    <li><b>조건</b>: 첫 두 장의 값이 같을 때(같은 숫자 또는 10·J·Q·K 끼리) 처음 건 칩만큼 한 번 더 걸고 두 손으로 나눕니다.</li>
+                    <li><b>진행</b>: 한 판에 <b>한 번만</b>(최대 2손) 할 수 있으며, 손마다 한 장씩 더 받은 뒤 <b>첫째 손</b>부터 차례로 진행합니다. 나눈 손에서도 첫 두 장일 때 <b>더블</b>할 수 있습니다.</li>
+                    <li><b>A 스플릿</b>: A 두 장을 나누면 손마다 <b>딱 한 장씩만</b> 받고 자동으로 멈춥니다(히트·더블 불가).</li>
+                    <li><b>정산</b>: 나눈 손의 두 장 21은 블랙잭(1.5배)이 아닌 <b>그냥 21(1배)</b>이며, 딜러가 블랙잭이면 두 손 모두 집니다. 정산은 손마다 따로 합니다.</li>
                 </ul>
             </div>
             <div class="guide-section">
@@ -13380,8 +13890,8 @@ const ARCADE_GUIDES = {
                 <div class="guide-sec-title">💡 연습판 안내 · Practice Notes</div>
                 <ul>
                     <li>6벌(312장) 슈에서 뽑으며, 남은 카드가 60장 아래면 다음 판 전에 다시 섞습니다.</li>
-                    <li><b>스플릿 · 인슈어런스 · 서렌더</b>는 <b>이 연습판에는 없음</b>.</li>
-                    <li><b>도움말 켜기</b>를 켜면 내 차례마다 기본 전략 추천을 한 줄로 보여 줍니다.</li>
+                    <li><b>인슈어런스 · 서렌더</b>는 <b>이 연습판에는 없음</b>.</li>
+                    <li><b>도움말 켜기</b>를 켜면 내 차례마다 기본 전략 추천(스플릿 포함)을 한 줄로 보여 줍니다.</li>
                     <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
                 </ul>
             </div>

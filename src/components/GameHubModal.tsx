@@ -37,7 +37,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
               GIJO 게임 라운지
             </h2>
             <p className="text-xs text-ink-mute font-medium mt-0.5">
-              오프라인으로 즐기는 파티 · 미니게임
+              혼자 · 모임 · 카지노 룰 연습
             </p>
           </div>
         </div>
@@ -66,13 +66,13 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-ink">GIJO Drink</h3>
+              <h3 className="text-sm font-black text-ink">모임 게임</h3>
               <span className="text-[11px] font-bold text-brand bg-brand/10 px-2 py-0.5 rounded-full">
                 2~12인
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              미션 룰렛 · 터치 복불복 · 커플 매칭
+              GIJO Drink · 폰 한 대로 여럿이 하는 게임
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -92,13 +92,13 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-ink">GIJO Arcade</h3>
+              <h3 className="text-sm font-black text-ink">혼자 하는 게임</h3>
               <span className="text-[11px] font-bold text-ink-soft bg-slate-200/70 px-2 py-0.5 rounded-full">
                 1인용
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              777 슬롯 · 퍼즐 · 아케이드 11종
+              GIJO Arcade · 777 슬롯 · 퍼즐 등 11종
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
@@ -118,13 +118,13 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-ink">GIJO Casino</h3>
+              <h3 className="text-sm font-black text-ink">카지노 룰 연습판</h3>
               <span className="text-[11px] font-bold text-emerald-700 bg-emerald-600/10 px-2 py-0.5 rounded-full">
-                룰 연습
+                가상 칩
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              블랙잭 · 바카라 · 홀덤 등 10종 · 가상 칩
+              GIJO Casino · 블랙잭 · 바카라 등 10종
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />

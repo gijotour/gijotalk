@@ -23,14 +23,20 @@ const GAME_URL = `${BASE_URL}game/gijo-arcade.html`;
 
 interface ArcadeModalProps {
   onClose: () => void;
+  /** casino 면 같은 게임 파일을 카지노 룰 연습 첫 화면으로 엽니다(#casino). 주소의 # 뒤만 달라 캐시는 같은 파일을 씁니다. */
+  mode?: 'arcade' | 'casino';
 }
 
-export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose }) => {
+export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose, mode = 'arcade' }) => {
+  const isCasino = mode === 'casino';
+  const gameUrl = isCasino ? `${GAME_URL}#casino` : GAME_URL;
+  const gameName = isCasino ? 'GIJO Casino' : 'GIJO Arcade';
+  const gameTag = isCasino ? '룰 연습' : '오프라인 게임';
   return (
     // 실수로 배경을 눌러 닫히면 하던 판이 날아갑니다.
     <Modal
       onClose={onClose}
-      label="GIJO Arcade 오프라인 게임"
+      label={`${gameName} ${gameTag}`}
       variant="fullscreen"
       closeOnBackdrop={false}
       panelClassName="w-full h-full bg-[#0a0a0c] flex flex-col"
@@ -45,12 +51,12 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose }) => {
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
           </span>
           <span className="text-xs font-black tracking-wider text-white flex-1 truncate uppercase">
-            GIJO Arcade · <span className="text-cyan-400">오프라인 게임</span>
+            {gameName} · <span className="text-cyan-400">{gameTag}</span>
           </span>
         </div>
 
         <a
-          href={GAME_URL}
+          href={gameUrl}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="게임을 새 창에서 열기"
@@ -69,8 +75,8 @@ export const ArcadeModal: React.FC<ArcadeModalProps> = ({ onClose }) => {
       </div>
 
       <iframe
-        src={GAME_URL}
-        title="GIJO Arcade 오프라인 게임"
+        src={gameUrl}
+        title={`${gameName} ${gameTag}`}
         // 효과음과 진동을 씁니다. Permissions-Policy 에 vibrate 를 명시해야 iframe 내 햅틱이 작동합니다.
         allow="autoplay; fullscreen; vibrate"
         className="flex-1 w-full border-0 bg-[#0a0a0c]"

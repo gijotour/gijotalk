@@ -1,12 +1,13 @@
 import React from 'react';
 import { Modal } from './Modal';
-import { Gamepad2, PartyPopper, Trophy, X, ChevronRight, WifiOff } from 'lucide-react';
+import { Gamepad2, PartyPopper, Trophy, Spade, X, ChevronRight, WifiOff } from 'lucide-react';
 
 interface GameHubModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenPartyGame: () => void;
   onOpenArcade: () => void;
+  onOpenCasino: () => void;
 }
 
 export const GameHubModal: React.FC<GameHubModalProps> = ({
@@ -14,6 +15,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
   onClose,
   onOpenPartyGame,
   onOpenArcade,
+  onOpenCasino,
 }) => {
   if (!isOpen) return null;
 
@@ -48,7 +50,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
         </button>
       </div>
 
-      {/* 심플 2카드 선택 */}
+      {/* 심플 3카드 선택 */}
       <div className="space-y-2.5">
         <button
           type="button"
@@ -96,7 +98,33 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              카지노 룰 연습 · 퍼즐 · 아케이드 15종
+              777 슬롯 · 퍼즐 · 아케이드 11종
+            </p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            onOpenCasino();
+          }}
+          aria-label="GIJO Casino 룰 연습 시작하기"
+          className="w-full text-left bg-slate-50/70 hover:bg-slate-100/80 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5 transition-colors active:scale-[0.99]"
+        >
+          <span className="w-11 h-11 rounded-2xl bg-emerald-600/10 text-emerald-700 flex items-center justify-center shrink-0">
+            <Spade className="w-5 h-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-black text-ink">GIJO Casino</h3>
+              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-600/10 px-2 py-0.5 rounded-full">
+                룰 연습
+              </span>
+            </div>
+            <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
+              블랙잭 · 바카라 · 룰렛 등 7종 · 가상 칩
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />

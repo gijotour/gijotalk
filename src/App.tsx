@@ -108,6 +108,8 @@ export default function App() {
   const [showPhotoModal, setShowPhotoModal] = useState<boolean>(false);
   const [showPartyGame, setShowPartyGame] = useState<boolean>(false);
   const [showArcade, setShowArcade] = useState<boolean>(false);
+  // 같은 게임 파일을 아케이드 첫 화면으로 열지, 카지노 룰 연습 첫 화면으로 열지.
+  const [arcadeMode, setArcadeMode] = useState<'arcade' | 'casino'>('arcade');
   const [showGameHub, setShowGameHub] = useState<boolean>(false);
   const [showEntryGuide, setShowEntryGuide] = useState<boolean>(false);
   const [showCalculator, setShowCalculator] = useState<boolean>(false);
@@ -333,7 +335,7 @@ export default function App() {
           }
         }}
         onOpenPartyGame={() => setShowPartyGame(true)}
-        onOpenArcade={() => setShowArcade(true)}
+        onOpenArcade={() => { setArcadeMode('arcade'); setShowArcade(true); }}
         onOpenEntryGuide={() => setShowEntryGuide(true)}
         onOpenCalculator={() => setShowCalculator(true)}
         onOpenChecklist={() => setShowChecklist(true)}
@@ -716,12 +718,13 @@ export default function App() {
         isOpen={showGameHub}
         onClose={() => setShowGameHub(false)}
         onOpenPartyGame={() => setShowPartyGame(true)}
-        onOpenArcade={() => setShowArcade(true)}
+        onOpenArcade={() => { setArcadeMode('arcade'); setShowArcade(true); }}
+        onOpenCasino={() => { setArcadeMode('casino'); setShowArcade(true); }}
       />
 
       {/* 파티 게임 & 아케이드 */}
       {showPartyGame && <PartyGameModal onClose={() => setShowPartyGame(false)} />}
-      {showArcade && <ArcadeModal onClose={() => setShowArcade(false)} />}
+      {showArcade && <ArcadeModal mode={arcadeMode} onClose={() => setShowArcade(false)} />}
     </div>
   );
 }

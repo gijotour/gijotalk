@@ -4440,11 +4440,2010 @@ canvas {
     font-weight: 800;
 }
 
+/* ===== 드래곤 타이거 · Dragon Tiger (.dt- 접두사 전용) ===== */
+.dt-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.dt-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    overflow: hidden;
+}
+
+.dt-hud {
+    padding: 5px 8px;
+    gap: 6px;
+}
+
+.dt-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.dt-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.dt-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.dt-rules-btn {
+    min-height: 44px;
+    min-width: 54px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.dt-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.dt-en {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    letter-spacing: 0.01em;
+}
+
+.dt-rules-btn .dt-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.82);
+}
+
+.dt-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 10px 6px;
+    padding: 8px 8px;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 50% 42%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 7px;
+    overflow: hidden;
+}
+
+.dt-top-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.dt-scale-pill {
+    font-size: 0.64rem;
+    font-weight: 800;
+    color: rgba(248, 250, 252, 0.84);
+    background: rgba(0, 0, 0, 0.28);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.28);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dt-shoe-pill {
+    font-size: 0.64rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.9);
+    background: rgba(0, 0, 0, 0.32);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.dt-arena {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+}
+
+.dt-box {
+    background: rgba(0, 0, 0, 0.26);
+    border: 1.5px solid rgba(212, 175, 55, 0.3);
+    border-radius: 14px;
+    padding: 7px 6px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    min-width: 0;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.dt-box-dragon {
+    border-color: rgba(248, 113, 113, 0.45);
+}
+
+.dt-box-tiger {
+    border-color: rgba(96, 165, 250, 0.45);
+}
+
+.dt-box.dt-box-win {
+    border-color: #fde047;
+    background: rgba(212, 175, 55, 0.2);
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.38);
+}
+
+.dt-box.dt-box-tie {
+    border-color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.18);
+    box-shadow: 0 0 12px rgba(52, 211, 153, 0.28);
+}
+
+.dt-box-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 0 2px;
+}
+
+.dt-box-title {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    line-height: 1.05;
+}
+
+.dt-box-kr {
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: #f8fafc;
+}
+
+.dt-box-dragon .dt-box-kr { color: #fca5a5; }
+.dt-box-tiger .dt-box-kr { color: #93c5fd; }
+
+.dt-box-badge {
+    font-size: 0.66rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fde68a;
+}
+
+.dt-card-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 112px;
+    perspective: 760px;
+}
+
+.dt-card-slot {
+    width: 78px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dt-card-empty {
+    width: 78px;
+    height: 110px;
+    border-radius: 10px;
+    border: 1.5px dashed rgba(212, 175, 55, 0.36);
+    background: rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: rgba(248, 250, 252, 0.45);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.dt-card {
+    width: 78px;
+    height: 110px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.dt-card-deal {
+    animation: dt-deal-in 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dt-deal-in {
+    0% { opacity: 0; transform: translateY(-16px) scale(0.86); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dt-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dt-card.dt-facedown .dt-card-inner {
+    transform: rotateY(180deg);
+}
+
+.dt-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.dt-card-front {
+    background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1.5px solid rgba(15, 23, 42, 0.22);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 6px;
+}
+
+.dt-card-front.dt-red { color: #dc2626; }
+.dt-card-front.dt-black { color: #111827; }
+
+.dt-card-corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: flex-start;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.dt-card-corner-bot {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.dt-card-rank {
+    font-size: 1.24rem;
+    letter-spacing: -0.04em;
+}
+
+.dt-card-suit-sm {
+    font-size: 0.86rem;
+    margin-top: 1px;
+}
+
+.dt-card-suit-lg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.35rem;
+    line-height: 1;
+    opacity: 0.92;
+    pointer-events: none;
+}
+
+.dt-card-back {
+    transform: rotateY(180deg);
+    background-color: #7c1d28;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px);
+    border: 3px solid #ffffff;
+    box-shadow: inset 0 0 0 1.5px #d4af37, 0 5px 12px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dt-card-back-emblem {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #4c0519;
+    border: 1.5px solid #d4af37;
+    color: #fde68a;
+    font-size: 0.96rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dt-val-side {
+    min-width: 44px;
+    padding: 5px 4px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.36);
+    border: 1px solid rgba(212, 175, 55, 0.36);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.dt-val-label {
+    font-size: 0.56rem;
+    font-weight: 700;
+    color: rgba(248, 250, 252, 0.68);
+    line-height: 1;
+}
+
+.dt-val-num {
+    font-size: 1.24rem;
+    font-weight: 900;
+    color: #fef08a;
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+}
+
+.dt-val-note {
+    font-size: 0.56rem;
+    font-weight: 800;
+    color: rgba(253, 230, 138, 0.84);
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.dt-result-box {
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.44);
+    border: 1px solid rgba(212, 175, 55, 0.42);
+    border-radius: 12px;
+    padding: 7px 10px;
+    min-height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2px;
+}
+
+.dt-res-main {
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.26;
+    word-break: keep-all;
+}
+
+.dt-res-main.dt-tone-win { color: #6ee7b7; }
+.dt-res-main.dt-tone-lose { color: #fca5a5; }
+.dt-res-main.dt-tone-half { color: #fde68a; }
+
+.dt-res-sub {
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: rgba(241, 245, 249, 0.72);
+    line-height: 1.22;
+    word-break: keep-all;
+}
+
+.dt-history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 7px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.26);
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    flex-shrink: 0;
+}
+
+.dt-hist-label {
+    font-size: 0.64rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.88);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.dt-hist-dots {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+}
+
+.dt-hist-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.64rem;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.dt-hist-d {
+    background: #dc2626;
+    border: 1px solid #fca5a5;
+    color: #ffffff;
+}
+
+.dt-hist-t {
+    background: #2563eb;
+    border: 1px solid #93c5fd;
+    color: #ffffff;
+}
+
+.dt-hist-tie {
+    background: #059669;
+    border: 1px solid #6ee7b7;
+    color: #ffffff;
+    font-size: 0.48rem;
+    letter-spacing: -0.04em;
+}
+
+.dt-hist-empty {
+    background: rgba(0, 0, 0, 0.24);
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.24);
+}
+
+.dt-hist-latest {
+    box-shadow: 0 0 0 1.5px #fde047, 0 0 7px rgba(250, 204, 21, 0.65);
+}
+
+.dt-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 10px 3px;
+    flex-shrink: 0;
+}
+
+.dt-side-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.dt-side-btn {
+    min-height: 50px;
+    padding: 4px 4px;
+    border-radius: 12px;
+    background: #12241c;
+    border: 1.5px solid rgba(212, 175, 55, 0.34);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.dt-side-btn:active:not(:disabled) { transform: scale(0.97); }
+.dt-side-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+
+.dt-side-pay {
+    font-size: 0.64rem;
+    font-weight: 800;
+    color: rgba(253, 230, 138, 0.88);
+}
+
+.dt-side-dragon.dt-side-selected {
+    background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+    border-color: #fca5a5;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+}
+
+.dt-side-tiger.dt-side-selected {
+    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+    border-color: #93c5fd;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.45);
+}
+
+.dt-side-tie.dt-side-selected {
+    background: linear-gradient(180deg, #059669 0%, #047857 100%);
+    border-color: #6ee7b7;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+}
+
+.dt-side-selected .dt-en,
+.dt-side-selected .dt-side-pay {
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.dt-bet-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.dt-bet-btn {
+    min-height: 44px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.dt-bet-btn.dt-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.dt-bet-btn:active:not(:disabled) { transform: scale(0.96); }
+.dt-bet-btn:disabled { opacity: 0.38; cursor: default; }
+
+.dt-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.dt-btn {
+    min-height: 46px;
+    flex: 1;
+    padding: 5px 8px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.94rem;
+    font-weight: 900;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.dt-btn:active:not(:disabled) { transform: scale(0.97); }
+.dt-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+.dt-btn-deal {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.dt-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.dt-btn-deal .dt-en,
+.dt-btn-refill .dt-en {
+    color: rgba(15, 23, 42, 0.74);
+}
+
+.dt-hidden {
+    display: none !important;
+}
+
+.dt-hint {
+    text-align: center;
+    font-size: 0.64rem;
+    line-height: 1.24;
+    color: var(--text-muted);
+    padding: 1px 12px 4px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.dt-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.78rem;
+}
+
+.dt-guide-table th,
+.dt-guide-table td {
+    border: 1px solid var(--line);
+    padding: 5px 7px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.dt-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
 /* 룰렛 — 처음 하는 사람이 쉬운 곳(빨강·검정·홀짝)부터 보도록 바깥 배팅을 숫자판 위에 둔다 */
 .rt-board .rt-out-group { order: -1; }
 
 /* 첫 화면 목록 — 게임이 늘어도 줄이 눌리지 않고 목록이 세로로 넘어가게 */
 .arcade-portal > .portal-item { flex-shrink: 0; }
+
+/* ===== 쓰리카드 포커 · Three Card Poker (.tc- 접두사 전용) ===== */
+.tc-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.tc-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    overflow: hidden;
+}
+
+.tc-hud {
+    padding: 5px 8px;
+    gap: 6px;
+}
+
+.tc-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.tc-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.tc-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.tc-rules-btn {
+    min-height: 44px;
+    min-width: 54px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.tc-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.tc-en {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    letter-spacing: 0.01em;
+}
+
+.tc-rules-btn .tc-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.82);
+}
+
+.tc-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 10px 6px;
+    padding: 8px 10px;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 50% 45%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.tc-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 0;
+}
+
+.tc-zone-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 0 2px;
+    min-width: 0;
+}
+
+.tc-zone-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+.tc-zone-label {
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #f8fafc;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tc-rank-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.44);
+    border: 1px solid rgba(212, 175, 55, 0.48);
+    font-size: 0.78rem;
+    font-weight: 900;
+    color: #fef08a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tc-rank-pill.tc-rank-bonus {
+    background: rgba(217, 119, 6, 0.48);
+    border-color: #fde047;
+    color: #fef08a;
+    box-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
+}
+
+.tc-rank-pill.tc-rank-dnq {
+    background: rgba(51, 65, 85, 0.62);
+    border-color: rgba(148, 163, 184, 0.65);
+    color: #e2e8f0;
+}
+
+.tc-qual-tag {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 1px 6px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tc-qual-yes {
+    background: rgba(52, 211, 153, 0.24);
+    color: #6ee7b7;
+    border: 1px solid rgba(52, 211, 153, 0.55);
+}
+
+.tc-qual-no {
+    background: rgba(251, 191, 36, 0.22);
+    color: #fde68a;
+    border: 1px solid rgba(251, 191, 36, 0.55);
+}
+
+.tc-bonus-tag {
+    font-size: 0.62rem;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.28);
+    color: #fef08a;
+    border: 1px solid #fde047;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tc-deck-pill {
+    font-size: 0.64rem;
+    font-weight: 700;
+    color: rgba(254, 240, 138, 0.84);
+    background: rgba(0, 0, 0, 0.28);
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tc-cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 92px;
+    padding: 2px 4px;
+    perspective: 720px;
+}
+
+.tc-cards-empty {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: rgba(248, 250, 252, 0.44);
+    text-align: center;
+    padding: 8px 12px;
+    border: 1px dashed rgba(212, 175, 55, 0.28);
+    border-radius: 10px;
+}
+
+.tc-card {
+    width: 66px;
+    height: 92px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.tc-card-deal {
+    animation: tc-deal-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes tc-deal-in {
+    0% { opacity: 0; transform: translateY(-18px) scale(0.86); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tc-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tc-card.tc-facedown .tc-card-inner {
+    transform: rotateY(180deg);
+}
+
+.tc-card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 9px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.tc-card-front {
+    background: linear-gradient(160deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid rgba(15, 23, 42, 0.22);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.42);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px 5px;
+}
+
+.tc-card-front.tc-red { color: #dc2626; }
+.tc-card-front.tc-black { color: #111827; }
+
+.tc-card-corner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: flex-start;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.tc-card-corner-bot {
+    align-self: flex-end;
+    transform: rotate(180deg);
+}
+
+.tc-card-rank {
+    font-size: 1rem;
+    letter-spacing: -0.04em;
+}
+
+.tc-card-suit-sm {
+    font-size: 0.74rem;
+    margin-top: 1px;
+}
+
+.tc-card-suit-lg {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    line-height: 1;
+    opacity: 0.92;
+    pointer-events: none;
+}
+
+.tc-card-back {
+    transform: rotateY(180deg);
+    background-color: #1e3a5f;
+    background-image:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.13) 0 4px, transparent 4px 8px);
+    border: 3px solid #ffffff;
+    box-shadow: inset 0 0 0 1.5px #d4af37, 0 4px 10px rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tc-card-back-emblem {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #10243d;
+    border: 1.5px solid #d4af37;
+    color: #fde68a;
+    font-size: 0.96rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tc-center {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.38);
+    border-radius: 12px;
+    padding: 7px 10px;
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2px;
+}
+
+.tc-center.tc-center-win {
+    border-color: rgba(52, 211, 153, 0.78);
+    background: rgba(6, 78, 59, 0.65);
+}
+
+.tc-center.tc-center-bonus {
+    border-color: #fde047;
+    background: rgba(146, 64, 14, 0.58);
+    box-shadow: 0 0 14px rgba(250, 204, 21, 0.25);
+}
+
+.tc-center.tc-center-lose {
+    border-color: rgba(248, 113, 113, 0.72);
+    background: rgba(127, 29, 29, 0.58);
+}
+
+.tc-center.tc-center-push {
+    border-color: rgba(251, 191, 36, 0.64);
+    background: rgba(30, 41, 59, 0.65);
+}
+
+.tc-center.tc-center-tip {
+    border-color: rgba(125, 211, 252, 0.62);
+    background: rgba(12, 42, 58, 0.58);
+}
+
+.tc-msg-main {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #f8fafc;
+    line-height: 1.3;
+    word-break: keep-all;
+}
+
+.tc-msg-sub {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.75);
+    line-height: 1.24;
+    word-break: keep-all;
+}
+
+.tc-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 10px 4px;
+    flex-shrink: 0;
+}
+
+.tc-bet-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tc-bet-btn {
+    min-height: 44px;
+    min-width: 54px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.tc-bet-btn.tc-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.tc-bet-btn:active:not(:disabled) { transform: scale(0.96); }
+.tc-bet-btn:disabled { opacity: 0.38; cursor: default; }
+
+.tc-help-btn {
+    min-height: 44px;
+    flex: 1;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    color: #cbd5e1;
+    font-family: var(--font-main);
+    font-size: 0.78rem;
+    font-weight: 800;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+    gap: 1px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.tc-help-btn.tc-on {
+    background: rgba(52, 211, 153, 0.16);
+    border-color: rgba(52, 211, 153, 0.65);
+    color: #a7f3d0;
+}
+
+.tc-help-btn:active { transform: scale(0.97); }
+
+.tc-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.tc-btn {
+    min-height: 48px;
+    min-width: 0;
+    flex: 1;
+    padding: 6px 6px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.tc-btn:active:not(:disabled) { transform: scale(0.97); }
+.tc-btn:disabled { opacity: 0.35; cursor: default; transform: none; }
+
+.tc-btn-deal {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.tc-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.tc-btn-play {
+    background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+    border-color: #6ee7b7;
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+}
+
+.tc-btn-fold {
+    background: linear-gradient(180deg, #475569 0%, #334155 100%);
+    border-color: #94a3b8;
+    color: #f8fafc;
+}
+
+.tc-btn-deal .tc-en,
+.tc-btn-refill .tc-en {
+    color: rgba(15, 23, 42, 0.74);
+}
+
+.tc-btn-play .tc-en,
+.tc-btn-fold .tc-en {
+    color: rgba(248, 250, 252, 0.85);
+}
+
+.tc-hidden {
+    display: none !important;
+}
+
+.tc-hint {
+    text-align: center;
+    font-size: 0.65rem;
+    line-height: 1.24;
+    color: var(--text-muted);
+    padding: 1px 12px 5px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.tc-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.78rem;
+}
+
+.tc-guide-table th,
+.tc-guide-table td {
+    border: 1px solid var(--line);
+    padding: 5px 7px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.tc-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+@media (max-height: 660px) {
+    .tc-table { padding: 7px 9px; gap: 5px; }
+    .tc-cards { min-height: 86px; gap: 8px; }
+    .tc-card { width: 62px; height: 86px; }
+    .tc-card-suit-lg { font-size: 1.85rem; }
+    .tc-center { min-height: 50px; padding: 6px 9px; }
+}
+
+/* ===== 크랩스 · Craps (.cr- 접두사 전용) ===== */
+.cr-portal-item .portal-item-icon {
+    border-color: rgba(212, 175, 55, 0.55);
+    background: linear-gradient(145deg, rgba(16, 101, 52, 0.45), rgba(212, 175, 55, 0.16));
+}
+
+.cr-screen {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: radial-gradient(ellipse at 50% 20%, #103324 0%, #0a1812 58%, #070b0a 100%);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    overflow: hidden;
+}
+
+.cr-hud {
+    padding: 5px 8px;
+    gap: 6px;
+}
+
+.cr-hud .btn-back {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.cr-hud .hud-stats {
+    gap: clamp(8px, 2.8vw, 16px);
+}
+
+.cr-hud .stat-val {
+    font-size: clamp(0.88rem, 3.8vw, 1.12rem);
+}
+
+.cr-rules-btn {
+    min-height: 44px;
+    min-width: 54px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.16);
+    border: 1px solid rgba(212, 175, 55, 0.55);
+    color: #fde68a;
+    font-family: var(--font-main);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.cr-rules-btn:active {
+    transform: scale(0.96);
+}
+
+.cr-en {
+    font-size: 0.58rem;
+    font-weight: 600;
+    color: rgba(248, 250, 252, 0.74);
+    letter-spacing: 0.01em;
+}
+
+.cr-rules-btn .cr-en {
+    font-size: 0.56rem;
+    color: rgba(253, 230, 138, 0.82);
+}
+
+.cr-table {
+    flex: 1;
+    min-height: 0;
+    margin: 0 10px 5px;
+    padding: 7px 8px;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 50% 42%, #166534 0%, #0f4c2a 56%, #09301b 100%);
+    border: 2px solid #d4af37;
+    box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.48), inset 0 0 0 3px rgba(212, 175, 55, 0.2), 0 8px 22px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.cr-phase-bar {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 5px 9px;
+    border-radius: 13px;
+    background: rgba(0, 0, 0, 0.38);
+    border: 1.5px solid rgba(212, 175, 55, 0.45);
+    flex-shrink: 0;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.cr-phase-bar.cr-phase-point {
+    background: rgba(15, 23, 42, 0.52);
+    border-color: #fde047;
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.22);
+}
+
+.cr-puck {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.cr-puck-off {
+    background: radial-gradient(circle at 35% 30%, #334155 0%, #0f172a 75%);
+    border: 2px solid #94a3b8;
+    color: #e2e8f0;
+    font-size: 0.66rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+.cr-puck-on {
+    background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f5f9 65%, #cbd5e1 100%);
+    border: 2.5px solid #f59e0b;
+    color: #0f172a;
+    font-size: 0.68rem;
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.65), 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cr-puck-num {
+    font-size: 0.86rem;
+    font-weight: 900;
+    color: #b45309;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.cr-phase-texts {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.cr-phase-title {
+    font-size: 0.96rem;
+    font-weight: 900;
+    color: #fef08a;
+    line-height: 1.15;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 5px;
+    word-break: keep-all;
+}
+
+.cr-phase-bar.cr-phase-point .cr-phase-title {
+    color: #ffffff;
+}
+
+.cr-phase-sub {
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: rgba(241, 245, 249, 0.84);
+    line-height: 1.2;
+    word-break: keep-all;
+}
+
+.cr-dice-stage {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 13px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    flex-shrink: 0;
+}
+
+.cr-dice-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-shrink: 0;
+}
+
+.cr-die {
+    width: 50px;
+    height: 50px;
+    padding: 6px;
+    border-radius: 11px;
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 60%, #dbe4ee 100%);
+    border: 1.5px solid #cbd5e1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55), inset 0 1.5px 0 #ffffff, inset 0 -2px 3px rgba(15, 23, 42, 0.16);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    place-items: center;
+    will-change: transform;
+}
+
+.cr-die.cr-rolling {
+    animation: cr-tumble 0.22s ease-in-out infinite;
+}
+
+.cr-die.cr-rolling:nth-child(2) {
+    animation-delay: -0.09s;
+}
+
+.cr-die.cr-landed {
+    animation: cr-pop 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes cr-tumble {
+    0% { transform: translate(0, 0) rotate(-11deg) scale(0.95); }
+    33% { transform: translate(2px, -3px) rotate(13deg) scale(1.03); }
+    66% { transform: translate(-2px, 2px) rotate(-9deg) scale(0.97); }
+    100% { transform: translate(0, 0) rotate(10deg) scale(0.95); }
+}
+
+@keyframes cr-pop {
+    0% { transform: scale(0.84) rotate(-6deg); }
+    60% { transform: scale(1.09) rotate(2deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.cr-pip {
+    width: 8.5px;
+    height: 8.5px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #334155 0%, #0f172a 75%);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.55);
+}
+
+.cr-pip.cr-pip-red {
+    background: radial-gradient(circle at 35% 30%, #ef4444 0%, #b91c1c 80%);
+}
+
+.cr-pip.cr-pip-lg {
+    width: 12px;
+    height: 12px;
+}
+
+.cr-p1 { grid-area: 1 / 1; }
+.cr-p2 { grid-area: 1 / 2; }
+.cr-p3 { grid-area: 1 / 3; }
+.cr-p4 { grid-area: 2 / 1; }
+.cr-p5 { grid-area: 2 / 2; }
+.cr-p6 { grid-area: 2 / 3; }
+.cr-p7 { grid-area: 3 / 1; }
+.cr-p8 { grid-area: 3 / 2; }
+.cr-p9 { grid-area: 3 / 3; }
+
+.cr-sum-box {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+}
+
+.cr-sum-top {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    line-height: 1;
+}
+
+.cr-sum-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.88);
+}
+
+.cr-sum-val {
+    font-size: clamp(1.7rem, 6.8vw, 2.1rem);
+    font-weight: 900;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+}
+
+.cr-sum-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 0.62rem;
+    font-weight: 900;
+    line-height: 1.15;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: rgba(241, 245, 249, 0.88);
+}
+
+.cr-sum-tag.cr-tag-win {
+    background: rgba(16, 185, 129, 0.34);
+    border-color: #6ee7b7;
+    color: #d1fae5;
+}
+
+.cr-sum-tag.cr-tag-lose {
+    background: rgba(220, 38, 38, 0.38);
+    border-color: #fca5a5;
+    color: #fee2e2;
+}
+
+.cr-sum-tag.cr-tag-point {
+    background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+    border-color: #fef9c3;
+    color: #111318;
+}
+
+.cr-log-box {
+    flex: 1;
+    min-height: 0;
+    background: rgba(0, 0, 0, 0.44);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 12px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    overflow: hidden;
+}
+
+.cr-log-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.cr-log-label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: rgba(254, 240, 138, 0.88);
+}
+
+.cr-status-pill {
+    font-size: 0.62rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cr-status-pill.cr-tone-win { color: #6ee7b7; }
+.cr-status-pill.cr-tone-lose { color: #fca5a5; }
+.cr-status-pill.cr-tone-even { color: #fde68a; }
+
+.cr-log-list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 3px;
+    overflow-y: auto;
+}
+
+.cr-log-item {
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.26;
+    color: rgba(226, 232, 240, 0.72);
+    padding: 2px 5px;
+    border-left: 2px solid rgba(148, 163, 184, 0.35);
+    border-radius: 4px;
+    word-break: keep-all;
+}
+
+.cr-log-item.cr-log-latest {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.08);
+    border-left-color: #fde047;
+    font-weight: 800;
+}
+
+.cr-log-item.cr-log-latest.cr-tone-win {
+    color: #a7f3d0;
+    border-left-color: #34d399;
+}
+
+.cr-log-item.cr-log-latest.cr-tone-lose {
+    color: #fecaca;
+    border-left-color: #f87171;
+}
+
+.cr-log-item.cr-log-latest.cr-tone-point {
+    color: #fef08a;
+    border-left-color: #fbbf24;
+}
+
+.cr-board {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.cr-spot {
+    position: relative;
+    width: 100%;
+    min-height: 54px;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-family: var(--font-main);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    text-align: left;
+    transition: transform 0.08s, box-shadow 0.16s, opacity 0.16s, border-color 0.16s;
+}
+
+.cr-spot:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.cr-spot:disabled {
+    cursor: default;
+    transform: none;
+}
+
+.cr-spot-pass {
+    background: linear-gradient(180deg, rgba(16, 120, 74, 0.85) 0%, rgba(12, 83, 52, 0.94) 100%);
+    border: 1.5px solid #6ee7b7;
+}
+
+.cr-spot-dont {
+    background: linear-gradient(180deg, rgba(30, 58, 138, 0.82) 0%, rgba(23, 37, 84, 0.94) 100%);
+    border: 1.5px solid #93c5fd;
+}
+
+.cr-spot-field {
+    background: linear-gradient(180deg, rgba(161, 98, 7, 0.8) 0%, rgba(113, 63, 18, 0.94) 100%);
+    border: 1.5px solid #fde047;
+}
+
+.cr-spot-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cr-spot-top {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 5px;
+    line-height: 1.1;
+}
+
+.cr-spot-title {
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.cr-spot-desc {
+    font-size: 0.64rem;
+    font-weight: 700;
+    color: rgba(241, 245, 249, 0.86);
+    line-height: 1.18;
+    word-break: keep-all;
+}
+
+.cr-spot-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 3px;
+    flex-shrink: 0;
+}
+
+.cr-spot-pay {
+    font-size: 0.64rem;
+    font-weight: 900;
+    color: #fef08a;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(254, 240, 138, 0.42);
+    padding: 2px 6px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.cr-spot-lock {
+    display: none;
+    font-size: 0.56rem;
+    font-weight: 800;
+    color: rgba(226, 232, 240, 0.9);
+    background: rgba(15, 23, 42, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    padding: 1px 5px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.cr-spot.cr-spot-locked {
+    opacity: 0.5;
+}
+
+.cr-spot.cr-spot-locked.cr-has-bet {
+    opacity: 0.72;
+}
+
+.cr-spot.cr-spot-locked .cr-spot-lock {
+    display: inline-flex;
+}
+
+.cr-spot.cr-spot-busy {
+    opacity: 0.62;
+}
+
+.cr-spot.cr-has-bet {
+    box-shadow: inset 0 0 0 2px #fde047, 0 0 10px rgba(250, 204, 21, 0.3);
+}
+
+.cr-spot.cr-spot-win {
+    box-shadow: 0 0 0 2.5px #34d399, 0 0 16px rgba(52, 211, 153, 0.75);
+}
+
+.cr-spot.cr-spot-push {
+    box-shadow: 0 0 0 2px #fde047, 0 0 12px rgba(250, 204, 21, 0.55);
+}
+
+.cr-spot.cr-spot-lose {
+    box-shadow: 0 0 0 2px #f87171, 0 0 12px rgba(248, 113, 113, 0.5);
+}
+
+.cr-chip-badge {
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    min-width: 24px;
+    height: 19px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #fde047 0%, #d97706 100%);
+    border: 1.5px solid #ffffff;
+    color: #111318;
+    font-size: 0.64rem;
+    font-weight: 900;
+    line-height: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+
+.cr-spot.cr-has-bet .cr-chip-badge {
+    display: inline-flex;
+}
+
+.cr-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 10px 3px;
+    flex-shrink: 0;
+}
+
+.cr-chip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cr-unit-btn {
+    min-height: 44px;
+    min-width: 54px;
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #13261d;
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: #e2e8f0;
+    font-family: var(--font-main);
+    font-size: 0.88rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+}
+
+.cr-unit-btn.cr-selected {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.42);
+}
+
+.cr-unit-btn:active:not(:disabled) { transform: scale(0.96); }
+.cr-unit-btn:disabled { opacity: 0.38; cursor: default; }
+
+.cr-clear-btn {
+    min-height: 44px;
+    flex: 1;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    color: #f1f5f9;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    cursor: pointer;
+}
+
+.cr-clear-btn:active:not(:disabled) { transform: scale(0.97); }
+.cr-clear-btn:disabled { opacity: 0.36; cursor: default; }
+
+.cr-act-row {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.cr-btn {
+    min-height: 46px;
+    flex: 1;
+    padding: 5px 8px;
+    border-radius: 13px;
+    border: 1.5px solid transparent;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    font-family: var(--font-main);
+    font-size: 0.92rem;
+    font-weight: 900;
+    line-height: 1.1;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.15s;
+}
+
+.cr-btn:active:not(:disabled) { transform: scale(0.97); }
+.cr-btn:disabled { opacity: 0.38; cursor: default; transform: none; }
+
+.cr-btn-roll {
+    background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+    border-color: #fef08a;
+    color: #111318;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.32);
+}
+
+.cr-btn-refill {
+    background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+    border-color: #a7f3d0;
+    color: #052e16;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.32);
+}
+
+.cr-btn-roll .cr-en,
+.cr-btn-refill .cr-en {
+    color: rgba(15, 23, 42, 0.74);
+}
+
+.cr-hidden {
+    display: none !important;
+}
+
+.cr-hint {
+    text-align: center;
+    font-size: 0.64rem;
+    line-height: 1.22;
+    color: var(--text-muted);
+    padding: 1px 12px 4px;
+    flex-shrink: 0;
+    word-break: keep-all;
+}
+
+.cr-guide-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 0.78rem;
+}
+
+.cr-guide-table th,
+.cr-guide-table td {
+    border: 1px solid var(--line);
+    padding: 5px 7px;
+    text-align: left;
+    color: var(--txt-main);
+}
+
+.cr-guide-table th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gold);
+    font-weight: 800;
+}
+
+@media (max-height: 660px) {
+    .cr-table { padding: 6px 8px; gap: 4px; }
+    .cr-phase-bar { padding: 4px 8px; gap: 7px; }
+    .cr-puck { width: 34px; height: 34px; }
+    .cr-dice-stage { padding: 4px 9px; }
+    .cr-die { width: 46px; height: 46px; padding: 5px; }
+    .cr-pip { width: 7.5px; height: 7.5px; }
+    .cr-pip.cr-pip-lg { width: 11px; height: 11px; }
+    .cr-spot { min-height: 48px; padding: 4px 9px; }
+    .cr-log-item { font-size: 0.65rem; line-height: 1.22; }
+}
+
+/* ===== 카지노 룰 연습 — 아케이드와 첫 화면을 나눈다(.mode-casino) ===== */
+body:not(.mode-casino) .portal-item.pi-casino,
+body.mode-casino .portal-item.pi-arcade { display: none; }
+.mode-switch {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; margin-top: 10px; padding: 8px 18px;
+    border-radius: 999px; border: 1px solid rgba(232, 201, 122, 0.55);
+    background: linear-gradient(180deg, rgba(20, 83, 45, 0.9), rgba(6, 40, 26, 0.95));
+    color: #f3d98f; font-family: var(--font-main); font-size: 0.92rem; font-weight: 800; cursor: pointer;
+}
+.mode-switch small { font-size: 0.72rem; font-weight: 600; opacity: 0.8; }
+.mode-switch:active { transform: scale(0.97); }
+body.mode-casino .mode-switch {
+    border-color: var(--line); background: var(--bg-card); color: var(--txt-main);
+}
+body.mode-casino #scr-menu {
+    background: radial-gradient(ellipse at 50% 0%, rgba(24, 110, 78, 0.55), rgba(6, 20, 15, 0.96) 62%), #06140f;
+}
+body.mode-casino .menu-title { color: #f3d98f; text-shadow: 0 0 18px rgba(232, 201, 122, 0.35); }
+body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122, 0.35); }
 </style>
 </head>
 <body>
@@ -4455,6 +6454,7 @@ canvas {
         <div class="menu-header">
             <h1 class="menu-title">GIJO Arcade</h1>
             <p class="menu-sub" id="menu-sub">비행기·대기 시간용 오프라인 게임 · Offline Mini Games</p>
+            <button type="button" class="mode-switch" id="mode-switch"></button>
         </div>
 
         <div class="arcade-portal">
@@ -4665,6 +6665,48 @@ canvas {
                             <span class="portal-best-pill" data-best="sicbo">BEST 0</span>
                         </span>
                         <span class="portal-item-desc">주사위 세 개 맞히기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item dt-portal-item">
+                <button class="portal-item-main" data-go="dragontiger" aria-label="드래곤 타이거 · Dragon Tiger">
+                    <span class="portal-item-icon">🐉</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">드래곤 타이거</span>
+                            <span class="portal-best-pill" data-best="dragontiger">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">카드 한 장씩, 높은 쪽 맞히기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item tc-portal-item">
+                <button class="portal-item-main" data-go="threecard" aria-label="쓰리카드 포커 · Three Card Poker">
+                    <span class="portal-item-icon">♠️</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">쓰리카드 포커</span>
+                            <span class="portal-best-pill" data-best="threecard">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">세 장으로 딜러와 족보 겨루기 — 규칙을 배우는 연습판</span>
+                    </span>
+                    <span class="portal-item-arrow">&#8594;</span>
+                </button>
+            </div>
+
+            <div class="portal-item cr-portal-item">
+                <button class="portal-item-main" data-go="craps" aria-label="크랩스 · Craps">
+                    <span class="portal-item-icon">🧊</span>
+                    <span class="portal-item-texts">
+                        <span class="portal-item-title-row">
+                            <span class="portal-item-title">크랩스</span>
+                            <span class="portal-best-pill" data-best="craps">BEST 0</span>
+                        </span>
+                        <span class="portal-item-desc">주사위 두 개, 패스 라인 배우기 — 규칙을 배우는 연습판</span>
                     </span>
                     <span class="portal-item-arrow">&#8594;</span>
                 </button>
@@ -5173,6 +7215,260 @@ canvas {
         </div>
 
         <p class="sb-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 드래곤 타이거 ===== -->
+    <section id="scr-dragontiger" class="screen hidden dt-screen">
+        <div class="hud dt-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="dt-rules-btn" id="dt-rules-btn" aria-label="드래곤 타이거 규칙 보기 · Dragon Tiger Rules">규칙<span class="dt-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>50</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="dt-table">
+            <div class="dt-top-meta">
+                <span class="dt-scale-pill">A(1) 최저 &lt; 2~10 &lt; J(11)·Q(12)·K(13) 최고</span>
+                <span class="dt-shoe-pill" id="dt-shoe-count">슈 416</span>
+            </div>
+
+            <div class="dt-arena">
+                <div class="dt-box dt-box-dragon" id="dt-dragon-box">
+                    <div class="dt-box-head">
+                        <div class="dt-box-title">
+                            <span class="dt-box-kr">드래곤</span>
+                            <span class="dt-en">Dragon</span>
+                        </div>
+                        <span class="dt-box-badge">🐉 D</span>
+                    </div>
+                    <div class="dt-card-stage">
+                        <div class="dt-card-slot" id="dt-dragon-card"></div>
+                        <div class="dt-val-side" aria-label="드래곤 카드 높낮이">
+                            <span class="dt-val-label">높낮이</span>
+                            <span class="dt-val-num" id="dt-dragon-val">-</span>
+                            <span class="dt-val-note" id="dt-dragon-note">1~13</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dt-box dt-box-tiger" id="dt-tiger-box">
+                    <div class="dt-box-head">
+                        <div class="dt-box-title">
+                            <span class="dt-box-kr">타이거</span>
+                            <span class="dt-en">Tiger</span>
+                        </div>
+                        <span class="dt-box-badge">🐯 T</span>
+                    </div>
+                    <div class="dt-card-stage">
+                        <div class="dt-card-slot" id="dt-tiger-card"></div>
+                        <div class="dt-val-side" aria-label="타이거 카드 높낮이">
+                            <span class="dt-val-label">높낮이</span>
+                            <span class="dt-val-num" id="dt-tiger-val">-</span>
+                            <span class="dt-val-note" id="dt-tiger-note">1~13</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dt-result-box" id="dt-result-box" aria-live="polite">
+                <div class="dt-res-main" id="dt-res-main">한 장씩 비교! 걸 곳을 고르고 딜을 누르세요</div>
+                <div class="dt-res-sub" id="dt-res-sub">One card each, higher wins · Choose side &amp; press Deal</div>
+            </div>
+
+            <div class="dt-history-row">
+                <span class="dt-hist-label">최근 10</span>
+                <div class="dt-hist-dots" id="dt-history" aria-label="최근 10판 결과 · Recent 10 results"></div>
+            </div>
+        </div>
+
+        <div class="dt-controls">
+            <div class="dt-side-row">
+                <button type="button" class="dt-side-btn dt-side-dragon dt-side-selected" data-dt-side="dragon" aria-pressed="true">드래곤<span class="dt-en">Dragon</span><span class="dt-side-pay">1배</span></button>
+                <button type="button" class="dt-side-btn dt-side-tiger" data-dt-side="tiger" aria-pressed="false">타이거<span class="dt-en">Tiger</span><span class="dt-side-pay">1배</span></button>
+                <button type="button" class="dt-side-btn dt-side-tie" data-dt-side="tie" aria-pressed="false">타이<span class="dt-en">Tie</span><span class="dt-side-pay">8배</span></button>
+            </div>
+            <div class="dt-bet-row">
+                <button type="button" class="dt-bet-btn" data-dt-bet="10">10</button>
+                <button type="button" class="dt-bet-btn dt-selected" data-dt-bet="50">50</button>
+                <button type="button" class="dt-bet-btn" data-dt-bet="100">100</button>
+            </div>
+            <div class="dt-act-row">
+                <button type="button" class="dt-btn dt-btn-deal" id="dt-deal-btn">딜<span class="dt-en">Deal</span></button>
+                <button type="button" class="dt-btn dt-btn-refill dt-hidden" id="dt-refill-btn">칩 다시 받기<span class="dt-en">Refill 1000</span></button>
+            </div>
+        </div>
+
+        <p class="dt-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 쓰리카드 포커 ===== -->
+    <section id="scr-threecard" class="screen hidden tc-screen">
+        <div class="hud tc-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="tc-rules-btn" id="tc-rules-btn" aria-label="쓰리카드 포커 규칙 보기 · Three Card Poker Rules">규칙<span class="tc-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>50</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="tc-table">
+            <div class="tc-zone">
+                <div class="tc-zone-head">
+                    <div class="tc-zone-title">
+                        <span class="tc-zone-label">딜러<span class="tc-en">Dealer</span></span>
+                        <span class="tc-rank-pill" id="tc-dealer-rank">-</span>
+                    </div>
+                    <span class="tc-deck-pill">52장 매 판 섞음</span>
+                </div>
+                <div class="tc-cards" id="tc-dealer-cards"></div>
+            </div>
+
+            <div class="tc-center" id="tc-center" aria-live="polite">
+                <div class="tc-msg-main" id="tc-msg-main">앤티를 고르고 딜을 누르세요</div>
+                <div class="tc-msg-sub" id="tc-msg-sub">Choose your Ante and press Deal · 딜러 자격 Q 하이 이상</div>
+            </div>
+
+            <div class="tc-zone">
+                <div class="tc-zone-head">
+                    <div class="tc-zone-title">
+                        <span class="tc-zone-label">나<span class="tc-en">Player</span></span>
+                        <span class="tc-rank-pill" id="tc-player-rank">-</span>
+                    </div>
+                    <span class="tc-bonus-tag tc-hidden" id="tc-bonus-tag">보너스</span>
+                </div>
+                <div class="tc-cards" id="tc-player-cards"></div>
+            </div>
+        </div>
+
+        <div class="tc-controls">
+            <div class="tc-bet-row">
+                <button type="button" class="tc-bet-btn" data-tc-ante="10">10</button>
+                <button type="button" class="tc-bet-btn tc-selected" data-tc-ante="50">50</button>
+                <button type="button" class="tc-bet-btn" data-tc-ante="100">100</button>
+                <button type="button" class="tc-help-btn tc-on" id="tc-help-btn" aria-pressed="true">도움말 켜짐<span class="tc-en">Help ON</span></button>
+            </div>
+            <div class="tc-act-row" id="tc-bet-actions">
+                <button type="button" class="tc-btn tc-btn-deal" id="tc-deal-btn">딜<span class="tc-en">Deal</span></button>
+                <button type="button" class="tc-btn tc-btn-refill tc-hidden" id="tc-refill-btn">칩 다시 받기<span class="tc-en">Refill 1000</span></button>
+            </div>
+            <div class="tc-act-row tc-hidden" id="tc-play-actions">
+                <button type="button" class="tc-btn tc-btn-play" id="tc-play-btn">플레이<span class="tc-en" id="tc-play-en">Play (+50)</span></button>
+                <button type="button" class="tc-btn tc-btn-fold" id="tc-fold-btn">폴드<span class="tc-en">Fold</span></button>
+            </div>
+        </div>
+
+        <p class="tc-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
+    </section>
+
+    <!-- ===== 크랩스 ===== -->
+    <section id="scr-craps" class="screen hidden cr-screen">
+        <div class="hud cr-hud">
+            <button class="btn-back" data-back>&larr; 메뉴 · Menu</button>
+            <button type="button" class="cr-rules-btn" id="cr-rules-btn" aria-label="크랩스 규칙 보기 · Craps Rules">규칙<span class="cr-en">Rules</span></button>
+            <div class="hud-stats">
+                <div class="stat"><span class="stat-label">칩 · Chips</span><span class="stat-val" data-chips>1000</span></div>
+                <div class="stat"><span class="stat-label">배팅 · Bet</span><span class="stat-val" data-bet>0</span></div>
+                <div class="stat"><span class="stat-label">Best</span><span class="stat-val" data-bestval>0</span></div>
+            </div>
+        </div>
+
+        <div class="cr-table">
+            <div class="cr-phase-bar" id="cr-phase-bar" aria-live="polite">
+                <div class="cr-puck cr-puck-off" id="cr-puck">OFF</div>
+                <div class="cr-phase-texts">
+                    <div class="cr-phase-title" id="cr-phase-title">컴아웃 롤 <span class="cr-en">Come-out</span></div>
+                    <div class="cr-phase-sub" id="cr-phase-sub">7·11 패스 승 · 2·3·12 크랩스 · 그 외 숫자면 포인트</div>
+                </div>
+            </div>
+
+            <div class="cr-dice-stage">
+                <div class="cr-dice-row" id="cr-dice-row" aria-label="주사위 두 개 · Two Dice">
+                    <div class="cr-die" id="cr-die-0"></div>
+                    <div class="cr-die" id="cr-die-1"></div>
+                </div>
+                <div class="cr-sum-box">
+                    <div class="cr-sum-top">
+                        <span class="cr-sum-label">합 <span class="cr-en">Sum</span></span>
+                        <span class="cr-sum-val" id="cr-sum-val">?</span>
+                    </div>
+                    <span class="cr-sum-tag" id="cr-sum-tag">준비 · Ready</span>
+                </div>
+            </div>
+
+            <div class="cr-log-box" aria-live="polite">
+                <div class="cr-log-head">
+                    <span class="cr-log-label">진행 설명 <span class="cr-en">Log</span></span>
+                    <span class="cr-status-pill" id="cr-status-pill">칩을 올려 굴리세요</span>
+                </div>
+                <div class="cr-log-list" id="cr-log-list"></div>
+            </div>
+
+            <div class="cr-board" id="cr-board">
+                <button type="button" class="cr-spot cr-spot-pass" data-cr-bet="pass" aria-label="패스 라인 Pass Line 1배">
+                    <span class="cr-spot-main">
+                        <span class="cr-spot-top">
+                            <span class="cr-spot-title">패스 라인</span>
+                            <span class="cr-en">Pass Line</span>
+                        </span>
+                        <span class="cr-spot-desc">컴아웃 7·11 승 · 포인트 먼저 나오면 승</span>
+                    </span>
+                    <span class="cr-spot-side">
+                        <span class="cr-spot-pay">1배</span>
+                        <span class="cr-spot-lock" id="cr-lock-pass">컴아웃 때만</span>
+                    </span>
+                    <span class="cr-chip-badge" id="cr-badge-pass"></span>
+                </button>
+
+                <button type="button" class="cr-spot cr-spot-dont" data-cr-bet="dontPass" aria-label="돈 패스 Don't Pass 1배">
+                    <span class="cr-spot-main">
+                        <span class="cr-spot-top">
+                            <span class="cr-spot-title">돈 패스</span>
+                            <span class="cr-en">Don't Pass</span>
+                        </span>
+                        <span class="cr-spot-desc">컴아웃 2·3 승(12 무) · 포인트 전 7 승</span>
+                    </span>
+                    <span class="cr-spot-side">
+                        <span class="cr-spot-pay">1배</span>
+                        <span class="cr-spot-lock" id="cr-lock-dontPass">컴아웃 때만</span>
+                    </span>
+                    <span class="cr-chip-badge" id="cr-badge-dontPass"></span>
+                </button>
+
+                <button type="button" class="cr-spot cr-spot-field" data-cr-bet="field" aria-label="필드 Field 1배 2와 12는 2배">
+                    <span class="cr-spot-main">
+                        <span class="cr-spot-top">
+                            <span class="cr-spot-title">필드</span>
+                            <span class="cr-en">Field</span>
+                        </span>
+                        <span class="cr-spot-desc">한 번 굴림 · 합 2·3·4·9·10·11·12 승</span>
+                    </span>
+                    <span class="cr-spot-side">
+                        <span class="cr-spot-pay">1배 (2·12 2배)</span>
+                    </span>
+                    <span class="cr-chip-badge" id="cr-badge-field"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="cr-controls">
+            <div class="cr-chip-row">
+                <button type="button" class="cr-unit-btn" data-cr-unit="10">10</button>
+                <button type="button" class="cr-unit-btn cr-selected" data-cr-unit="50">50</button>
+                <button type="button" class="cr-unit-btn" data-cr-unit="100">100</button>
+                <button type="button" class="cr-clear-btn" id="cr-clear-btn">지우기<span class="cr-en">Clear</span></button>
+            </div>
+            <div class="cr-act-row">
+                <button type="button" class="cr-btn cr-btn-roll" id="cr-roll-btn">굴리기<span class="cr-en">Roll</span></button>
+                <button type="button" class="cr-btn cr-btn-refill cr-hidden" id="cr-refill-btn">칩 다시 받기<span class="cr-en">Refill 1000</span></button>
+            </div>
+        </div>
+
+        <p class="cr-hint">가상 칩 전용 · 현금 거래 없음<br>Play chips only — no real money</p>
     </section>
 
 </div>
@@ -13649,6 +15945,1991 @@ class SicBo {
 }
 
 
+/* ============================================================
+   드래곤 타이거 · Dragon Tiger (8벌 슈, 한 장 비교 규칙 학습판 · DOM)
+   ============================================================ */
+
+const DT_SUITS = [
+    { sym: '♠', red: false },
+    { sym: '♥', red: true },
+    { sym: '♦', red: true },
+    { sym: '♣', red: false }
+];
+const DT_RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+const DT_DECKS = 8;
+const DT_RESHUFFLE_AT = 60;
+const DT_START_CHIPS = 1000;
+const DT_MAX_HISTORY = 10;
+
+function dtCardValue(rank) {
+    if (rank === 'A') return 1;
+    if (rank === 'J') return 11;
+    if (rank === 'Q') return 12;
+    if (rank === 'K') return 13;
+    return parseInt(rank, 10);
+}
+
+function dtCardLabel(card) {
+    const val = dtCardValue(card.rank);
+    if (card.rank === 'A' || card.rank === 'J' || card.rank === 'Q' || card.rank === 'K') {
+        return `${card.rank}(${val})`;
+    }
+    return card.rank;
+}
+
+function dtValNote(rank) {
+    if (rank === 'A') return 'A=1 최저';
+    if (rank === 'J') return 'J=11';
+    if (rank === 'Q') return 'Q=12';
+    if (rank === 'K') return 'K=13 최고';
+    return `숫자 ${rank}`;
+}
+
+class DragonTiger {
+    constructor() {
+        this.id = 'dragontiger';
+        this.screen = document.getElementById('scr-dragontiger');
+        this.running = false;
+        this.busy = false;
+        this.chips = DT_START_CHIPS;
+        this.selectedBet = 50;
+        this.currentBet = 50;
+        this._activeBet = 0;
+        this.selectedSide = 'dragon'; // 'dragon' | 'tiger' | 'tie'
+        this.shoe = [];
+        this.dragonCard = null;
+        this.tigerCard = null;
+        this.history = [];
+        this._binds = [];
+        this._timers = [];
+        this._runSeq = 0;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+    }
+
+    wait(ms, seq) {
+        return new Promise((resolve) => {
+            const id = setTimeout(() => {
+                this._timers = this._timers.filter(t => t !== id);
+                resolve(this.running && seq === this._runSeq);
+            }, ms);
+            this._timers.push(id);
+        });
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoDragonTiger_credits') || String(DT_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : DT_START_CHIPS;
+            const savedHist = localStorage.getItem('gijoDragonTiger_history');
+            if (savedHist) {
+                const parsed = JSON.parse(savedHist);
+                if (Array.isArray(parsed)) {
+                    this.history = parsed.filter(v => v === 'D' || v === 'T' || v === 'Tie').slice(-DT_MAX_HISTORY);
+                }
+            }
+        } catch {
+            this.chips = DT_START_CHIPS;
+            this.history = [];
+        }
+    }
+
+    saveChips() {
+        try { localStorage.setItem('gijoDragonTiger_credits', String(this.chips)); } catch {}
+    }
+
+    saveHistory() {
+        try { localStorage.setItem('gijoDragonTiger_history', JSON.stringify(this.history)); } catch {}
+    }
+
+    buildShoe() {
+        const deck = [];
+        for (let d = 0; d < DT_DECKS; d++) {
+            for (let s = 0; s < DT_SUITS.length; s++) {
+                for (let r = 0; r < DT_RANKS.length; r++) {
+                    deck.push({ rank: DT_RANKS[r], sym: DT_SUITS[s].sym, red: DT_SUITS[s].red });
+                }
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = (Math.random() * (i + 1)) | 0;
+            const tmp = deck[i];
+            deck[i] = deck[j];
+            deck[j] = tmp;
+        }
+        return deck;
+    }
+
+    drawCard() {
+        if (this.shoe.length === 0) this.shoe = this.buildShoe();
+        const card = this.shoe.pop();
+        this.updateShoePill();
+        return card;
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this._activeBet = 0;
+        this.currentBet = this.selectedBet;
+        this.dragonCard = null;
+        this.tigerCard = null;
+        if (this.shoe.length < DT_RESHUFFLE_AT) {
+            this.shoe = this.buildShoe();
+        }
+
+        store.setBest(this.id, this.chips);
+        this.bindInput();
+        this.renderEmptyCards();
+        this.renderHistory();
+        this.updateHud();
+        this.updateShoePill();
+        this.updateControls();
+
+        if (this.chips < this.selectedBet) {
+            this.setResult('칩이 배팅액보다 적어요 · 칩을 다시 받으세요', 'Refill 1000 or pick a smaller bet', 'half');
+        } else {
+            this.setResult('한 장씩 비교! 걸 곳을 고르고 딜을 누르세요', 'One card each, higher wins · Choose side & press Deal', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        if (this.busy && this._activeBet > 0) {
+            this.chips += this._activeBet;
+            this._activeBet = 0;
+        }
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('dt-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('dragontiger');
+        });
+        this.screen.querySelectorAll('[data-dt-side]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy) return;
+                sfx.init();
+                this.selectedSide = btn.getAttribute('data-dt-side');
+                sfx.blip(620, 0.04, 'triangle', 0.04);
+                this.updateControls();
+            });
+        });
+        this.screen.querySelectorAll('[data-dt-bet]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy) return;
+                sfx.init();
+                this.selectedBet = parseInt(btn.getAttribute('data-dt-bet'), 10);
+                this.currentBet = this.selectedBet;
+                sfx.blip(580, 0.04, 'triangle', 0.04);
+                this.updateHud();
+                this.updateControls();
+                if (this.chips < this.selectedBet) {
+                    this.setResult('칩이 배팅액보다 적어요 · 칩을 다시 받으세요', 'Chips below selected bet — Refill 1000', 'half');
+                }
+            });
+        });
+        this.on(document.getElementById('dt-deal-btn'), 'click', () => {
+            sfx.init();
+            this.startRound();
+        });
+        this.on(document.getElementById('dt-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+    }
+
+    updateHud() {
+        this.setStat('chips', this.chips);
+        this.setStat('bet', this.busy ? this.currentBet : this.selectedBet);
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateShoePill() {
+        const el = document.getElementById('dt-shoe-count');
+        if (el) el.textContent = `슈 ${this.shoe.length}`;
+    }
+
+    setResult(main, sub, tone = '') {
+        const mEl = document.getElementById('dt-res-main');
+        const sEl = document.getElementById('dt-res-sub');
+        if (mEl) {
+            mEl.textContent = main;
+            mEl.className = 'dt-res-main' + (tone ? ` dt-tone-${tone}` : '');
+        }
+        if (sEl) sEl.textContent = sub;
+    }
+
+    updateControls() {
+        const needRefill = !this.busy && this.chips < this.selectedBet;
+
+        this.screen.querySelectorAll('[data-dt-side]').forEach((btn) => {
+            const side = btn.getAttribute('data-dt-side');
+            btn.classList.toggle('dt-side-selected', side === this.selectedSide);
+            btn.setAttribute('aria-pressed', side === this.selectedSide ? 'true' : 'false');
+            btn.disabled = this.busy;
+        });
+
+        this.screen.querySelectorAll('[data-dt-bet]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-dt-bet'), 10);
+            btn.classList.toggle('dt-selected', v === this.selectedBet);
+            btn.disabled = this.busy;
+        });
+
+        const dealBtn = document.getElementById('dt-deal-btn');
+        const refillBtn = document.getElementById('dt-refill-btn');
+
+        if (dealBtn) {
+            dealBtn.classList.toggle('dt-hidden', needRefill);
+            dealBtn.disabled = this.busy || needRefill;
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('dt-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+    }
+
+    renderHistory() {
+        const wrap = document.getElementById('dt-history');
+        if (!wrap) return;
+        let html = '';
+        const recent = this.history.slice(-DT_MAX_HISTORY);
+        for (let i = 0; i < DT_MAX_HISTORY; i++) {
+            const code = recent[i];
+            const latest = (code && i === recent.length - 1) ? ' dt-hist-latest' : '';
+            if (code === 'D') html += `<span class="dt-hist-dot dt-hist-d${latest}" title="드래곤 승 · Dragon">D</span>`;
+            else if (code === 'T') html += `<span class="dt-hist-dot dt-hist-t${latest}" title="타이거 승 · Tiger">T</span>`;
+            else if (code === 'Tie') html += `<span class="dt-hist-dot dt-hist-tie${latest}" title="타이 · Tie">Tie</span>`;
+            else html += '<span class="dt-hist-dot dt-hist-empty">·</span>';
+        }
+        wrap.innerHTML = html;
+    }
+
+    createCardEl(card, faceDown = true) {
+        const wrap = document.createElement('div');
+        wrap.className = 'dt-card dt-card-deal' + (faceDown ? ' dt-facedown' : '');
+        const colorCls = card.red ? 'dt-red' : 'dt-black';
+        wrap.innerHTML =
+            `<div class="dt-card-inner">` +
+                `<div class="dt-card-face dt-card-front ${colorCls}">` +
+                    `<div class="dt-card-corner"><span class="dt-card-rank">${card.rank}</span><span class="dt-card-suit-sm">${card.sym}</span></div>` +
+                    `<div class="dt-card-suit-lg">${card.sym}</div>` +
+                    `<div class="dt-card-corner dt-card-corner-bot"><span class="dt-card-rank">${card.rank}</span><span class="dt-card-suit-sm">${card.sym}</span></div>` +
+                `</div>` +
+                `<div class="dt-card-face dt-card-back"><div class="dt-card-back-emblem">🐉</div></div>` +
+            `</div>`;
+        return wrap;
+    }
+
+    updateCardValueUI(side, card) {
+        const numEl = document.getElementById(side === 'dragon' ? 'dt-dragon-val' : 'dt-tiger-val');
+        const noteEl = document.getElementById(side === 'dragon' ? 'dt-dragon-note' : 'dt-tiger-note');
+        if (!card) {
+            if (numEl) numEl.textContent = '-';
+            if (noteEl) noteEl.textContent = '1~13';
+            return;
+        }
+        if (numEl) numEl.textContent = String(dtCardValue(card.rank));
+        if (noteEl) noteEl.textContent = dtValNote(card.rank);
+    }
+
+    renderEmptyCards() {
+        const dWrap = document.getElementById('dt-dragon-card');
+        const tWrap = document.getElementById('dt-tiger-card');
+        const dBox = document.getElementById('dt-dragon-box');
+        const tBox = document.getElementById('dt-tiger-box');
+        if (dBox) dBox.classList.remove('dt-box-win', 'dt-box-tie');
+        if (tBox) tBox.classList.remove('dt-box-win', 'dt-box-tie');
+        if (dWrap) dWrap.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">1장</span></div>';
+        if (tWrap) tWrap.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">1장</span></div>';
+        this.updateCardValueUI('dragon', null);
+        this.updateCardValueUI('tiger', null);
+    }
+
+    async dealCardAnimated(side, seq) {
+        const card = this.drawCard();
+        if (side === 'dragon') this.dragonCard = card;
+        else this.tigerCard = card;
+
+        const slot = document.getElementById(side === 'dragon' ? 'dt-dragon-card' : 'dt-tiger-card');
+        let el = null;
+        if (slot) {
+            slot.innerHTML = '';
+            el = this.createCardEl(card, true);
+            slot.appendChild(el);
+        }
+        if (!(await this.wait(60, seq))) return null;
+        if (el) el.classList.remove('dt-facedown');
+        this.updateCardValueUI(side, card);
+        sfx.blip(side === 'dragon' ? 540 : 440, 0.045, 'triangle', 0.045);
+        if (!(await this.wait(300, seq))) return null;
+        return card;
+    }
+
+    refillChips() {
+        if (this.busy) return;
+        this.chips = DT_START_CHIPS;
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateHud();
+        this.updateControls();
+        this.setResult('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 chips · 걸 곳을 고르고 딜을 누르세요', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    async startRound() {
+        if (this.busy) return;
+        if (this.chips < this.selectedBet) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.currentBet = this.selectedBet;
+        this._activeBet = this.currentBet;
+        this.chips -= this.currentBet;
+        this.saveChips();
+
+        let reshuffled = false;
+        if (this.shoe.length < DT_RESHUFFLE_AT) {
+            this.shoe = this.buildShoe();
+            reshuffled = true;
+        }
+
+        this.dragonCard = null;
+        this.tigerCard = null;
+
+        const dBox = document.getElementById('dt-dragon-box');
+        const tBox = document.getElementById('dt-tiger-box');
+        if (dBox) dBox.classList.remove('dt-box-win', 'dt-box-tie');
+        if (tBox) tBox.classList.remove('dt-box-win', 'dt-box-tie');
+
+        const dSlot = document.getElementById('dt-dragon-card');
+        const tSlot = document.getElementById('dt-tiger-card');
+        if (dSlot) dSlot.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">대기</span></div>';
+        if (tSlot) tSlot.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">대기</span></div>';
+        this.updateCardValueUI('dragon', null);
+        this.updateCardValueUI('tiger', null);
+
+        this.updateHud();
+        this.updateShoePill();
+        this.updateControls();
+
+        if (reshuffled) {
+            this.setResult('8벌(416장) 슈를 새로 섞었습니다 · 카드 배분 중…', 'Shoe reshuffled — Dealing Dragon & Tiger', '');
+        } else {
+            this.setResult('드래곤 → 타이거 순으로 카드를 여는 중…', 'Dealing one card to Dragon, then Tiger', '');
+        }
+        vibe(12);
+
+        if (!(await this.dealCardAnimated('dragon', seq))) return;
+        if (!(await this.dealCardAnimated('tiger', seq))) return;
+
+        this.settleRound(reshuffled);
+    }
+
+    settleRound(reshuffled = false) {
+        const dVal = dtCardValue(this.dragonCard.rank);
+        const tVal = dtCardValue(this.tigerCard.rank);
+        const dLabel = dtCardLabel(this.dragonCard);
+        const tLabel = dtCardLabel(this.tigerCard);
+
+        const dBox = document.getElementById('dt-dragon-box');
+        const tBox = document.getElementById('dt-tiger-box');
+
+        let outcome = 'Tie';
+        if (dVal > tVal) outcome = 'D';
+        else if (tVal > dVal) outcome = 'T';
+
+        if (outcome === 'D' && dBox) dBox.classList.add('dt-box-win');
+        else if (outcome === 'T' && tBox) tBox.classList.add('dt-box-win');
+        else if (outcome === 'Tie') {
+            if (dBox) dBox.classList.add('dt-box-tie');
+            if (tBox) tBox.classList.add('dt-box-tie');
+        }
+
+        const bet = this.currentBet;
+        let tone = 'lose';
+        let mainText = '';
+        let subText = '';
+
+        if (outcome === 'D') {
+            if (this.selectedSide === 'dragon') {
+                this.chips += bet * 2;
+                tone = 'win';
+                mainText = `드래곤 ${dLabel} > 타이거 ${tLabel} → 드래곤 승, +${bet}`;
+                subText = 'Dragon wins (1:1) · 무늬와 상관없이 높은 숫자가 승리';
+                sfx.good();
+                vibe([0, 35, 35, 35]);
+            } else {
+                mainText = `드래곤 ${dLabel} > 타이거 ${tLabel} → 드래곤 승, −${bet}`;
+                subText = 'Dragon wins · 높은 숫자가 있는 쪽이 이깁니다';
+                sfx.hit();
+                vibe(30);
+            }
+        } else if (outcome === 'T') {
+            if (this.selectedSide === 'tiger') {
+                this.chips += bet * 2;
+                tone = 'win';
+                mainText = `타이거 ${tLabel} > 드래곤 ${dLabel} → 타이거 승, +${bet}`;
+                subText = 'Tiger wins (1:1) · 무늬와 상관없이 높은 숫자가 승리';
+                sfx.good();
+                vibe([0, 35, 35, 35]);
+            } else {
+                mainText = `타이거 ${tLabel} > 드래곤 ${dLabel} → 타이거 승, −${bet}`;
+                subText = 'Tiger wins · 높은 숫자가 있는 쪽이 이깁니다';
+                sfx.hit();
+                vibe(30);
+            }
+        } else {
+            if (this.selectedSide === 'tie') {
+                const profit = bet * 8;
+                this.chips += bet + profit;
+                tone = 'win';
+                mainText = `드래곤 ${dLabel} = 타이거 ${tLabel} → 타이 적중(8배), +${profit}`;
+                subText = 'Tie wins (8:1) · 두 카드의 숫자가 같아 8배 배당!';
+                sfx.good();
+                vibe([0, 40, 40, 60]);
+            } else {
+                const half = bet / 2;
+                this.chips += half;
+                tone = 'half';
+                mainText = `드래곤 ${dLabel} = 타이거 ${tLabel} → 타이, 절반 돌려받기 −${half}`;
+                subText = `Tie half-back · 드래곤/타이거 배팅은 절반(${half})만 잃고 절반 돌려받음`;
+                sfx.blip(500, 0.09, 'triangle', 0.05);
+                vibe(20);
+            }
+        }
+
+        if (reshuffled) {
+            subText = '새 슈(416장) 첫 판 · ' + subText;
+        }
+
+        this._activeBet = 0;
+        this.history.push(outcome);
+        if (this.history.length > DT_MAX_HISTORY) {
+            this.history = this.history.slice(-DT_MAX_HISTORY);
+        }
+        this.saveHistory();
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+
+        this.busy = false;
+        this.renderHistory();
+        this.updateHud();
+        this.updateControls();
+        this.setResult(mainText, subText, tone);
+    }
+}
+
+
+/* ============================================================
+   쓰리카드 포커 · Three Card Poker (1벌 52장 매 판 섞음 · 규칙 학습판 · DOM)
+   ============================================================ */
+
+const TC_SUITS = [
+    { sym: '♠', red: false },
+    { sym: '♥', red: true },
+    { sym: '♦', red: true },
+    { sym: '♣', red: false }
+];
+const TC_RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const TC_START_CHIPS = 1000;
+
+function tcRankVal(rank) {
+    if (rank === 'A') return 14;
+    if (rank === 'K') return 13;
+    if (rank === 'Q') return 12;
+    if (rank === 'J') return 11;
+    return parseInt(rank, 10);
+}
+
+function tcValToRank(v) {
+    if (v === 14) return 'A';
+    if (v === 13) return 'K';
+    if (v === 12) return 'Q';
+    if (v === 11) return 'J';
+    return String(v);
+}
+
+/**
+ * 쓰리카드 포커 세 장 족보 판정 (순수 함수)
+ * @param {Array<{rank: string, sym?: string, suit?: string}>} cards
+ * @returns {{ rank: number, name: string, nameEn: string, label: string, shortLabel: string, cardsText: string, tiebreak: number[] }}
+ */
+function tcEvalHand(cards) {
+    const vals = cards.map(c => tcRankVal(c.rank)).sort((a, b) => b - a);
+    const suits = cards.map(c => (c.sym !== undefined ? c.sym : c.suit));
+    const isFlush = suits[0] === suits[1] && suits[1] === suits[2];
+
+    let straightHigh = 0;
+    if (vals[0] - vals[1] === 1 && vals[1] - vals[2] === 1) {
+        straightHigh = vals[0];
+    } else if (vals[0] === 14 && vals[1] === 3 && vals[2] === 2) {
+        straightHigh = 3; // A-2-3: 가장 낮은 스트레이트(3이 가장 높은 카드)
+    }
+    const isStraight = straightHigh > 0;
+
+    if (isFlush && isStraight) {
+        const hiText = straightHigh === 3 ? 'A-2-3' : tcValToRank(straightHigh);
+        const cardsText = straightHigh === 3
+            ? 'A-2-3'
+            : `${tcValToRank(straightHigh - 2)}-${tcValToRank(straightHigh - 1)}-${tcValToRank(straightHigh)}`;
+        return {
+            rank: 5,
+            name: '스트레이트 플러시',
+            nameEn: 'Straight Flush',
+            label: `스트레이트 플러시 (${hiText})`,
+            shortLabel: `스트레이트 플러시(${hiText})`,
+            cardsText,
+            tiebreak: [straightHigh]
+        };
+    }
+
+    if (vals[0] === vals[1] && vals[1] === vals[2]) {
+        const r = tcValToRank(vals[0]);
+        return {
+            rank: 4,
+            name: '트리플',
+            nameEn: 'Three of a Kind',
+            label: `트리플 (${r})`,
+            shortLabel: `트리플(${r})`,
+            cardsText: `${r}-${r}-${r}`,
+            tiebreak: [vals[0]]
+        };
+    }
+
+    if (isStraight) {
+        const hiText = straightHigh === 3 ? 'A-2-3' : tcValToRank(straightHigh);
+        const cardsText = straightHigh === 3
+            ? 'A-2-3'
+            : `${tcValToRank(straightHigh - 2)}-${tcValToRank(straightHigh - 1)}-${tcValToRank(straightHigh)}`;
+        return {
+            rank: 3,
+            name: '스트레이트',
+            nameEn: 'Straight',
+            label: `스트레이트 (${hiText})`,
+            shortLabel: `스트레이트(${hiText})`,
+            cardsText,
+            tiebreak: [straightHigh]
+        };
+    }
+
+    if (isFlush) {
+        const r0 = tcValToRank(vals[0]);
+        return {
+            rank: 2,
+            name: '플러시',
+            nameEn: 'Flush',
+            label: `플러시 (${r0})`,
+            shortLabel: `플러시(${r0})`,
+            cardsText: `${r0}-${tcValToRank(vals[1])}-${tcValToRank(vals[2])}`,
+            tiebreak: [vals[0], vals[1], vals[2]]
+        };
+    }
+
+    if (vals[0] === vals[1] || vals[1] === vals[2]) {
+        const pairVal = vals[1];
+        const kickerVal = vals[0] === vals[1] ? vals[2] : vals[0];
+        const pr = tcValToRank(pairVal);
+        const kr = tcValToRank(kickerVal);
+        return {
+            rank: 1,
+            name: '원 페어',
+            nameEn: 'One Pair',
+            label: `원 페어 (${pr})`,
+            shortLabel: `원 페어(${pr})`,
+            cardsText: `${pr}-${pr}-${kr}`,
+            tiebreak: [pairVal, kickerVal]
+        };
+    }
+
+    const r0 = tcValToRank(vals[0]);
+    return {
+        rank: 0,
+        name: '하이 카드',
+        nameEn: 'High Card',
+        label: `하이 카드 (${r0})`,
+        shortLabel: `하이 카드(${r0})`,
+        cardsText: `${r0}-${tcValToRank(vals[1])}-${tcValToRank(vals[2])}`,
+        tiebreak: [vals[0], vals[1], vals[2]]
+    };
+}
+
+/**
+ * 쓰리카드 포커 두 족보 비교 (순수 함수)
+ * @returns {number} a > b 이면 양수, 같으면 0, a < b 이면 음수
+ */
+function tcCompare(a, b) {
+    const ea = Array.isArray(a) ? tcEvalHand(a) : a;
+    const eb = Array.isArray(b) ? tcEvalHand(b) : b;
+    if (ea.rank !== eb.rank) return ea.rank - eb.rank;
+    const len = Math.max(ea.tiebreak.length, eb.tiebreak.length);
+    for (let i = 0; i < len; i++) {
+        const av = ea.tiebreak[i] || 0;
+        const bv = eb.tiebreak[i] || 0;
+        if (av !== bv) return av - bv;
+    }
+    return 0;
+}
+
+function tcDealerQualifies(ev) {
+    return ev.rank >= 1 || ev.tiebreak[0] >= 12;
+}
+
+function tcAnteBonusMult(ev) {
+    if (ev.rank === 5) return 5;
+    if (ev.rank === 4) return 4;
+    if (ev.rank === 3) return 1;
+    return 0;
+}
+
+function tcIsQ64OrBetter(ev) {
+    if (ev.rank >= 1) return true;
+    const ref = [12, 6, 4];
+    for (let i = 0; i < 3; i++) {
+        if (ev.tiebreak[i] !== ref[i]) return ev.tiebreak[i] > ref[i];
+    }
+    return true;
+}
+
+function tcStrategyAdvice(cards, canPlay) {
+    const ev = tcEvalHand(cards);
+    const shouldPlay = tcIsQ64OrBetter(ev);
+    const bonusMult = tcAnteBonusMult(ev);
+    const actKr = shouldPlay ? '플레이' : '폴드';
+    const actEn = shouldPlay ? 'Play' : 'Fold';
+    const reasonKr = shouldPlay ? 'Q-6-4 이상' : 'Q-6-4 미만';
+    const reasonEn = shouldPlay ? 'Q-6-4 or better' : 'below Q-6-4';
+
+    let kr = `내 패 ${ev.cardsText} (${ev.name}) → 기본 전략은 ${actKr} (${reasonKr})`;
+    let en = `Your ${ev.cardsText} (${ev.nameEn}) — Basic strategy: ${actEn} (${reasonEn})`;
+    if (shouldPlay && bonusMult > 0) {
+        en += ` · Ante Bonus ${bonusMult}:1`;
+    }
+    if (!canPlay) {
+        en = '칩 부족으로 플레이 불가 · 폴드만 가능 (Not enough chips to Play — Fold only)';
+    }
+    return { kr, en, shouldPlay };
+}
+
+class ThreeCardPoker {
+    constructor() {
+        this.id = 'threecard';
+        this.screen = document.getElementById('scr-threecard');
+        this.running = false;
+        this.busy = false;
+        this.phase = 'bet'; // 'bet' | 'deal' | 'choice' | 'reveal'
+        this.chips = TC_START_CHIPS;
+        this.selectedAnte = 50;
+        this.anteBet = 0;
+        this.playBet = 0;
+        this.helpOn = true;
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.dealerRevealed = false;
+        this._binds = [];
+        this._timers = [];
+        this._runSeq = 0;
+    }
+
+    getDisplayBet() {
+        if (this.anteBet > 0) return this.anteBet + this.playBet;
+        return this.selectedAnte;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+    }
+
+    wait(ms, seq) {
+        return new Promise((resolve) => {
+            const id = setTimeout(() => {
+                this._timers = this._timers.filter(t => t !== id);
+                resolve(this.running && seq === this._runSeq);
+            }, ms);
+            this._timers.push(id);
+        });
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoThreeCard_credits') || String(TC_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : TC_START_CHIPS;
+            const savedHelp = localStorage.getItem('gijoThreeCard_help');
+            this.helpOn = savedHelp === null ? true : savedHelp === '1';
+        } catch {
+            this.chips = TC_START_CHIPS;
+            this.helpOn = true;
+        }
+    }
+
+    saveChips() {
+        try { localStorage.setItem('gijoThreeCard_credits', String(this.chips)); } catch {}
+    }
+
+    saveHelp() {
+        try { localStorage.setItem('gijoThreeCard_help', this.helpOn ? '1' : '0'); } catch {}
+    }
+
+    buildShuffledDeck() {
+        const deck = [];
+        for (let s = 0; s < TC_SUITS.length; s++) {
+            for (let r = 0; r < TC_RANKS.length; r++) {
+                deck.push({ rank: TC_RANKS[r], sym: TC_SUITS[s].sym, red: TC_SUITS[s].red });
+            }
+        }
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = (Math.random() * (i + 1)) | 0;
+            const tmp = deck[i];
+            deck[i] = deck[j];
+            deck[j] = tmp;
+        }
+        return deck;
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this.phase = 'bet';
+        this.anteBet = 0;
+        this.playBet = 0;
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.dealerRevealed = false;
+
+        store.setBest(this.id, this.chips);
+        this.bindInput();
+        this.renderEmptyHands();
+        this.updateHud();
+        this.updateHelpBtn();
+        this.updateControls();
+
+        if (this.chips < this.selectedAnte) {
+            this.setCenterMsg('칩이 앤티보다 적어요 · 칩을 다시 받으세요', 'Not enough chips for this Ante — refill for free', 'push');
+        } else {
+            this.setCenterMsg('앤티를 고르고 딜을 누르세요', 'Choose your Ante and press Deal · 딜러 자격 Q 하이 이상', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        if (this.phase === 'deal' && this.anteBet > 0) {
+            this.chips += this.anteBet;
+            this.anteBet = 0;
+        }
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('tc-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('threecard');
+        });
+        this.screen.querySelectorAll('[data-tc-ante]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy || this.phase !== 'bet') return;
+                sfx.init();
+                this.selectedAnte = parseInt(btn.getAttribute('data-tc-ante'), 10);
+                this.anteBet = 0;
+                this.playBet = 0;
+                sfx.blip(580, 0.04, 'triangle', 0.04);
+                this.updateHud();
+                this.updateControls();
+                if (this.chips < this.selectedAnte) {
+                    this.setCenterMsg('칩이 앤티보다 적어요 · 칩을 다시 받으세요', 'Not enough chips — refill for free', 'push');
+                }
+            });
+        });
+        this.on(document.getElementById('tc-help-btn'), 'click', () => {
+            sfx.init();
+            this.helpOn = !this.helpOn;
+            this.saveHelp();
+            this.updateHelpBtn();
+            sfx.blip(this.helpOn ? 680 : 440, 0.05, 'triangle', 0.04);
+            if (this.phase === 'choice' && !this.busy) {
+                this.renderChoiceMessage();
+            }
+        });
+        this.on(document.getElementById('tc-deal-btn'), 'click', () => {
+            sfx.init();
+            this.startRound();
+        });
+        this.on(document.getElementById('tc-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+        this.on(document.getElementById('tc-play-btn'), 'click', () => {
+            sfx.init();
+            this.playerPlay();
+        });
+        this.on(document.getElementById('tc-fold-btn'), 'click', () => {
+            sfx.init();
+            this.playerFold();
+        });
+    }
+
+    updateHud() {
+        this.setStat('chips', this.chips);
+        this.setStat('bet', this.getDisplayBet());
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateHelpBtn() {
+        const btn = document.getElementById('tc-help-btn');
+        if (!btn) return;
+        btn.classList.toggle('tc-on', this.helpOn);
+        btn.setAttribute('aria-pressed', this.helpOn ? 'true' : 'false');
+        btn.innerHTML = this.helpOn
+            ? '도움말 켜짐<span class="tc-en">Help ON</span>'
+            : '도움말 꺼짐<span class="tc-en">Help OFF</span>';
+    }
+
+    setCenterMsg(kr, en, tone = '') {
+        const box = document.getElementById('tc-center');
+        const main = document.getElementById('tc-msg-main');
+        const sub = document.getElementById('tc-msg-sub');
+        if (box) {
+            box.classList.remove('tc-center-win', 'tc-center-bonus', 'tc-center-lose', 'tc-center-push', 'tc-center-tip');
+            if (tone) box.classList.add(`tc-center-${tone}`);
+        }
+        if (main) main.textContent = kr;
+        if (sub) sub.textContent = en || '';
+    }
+
+    updateControls() {
+        const inBet = this.phase === 'bet';
+        const needRefill = inBet && this.chips < this.selectedAnte;
+
+        this.screen.querySelectorAll('[data-tc-ante]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-tc-ante'), 10);
+            btn.classList.toggle('tc-selected', v === this.selectedAnte);
+            btn.disabled = this.busy || !inBet;
+        });
+
+        const betRow = document.getElementById('tc-bet-actions');
+        const playRow = document.getElementById('tc-play-actions');
+        const dealBtn = document.getElementById('tc-deal-btn');
+        const refillBtn = document.getElementById('tc-refill-btn');
+        const playBtn = document.getElementById('tc-play-btn');
+        const playEn = document.getElementById('tc-play-en');
+        const foldBtn = document.getElementById('tc-fold-btn');
+
+        if (betRow) betRow.classList.toggle('tc-hidden', !inBet);
+        if (playRow) playRow.classList.toggle('tc-hidden', inBet);
+
+        if (dealBtn) {
+            dealBtn.classList.toggle('tc-hidden', needRefill);
+            dealBtn.disabled = this.busy || !inBet || needRefill;
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('tc-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+
+        const canAct = this.phase === 'choice' && !this.busy;
+        const canPlay = canAct && this.chips >= this.anteBet;
+        if (playBtn) playBtn.disabled = !canPlay;
+        if (playEn) {
+            playEn.textContent = (this.phase === 'choice' && this.chips < this.anteBet)
+                ? 'Play (칩 부족)'
+                : `Play (+${this.anteBet || this.selectedAnte})`;
+        }
+        if (foldBtn) foldBtn.disabled = !canAct;
+    }
+
+    createCardEl(card, faceDown = false) {
+        const wrap = document.createElement('div');
+        wrap.className = 'tc-card tc-card-deal' + (faceDown ? ' tc-facedown' : '');
+        const colorCls = card.red ? 'tc-red' : 'tc-black';
+        wrap.innerHTML =
+            `<div class="tc-card-inner">` +
+                `<div class="tc-card-face tc-card-front ${colorCls}">` +
+                    `<div class="tc-card-corner"><span class="tc-card-rank">${card.rank}</span><span class="tc-card-suit-sm">${card.sym}</span></div>` +
+                    `<div class="tc-card-suit-lg">${card.sym}</div>` +
+                    `<div class="tc-card-corner tc-card-corner-bot"><span class="tc-card-rank">${card.rank}</span><span class="tc-card-suit-sm">${card.sym}</span></div>` +
+                `</div>` +
+                `<div class="tc-card-face tc-card-back"><div class="tc-card-back-emblem">♠</div></div>` +
+            `</div>`;
+        return wrap;
+    }
+
+    renderEmptyHands() {
+        const dWrap = document.getElementById('tc-dealer-cards');
+        const pWrap = document.getElementById('tc-player-cards');
+        if (dWrap) dWrap.innerHTML = '<div class="tc-cards-empty">딜러 카드 3장 · Dealer</div>';
+        if (pWrap) pWrap.innerHTML = '<div class="tc-cards-empty">내 카드 3장 · Player</div>';
+        this.updateRankPills();
+    }
+
+    updateRankPills() {
+        const dPill = document.getElementById('tc-dealer-rank');
+        const pPill = document.getElementById('tc-player-rank');
+        const bTag = document.getElementById('tc-bonus-tag');
+
+        if (dPill) {
+            dPill.classList.remove('tc-rank-bonus', 'tc-rank-dnq');
+            if (this.dealerHand.length < 3) {
+                dPill.textContent = '-';
+            } else if (!this.dealerRevealed) {
+                dPill.textContent = '비공개';
+            } else {
+                const dEval = tcEvalHand(this.dealerHand);
+                const qual = tcDealerQualifies(dEval);
+                if (!qual) dPill.classList.add('tc-rank-dnq');
+                dPill.innerHTML = qual
+                    ? `${dEval.label}<span class="tc-qual-tag tc-qual-yes">자격</span>`
+                    : `${dEval.label}<span class="tc-qual-tag tc-qual-no">자격 미달</span>`;
+            }
+        }
+
+        if (pPill) {
+            pPill.classList.remove('tc-rank-bonus', 'tc-rank-dnq');
+            if (this.playerHand.length < 3) {
+                pPill.textContent = '-';
+                if (bTag) bTag.classList.add('tc-hidden');
+            } else {
+                const pEval = tcEvalHand(this.playerHand);
+                const mult = tcAnteBonusMult(pEval);
+                if (mult > 0) pPill.classList.add('tc-rank-bonus');
+                pPill.textContent = pEval.label;
+                if (bTag) {
+                    if (mult > 0) {
+                        bTag.textContent = `보너스 ×${mult}`;
+                        bTag.classList.remove('tc-hidden');
+                    } else {
+                        bTag.classList.add('tc-hidden');
+                    }
+                }
+            }
+        }
+    }
+
+    renderChoiceMessage() {
+        const canPlay = this.chips >= this.anteBet;
+        if (this.helpOn && this.playerHand.length === 3) {
+            const adv = tcStrategyAdvice(this.playerHand, canPlay);
+            this.setCenterMsg(adv.kr, adv.en, 'tip');
+        } else if (!canPlay) {
+            this.setCenterMsg(
+                `칩이 모자라 플레이(+${this.anteBet}) 불가 · 폴드를 누르세요`,
+                'Not enough chips to Play — press Fold',
+                'push'
+            );
+        } else {
+            this.setCenterMsg(
+                `플레이(+${this.anteBet}) 또는 폴드(포기)를 고르세요`,
+                `Choose Play (+${this.anteBet}) or Fold`,
+                ''
+            );
+        }
+    }
+
+    refillChips() {
+        if (this.busy || this.phase !== 'bet') return;
+        this.chips = TC_START_CHIPS;
+        this.anteBet = 0;
+        this.playBet = 0;
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateHud();
+        this.updateControls();
+        this.setCenterMsg('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 play chips', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    async startRound() {
+        if (this.busy || this.phase !== 'bet') return;
+        if (this.chips < this.selectedAnte) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'deal';
+        this.anteBet = this.selectedAnte;
+        this.playBet = 0;
+        this.chips -= this.anteBet;
+        this.saveChips();
+
+        const deck = this.buildShuffledDeck();
+        this.playerHand = [];
+        this.dealerHand = [];
+        this.dealerRevealed = false;
+
+        const dWrap = document.getElementById('tc-dealer-cards');
+        const pWrap = document.getElementById('tc-player-cards');
+        if (dWrap) dWrap.innerHTML = '';
+        if (pWrap) pWrap.innerHTML = '';
+
+        this.updateRankPills();
+        this.updateHud();
+        this.updateControls();
+        this.setCenterMsg('52장 새 덱을 섞어 3장씩 나눕니다...', 'Shuffling fresh 52-card deck — dealing 3 cards each...', '');
+        vibe(10);
+
+        for (let i = 0; i < 3; i++) {
+            const pCard = deck.pop();
+            this.playerHand.push(pCard);
+            if (pWrap) {
+                const el = this.createCardEl(pCard, true);
+                pWrap.appendChild(el);
+                if (!(await this.wait(40, seq))) return;
+                el.classList.remove('tc-facedown');
+            }
+            sfx.blip(540, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(160, seq))) return;
+
+            const dCard = deck.pop();
+            this.dealerHand.push(dCard);
+            if (dWrap) {
+                dWrap.appendChild(this.createCardEl(dCard, true));
+            }
+            sfx.blip(420, 0.04, 'triangle', 0.04);
+            if (!(await this.wait(160, seq))) return;
+        }
+
+        this.phase = 'choice';
+        this.busy = false;
+        this.updateRankPills();
+        this.updateControls();
+        this.renderChoiceMessage();
+    }
+
+    playerFold() {
+        if (this.busy || this.phase !== 'choice') return;
+        const ante = this.anteBet;
+        sfx.hit();
+        vibe(25);
+        this.finishRound(
+            'lose',
+            `폴드(포기) → 앤티 −${ante}`,
+            `Folded — Ante −${ante} (딜러 카드 비공개)`
+        );
+    }
+
+    async playerPlay() {
+        if (this.busy || this.phase !== 'choice') return;
+        if (this.chips < this.anteBet) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this.phase = 'reveal';
+        this.playBet = this.anteBet;
+        this.chips -= this.playBet;
+        this.saveChips();
+        this.updateHud();
+        this.updateControls();
+        sfx.blip(660, 0.05, 'triangle', 0.05);
+        this.setCenterMsg('플레이! 딜러 카드를 차례로 엽니다...', 'Play! Revealing Dealer cards...', 'tip');
+
+        const dWrap = document.getElementById('tc-dealer-cards');
+        const dEls = dWrap ? Array.from(dWrap.querySelectorAll('.tc-card')) : [];
+        for (let i = 0; i < dEls.length; i++) {
+            if (!(await this.wait(180, seq))) return;
+            dEls[i].classList.remove('tc-facedown');
+            sfx.blip(500 + i * 55, 0.045, 'triangle', 0.045);
+        }
+        if (!(await this.wait(280, seq))) return;
+
+        this.dealerRevealed = true;
+        this.updateRankPills();
+        this.settlePlay();
+    }
+
+    settlePlay() {
+        const ante = this.anteBet;
+        const play = this.playBet;
+        const pEval = tcEvalHand(this.playerHand);
+        const dEval = tcEvalHand(this.dealerHand);
+        const qualified = tcDealerQualifies(dEval);
+        const bonusMult = tcAnteBonusMult(pEval);
+        const bonus = ante * bonusMult;
+
+        let payout = bonus;
+        let tone = 'push';
+        let kr = '';
+        let en = '';
+
+        const bonusKr = bonus > 0 ? ` · 보너스(${pEval.name} ×${bonusMult}) +${bonus}` : '';
+        const bonusEn = bonus > 0 ? ` · Bonus +${bonus}` : '';
+
+        if (!qualified) {
+            payout += ante * 2 + play;
+            tone = bonus > 0 ? 'bonus' : 'win';
+            const dHi = tcValToRank(dEval.tiebreak[0]);
+            kr = `딜러 ${dHi} 하이 → 자격 미달 · 앤티 +${ante}, 플레이 돌려받기${bonusKr}`;
+            en = `Dealer ${dHi} High (No Qualify) — Ante +${ante}, Play Push${bonusEn}`;
+            sfx.good();
+            vibe(bonus > 0 ? [0, 40, 40, 60] : [0, 30, 30, 30]);
+        } else {
+            const cmp = tcCompare(pEval, dEval);
+            if (cmp > 0) {
+                payout += ante * 2 + play * 2;
+                tone = bonus > 0 ? 'bonus' : 'win';
+                kr = `내 ${pEval.shortLabel} > 딜러 ${dEval.shortLabel} → 앤티 +${ante}, 플레이 +${play}${bonusKr}`;
+                en = `Your ${pEval.nameEn} beats Dealer ${dEval.nameEn} — Ante +${ante}, Play +${play}${bonusEn}`;
+                sfx.good();
+                vibe(bonus > 0 ? [0, 40, 40, 60] : [0, 35, 35, 35]);
+            } else if (cmp < 0) {
+                tone = bonus > (ante + play) ? 'bonus' : (bonus > 0 ? 'push' : 'lose');
+                kr = `내 ${pEval.shortLabel} < 딜러 ${dEval.shortLabel} → 앤티 −${ante}, 플레이 −${play}${bonusKr}`;
+                en = `Dealer ${dEval.nameEn} beats Your ${pEval.nameEn} — Ante −${ante}, Play −${play}${bonusEn}`;
+                if (bonus > (ante + play)) {
+                    sfx.good();
+                    vibe([0, 35, 35, 35]);
+                } else {
+                    sfx.hit();
+                    vibe(35);
+                }
+            } else {
+                payout += ante + play;
+                tone = bonus > 0 ? 'bonus' : 'push';
+                kr = `내 ${pEval.shortLabel} = 딜러 ${dEval.shortLabel} → 무승부 · 앤티·플레이 돌려받기${bonusKr}`;
+                en = `Exact Tie — Ante & Play Push${bonusEn}`;
+                if (bonus > 0) {
+                    sfx.good();
+                    vibe([0, 35, 35, 35]);
+                } else {
+                    sfx.blip(520, 0.08, 'triangle', 0.05);
+                }
+            }
+        }
+
+        this.chips += payout;
+        this.finishRound(tone, kr, en);
+    }
+
+    finishRound(tone, kr, en) {
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.phase = 'bet';
+        this.busy = false;
+        this.updateHud();
+        this.updateControls();
+        this.setCenterMsg(kr, en, tone);
+    }
+}
+
+
+/* ============================================================
+   크랩스 · Craps (주사위 두 개, 기본 세 배팅 규칙 연습판 · DOM)
+   ============================================================ */
+const CR_START_CHIPS = 1000;
+const CR_ROLL_MS = 1000;
+const CR_MAX_LOGS = 4;
+const CR_PIP_MAP = {
+    1: [5],
+    2: [3, 7],
+    3: [3, 5, 7],
+    4: [1, 3, 7, 9],
+    5: [1, 3, 5, 7, 9],
+    6: [1, 3, 4, 6, 7, 9]
+};
+
+function crDiePipsHtml(val) {
+    const spots = CR_PIP_MAP[val] || CR_PIP_MAP[1];
+    const isRed = (val === 1 || val === 4);
+    const isLg = (val === 1);
+    let html = '';
+    for (let i = 0; i < spots.length; i++) {
+        const cls = 'cr-pip cr-p' + spots[i] + (isRed ? ' cr-pip-red' : '') + (isLg ? ' cr-pip-lg' : '');
+        html += `<span class="${cls}"></span>`;
+    }
+    return html;
+}
+
+function crSubjectParticle(n) {
+    return (n === 6 || n === 8 || n === 10) ? '이' : '가';
+}
+
+function crTopicParticle(n) {
+    return (n === 3 || n === 6 || n === 7 || n === 8 || n === 10 || n === 11) ? '은' : '는';
+}
+
+function crBetName(key) {
+    if (key === 'pass') return '패스 라인';
+    if (key === 'dontPass') return '돈 패스';
+    if (key === 'field') return '필드';
+    return key;
+}
+
+class Craps {
+    constructor() {
+        this.id = 'craps';
+        this.screen = document.getElementById('scr-craps');
+        this.running = false;
+        this.busy = false;
+        this.chips = CR_START_CHIPS;
+        this.chipUnit = 50;
+        this.point = null;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        this.lockedBets = { pass: 0, dontPass: 0 };
+        this.activeFieldBet = 0;
+        this.lastDice = [3, 4];
+        this.hasRolled = false;
+        this.logs = [];
+        this._rollId = 0;
+        this._spotFeedback = { pass: '', dontPass: '', field: '' };
+        this._binds = [];
+        this._timers = [];
+        this._runSeq = 0;
+    }
+
+    setStat(name, value) {
+        const el = this.screen.querySelector(`[data-${name}]`);
+        if (el) el.textContent = value;
+    }
+
+    on(target, type, fn) {
+        if (!target) return;
+        target.addEventListener(type, fn);
+        this._binds.push([target, type, fn]);
+    }
+
+    offAll() {
+        this._binds.forEach(([t, ty, fn]) => t.removeEventListener(ty, fn));
+        this._binds = [];
+    }
+
+    after(fn, ms) {
+        const id = setTimeout(() => {
+            this._timers = this._timers.filter(t => t !== id);
+            if (this.running) fn();
+        }, ms);
+        this._timers.push(id);
+        return id;
+    }
+
+    clearTimers() {
+        (this._timers || []).forEach(clearTimeout);
+        this._timers = [];
+    }
+
+    loadState() {
+        try {
+            const savedChips = parseInt(localStorage.getItem('gijoCraps_credits') || String(CR_START_CHIPS), 10);
+            this.chips = (Number.isFinite(savedChips) && savedChips >= 0) ? savedChips : CR_START_CHIPS;
+        } catch {
+            this.chips = CR_START_CHIPS;
+        }
+    }
+
+    saveChips() {
+        const safeTotal = this.chips + this.getLockedTotal() + this.activeFieldBet;
+        try { localStorage.setItem('gijoCraps_credits', String(safeTotal)); } catch {}
+    }
+
+    getStagedTotal() {
+        return this.stagedBets.pass + this.stagedBets.dontPass + this.stagedBets.field;
+    }
+
+    getLockedTotal() {
+        return this.lockedBets.pass + this.lockedBets.dontPass;
+    }
+
+    getDisplayedBet(key) {
+        if (key === 'field') return this.busy ? this.activeFieldBet : this.stagedBets.field;
+        return this.lockedBets[key] + this.stagedBets[key];
+    }
+
+    enter() {
+        this._runSeq++;
+        this.clearTimers();
+        this.offAll();
+        this.loadState();
+
+        this.running = true;
+        this.busy = false;
+        this.point = null;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        this.lockedBets = { pass: 0, dontPass: 0 };
+        this.activeFieldBet = 0;
+        this.lastDice = [3, 4];
+        this.hasRolled = false;
+        this.logs = [];
+        this._rollId = 0;
+        this._spotFeedback = { pass: '', dontPass: '', field: '' };
+
+        store.setBest(this.id, this.chips);
+        this.bindInput();
+        this.renderDice(this.lastDice, [false, false], -1);
+        this.updatePhaseUI();
+        this.updateSumUI(null, false);
+        this.renderLogs();
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+
+        if (this.chips < this.chipUnit) {
+            this.setStatus('칩이 부족해요 · 칩 다시 받기 또는 단위 변경', 'even');
+        } else {
+            this.setStatus('컴아웃 롤 · 칸을 눌러 칩을 올리세요', '');
+        }
+    }
+
+    exit() {
+        this._runSeq++;
+        // 나갈 때 판에 걸려 있던 패스·돈 패스(및 구르는 중이던 필드) 칩은 잃지 않게 돌려준다.
+        const refund = this.lockedBets.pass + this.lockedBets.dontPass + this.activeFieldBet;
+        if (refund > 0) {
+            this.chips += refund;
+        }
+        this.lockedBets = { pass: 0, dontPass: 0 };
+        this.activeFieldBet = 0;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        this.point = null;
+        this.running = false;
+        this.busy = false;
+        this.clearTimers();
+        for (let i = 0; i < 2; i++) {
+            const el = document.getElementById(`cr-die-${i}`);
+            if (el) el.classList.remove('cr-rolling', 'cr-landed');
+        }
+        this.offAll();
+        this.saveChips();
+    }
+
+    resize() {}
+    draw() {}
+
+    bindInput() {
+        this.on(document.getElementById('cr-rules-btn'), 'click', () => {
+            sfx.init();
+            showGuideModal('craps');
+        });
+        this.on(document.getElementById('cr-board'), 'click', (e) => {
+            if (this.busy) return;
+            const btn = e.target.closest('[data-cr-bet]');
+            if (!btn || btn.disabled) return;
+            sfx.init();
+            this.placeBet(btn.getAttribute('data-cr-bet'));
+        });
+        this.screen.querySelectorAll('[data-cr-unit]').forEach((btn) => {
+            this.on(btn, 'click', () => {
+                if (this.busy) return;
+                sfx.init();
+                this.chipUnit = parseInt(btn.getAttribute('data-cr-unit'), 10);
+                sfx.blip(600, 0.04, 'triangle', 0.04);
+                this.updateControls();
+                if (this.point === null && this.getStagedTotal() === 0 && this.chips < this.chipUnit) {
+                    this.setStatus('칩이 단위보다 적어요 · 다시 받거나 단위 줄이기', 'even');
+                }
+            });
+        });
+        this.on(document.getElementById('cr-clear-btn'), 'click', () => {
+            if (this.busy) return;
+            sfx.init();
+            this.clearBets();
+        });
+        this.on(document.getElementById('cr-roll-btn'), 'click', () => {
+            sfx.init();
+            this.roll();
+        });
+        this.on(document.getElementById('cr-refill-btn'), 'click', () => {
+            sfx.init();
+            this.refillChips();
+        });
+    }
+
+    setStatus(text, tone = '') {
+        const el = document.getElementById('cr-status-pill');
+        if (!el) return;
+        el.textContent = text;
+        el.className = 'cr-status-pill' + (tone ? ` cr-tone-${tone}` : '');
+    }
+
+    pushLogs(entries) {
+        this._rollId++;
+        for (let i = 0; i < entries.length; i++) {
+            this.logs.push({
+                text: entries[i].text,
+                tone: entries[i].tone || '',
+                rollId: this._rollId
+            });
+        }
+        if (this.logs.length > CR_MAX_LOGS) {
+            this.logs = this.logs.slice(-CR_MAX_LOGS);
+        }
+        this.renderLogs();
+    }
+
+    renderLogs() {
+        const list = document.getElementById('cr-log-list');
+        if (!list) return;
+        if (this.logs.length === 0) {
+            list.innerHTML =
+                `<div class="cr-log-item cr-log-latest">컴아웃 롤(첫 굴림): 7·11 패스 승, 2·3·12 패스 패, 그 외 수는 포인트!</div>` +
+                `<div class="cr-log-item">아래 패스 라인·돈 패스·필드 중 한 곳 이상 눌러 칩을 올리고 굴리세요.</div>`;
+            return;
+        }
+        let html = '';
+        for (let i = 0; i < this.logs.length; i++) {
+            const item = this.logs[i];
+            const isLatest = item.rollId === this._rollId;
+            const cls = 'cr-log-item' + (isLatest ? ' cr-log-latest' : '') + (isLatest && item.tone ? ` cr-tone-${item.tone}` : '');
+            html += `<div class="${cls}">${item.text}</div>`;
+        }
+        list.innerHTML = html;
+        list.scrollTop = list.scrollHeight;
+    }
+
+    renderDice(dice, rollingMask = [false, false], landedIdx = -1) {
+        for (let i = 0; i < 2; i++) {
+            const el = document.getElementById(`cr-die-${i}`);
+            if (!el) continue;
+            el.innerHTML = crDiePipsHtml(dice[i]);
+            el.classList.toggle('cr-rolling', Boolean(rollingMask[i]));
+            if (i === landedIdx) {
+                el.classList.remove('cr-landed');
+                void el.offsetWidth;
+                el.classList.add('cr-landed');
+            } else if (rollingMask[i]) {
+                el.classList.remove('cr-landed');
+            }
+        }
+    }
+
+    updatePhaseUI() {
+        const bar = document.getElementById('cr-phase-bar');
+        const puck = document.getElementById('cr-puck');
+        const title = document.getElementById('cr-phase-title');
+        const sub = document.getElementById('cr-phase-sub');
+        if (!bar || !puck || !title || !sub) return;
+
+        if (this.point === null) {
+            bar.classList.remove('cr-phase-point');
+            puck.className = 'cr-puck cr-puck-off';
+            puck.textContent = 'OFF';
+            title.innerHTML = '컴아웃 롤 <span class="cr-en">Come-out</span>';
+            sub.textContent = '7·11 패스 승 · 2·3·12 크랩스 · 그 외 숫자면 포인트';
+        } else {
+            const p = this.point;
+            bar.classList.add('cr-phase-point');
+            puck.className = 'cr-puck cr-puck-on';
+            puck.innerHTML = `<span>ON</span><span class="cr-puck-num">${p}</span>`;
+            title.innerHTML = `포인트 ${p} <span class="cr-en">Point is ${p}</span>`;
+            sub.textContent = `${p}${crSubjectParticle(p)} 먼저 나오면 패스 승 · 7 먼저 나오면 세븐 아웃`;
+        }
+    }
+
+    updateSumUI(dice, rolling = false, tagText = '', tagTone = '') {
+        const sumEl = document.getElementById('cr-sum-val');
+        const tagEl = document.getElementById('cr-sum-tag');
+        if (!sumEl || !tagEl) return;
+
+        if (rolling) {
+            sumEl.textContent = '···';
+            tagEl.textContent = '굴리는 중 · Rolling';
+            tagEl.className = 'cr-sum-tag';
+            return;
+        }
+        if (!dice) {
+            sumEl.textContent = '?';
+            tagEl.textContent = '준비 · Ready';
+            tagEl.className = 'cr-sum-tag';
+            return;
+        }
+        const sum = dice[0] + dice[1];
+        sumEl.textContent = String(sum);
+        tagEl.textContent = tagText || `${dice[0]} + ${dice[1]}`;
+        tagEl.className = 'cr-sum-tag' + (tagTone ? ` cr-tag-${tagTone}` : '');
+    }
+
+    updateHud() {
+        const staged = this.getStagedTotal();
+        const locked = this.getLockedTotal();
+        const totalBet = this.busy ? (locked + this.activeFieldBet) : (locked + staged);
+        const shownChips = this.busy ? this.chips : Math.max(0, this.chips - staged);
+        this.setStat('chips', shownChips);
+        this.setStat('bet', totalBet);
+        this.setStat('bestval', store.best(this.id));
+    }
+
+    updateBoardUI() {
+        const board = document.getElementById('cr-board');
+        if (!board) return;
+        const inPoint = this.point !== null;
+
+        ['pass', 'dontPass', 'field'].forEach((key) => {
+            const btn = board.querySelector(`[data-cr-bet="${key}"]`);
+            if (!btn) return;
+            const amt = this.getDisplayedBet(key);
+            const isLocked = inPoint && (key === 'pass' || key === 'dontPass');
+            const fb = this._spotFeedback[key] || '';
+
+            btn.classList.toggle('cr-has-bet', amt > 0);
+            btn.classList.toggle('cr-spot-locked', isLocked);
+            btn.classList.toggle('cr-spot-busy', this.busy && !isLocked);
+            btn.classList.toggle('cr-spot-win', fb === 'win');
+            btn.classList.toggle('cr-spot-push', fb === 'push');
+            btn.classList.toggle('cr-spot-lose', fb === 'lose');
+            btn.disabled = this.busy || isLocked;
+
+            const badge = document.getElementById(`cr-badge-${key}`);
+            if (badge) badge.textContent = amt > 0 ? String(amt) : '';
+
+            if (key === 'pass' || key === 'dontPass') {
+                const lockEl = document.getElementById(`cr-lock-${key}`);
+                if (lockEl) {
+                    lockEl.textContent = amt > 0 ? '판 끝까지 고정' : '컴아웃 때만';
+                }
+            }
+        });
+    }
+
+    updateControls() {
+        const inPoint = this.point !== null;
+        const staged = this.getStagedTotal();
+        const locked = this.getLockedTotal();
+        const needRefill = !this.busy && !inPoint && staged === 0 && this.chips < this.chipUnit;
+        const canRoll = !this.busy && !needRefill && (inPoint || staged > 0);
+
+        this.screen.querySelectorAll('[data-cr-unit]').forEach((btn) => {
+            const v = parseInt(btn.getAttribute('data-cr-unit'), 10);
+            btn.classList.toggle('cr-selected', v === this.chipUnit);
+            btn.disabled = this.busy;
+        });
+
+        const clearBtn = document.getElementById('cr-clear-btn');
+        const rollBtn = document.getElementById('cr-roll-btn');
+        const refillBtn = document.getElementById('cr-refill-btn');
+
+        if (clearBtn) clearBtn.disabled = this.busy || staged === 0;
+        if (rollBtn) {
+            rollBtn.classList.toggle('cr-hidden', needRefill);
+            rollBtn.disabled = !canRoll;
+            if (inPoint && locked === 0 && staged === 0) {
+                rollBtn.innerHTML = '그냥 굴리기<span class="cr-en">Roll (Point)</span>';
+            } else {
+                rollBtn.innerHTML = '굴리기<span class="cr-en">Roll</span>';
+            }
+        }
+        if (refillBtn) {
+            refillBtn.classList.toggle('cr-hidden', !needRefill);
+            refillBtn.disabled = this.busy || !needRefill;
+        }
+    }
+
+    placeBet(key) {
+        if (this.point !== null && (key === 'pass' || key === 'dontPass')) {
+            sfx.hit();
+            this.setStatus('패스·돈 패스는 컴아웃 전에만 걸 수 있어요', 'even');
+            return;
+        }
+        const staged = this.getStagedTotal();
+        if (staged + this.chipUnit > this.chips) {
+            sfx.hit();
+            vibe(20);
+            this.setStatus(`남은 칩 ${Math.max(0, this.chips - staged)} · 단위를 줄이세요`, 'lose');
+            return;
+        }
+
+        this._spotFeedback = { pass: '', dontPass: '', field: '' };
+        this.stagedBets[key] += this.chipUnit;
+        sfx.blip(660, 0.04, 'triangle', 0.045);
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+
+        const parts = [];
+        ['pass', 'dontPass', 'field'].forEach((k) => {
+            const v = this.getDisplayedBet(k);
+            if (v > 0) parts.push(`${crBetName(k)} ${v}`);
+        });
+        this.setStatus(parts.join(' · '), '');
+    }
+
+    clearBets() {
+        if (this.getStagedTotal() === 0) return;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        sfx.blip(400, 0.05, 'triangle', 0.04);
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+        if (this.point !== null) {
+            this.setStatus('필드 배팅만 비웠습니다 (패스·돈 패스 유지)', '');
+        } else {
+            this.setStatus('배팅을 모두 비웠습니다', '');
+        }
+    }
+
+    refillChips() {
+        if (this.busy || this.point !== null) return;
+        this.chips = CR_START_CHIPS;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+        this.setStatus('가상 칩 1000을 다시 받았습니다', 'win');
+        sfx.good();
+        vibe(20);
+    }
+
+    roll() {
+        if (this.busy) return;
+        const inPoint = this.point !== null;
+        const staged = this.getStagedTotal();
+        if (!inPoint && staged <= 0) {
+            this.updateControls();
+            return;
+        }
+        if (staged > this.chips) {
+            this.updateControls();
+            return;
+        }
+
+        const seq = ++this._runSeq;
+        this.busy = true;
+        this._spotFeedback = { pass: '', dontPass: '', field: '' };
+
+        // 새 배팅 칩을 지갑에서 빼서 테이블에 올린다.
+        this.chips -= staged;
+        if (!inPoint) {
+            this.lockedBets.pass += this.stagedBets.pass;
+            this.lockedBets.dontPass += this.stagedBets.dontPass;
+        }
+        this.activeFieldBet = this.stagedBets.field;
+        this.stagedBets = { pass: 0, dontPass: 0, field: 0 };
+        this.saveChips();
+
+        const isFreePointRoll = inPoint && this.getLockedTotal() === 0 && this.activeFieldBet === 0;
+        const finalDice = [
+            Math.floor(Math.random() * 6) + 1,
+            Math.floor(Math.random() * 6) + 1
+        ];
+        const stopAt = [740, CR_ROLL_MS];
+        const startTs = performance.now();
+        const curDice = this.lastDice.slice();
+        const landed = [false, false];
+
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+        this.updateSumUI(null, true);
+        this.setStatus(isFreePointRoll ? '포인트 단계 — 그냥 굴립니다' : '주사위가 구르는 중…', '');
+        vibe(15);
+
+        const tick = () => {
+            if (!this.running || seq !== this._runSeq) return;
+            const elapsed = performance.now() - startTs;
+            const rollingMask = [false, false];
+            let newlyLanded = -1;
+
+            for (let i = 0; i < 2; i++) {
+                if (elapsed >= stopAt[i]) {
+                    curDice[i] = finalDice[i];
+                    if (!landed[i]) {
+                        landed[i] = true;
+                        newlyLanded = i;
+                        sfx.blip(540 + i * 120, 0.05, 'triangle', 0.045);
+                    }
+                } else {
+                    rollingMask[i] = true;
+                    curDice[i] = Math.floor(Math.random() * 6) + 1;
+                }
+            }
+
+            this.renderDice(curDice, rollingMask, newlyLanded);
+            if (newlyLanded === -1 && elapsed < CR_ROLL_MS) {
+                sfx.blip(340 + Math.random() * 220, 0.02, 'triangle', 0.02);
+            }
+
+            if (elapsed >= CR_ROLL_MS) {
+                this.settleRoll(finalDice, isFreePointRoll);
+            } else {
+                const remain = CR_ROLL_MS - elapsed;
+                const delay = Math.min(remain, elapsed < 620 ? 75 : 95);
+                this.after(tick, Math.max(25, delay));
+            }
+        };
+
+        this.renderDice(curDice, [true, true], -1);
+        this.after(tick, 60);
+    }
+
+    settleRoll(dice, isFreePointRoll) {
+        const d1 = dice[0];
+        const d2 = dice[1];
+        const sum = d1 + d2;
+        const passStake = this.lockedBets.pass;
+        const dontStake = this.lockedBets.dontPass;
+        const fieldStake = this.activeFieldBet;
+        const wasPoint = this.point;
+
+        let netDelta = 0;
+        let roundEnded = false;
+        let tagText = '';
+        let tagTone = '';
+        const newLogs = [];
+        const fb = { pass: '', dontPass: '', field: '' };
+
+        if (wasPoint === null) {
+            // === 컴아웃 롤 ===
+            if (sum === 7 || sum === 11) {
+                roundEnded = true;
+                tagText = `내추럴 ${sum} · 패스 승`;
+                tagTone = 'win';
+                const parts = [];
+                if (passStake > 0) {
+                    this.chips += passStake * 2;
+                    netDelta += passStake;
+                    fb.pass = 'win';
+                    parts.push(`패스 라인 승 +${passStake}`);
+                }
+                if (dontStake > 0) {
+                    netDelta -= dontStake;
+                    fb.dontPass = 'lose';
+                    parts.push(`돈 패스 −${dontStake}`);
+                }
+                const outcome = parts.length ? parts.join(', ') : '패스 라인 승 · 다시 컴아웃';
+                newLogs.push({
+                    text: `${d1}+${d2} = ${sum} · 컴아웃에서 ${sum} → ${outcome}`,
+                    tone: netDelta > 0 ? 'win' : (netDelta < 0 ? 'lose' : 'point')
+                });
+            } else if (sum === 2 || sum === 3 || sum === 12) {
+                roundEnded = true;
+                tagText = sum === 12 ? '크랩스 12 · 돈 패스 무' : `크랩스 ${sum} · 패스 패`;
+                tagTone = 'lose';
+                const parts = [];
+                if (passStake > 0) {
+                    netDelta -= passStake;
+                    fb.pass = 'lose';
+                    parts.push(`패스 라인 패 −${passStake}`);
+                }
+                if (dontStake > 0) {
+                    if (sum === 12) {
+                        this.chips += dontStake;
+                        fb.dontPass = 'push';
+                        parts.push('돈 패스 무승부(돌려받기)');
+                    } else {
+                        this.chips += dontStake * 2;
+                        netDelta += dontStake;
+                        fb.dontPass = 'win';
+                        parts.push(`돈 패스 승 +${dontStake}`);
+                    }
+                }
+                const outcome = parts.length
+                    ? parts.join(', ')
+                    : (sum === 12 ? '패스 패 · 돈 패스 무승부 · 다시 컴아웃' : '패스 패 · 돈 패스 승 · 다시 컴아웃');
+                newLogs.push({
+                    text: `${d1}+${d2} = ${sum} · 컴아웃 크랩스(${sum}) → ${outcome}`,
+                    tone: netDelta > 0 ? 'win' : (netDelta < 0 ? 'lose' : 'point')
+                });
+            } else {
+                this.point = sum;
+                tagText = `포인트 ${sum} 결정 · ON`;
+                tagTone = 'point';
+                newLogs.push({
+                    text: `${d1}+${d2} = ${sum} → 포인트는 ${sum}. ${sum} ${crSubjectParticle(sum)} 다시 나오면 패스 승, 7 이 먼저 나오면 돈 패스 승`,
+                    tone: 'point'
+                });
+            }
+        } else {
+            // === 포인트 단계 ===
+            if (sum === wasPoint) {
+                roundEnded = true;
+                this.point = null;
+                tagText = `포인트 ${wasPoint} 적중!`;
+                tagTone = 'win';
+                const parts = [];
+                if (passStake > 0) {
+                    this.chips += passStake * 2;
+                    netDelta += passStake;
+                    fb.pass = 'win';
+                    parts.push(`패스 라인 승 +${passStake}`);
+                }
+                if (dontStake > 0) {
+                    netDelta -= dontStake;
+                    fb.dontPass = 'lose';
+                    parts.push(`돈 패스 −${dontStake}`);
+                }
+                const outcome = parts.length ? parts.join(', ') : '판 종료 · 다시 컴아웃';
+                newLogs.push({
+                    text: `${d1}+${d2} = ${sum} · 포인트 ${wasPoint} 적중 → ${outcome}`,
+                    tone: netDelta > 0 ? 'win' : (netDelta < 0 ? 'lose' : 'point')
+                });
+            } else if (sum === 7) {
+                roundEnded = true;
+                this.point = null;
+                tagText = '세븐 아웃 · Seven Out';
+                tagTone = 'lose';
+                const parts = [];
+                if (passStake > 0) {
+                    netDelta -= passStake;
+                    fb.pass = 'lose';
+                    parts.push(`패스 라인 패 −${passStake}`);
+                }
+                if (dontStake > 0) {
+                    this.chips += dontStake * 2;
+                    netDelta += dontStake;
+                    fb.dontPass = 'win';
+                    parts.push(`돈 패스 +${dontStake}`);
+                }
+                const outcome = parts.length ? parts.join(', ') : '판 종료 · 다시 컴아웃';
+                newLogs.push({
+                    text: `${d1}+${d2} = 7 · 세븐 아웃 → ${outcome}`,
+                    tone: netDelta > 0 ? 'win' : (netDelta < 0 ? 'lose' : 'point')
+                });
+            } else {
+                tagText = `포인트 ${wasPoint} 아님 · 계속`;
+                tagTone = '';
+                const note = isFreePointRoll ? ' · 포인트 단계 — 그냥 굴립니다' : '';
+                newLogs.push({
+                    text: `${d1}+${d2} = ${sum} · 포인트 ${wasPoint} 아님 → 계속${note}`,
+                    tone: ''
+                });
+            }
+        }
+
+        if (roundEnded) {
+            this.lockedBets = { pass: 0, dontPass: 0 };
+        }
+
+        // === 필드 정산 (매 굴림 바로 정산) ===
+        if (fieldStake > 0) {
+            this.activeFieldBet = 0;
+            if (sum === 2 || sum === 12) {
+                const profit = fieldStake * 2;
+                this.chips += fieldStake + profit;
+                netDelta += profit;
+                fb.field = 'win';
+                newLogs.push({
+                    text: `필드: 합 ${sum} ${crTopicParticle(sum)} 2배 칸! → +${profit}`,
+                    tone: 'win'
+                });
+            } else if (sum === 3 || sum === 4 || sum === 9 || sum === 10 || sum === 11) {
+                this.chips += fieldStake * 2;
+                netDelta += fieldStake;
+                fb.field = 'win';
+                newLogs.push({
+                    text: `필드: 합 ${sum} ${crTopicParticle(sum)} 1배 칸 → +${fieldStake}`,
+                    tone: 'win'
+                });
+            } else {
+                netDelta -= fieldStake;
+                fb.field = 'lose';
+                newLogs.push({
+                    text: `필드: 합 ${sum} ${crTopicParticle(sum)} 필드 밖 → −${fieldStake}`,
+                    tone: 'lose'
+                });
+            }
+        } else {
+            this.activeFieldBet = 0;
+        }
+
+        this.lastDice = dice.slice();
+        this.hasRolled = true;
+        this._spotFeedback = fb;
+        this.busy = false;
+
+        this.saveChips();
+        store.setBest(this.id, this.chips);
+
+        this.renderDice(dice, [false, false], -1);
+        this.updatePhaseUI();
+        this.updateSumUI(dice, false, tagText, tagTone);
+        this.pushLogs(newLogs);
+        this.updateBoardUI();
+        this.updateHud();
+        this.updateControls();
+
+        // 상단 한 줄 상태 갱신
+        if (netDelta > 0) {
+            this.setStatus(`이번 굴림 +${netDelta}칩`, 'win');
+            sfx.good();
+            vibe([0, 35, 35, 35]);
+        } else if (netDelta < 0) {
+            this.setStatus(`이번 굴림 −${Math.abs(netDelta)}칩`, 'lose');
+            sfx.hit();
+            vibe(35);
+        } else if (this.point !== null && this.getLockedTotal() === 0) {
+            this.setStatus('포인트 단계 — 필드 배팅 또는 그냥 굴리기', 'even');
+            sfx.blip(520, 0.08, 'triangle', 0.05);
+        } else if (this.point !== null) {
+            this.setStatus(`포인트 ${this.point} 진행 중 · 계속 굴리세요`, 'even');
+            sfx.blip(520, 0.08, 'triangle', 0.05);
+        } else if (this.chips < this.chipUnit) {
+            this.setStatus('칩이 부족해요 · 칩 다시 받기 또는 단위 줄이기', 'even');
+            sfx.blip(480, 0.08, 'triangle', 0.05);
+        } else {
+            this.setStatus('컴아웃 롤 · 다음 판 칩을 올리세요', 'even');
+            sfx.blip(520, 0.08, 'triangle', 0.05);
+        }
+    }
+}
+
+
 const games = {
     slots: new Slots(),
     block: new BlockDrop(),
@@ -13664,7 +17945,10 @@ const games = {
     blackjack: new Blackjack(),
     baccarat: new Baccarat(),
     roulette: new RouletteTable(),
-    sicbo: new SicBo()
+    sicbo: new SicBo(),
+    dragontiger: new DragonTiger(),
+    threecard: new ThreeCardPoker(),
+    craps: new Craps()
 };
 
 let current = null;
@@ -14026,6 +18310,154 @@ const ARCADE_GUIDES = {
                 </ul>
             </div>
         `
+    },
+    dragontiger: {
+        badge: 'CARD GUIDE · DRAGON TIGER',
+        title: '드래곤 타이거 규칙 안내 · Dragon Tiger Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 한 줄 요약 · Summary</div>
+                <p><b>카지노에서 가장 쉬운 카드 게임</b>입니다. <b>드래곤</b>과 <b>타이거</b>에 카드 한 장씩만 열어 <b>숫자가 더 높은 쪽</b>이 이깁니다. 무늬(♠♥♦♣)는 따지지 않습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🃏 카드 높낮이 · Card Ranks (A가 가장 낮음!)</div>
+                <table class="dt-guide-table">
+                    <tr><th>카드</th><th>높낮이 숫자</th><th>참고</th></tr>
+                    <tr><td><b>A (에이스)</b></td><td><b>1</b></td><td><b>가장 낮음</b> (2보다도 낮습니다)</td></tr>
+                    <tr><td>2 ~ 10</td><td>2 ~ 10</td><td>적힌 숫자 그대로</td></tr>
+                    <tr><td>J (잭)</td><td><b>11</b></td><td>10보다 높음</td></tr>
+                    <tr><td>Q (퀸)</td><td><b>12</b></td><td>J보다 높음</td></tr>
+                    <tr><td><b>K (킹)</b></td><td><b>13</b></td><td><b>가장 높음</b></td></tr>
+                </table>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">▶️ 진행 순서 · How to Play</div>
+                <ul>
+                    <li><b>1. 걸 곳 &amp; 배팅</b>: <b>드래곤 · 타이거 · 타이</b> 중 한 곳과 배팅액(10 / 50 / 100)을 고릅니다.</li>
+                    <li><b>2. 딜 (Deal)</b>: <b>딜</b>을 누르면 드래곤에 한 장, 타이거에 한 장이 차례로 앞면 공개됩니다.</li>
+                    <li><b>3. 바로 승부</b>: 추가 카드 없이 두 장의 숫자를 바로 비교해 정산합니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🏆 배당 표 · Payouts</div>
+                <table class="dt-guide-table">
+                    <tr><th>걸 곳 / 결과</th><th>정산</th></tr>
+                    <tr><td>드래곤 승 (Dragon)</td><td>배팅의 <b>1배</b></td></tr>
+                    <tr><td>타이거 승 (Tiger)</td><td>배팅의 <b>1배</b></td></tr>
+                    <tr><td>타이 적중 (Tie)</td><td>배팅의 <b>8배</b></td></tr>
+                    <tr><td>빗나감</td><td>건 칩 잃음</td></tr>
+                </table>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">⚖️ 타이 때 절반 돌려받기 · Tie Half-Back</div>
+                <ul>
+                    <li>두 카드의 숫자가 같아 <b>타이(Tie)</b>가 나왔는데 <b>드래곤</b>이나 <b>타이거</b>에 걸었다면, 건 칩을 다 잃지 않고 <b>절반을 돌려받습니다</b>(예: 50칩 걸면 25칩 돌려받고 −25).</li>
+                    <li>8벌(416장) 슈에서 뽑으며, 남은 카드가 60장 아래면 다음 판 전에 다시 섞습니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
+    },
+    threecard: {
+        badge: 'CARD GUIDE · THREE CARD POKER',
+        title: '쓰리카드 포커 규칙 안내 · Three Card Poker Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 한 줄 요약 · Summary</div>
+                <p><b>카드 세 장</b>으로 딜러와 족보를 겨루는 포커입니다. 내 패를 보고 <b>플레이(계속)</b>할지 <b>폴드(포기)</b>할지 고르며, <b>딜러 자격(Q 하이 이상)</b>과 <b>세 장 족보</b>를 익히는 것이 핵심입니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🃏 세 장 족보 표 · 3-Card Hand Rankings</div>
+                <p><b>중요!</b> 세 장 포커에서는 <b>스트레이트가 플러시보다 높습니다</b>(다섯 장 포커와 반대). 같은 족보끼리는 높은 카드부터 차례로 비교하며(원 페어는 페어 숫자 → 남은 한 장), 무늬로는 우열을 가리지 않습니다.</p>
+                <table class="tc-guide-table">
+                    <tr><th>순위 · 족보</th><th>설명</th><th>예시 카드</th></tr>
+                    <tr><td><b>1. 스트레이트 플러시</b></td><td>같은 무늬 연속 3장</td><td>♠Q ♠K ♠A / ♥A ♥2 ♥3</td></tr>
+                    <tr><td><b>2. 트리플</b></td><td>같은 숫자 3장</td><td>♠8 ♥8 ♦8</td></tr>
+                    <tr><td><b>3. 스트레이트</b></td><td>연속 3장 (플러시보다 높음!)</td><td>♠7 ♥8 ♦9 / Q-K-A(최고) · A-2-3(최저)</td></tr>
+                    <tr><td><b>4. 플러시</b></td><td>같은 무늬 3장</td><td>♦K ♦9 ♦4</td></tr>
+                    <tr><td><b>5. 원 페어</b></td><td>같은 숫자 2장</td><td>♣9 ♥9 ♠4</td></tr>
+                    <tr><td><b>6. 하이 카드</b></td><td>위 족보에 해당 없음</td><td>♠K ♦7 ♣2</td></tr>
+                </table>
+                <p>※ <b>A</b>는 <b>Q-K-A</b>(최고 스트레이트)와 <b>A-2-3</b>(가장 낮은 스트레이트, 가장 높은 카드는 <b>3</b>) 모두 되지만, <b>K-A-2</b>는 스트레이트가 아닙니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">▶️ 진행 순서 · How to Play</div>
+                <ul>
+                    <li><b>1. 앤티(Ante) &amp; 딜</b>: 10 / 50 / 100 중 앤티를 고르고 <b>딜(Deal)</b>을 누르면 나 3장(앞면), 딜러 3장(뒷면)을 받습니다.</li>
+                    <li><b>2. 내 선택</b>: <b>플레이(Play)</b>(앤티와 같은 칩을 한 번 더 걸고 겨루기) 또는 <b>폴드(Fold)</b>(포기하고 앤티 잃기)를 고릅니다.</li>
+                    <li><b>3. 비교 &amp; 정산</b>: 플레이를 누르면 딜러 카드 3장을 열어 딜러 자격과 족보를 비교합니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">👑 딜러 자격 · Dealer Qualification</div>
+                <p>딜러 패가 <b>Q 하이 이상</b>(하이 카드라면 가장 높은 카드가 Q · K · A, 또는 원 페어 이상)이어야 겨룹니다. 딜러가 <b>J 하이 이하(자격 미달)</b>이면 앤티는 1배로 이기고 플레이 칩은 그대로 돌려받습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🏆 정산 표 · Payouts</div>
+                <table class="tc-guide-table">
+                    <tr><th>상황</th><th>앤티 (Ante)</th><th>플레이 (Play)</th></tr>
+                    <tr><td>폴드 (포기)</td><td>잃음</td><td>걸지 않음</td></tr>
+                    <tr><td>딜러 자격 미달 (J 하이 이하)</td><td><b>1배 승리</b></td><td><b>돌려받기</b></td></tr>
+                    <tr><td>딜러 자격 있음 · 내 패 승</td><td><b>1배 승리</b></td><td><b>1배 승리</b></td></tr>
+                    <tr><td>딜러 자격 있음 · 동점</td><td><b>돌려받기</b></td><td><b>돌려받기</b></td></tr>
+                    <tr><td>딜러 자격 있음 · 내 패 패</td><td>잃음</td><td>잃음</td></tr>
+                </table>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">✨ 앤티 보너스 표 · Ante Bonus</div>
+                <p><b>플레이</b>했을 때 내 패가 아래 족보면 <b>딜러 패·자격·승패와 상관없이</b> 보너스를 더 받습니다.</p>
+                <table class="tc-guide-table">
+                    <tr><th>내 족보</th><th>보너스 (앤티 기준)</th></tr>
+                    <tr><td>스트레이트 플러시</td><td><b>5배</b></td></tr>
+                    <tr><td>트리플</td><td><b>4배</b></td></tr>
+                    <tr><td>스트레이트</td><td><b>1배</b></td></tr>
+                </table>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">💡 연습판 안내 · Practice Notes</div>
+                <ul>
+                    <li>52장 한 벌을 매 판 새로 섞습니다.</li>
+                    <li><b>페어 플러스(Pair Plus)</b> 등 곁배팅은 <b>이 연습판에는 없음</b>.</li>
+                    <li><b>도움말 켜기</b>를 켜면 내 선택 때 기본 전략(<b>Q-6-4 이상 플레이 / 미만 폴드</b>)을 한 줄로 알려 줍니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
+    },
+    craps: {
+        badge: 'DICE GUIDE · CRAPS',
+        title: '크랩스 규칙 안내 · Craps Rules',
+        content: `
+            <div class="guide-section">
+                <div class="guide-sec-title">🎯 한 줄 요약 · Summary</div>
+                <p><b>주사위 두 개</b>를 굴려 나온 <b>합(2~12)</b>으로 승부하는 게임입니다. <b>컴아웃 롤</b>과 <b>포인트 단계</b> 두 가지만 알면 크랩스의 뼈대를 바로 이해할 수 있습니다.</p>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🔄 두 단계 진행 · Come-out &rarr; Point</div>
+                <ul>
+                    <li><b>1단계 · 컴아웃 롤 (OFF)</b>: 판의 첫 굴림입니다. 합이 <b>7·11</b>이면 패스 라인 즉시 승, <b>2·3·12(크랩스)</b>면 패스 라인 즉시 패로 판이 끝납니다.</li>
+                    <li><b>포인트 설정</b>: 위 외의 숫자(<b>4·5·6·8·9·10</b>)가 나오면 그 숫자가 <b>포인트</b>가 되며 퍽이 <b>ON</b>으로 바뀝니다.</li>
+                    <li><b>2단계 · 포인트 단계 (ON)</b>: 정해진 <b>포인트가 다시 나오면</b> 패스 라인 승, 그 전에 <b>7(세븐 아웃)</b>이 나오면 패스 라인 패로 판이 끝나고 다시 컴아웃으로 돌아갑니다. 다른 숫자는 계속 굴립니다.</li>
+                </ul>
+            </div>
+            <div class="guide-section">
+                <div class="guide-sec-title">🏆 기본 세 가지 배팅 · Bets &amp; Payouts</div>
+                <table class="cr-guide-table">
+                    <tr><th>배팅</th><th>언제 거나</th><th>승 / 패 · 무승부</th><th>배당</th></tr>
+                    <tr><td><b>패스 라인</b><br>Pass Line</td><td>컴아웃 전만<br>(판 끝까지 고정)</td><td>컴아웃 7·11 승 / 2·3·12 패<br>포인트 재등장 승 / 7 패</td><td><b>1배</b></td></tr>
+                    <tr><td><b>돈 패스</b><br>Don't Pass</td><td>컴아웃 전만<br>(판 끝까지 고정)</td><td>컴아웃 2·3 승 / 7·11 패 / <b>12 무승부</b><br>포인트 전 7 승 / 포인트 패</td><td><b>1배</b></td></tr>
+                    <tr><td><b>필드</b><br>Field</td><td>언제든<br>(한 번만 정산)</td><td>3·4·9·10·11 승(1배) · <b>2·12 승(2배)</b><br>5·6·7·8 패</td><td><b>1배</b><br>(2·12는 <b>2배</b>)</td></tr>
+                </table>
+            </div>
+            <div class="guide-section highlight">
+                <div class="guide-sec-title">💡 연습판 안내 · Practice Notes</div>
+                <ul>
+                    <li><b>이 연습판은 기본 세 가지만 — 컴·오즈·플레이스 등은 없음.</b></li>
+                    <li>칩 단위(10 / 50 / 100)를 골라 배팅 칸을 누르면 칩이 올라갑니다. 포인트 단계 중 화면을 나가면 걸려 있던 패스·돈 패스 칩은 돌려받습니다.</li>
+                    <li>가상 칩 전용이며 현금 거래는 없습니다.</li>
+                </ul>
+            </div>
+        `
     }
 };
 
@@ -14054,6 +18486,39 @@ window.showGuideModal = showGuideModal;
 window.closeGuideModal = closeGuideModal;
 
 paintHot();
+
+// ── 카지노 룰 연습은 아케이드와 첫 화면을 따로 쓴다 ─────────────────────────
+// 같은 파일이지만 목록·제목·색이 다르다. 주소 ?mode=casino 로 바로 열 수 있고,
+// 카지노 게임을 #play= 로 바로 열어도 카지노 쪽으로 들어간다(뒤로 가면 카지노 첫 화면).
+// 카지노 게임을 더하면 아래 CASINO_IDS 에 id 를 넣는다.
+const CASINO_IDS = ['blackjack', 'baccarat', 'roulette', 'sicbo', 'dragontiger', 'threecard', 'craps'];
+document.querySelectorAll('[data-go]').forEach(btn => {
+    const item = btn.closest('.portal-item');
+    if (item) item.classList.add(CASINO_IDS.includes(btn.getAttribute('data-go')) ? 'pi-casino' : 'pi-arcade');
+});
+const ARCADE_MENU_SUB = document.getElementById('menu-sub').textContent;
+function setCasinoMode(on) {
+    document.body.classList.toggle('mode-casino', on);
+    document.querySelector('#scr-menu .menu-title').textContent = on ? 'GIJO Casino' : 'GIJO Arcade';
+    document.getElementById('menu-sub').textContent = on
+        ? '카지노 룰 연습 · 가상 칩 전용 · Casino Rules Practice'
+        : ARCADE_MENU_SUB;
+    document.getElementById('mode-switch').innerHTML = on
+        ? '← 아케이드 게임 <small>Arcade</small>'
+        : '🃏 카지노 룰 연습 <small>Casino Rules →</small>';
+    document.title = on ? 'GIJO Casino' : 'GIJO Arcade';
+    const portal = document.querySelector('.arcade-portal');
+    if (portal) portal.scrollTop = 0;
+}
+document.getElementById('mode-switch').addEventListener('click', () => {
+    sfx.init();
+    setCasinoMode(!document.body.classList.contains('mode-casino'));
+});
+setCasinoMode(
+    new URLSearchParams(location.search).get('mode') === 'casino' ||
+    location.hash === '#casino' ||
+    CASINO_IDS.includes((location.hash.match(/^#play=([a-z0-9]+)$/) || [])[1])
+);
 
 // 바깥(게임 목록 화면)에서 #play=snake 꼴로 들어오면 그 게임을 바로 연다.
 // 주소의 # 는 지워 둔다 — 뒤로 가면 메뉴가 나오고, 새로고침해도 메뉴에서 시작한다.

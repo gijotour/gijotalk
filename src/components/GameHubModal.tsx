@@ -72,7 +72,7 @@ export const GameHubModal: React.FC<GameHubModalProps> = ({
               </span>
             </div>
             <p className="text-xs text-ink-mute font-medium mt-0.5 truncate">
-              GIJO Drink · 폰 한 대로 여럿이 하는 게임
+              GIJO Drink · 미션 룰렛 · 라이어 게임 등 11종
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />

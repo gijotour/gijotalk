@@ -9390,7 +9390,7 @@ body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122
         <div class="mines-controls">
             <button type="button" class="mines-flag-btn" id="mines-flag-btn" aria-pressed="false">🚩 깃발 모드: 꺼짐 · Tap to Open</button>
         </div>
-        <p class="hint mines-hint">탭 = 열기 · 길게 누르기/깃발 모드 = 깃발 · 숫자 탭 = 주변 열기</p>
+        <p class="hint mines-hint">탭 = 열기 · 길게 누르기 = 깃발 · 숫자 탭 = 주변 열기<br>Tap to open · Hold to flag · Tap a number to open around</p>
     </section>
 
     <!-- ===== 패턴 기억 릴레이 ===== -->
@@ -10842,7 +10842,6 @@ class SpaceShooter extends Game {
         this.titleEn = 'GIJO Space Shooter';
         this.titleKr = '비행기 슈팅';
         this.introHint = '화면을 끌어 비행기를 옮기세요. 총알은 알아서 나갑니다.<br>Drag to move your ship. It fires automatically.';
-        this.bgImg = loadImg('assets/space_shooter_fun_art.jpg');
     }
 
     reset() {
@@ -11161,13 +11160,18 @@ class SpaceShooter extends Game {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
         this.beginFrame(ctx);
-        drawBgImage(ctx, this.bgImg, this.W, this.H);
-        // 원래는 완전 불투명으로 덮었는데, 사진이 비치도록 알파를 낮췄습니다
-        // — 그래도 조종석·총알 등 스프라이트가 묻히지 않을 만큼은 어둡게 남깁니다.
-        ctx.fillStyle = HOT.pick('#05050a', '#12040f');
-        ctx.globalAlpha = 0.6;
+        // 배경은 직접 칠한다. 예전 그림에는 가짜 점수판 글자가 있어 적·총알이 묻혔다.
+        const sky = ctx.createLinearGradient(0, 0, 0, this.H);
+        sky.addColorStop(0, HOT.pick('#070b1f', '#1a0616'));
+        sky.addColorStop(0.6, HOT.pick('#05060f', '#12040f'));
+        sky.addColorStop(1, HOT.pick('#0b0720', '#1d0714'));
+        ctx.fillStyle = sky;
         ctx.fillRect(0, 0, this.W, this.H);
-        ctx.globalAlpha = 1;
+        const neb = ctx.createRadialGradient(this.W * 0.78, this.H * 0.22, 0, this.W * 0.78, this.H * 0.22, this.W * 0.7);
+        neb.addColorStop(0, 'rgba(120, 80, 255, 0.16)');
+        neb.addColorStop(1, 'rgba(120, 80, 255, 0)');
+        ctx.fillStyle = neb;
+        ctx.fillRect(0, 0, this.W, this.H);
 
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
         this.stars.forEach(s => ctx.fillRect(s.x, s.y, s.s, s.s));
@@ -11594,7 +11598,7 @@ class Snake extends Game {
             ctx.fillStyle = 'rgba(255,255,255,0.6)';
             ctx.font = '600 13px ' + UI_FONT;
             ctx.textAlign = 'center';
-            ctx.fillText('쓸어서 출발 · Swipe to start', this.W / 2, this.H * 0.5);
+            ctx.fillText('쓸어서 출발 · Swipe to start', this.W / 2, this.H * 0.5 + Math.max(34, this.H * 0.07));
         }
 
         // 콤보·보너스 팝업 — 짧게 떴다 사라집니다.
@@ -11633,7 +11637,6 @@ class BrickBreaker extends Game {
         this.titleEn = 'GIJO Brick Breaker';
         this.titleKr = '벽돌 깨기';
         this.introHint = '화면을 끌어 받침대를 움직이세요. 공을 놓치면 목숨이 줄어듭니다.<br>Drag to move the paddle. Miss the ball and you lose a life.';
-        this.bgImg = loadImg('assets/brick_breaker_fun_art.jpg');
     }
 
     reset() {
@@ -11786,11 +11789,18 @@ class BrickBreaker extends Game {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
         this.beginFrame(ctx);
-        drawBgImage(ctx, this.bgImg, this.W, this.H);
-        ctx.fillStyle = HOT.pick('#0d0a04', '#190812');
-        ctx.globalAlpha = 0.6;
+        // 배경은 직접 칠한다. 예전 그림은 벽돌·공과 뒤섞여 보였다.
+        const wall = ctx.createLinearGradient(0, 0, 0, this.H);
+        wall.addColorStop(0, HOT.pick('#101426', '#1f0a18'));
+        wall.addColorStop(1, HOT.pick('#07080f', '#0f050c'));
+        ctx.fillStyle = wall;
         ctx.fillRect(0, 0, this.W, this.H);
-        ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.035)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let gx = 0.5; gx < this.W; gx += 28) { ctx.moveTo(gx, 0); ctx.lineTo(gx, this.H); }
+        for (let gy = 0.5; gy < this.H; gy += 28) { ctx.moveTo(0, gy); ctx.lineTo(this.W, gy); }
+        ctx.stroke();
 
         // 💎 크리스털 보석 벽돌 렌더링
         this.bricks.forEach(k => {
@@ -13553,6 +13563,28 @@ class FlappyNeon extends Game {
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
         this.beginFrame(ctx);
+
+        // 밤하늘 · 흐르는 별 · 바닥 선 — 속도감이 보이도록 직접 그린다
+        const night = ctx.createLinearGradient(0, 0, 0, this.H);
+        night.addColorStop(0, '#0a1030');
+        night.addColorStop(0.7, '#0b0a1c');
+        night.addColorStop(1, '#170a22');
+        ctx.fillStyle = night;
+        ctx.fillRect(0, 0, this.W, this.H);
+        const flowT = performance.now() / 1000;
+        for (let i = 0; i < 34; i++) {
+            const depth = 0.35 + ((i * 37) % 10) / 10 * 0.65;
+            const span = this.W + 8;
+            const sx = (((i * 97.3) % span) - flowT * 26 * depth) % span;
+            const sy = ((i * 61.7) % (this.H - 24));
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.18 + depth * 0.42).toFixed(2) + ')';
+            ctx.fillRect(sx < 0 ? sx + span : sx, sy, depth * 1.8, depth * 1.8);
+        }
+        ctx.fillStyle = 'rgba(0, 243, 255, 0.55)';
+        ctx.fillRect(0, this.H - 3, this.W, 3);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        for (let gx = -((flowT * this.speed) % 26); gx < this.W; gx += 26) ctx.fillRect(gx, this.H - 3, 10, 3);
+        ctx.fillStyle = '#ffffff'; // 이모지는 칠 색의 투명도를 따라가므로 불투명으로 되돌린다
 
         // 파이프 렌더링 (일렉트릭 네온 레이저 기둥)
         this.pipes.forEach(p => {

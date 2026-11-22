@@ -19187,7 +19187,7 @@ class DragonTiger {
         store.setBest(this.id, this.chips);
         this.updateHud();
         this.updateControls();
-        this.setResult('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 chips · 걸 곳을 고르고 딜을 누르세요', 'win');
+        this.setResult('가상 칩 1000을 다시 받았습니다', 'Refilled to 1000 chips · Choose side & press Deal', 'win');
         sfx.good();
         vibe(20);
     }
@@ -19524,7 +19524,8 @@ function tcStrategyAdvice(cards, canPlay) {
         en += ` · Ante Bonus ${bonusMult}:1`;
     }
     if (!canPlay) {
-        en = '칩 부족으로 플레이 불가 · 폴드만 가능 (Not enough chips to Play — Fold only)';
+        kr = '칩이 모자라 플레이할 수 없어요 · 폴드만 가능';
+        en = 'Not enough chips to Play — Fold only';
     }
     return { kr, en, shouldPlay };
 }
@@ -19777,7 +19778,7 @@ class ThreeCardPoker {
         if (playBtn) playBtn.disabled = !canPlay;
         if (playEn) {
             playEn.textContent = (this.phase === 'choice' && this.chips < this.anteBet)
-                ? 'Play (칩 부족)'
+                ? 'Play (no chips)'
                 : `Play (+${this.anteBet || this.selectedAnte})`;
         }
         if (foldBtn) foldBtn.disabled = !canAct;
@@ -22072,7 +22073,7 @@ class CasinoHoldem {
         if (callBtn) callBtn.disabled = !canCall;
         if (callEn) {
             callEn.textContent = (this.phase === 'choice' && this.chips < callCost)
-                ? 'Call (칩 부족)'
+                ? 'Call (no chips)'
                 : `Call (+${callCost})`;
         }
         if (foldBtn) foldBtn.disabled = !canAct;

@@ -10026,7 +10026,7 @@ body.mode-casino .pi-casino .portal-item-main { border-color: rgba(232, 201, 122
                 <button type="button" class="vp-btn vp-btn-refill vp-hidden" id="vp-refill-btn">칩 다시 받기<span class="vp-en">Refill 1000</span></button>
             </div>
             <div class="vp-act-row vp-hidden" id="vp-hold-actions">
-                <button type="button" class="vp-btn vp-btn-draw" id="vp-draw-btn">드로우<span class="vp-en" id="vp-draw-en">Draw · 5장 교체</span></button>
+                <button type="button" class="vp-btn vp-btn-draw" id="vp-draw-btn">드로우<span class="vp-en" id="vp-draw-en">Draw · swap 5</span></button>
             </div>
         </div>
 
@@ -19154,8 +19154,8 @@ class DragonTiger {
         const tBox = document.getElementById('dt-tiger-box');
         if (dBox) dBox.classList.remove('dt-box-win', 'dt-box-tie');
         if (tBox) tBox.classList.remove('dt-box-win', 'dt-box-tie');
-        if (dWrap) dWrap.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">1장</span></div>';
-        if (tWrap) tWrap.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">1장</span></div>';
+        if (dWrap) dWrap.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">1 card</span></div>';
+        if (tWrap) tWrap.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">1 card</span></div>';
         this.updateCardValueUI('dragon', null);
         this.updateCardValueUI('tiger', null);
     }
@@ -19222,8 +19222,8 @@ class DragonTiger {
 
         const dSlot = document.getElementById('dt-dragon-card');
         const tSlot = document.getElementById('dt-tiger-card');
-        if (dSlot) dSlot.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">대기</span></div>';
-        if (tSlot) tSlot.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">대기</span></div>';
+        if (dSlot) dSlot.innerHTML = '<div class="dt-card-empty">드래곤<span class="dt-en">Waiting</span></div>';
+        if (tSlot) tSlot.innerHTML = '<div class="dt-card-empty">타이거<span class="dt-en">Waiting</span></div>';
         this.updateCardValueUI('dragon', null);
         this.updateCardValueUI('tiger', null);
 
@@ -21409,8 +21409,8 @@ class VideoPoker {
         if (drawEn) {
             const swapCount = this.held.filter(h => !h).length;
             drawEn.textContent = swapCount === 0
-                ? 'Draw · 그대로 승부'
-                : `Draw · ${swapCount}장 교체`;
+                ? 'Draw · keep all'
+                : `Draw · swap ${swapCount}`;
         }
 
         const canHold = this.phase === 'hold' && !this.busy;

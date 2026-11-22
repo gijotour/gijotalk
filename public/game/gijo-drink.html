@@ -5829,6 +5829,66 @@ body.hot .hot-toggle-btn {
     #screen-finger .finger-area:empty::before,
     #screen-titanic .beer-liquid { animation: none; }
 }
+
+/* ===== 2026-11 무대 다듬기 2: 미션 룰렛 · 라이어 · 10초 · 번개 반응 ===== */
+.roulette-slice-label {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1px;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+.roulette-slice-en {
+    font-size: 0.66em;
+    font-weight: 700;
+    letter-spacing: 0;
+    opacity: 0.92;
+}
+.roulette-slice-label.roulette-slice-dense {
+    font-size: clamp(0.7rem, 2.6vw, 0.86rem);
+}
+
+.liar-result-headline,
+.liar-fact-val,
+.tensec-spotlight-diff {
+    white-space: pre-line;
+}
+.liar-fact-label {
+    flex-shrink: 0;
+}
+.liar-fact-val {
+    line-height: 1.3;
+}
+.game-tidy .liar-timer-controls .btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 0.92rem;
+    white-space: nowrap;
+}
+.tensec-spotlight-diff {
+    line-height: 1.4;
+}
+#tensec-stage-ranking {
+    padding-bottom: 30px;
+}
+
+/* 가운데 판이 떠 있는 동안에는 번호·기록을 바깥쪽으로 밀어 가리지 않게 한다 */
+.react-arena:has(.react-hub-card:not(.react-hidden)) .react-zone {
+    align-items: flex-end;
+    padding-bottom: 16px;
+}
+.react-arena:has(.react-hub-card:not(.react-hidden)) .react-zone.react-zone-rotated {
+    align-items: flex-start;
+    padding-top: 16px;
+}
+.react-hub-card {
+    max-width: 264px;
+    padding: 13px 14px;
+    gap: 8px;
+}
 </style>
 </head>
 <body>
@@ -7921,9 +7981,21 @@ const app = {
             const rotateDeg = (i * angle) + (angle / 2);
             label.style.transform = `rotate(${rotateDeg}deg)`;
 
-            let text = options[i];
-            if (text.length > 13) text = text.substring(0, 12) + '..';
-            label.innerText = text;
+            // 「한글 (English)」 꼴이면 두 줄로 나눠 적는다. 칸이 좁아지면 영어 줄은 뺀다.
+            const parts = /^(.*?)\s*\(([^()]+)\)\s*$/.exec(options[i]);
+            const clip = (s, max) => { const a = Array.from(s); return a.length > max ? a.slice(0, max - 1).join('') + '…' : s; };
+            const krMax = count <= 6 ? 12 : count <= 8 ? 9 : count <= 10 ? 7 : 5;
+            const krEl = document.createElement('span');
+            krEl.className = 'roulette-slice-kr';
+            krEl.textContent = clip(parts ? parts[1] : options[i], krMax);
+            label.appendChild(krEl);
+            if (parts && count <= 8) {
+                const enEl = document.createElement('span');
+                enEl.className = 'roulette-slice-en';
+                enEl.textContent = clip(parts[2], count <= 6 ? 16 : 12);
+                label.appendChild(enEl);
+            }
+            if (count > 8) label.classList.add('roulette-slice-dense');
 
             wheel.appendChild(label);
         }
@@ -9202,13 +9274,13 @@ const app = {
         if (iconEl) iconEl.textContent = isCaught ? '🎉' : '🕵️';
         if (headlineEl) {
             headlineEl.textContent = isCaught
-                ? '정답! 라이어를 찾았어요 · Caught the Liar!'
-                : '아쉬워요! 라이어가 숨었어요 · The Liar Escaped!';
+                ? '정답! 라이어를 찾았어요\nCaught the Liar!'
+                : '아쉬워요! 라이어가 숨었어요\nThe Liar Escaped!';
         }
-        if (votedEl) votedEl.textContent = `${votedIdx + 1}번 · Player ${votedIdx + 1}`;
+        if (votedEl) votedEl.textContent = `${votedIdx + 1}번\nPlayer ${votedIdx + 1}`;
         if (liarEl) liarEl.textContent = `${this.liarIndex + 1}번 · Player ${this.liarIndex + 1}`;
-        if (topicEl) topicEl.textContent = `${this.liarCurrentTopic.icon} ${this.liarCurrentTopic.kr} · ${this.liarCurrentTopic.en}`;
-        if (wordEl) wordEl.textContent = `${this.liarCurrentWord.kr} · ${this.liarCurrentWord.en}`;
+        if (topicEl) topicEl.textContent = `${this.liarCurrentTopic.icon} ${this.liarCurrentTopic.kr}\n${this.liarCurrentTopic.en}`;
+        if (wordEl) wordEl.textContent = `${this.liarCurrentWord.kr}\n${this.liarCurrentWord.en}`;
 
         if (comebackEl) {
             if (isCaught) {
@@ -9528,11 +9600,11 @@ const app = {
         const last = sorted[sorted.length - 1];
         if (first && firstPlayerEl && firstDiffEl) {
             firstPlayerEl.textContent = `${first.player}번 · P${first.player}`;
-            firstDiffEl.textContent = `${first.elapsed.toFixed(2)}s (오차 · off by ${first.diff.toFixed(2)}s)`;
+            firstDiffEl.textContent = `${first.elapsed.toFixed(2)}s\n오차 · off by ${first.diff.toFixed(2)}s`;
         }
         if (last && lastPlayerEl && lastDiffEl) {
             lastPlayerEl.textContent = `${last.player}번 · P${last.player}`;
-            lastDiffEl.textContent = `${last.elapsed.toFixed(2)}s (오차 · off by ${last.diff.toFixed(2)}s)`;
+            lastDiffEl.textContent = `${last.elapsed.toFixed(2)}s\n오차 · off by ${last.diff.toFixed(2)}s`;
         }
 
         if (listEl) {

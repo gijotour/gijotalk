@@ -1780,6 +1780,14 @@ body.hot .slots-jackpot-topper {
     gap: 12px;
 }
 
+/* 안내창 글은 낱말 단위로 줄을 바꾼다 — 표 칸에서 「플러/시」처럼 갈리지 않게 */
+.arcade-guide-card,
+.arcade-guide-card th,
+.arcade-guide-card td {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
 .guide-header {
     display: flex;
     justify-content: space-between;
@@ -19266,12 +19274,12 @@ class DragonTiger {
                 this.chips += bet * 2;
                 tone = 'win';
                 mainText = `드래곤 ${dLabel} > 타이거 ${tLabel} → 드래곤 승, +${bet}`;
-                subText = 'Dragon wins (1:1) · 무늬와 상관없이 높은 숫자가 승리';
+                subText = 'Dragon wins (1:1) — higher card wins, suits ignored';
                 sfx.good();
                 vibe([0, 35, 35, 35]);
             } else {
                 mainText = `드래곤 ${dLabel} > 타이거 ${tLabel} → 드래곤 승, −${bet}`;
-                subText = 'Dragon wins · 높은 숫자가 있는 쪽이 이깁니다';
+                subText = 'Dragon wins — the higher card takes it';
                 sfx.hit();
                 vibe(30);
             }
@@ -19280,12 +19288,12 @@ class DragonTiger {
                 this.chips += bet * 2;
                 tone = 'win';
                 mainText = `타이거 ${tLabel} > 드래곤 ${dLabel} → 타이거 승, +${bet}`;
-                subText = 'Tiger wins (1:1) · 무늬와 상관없이 높은 숫자가 승리';
+                subText = 'Tiger wins (1:1) — higher card wins, suits ignored';
                 sfx.good();
                 vibe([0, 35, 35, 35]);
             } else {
                 mainText = `타이거 ${tLabel} > 드래곤 ${dLabel} → 타이거 승, −${bet}`;
-                subText = 'Tiger wins · 높은 숫자가 있는 쪽이 이깁니다';
+                subText = 'Tiger wins — the higher card takes it';
                 sfx.hit();
                 vibe(30);
             }
@@ -19295,7 +19303,7 @@ class DragonTiger {
                 this.chips += bet + profit;
                 tone = 'win';
                 mainText = `드래곤 ${dLabel} = 타이거 ${tLabel} → 타이 적중(8배), +${profit}`;
-                subText = 'Tie wins (8:1) · 두 카드의 숫자가 같아 8배 배당!';
+                subText = 'Tie wins (8:1) — both cards share the same rank';
                 sfx.good();
                 vibe([0, 40, 40, 60]);
             } else {
@@ -19303,14 +19311,14 @@ class DragonTiger {
                 this.chips += half;
                 tone = 'half';
                 mainText = `드래곤 ${dLabel} = 타이거 ${tLabel} → 타이, 절반 돌려받기 −${half}`;
-                subText = `Tie half-back · 드래곤/타이거 배팅은 절반(${half})만 잃고 절반 돌려받음`;
+                subText = `Tie — half back: you lose ${half}, the other half returns`;
                 sfx.blip(500, 0.09, 'triangle', 0.05);
                 vibe(20);
             }
         }
 
         if (reshuffled) {
-            subText = '새 슈(416장) 첫 판 · ' + subText;
+            subText = 'New shoe (416 cards) · ' + subText;
         }
 
         this._activeBet = 0;

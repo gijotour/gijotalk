@@ -5577,6 +5577,258 @@ body.hot .hot-toggle-btn {
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 14px;
 }
+
+/* ===== 2026-11 무대 다듬기: 시간 폭탄 · 카드 · 터치 룰렛 · 타이타닉 · 러브 드링크 ===== */
+
+/* 공통: 놀이 방법 카드 */
+.stage-howto {
+    width: 100%;
+    max-width: 420px;
+    margin: 14px auto 44px; /* 아래 저작권 줄에 가리지 않게 */
+    padding: 12px 14px 12px 34px;
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #e8edf5;
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: left;
+}
+.stage-howto li { margin: 0 0 8px; }
+.stage-howto li:last-child { margin-bottom: 0; }
+.stage-howto li span {
+    display: block;
+    margin-top: 1px;
+    color: #9fb0c6;
+    font-size: 0.76rem;
+    font-weight: 500;
+}
+
+/* ── 시간 폭탄 ── */
+#screen-bomb .bomb-container {
+    position: relative;
+    width: min(74vw, 300px, 38dvh);
+    height: min(74vw, 300px, 38dvh);
+    margin: 6px auto 14px;
+    border: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.2) 0%, rgba(255, 90, 0, 0.06) 48%, rgba(0, 0, 0, 0) 70%);
+    box-shadow: none;
+    display: block;
+}
+#screen-bomb .bomb-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.6));
+}
+#screen-bomb .bomb-spark {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bomb-spark-flicker 0.5s steps(2, end) infinite;
+}
+@keyframes bomb-spark-flicker {
+    0% { transform: scale(0.85) rotate(0deg); opacity: 0.85; }
+    100% { transform: scale(1.12) rotate(22deg); opacity: 1; }
+}
+/* 남은 시간은 폭탄 몸통 위에 띄운다 */
+/* 앞쪽의 .timer { display: none } 때문에 타이머 모드에서도 시간이 안 보였다. 여기서 다시 켠다. */
+#screen-bomb .bomb-timer {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 59%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: auto;
+    white-space: nowrap;
+    font-size: clamp(1.7rem, 9vw, 2.5rem);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: #ffe9c2;
+    text-shadow: 0 0 14px rgba(255, 140, 0, 0.9), 0 2px 0 #000;
+    pointer-events: none;
+}
+#screen-bomb .bomb-touch-label {
+    position: absolute;
+    left: 50%;
+    top: 78%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+#screen-bomb .bomb-boom {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.2);
+    font-size: clamp(6rem, 42vw, 11rem);
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+#screen-bomb .bomb-container.active {
+    animation-name: bomb-stage-shake;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+@keyframes bomb-stage-shake {
+    0% { transform: scale(1) rotate(-2deg); }
+    100% { transform: scale(1.05) rotate(2deg); }
+}
+#screen-bomb .bomb-container.exploded {
+    background: radial-gradient(circle, rgba(255, 60, 0, 0.75) 0%, rgba(255, 123, 0, 0.3) 45%, rgba(0, 0, 0, 0) 72%);
+    box-shadow: none;
+    transform: scale(1.06);
+}
+#screen-bomb .bomb-container.exploded .bomb-svg { opacity: 0; transition: opacity 0.12s ease; }
+#screen-bomb .bomb-container.exploded .bomb-boom {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), opacity 0.1s ease;
+}
+#screen-bomb .bomb-container.exploded .bomb-timer {
+    top: 86%;
+    font-size: clamp(1.1rem, 6vw, 1.5rem);
+    color: #fff;
+}
+
+/* ── 카드 뒤집기: 뒤집기 전 카드 ── */
+#screen-cards .card-front {
+    background:
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 12px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 12px),
+        linear-gradient(155deg, #3b1670 0%, #1a0b3a 55%, #0d0520 100%);
+    border: 2px solid rgba(190, 120, 255, 0.75);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), inset 0 0 0 5px rgba(13, 5, 32, 0.85), inset 0 0 0 6px rgba(190, 120, 255, 0.35);
+    gap: 6px;
+}
+#screen-cards .card-front::before { display: none; }
+#screen-cards .card-emblem {
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 46%, 84px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 215, 120, 0.8);
+    background: radial-gradient(circle at 35% 30%, #5b2aa3, #23104a);
+    box-shadow: 0 0 18px rgba(190, 120, 255, 0.55);
+    font-size: clamp(1.4rem, 7vw, 2.4rem);
+    line-height: 1;
+}
+#screen-cards .card-num {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: #ffd778;
+    color: #23104a;
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+#screen-cards .card-tap {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── 터치 룰렛: 복잡한 배경 그림을 걷어내고 누를 자리를 보여 준다 ── */
+#screen-finger.finger-screen {
+    background: radial-gradient(ellipse at 50% 58%, #0a3346 0%, #041219 55%, #01060a 100%);
+}
+#screen-finger .finger-area:empty::before {
+    content: '👆';
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    width: min(56vw, 230px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 3px dashed rgba(0, 243, 255, 0.55);
+    background: radial-gradient(circle, rgba(0, 243, 255, 0.16) 0%, rgba(0, 243, 255, 0) 70%);
+    font-size: clamp(3rem, 16vw, 4.6rem);
+    animation: stage-hint-pulse 1.8s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes stage-hint-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; }
+}
+
+/* ── 타이타닉: 배경 그림을 걷어내고 잔을 또렷하게 ── */
+#screen-titanic.titanic-screen {
+    background: radial-gradient(ellipse at 50% 55%, #10293a 0%, #06121b 55%, #02070b 100%);
+}
+#screen-titanic .beer-glass {
+    border-width: 4px;
+    border-bottom-width: 14px;
+    border-color: rgba(190, 240, 255, 0.85);
+    border-radius: 6px 6px 30px 30px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 22%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.1) 100%);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.55), inset 0 0 22px rgba(190, 240, 255, 0.12);
+}
+#screen-titanic .beer-liquid {
+    background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.55) 0 2px, transparent 3px) 12% 100% / 46px 62px,
+        radial-gradient(circle, rgba(255, 255, 255, 0.4) 0 1.5px, transparent 2.5px) 60% 100% / 38px 48px,
+        linear-gradient(to top, #d98a00 0%, #f6b21a 60%, #ffcf4a 100%);
+    border-radius: 0 0 16px 16px;
+    box-shadow: inset 12px 0 18px rgba(255, 255, 255, 0.12), inset -10px 0 18px rgba(120, 60, 0, 0.25);
+    animation: beer-bubbles 3.2s linear infinite;
+}
+@keyframes beer-bubbles {
+    from { background-position: 12% 100%, 60% 100%, 0 0; }
+    to { background-position: 12% calc(100% - 62px), 60% calc(100% - 96px), 0 0; }
+}
+#screen-titanic .beer-liquid::after {
+    top: -18px;
+    height: 20px;
+    border-radius: 12px 12px 4px 4px;
+    background:
+        radial-gradient(circle at 12px 8px, #fff 9px, transparent 10px) 0 0 / 26px 20px repeat-x,
+        linear-gradient(#fffdf2, #f3ead0);
+    box-shadow: 0 -2px 8px rgba(255, 255, 255, 0.5);
+}
+#screen-titanic .soju-cup {
+    border-width: 3px;
+    border-bottom-width: 7px;
+    border-color: rgba(220, 250, 255, 0.95);
+    border-radius: 4px 4px 12px 12px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.12) 100%);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+#screen-titanic .soju-liquid {
+    background: linear-gradient(to top, rgba(170, 245, 230, 0.85), rgba(210, 255, 245, 0.7));
+}
+
+/* ── 러브 드링크: 빈 화면 안내를 두 말로 ── */
+#screen-bridge .bridge-area:empty::before {
+    content: '💖\A 손가락을 올려 주세요\A Place your fingers here';
+    white-space: pre-line;
+    width: 86%;
+    text-align: center;
+    line-height: 1.5;
+    font-size: clamp(1rem, 4.6vw, 1.3rem);
+    color: rgba(226, 190, 255, 0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #screen-bomb .bomb-spark,
+    #screen-finger .finger-area:empty::before,
+    #screen-titanic .beer-liquid { animation: none; }
+}
 </style>
 </head>
 <body>
@@ -5815,12 +6067,46 @@ body.hot .hot-toggle-btn {
                 <button class="mode-tab-btn" id="bomb-tab-blind" onclick="app.setBombBlindMode(true)">🙈 블라인드 · Blind</button>
             </div>
             <div class="bomb-container" id="bomb-container" onclick="app.passBomb()">
-                <div class="bomb-icon">&#128163;</div>
-                <div class="bomb-touch-label">TOUCH!</div>
+                <svg class="bomb-svg" viewBox="0 0 300 300" aria-hidden="true">
+                    <defs>
+                        <radialGradient id="bomb-body" cx="0.36" cy="0.3" r="0.8">
+                            <stop offset="0" stop-color="#6b7280"/>
+                            <stop offset="0.35" stop-color="#2b303b"/>
+                            <stop offset="1" stop-color="#07080b"/>
+                        </radialGradient>
+                        <radialGradient id="bomb-spark" cx="0.5" cy="0.5" r="0.5">
+                            <stop offset="0" stop-color="#fffbe0"/>
+                            <stop offset="0.45" stop-color="#ffc233"/>
+                            <stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="150" cy="282" rx="86" ry="10" fill="#000" opacity="0.45"/>
+                    <!-- 심지 -->
+                    <path d="M176 70C190 40 214 34 232 46" fill="none" stroke="#c9a15a" stroke-width="9" stroke-linecap="round"/>
+                    <path d="M176 70C190 40 214 34 232 46" fill="none" stroke="#7a5a26" stroke-width="9" stroke-linecap="round" stroke-dasharray="3 9"/>
+                    <!-- 불꽃 -->
+                    <g class="bomb-spark">
+                        <circle cx="236" cy="44" r="30" fill="url(#bomb-spark)"/>
+                        <path d="M236 18l5 16 16-6-9 14 15 7-17 3 4 17-13-11-11 13 2-17-17-1 14-9-10-14 16 4z" fill="#fff3b0"/>
+                    </g>
+                    <!-- 마개 -->
+                    <rect x="146" y="58" width="52" height="34" rx="8" fill="#3a404d" stroke="#0b0d12" stroke-width="5" transform="rotate(14 172 75)"/>
+                    <!-- 몸통 -->
+                    <circle cx="150" cy="176" r="104" fill="url(#bomb-body)" stroke="#05060a" stroke-width="6"/>
+                    <path d="M82 132c14-28 40-44 68-46" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity="0.28"/>
+                    <circle cx="96" cy="150" r="8" fill="#fff" opacity="0.35"/>
+                </svg>
+                <div class="bomb-boom" aria-hidden="true">&#128165;</div>
                 <div class="timer bomb-timer" id="bomb-timer">00:00</div>
+                <div class="bomb-touch-label">TOUCH!</div>
             </div>
             <button class="btn neon-btn" id="start-bomb-btn" onclick="app.startBomb()">게임 시작 · Start Game</button>
             <div id="bomb-result" class="result-text"></div>
+            <ol class="stage-howto">
+                <li>시작하면 14~30초 사이 아무 때나 터집니다.<span>It blows at a random moment, 14–30 seconds in.</span></li>
+                <li>폭탄을 누르고 폰을 옆 사람에게 넘기세요.<span>Tap the bomb, then pass the phone to the next player.</span></li>
+                <li>들고 있을 때 터지면 벌칙!<span>If it blows in your hands, you lose.</span></li>
+            </ol>
         </section>
 
         <!-- Cards Screen -->
@@ -8514,7 +8800,7 @@ const app = {
             
             const front = document.createElement('div');
             front.className = 'card-front';
-            front.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span style="font-size:1.4rem;">🃏</span><span style="font-size:0.75rem;opacity:0.8;">#${i+1}</span></div>`;
+            front.innerHTML = `<span class="card-num">${i + 1}</span><span class="card-emblem" aria-hidden="true">🍹</span><span class="card-tap">TAP</span>`;
             
             const back = document.createElement('div');
             back.className = 'card-back';

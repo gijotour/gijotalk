@@ -3551,7 +3551,16 @@ body.hot .slots-jackpot-topper {
     border-radius: 50%;
     padding: 5px;
     background: radial-gradient(circle at 30% 25%, #f5d469 0%, #b8860b 52%, #5c3d07 100%);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), inset 0 0 0 1.5px rgba(255, 248, 220, 0.45);
+    /* 2.5D: 앞쪽으로 눕힌 판. 아래 그림자 한 겹이 판의 두께처럼 보인다. */
+    box-shadow: 0 7px 0 #4a3205, 0 12px 20px rgba(0, 0, 0, 0.62), inset 0 0 0 1.5px rgba(255, 248, 220, 0.45);
+    transform: perspective(380px) rotateX(32deg);
+    transform-origin: 50% 55%;
+}
+
+/* 눕힌 만큼(cos 32° ≈ 0.85) 세로로 눌린 가운데 글자를 펴 준다 */
+.rt-hub-num,
+.rt-hub-meta {
+    transform: scaleY(1.18);
 }
 
 .rt-wheel-inner {
@@ -4273,6 +4282,66 @@ body.hot .slots-jackpot-topper {
     0% { transform: scale(0.84) rotate(-6deg); }
     60% { transform: scale(1.09) rotate(2deg); }
     100% { transform: scale(1) rotate(0deg); }
+}
+
+
+/* ============================================================
+   3D 주사위 (식보·크랩스 공용) — CSS 3D, 라이브러리 없음
+   · 바깥 칸(.sb-die / .cr-die)은 자리만 잡고, 안의 정육면체가 돈다.
+   · 면 6개는 원래 주사위 모양(.sb-die / .cr-die 클래스)을 그대로 쓴다.
+   · 폰 부담: 주사위 하나에 면 6장, 굴릴 때만 transform 이 바뀐다.
+   ============================================================ */
+.d3-die {
+    position: relative;
+    padding: 0 !important;
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    display: block !important;
+    overflow: visible !important;
+    animation: none !important;
+    perspective: 240px;
+    /* 정육면체 반 변. 주사위 칸 크기(식보 48px)의 절반. 숨은 화면에서 잴 수 없어 CSS 로 정한다. */
+    --d3-half: 24px;
+}
+.d3-die::after {
+    /* 바닥 그림자: 정육면체 밖에 두어 같이 돌지 않게 한다. 주사위 뒤로 깔리게 한다. */
+    content: '';
+    z-index: 0;
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -7px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+}
+/* 기울인 정육면체는 옆면이 칸 밖으로 나온다. 이웃 주사위와 겹치지 않게 사이를 넓힌다. */
+/* (:has() 는 오래된 폰 브라우저에 없어, 주사위 코드가 줄에 d3-row 를 붙인다) */
+.d3-row {
+    gap: 14px;
+    padding: 0 6px;
+}
+.d3-cube {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    /* will-change 를 두지 않는다: 오래된 사파리에서 preserve-3d 가 평면으로 눌린다 */
+}
+.d3-face {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    animation: none !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .sb-pip {
@@ -6251,6 +6320,9 @@ body.hot .slots-jackpot-topper {
     flex-shrink: 0;
 }
 
+/* 3D 주사위 반 변: 크랩스 주사위는 50px(낮은 화면에서는 아래 46px 규칙에서 23px) */
+.cr-die.d3-die { --d3-half: 25px; }
+
 .cr-die {
     width: 50px;
     height: 50px;
@@ -6783,6 +6855,7 @@ body.hot .slots-jackpot-topper {
     .cr-puck { width: 34px; height: 34px; }
     .cr-dice-stage { padding: 4px 9px; }
     .cr-die { width: 46px; height: 46px; padding: 5px; }
+    .cr-die.d3-die { --d3-half: 23px; }
     .cr-pip { width: 7.5px; height: 7.5px; }
     .cr-pip.cr-pip-lg { width: 11px; height: 11px; }
     .cr-spot { min-height: 48px; padding: 4px 9px; }
@@ -8277,6 +8350,9 @@ body.hot .slots-jackpot-topper {
     position: relative;
     padding-top: 6px;
     flex-shrink: 0;
+    /* 2.5D: 세워 둔 바퀴를 살짝 뒤로 기울인다. 바늘도 같은 틀 안이라 칸과 어긋나지 않는다. */
+    transform: perspective(720px) rotateX(9deg);
+    transform-origin: 50% 100%;
 }
 
 .bw-pointer {
@@ -8320,7 +8396,8 @@ body.hot .slots-jackpot-topper {
     border-radius: 50%;
     padding: 5px;
     background: radial-gradient(circle at 30% 25%, #f5d469 0%, #b8860b 52%, #5c3d07 100%);
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.62), inset 0 0 0 1.5px rgba(255, 248, 220, 0.48);
+    /* 아래 한 겹이 바퀴 테두리의 두께처럼 보인다 */
+    box-shadow: 0 6px 0 #4a3205, 0 10px 20px rgba(0, 0, 0, 0.62), inset 0 0 0 1.5px rgba(255, 248, 220, 0.48);
 }
 
 .bw-wheel-inner {
@@ -18195,6 +18272,74 @@ class RouletteTable {
 }
 
 /* ============================================================
+   3D 주사위 (식보·크랩스 공용, CSS 3D)
+   · 굴리는 동안: 틱마다 무작위로 더 돌린다(짧은 전환).
+   · 멈출 때: 나온 눈이 앞을 보도록, 지금 각도에서 한 바퀴 더 돈 뒤 멈춘다.
+   · 「동작 줄이기」를 켠 폰에서는 돌리지 않고 바로 결과 면을 보여 준다.
+   ============================================================ */
+/* 정육면체에서 각 눈이 붙는 자리(마주 보는 면의 합이 7). */
+const DICE3D_FACE_AT = {
+    1: 'rotateY(0deg)', 6: 'rotateY(180deg)',
+    2: 'rotateY(90deg)', 5: 'rotateY(-90deg)',
+    3: 'rotateX(90deg)', 4: 'rotateX(-90deg)'
+};
+/* 그 눈을 앞으로 가져오는 정육면체 회전 [X, Y]. */
+const DICE3D_SHOW = { 1: [0, 0], 6: [0, 180], 2: [0, -90], 5: [0, 90], 3: [-90, 0], 4: [90, 0] };
+/* 쉬고 있을 때도 윗면과 옆면이 보이게 조금 비스듬히 본다. */
+const DICE3D_TILT = 'rotateX(-16deg) rotateY(16deg)';
+
+function dice3dReducedMotion() {
+    return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * @param {HTMLElement} el      주사위 칸(#sb-die-0 등)
+ * @param {number} val          나온 눈(1~6)
+ * @param {'roll'|'land'|'rest'} mode
+ * @param {(v:number)=>string} pipsHtml  그 게임의 눈 그리기
+ * @param {string} faceClass    면에 줄 원래 주사위 클래스('sb-die' / 'cr-die')
+ */
+function dice3dRender(el, val, mode, pipsHtml, faceClass) {
+    if (!el) return;
+    let cube = el.querySelector(':scope > .d3-cube');
+    if (!cube) {
+        el.classList.add('d3-die');
+        if (el.parentElement) el.parentElement.classList.add('d3-row');
+        let faces = '';
+        for (let v = 1; v <= 6; v++) {
+            faces += `<div class="d3-face ${faceClass}" style="transform:${DICE3D_FACE_AT[v]} translateZ(var(--d3-half))">${pipsHtml(v)}</div>`;
+        }
+        el.innerHTML = `<div class="d3-cube">${faces}</div>`;
+        cube = el.firstElementChild;
+        el._d3 = { ax: 0, ay: 0 };
+    }
+    const st = el._d3;
+    const reduce = dice3dReducedMotion();
+    if (mode === 'roll' && !reduce) {
+        st.rolling = true;
+        st.ax += 140 + Math.random() * 140;
+        st.ay += 120 + Math.random() * 160;
+        cube.style.transition = 'transform 90ms linear';
+        cube.style.transform = `${DICE3D_TILT} rotateX(${st.ax}deg) rotateY(${st.ay}deg)`;
+        return;
+    }
+    // 먼저 멈춘 주사위는 다른 주사위가 굴러가는 동안에도 'rest' 로 다시 불린다.
+    // 그때 손대면 0.5초 멈춤 회전이 끊겨 결과 면으로 뚝 튄다. 이미 그 눈으로 멈췄으면 그대로 둔다.
+    if (mode === 'rest' && st.val === val && !st.rolling) return;
+    st.rolling = false;
+    st.val = val;
+    // 굴리는 동안이 아니라 멈췄을 때만 읽어 줄 이름을 바꾼다(화면 낭독기가 중간 눈을 읽지 않게).
+    el.setAttribute('aria-label', `주사위 ${val} · Die ${val}`);
+    const [bx, by] = DICE3D_SHOW[val] || DICE3D_SHOW[1];
+    const extra = mode === 'land' && !reduce ? 1 : 0;
+    // 지금 각도보다 앞(같은 방향)에 있는 결과 각도로 간다. 뒤로 감기지 않게.
+    st.ax = bx + 360 * (Math.ceil((st.ax - bx) / 360) + extra);
+    st.ay = by + 360 * (Math.ceil((st.ay - by) / 360) + extra);
+    cube.style.transition = mode === 'land' && !reduce ? 'transform 0.5s cubic-bezier(0.2, 0.8, 0.25, 1)' : 'none';
+    cube.style.transform = `${DICE3D_TILT} rotateX(${st.ax}deg) rotateY(${st.ay}deg)`;
+}
+
+/* ============================================================
    다이사이 · 식보 (Sic Bo, 규칙 연습판 · DOM)
    ============================================================ */
 const SB_START_CHIPS = 1000;
@@ -18398,18 +18543,11 @@ class SicBo {
     }
 
     renderDice(dice, rollingMask = [false, false, false], landedIdx = -1) {
+        // 3D 주사위(공용 dice3dRender). 굴리는 중이면 돌리고, 방금 멈춘 주사위는 결과 면으로 돌아 멈춘다.
         for (let i = 0; i < 3; i++) {
             const el = document.getElementById(`sb-die-${i}`);
-            if (!el) continue;
-            el.innerHTML = sbDiePipsHtml(dice[i]);
-            el.classList.toggle('sb-rolling', Boolean(rollingMask[i]));
-            if (i === landedIdx) {
-                el.classList.remove('sb-landed');
-                void el.offsetWidth;
-                el.classList.add('sb-landed');
-            } else if (rollingMask[i]) {
-                el.classList.remove('sb-landed');
-            }
+            const mode = rollingMask[i] ? 'roll' : (i === landedIdx ? 'land' : 'rest');
+            dice3dRender(el, dice[i], mode, sbDiePipsHtml, 'sb-die');
         }
     }
 
@@ -20326,18 +20464,11 @@ class Craps {
     }
 
     renderDice(dice, rollingMask = [false, false], landedIdx = -1) {
+        // 3D 주사위(공용 dice3dRender). 식보와 같은 방식이다.
         for (let i = 0; i < 2; i++) {
             const el = document.getElementById(`cr-die-${i}`);
-            if (!el) continue;
-            el.innerHTML = crDiePipsHtml(dice[i]);
-            el.classList.toggle('cr-rolling', Boolean(rollingMask[i]));
-            if (i === landedIdx) {
-                el.classList.remove('cr-landed');
-                void el.offsetWidth;
-                el.classList.add('cr-landed');
-            } else if (rollingMask[i]) {
-                el.classList.remove('cr-landed');
-            }
+            const mode = rollingMask[i] ? 'roll' : (i === landedIdx ? 'land' : 'rest');
+            dice3dRender(el, dice[i], mode, crDiePipsHtml, 'cr-die');
         }
     }
 

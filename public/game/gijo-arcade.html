@@ -1304,6 +1304,29 @@ canvas {
 
 .ov-btn:active { transform: scale(0.96); }
 
+/* 비행기 슈팅 시작 화면의 두 단추: 큰 글자 아래 작은 줄 */
+.ov-btn[data-mode] {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 220px;
+}
+/* 두 번째 단추(조종석 시점) */
+.ov-btn.ov-btn-alt {
+    margin-top: 10px;
+    background: transparent;
+    border: 1.5px solid var(--primary-neon);
+    color: #f8fafc;
+}
+.ov-btn .ov-btn-sub {
+    display: block !important;
+    width: 100%;
+    margin-top: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
 .ov-hint {
     margin-top: 10px;
     font-size: 0.74rem;
@@ -10939,9 +10962,53 @@ class SpaceShooter extends Game {
         this.titleEn = 'GIJO Space Shooter';
         this.titleKr = '비행기 슈팅';
         this.introHint = '화면을 끌어 비행기를 옮기세요. 총알은 알아서 나갑니다.<br>Drag to move your ship. It fires automatically.';
+        // 'classic' = 위에서 내려다보는 원래 모드, 'cockpit' = 조종석 시점(1인칭).
+        // 최고 기록은 모드마다 따로 둔다(id 를 바꿔 store 키가 갈린다).
+        this.mode = 'classic';
+        this.aim = { x: 0, y: 0 };
+        // 「동작 줄이기」 설정은 한 번만 물어 두고 바뀌면 그대로 따라간다(매 프레임 matchMedia 를 만들지 않게).
+        this._reducedMq = typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    }
+
+    /** 시작 화면: 원래 모드와 조종석 모드 단추 두 개. */
+    intro() {
+        if (this.mode !== 'classic') {
+            this.setMode('classic');
+            this.reset();
+            this.draw();
+        }
+        const bestClassic = store.best('shoot');
+        const bestCockpit = store.best('shoot3d');
+        this.setStat('bestval', store.best(this.id));
+        this.showOverlay(`
+            <div class="ov-title">${this.titleKr}</div>
+            <div class="ov-en">${this.titleEn}</div>
+            <button class="ov-btn" data-mode="classic">시작 · Start<span class="ov-btn-sub">위에서 보기 · BEST ${bestClassic}</span></button>
+            <button class="ov-btn ov-btn-alt" data-mode="cockpit">조종석 시점 · Cockpit<span class="ov-btn-sub">1인칭 · BEST ${bestCockpit}</span></button>
+            <p class="ov-hint">${this.introHint}<br><br>조종석 시점: 조준점을 적에 맞추면 알아서 쏩니다. 어지러우면 위에서 보기로 하세요.<br>Cockpit: aim at enemies and it fires on its own.</p>
+        `);
+        this.overlay.querySelectorAll('[data-mode]').forEach((btn) => {
+            btn.onclick = () => {
+                sfx.init();
+                this.setMode(btn.getAttribute('data-mode'));
+                this.begin();
+            };
+        });
+    }
+
+    setMode(mode) {
+        this.mode = mode === 'cockpit' ? 'cockpit' : 'classic';
+        this.id = this.mode === 'cockpit' ? 'shoot3d' : 'shoot';
+        const hint = this.screen.querySelector('.hint');
+        if (hint) {
+            hint.innerHTML = this.mode === 'cockpit'
+                ? '화면을 끌어 조준 · 조준점에 적이 걸리면 자동 발사<br>Drag to aim · Auto-fire on target'
+                : '화면을 끌어서 이동 · 총알은 자동 발사<br>Drag to move · Auto-fire';
+        }
     }
 
     reset() {
+        if (this.mode === 'cockpit') { this.cpReset(); return; }
         this.ship = { x: this.W / 2, y: this.H - 46, r: 14 };
         this.bullets = [];
         this.enemyShots = [];
@@ -10970,6 +11037,402 @@ class SpaceShooter extends Game {
             this.ship.y = this.H - 46;
             this.ship.x = Math.min(this.ship.x, this.W - 16);
         }
+        if (this.aim && this.W > 20 && this.H > 20) {
+            this.aim.x = Math.max(10, Math.min(this.aim.x, this.W - 10));
+            this.aim.y = Math.max(10, Math.min(this.aim.y, this.cpDashY() - 10));
+        }
+        this._cpSky = null; // 크기가 바뀌면 배경 그라디언트를 다시 만든다
+    }
+
+    /* ============================================================
+       조종석 시점(1인칭) — 2026-11-24
+       · 적이 화면 안쪽(멀리)에서 다가온다. 원근은 2D 캔버스에서 직접 계산한다(라이브러리 없음).
+       · 손가락으로 조준점을 옮기고, 조준점에 적이 걸리면 알아서 쏜다(폰 한 손 조작).
+       · 적이나 적의 탄이 조종석까지 오면 목숨이 준다.
+       · 멀미를 줄이려고 화면을 돌리거나 기울이지 않는다. 「동작 줄이기」를 켠 폰에서는 별 흐름과 흔들림을 줄인다.
+       · 빛 번짐(shadowBlur)은 조준점에만 쓴다(폰 부담).
+       ============================================================ */
+    cpDashY() { return this.H * 0.84; }
+    cpHorizonY() { return this.H * 0.4; }
+    cpReduced() {
+        return Boolean(this._reducedMq && this._reducedMq.matches);
+    }
+
+    /** 세계 좌표(x·y 는 대략 -1~1, z 는 0=조종석 ~ 1=먼 곳)를 화면으로. */
+    cpProject(x, y, z) {
+        const k = Math.min(this.W, this.H) * 0.2;
+        const scale = k / (Math.max(0.01, z) + 0.12);
+        return { sx: this.W / 2 + x * scale, sy: this.cpHorizonY() + y * scale, scale };
+    }
+
+    cpNewStar(anyDepth) {
+        return { x: (Math.random() - 0.5) * 3.2, y: (Math.random() - 0.5) * 2.4, z: anyDepth ? 0.05 + Math.random() * 0.95 : 1 };
+    }
+
+    cpReset() {
+        this.aim = { x: this.W / 2, y: this.cpHorizonY() };
+        this.ship = { x: this.W / 2, y: this.H - 46, r: 14 };
+        this.cpEnemies = [];
+        this.cpShots = [];
+        this.cpLasers = [];
+        this.cpStars = Array.from({ length: 60 }, () => this.cpNewStar(true));
+        this.wave = 1;
+        this.lives = 3;
+        this.fireAcc = 0;
+        this.invuln = 0;
+        this.cpHurt = 0;
+        this.cpGun = 0;
+        this.cpWaveBreak = 0;
+        this.cpLocked = false;
+        this.killStreak = 0;
+        this.setStat('score', 0);
+        this.setStat('wave', 1);
+        this.setStat('life', 3);
+        this.cpStartWave();
+    }
+
+    cpStartWave() {
+        this.cpToSpawn = 5 + this.wave * 2;
+        this.cpSpawnAcc = 0.8;
+    }
+
+    cpSpawnEnemy() {
+        const palette = ['#ff0055', '#ff6b9d', '#a200ff', '#4d8cff', '#00e5a0'];
+        this.cpEnemies.push({
+            x: (Math.random() - 0.5) * 1.5,
+            y: (Math.random() - 0.5) * 1.0,
+            z: 1,
+            vx: (Math.random() - 0.5) * 0.18,
+            vy: (Math.random() - 0.5) * 0.12,
+            speed: Math.min(0.42, 0.14 + this.wave * 0.025) * (0.85 + Math.random() * 0.3),
+            r: 0.13,
+            hp: this.wave >= 4 && Math.random() < 0.3 ? 2 : 1,
+            color: palette[Math.floor(Math.random() * palette.length)],
+            fired: false,
+            spin: Math.random() * Math.PI * 2
+        });
+    }
+
+    cpHitPlayer(color) {
+        if (this.invuln > 0) return;
+        this.lives -= 1;
+        this.setStat('life', Math.max(0, this.lives));
+        this.invuln = 1.0;
+        this.cpHurt = 0.35;
+        this.killStreak = 0;
+        if (!this.cpReduced()) this.triggerShake(7, 0.25);
+        sfx.hit();
+        vibe([0, 60, 40, 60]);
+        this.addSpark(this.W / 2, this.cpDashY(), color, 16, 5);
+        if (this.lives <= 0) this.gameOver();
+    }
+
+    /** 조준점 아래에 있는 가장 가까운 목표(적·적의 탄). */
+    cpTargetUnderAim() {
+        let best = null;
+        const check = (o, kind, list) => {
+            const p = this.cpProject(o.x, o.y, o.z);
+            const rr = o.r * p.scale * 1.15 + 6; // 폰에서 맞히기 쉽게 조금 넉넉히
+            const dx = p.sx - this.aim.x, dy = p.sy - this.aim.y;
+            if (dx * dx + dy * dy <= rr * rr && (!best || o.z < best.o.z)) best = { o, kind, list, p };
+        };
+        for (const e of this.cpEnemies) check(e, 'enemy', this.cpEnemies);
+        for (const t of this.cpShots) check(t, 'shot', this.cpShots);
+        return best;
+    }
+
+    cpUpdate(dt) {
+        const reduced = this.cpReduced();
+        // 별: 화면 가운데에서 바깥으로 흘러 앞으로 나아가는 느낌
+        const starSpeed = reduced ? 0 : 0.38;
+        for (const st of this.cpStars) {
+            st.pz = st.z;
+            st.z -= starSpeed * dt;
+            if (st.z <= 0.03) Object.assign(st, this.cpNewStar(false), { pz: 1 });
+        }
+        if (this.invuln > 0) this.invuln -= dt;
+        if (this.cpHurt > 0) this.cpHurt -= dt;
+        if (this.cpGun > 0) this.cpGun -= dt;
+        this.updateFx(dt);
+
+        // 적 나오기
+        if (this.cpWaveBreak > 0) {
+            this.cpWaveBreak -= dt;
+            if (this.cpWaveBreak <= 0) this.cpStartWave();
+        } else if (this.cpToSpawn > 0) {
+            this.cpSpawnAcc -= dt;
+            if (this.cpSpawnAcc <= 0) {
+                this.cpSpawnEnemy();
+                this.cpToSpawn -= 1;
+                this.cpSpawnAcc = Math.max(0.45, 1.2 - this.wave * 0.06);
+            }
+        }
+
+        // 적 움직임과 탄
+        for (let i = this.cpEnemies.length - 1; i >= 0; i--) {
+            const e = this.cpEnemies[i];
+            e.z -= e.speed * dt;
+            e.x = Math.max(-0.95, Math.min(0.95, e.x + e.vx * dt));
+            e.y = Math.max(-0.7, Math.min(0.7, e.y + e.vy * dt));
+            // 가까워질수록 조종석 쪽으로 모인다. 그러지 않으면 가장자리 적이 화면 밖으로 나가
+            // 보이지도 겨눌 수도 없는 채로 부딪힌다.
+            if (e.z < 0.6) {
+                const pull = Math.min(1, dt * 1.6);
+                e.x -= e.x * pull;
+                e.y -= e.y * pull;
+            }
+            e.spin += dt * 2;
+            // 너무 가까이서 쏘면 보기도 전에 맞는다. 멀리(0.35~0.65)서만 쏜다.
+            // 확률은 시간에 맞춘다(120Hz 폰에서 두 배로 쏘지 않게).
+            if (!e.fired && e.z < 0.65 && e.z > 0.35 && this.wave >= 2 && Math.random() < 0.7 * dt) {
+                e.fired = true;
+                this.cpShots.push({ x: e.x, y: e.y, z: e.z - 0.02, r: 0.06, speed: e.speed + 0.28, color: '#ffb020' });
+            }
+            if (e.z <= 0.03) {
+                this.cpEnemies.splice(i, 1);
+                this.cpHitPlayer(e.color);
+                if (this.over) return;
+            }
+        }
+        for (let i = this.cpShots.length - 1; i >= 0; i--) {
+            const t = this.cpShots[i];
+            t.z -= t.speed * dt;
+            // 적의 탄은 조종석 가운데로 조금씩 모인다
+            t.x *= 1 - dt * 0.6;
+            t.y *= 1 - dt * 0.6;
+            if (t.z <= 0.03) {
+                this.cpShots.splice(i, 1);
+                this.cpHitPlayer('#ffb020');
+                if (this.over) return;
+            }
+        }
+
+        // 자동 발사: 조준점에 목표가 있을 때만 쏜다
+        this.fireAcc += dt;
+        const target = this.cpTargetUnderAim();
+        this.cpLocked = Boolean(target);
+        if (target && this.fireAcc >= 0.16) {
+            this.fireAcc = 0;
+            this.cpGun = 0.07;
+            this.cpLasers.push({ x: this.aim.x, y: this.aim.y, life: 0.09 });
+            sfx.blip(880, 0.03, 'square', 0.025);
+            const o = target.o;
+            o.hp = (o.hp || 1) - 1;
+            if (o.hp <= 0) {
+                target.list.splice(target.list.indexOf(o), 1);
+                const now = performance.now();
+                this.killStreak = now - (this.lastKillTime || 0) < 900 ? (this.killStreak || 0) + 1 : 1;
+                this.lastKillTime = now;
+                const gain = target.kind === 'enemy' ? (10 + this.wave * 2) * Math.min(3, this.killStreak) : 5;
+                this.score += gain;
+                this.setStat('score', this.score);
+                this.addSpark(target.p.sx, target.p.sy, o.color, target.kind === 'enemy' ? 14 : 6, 4);
+                if (target.kind === 'enemy' && this.killStreak >= 2) this.addPopupText(`x${Math.min(3, this.killStreak)}`, target.p.sx, target.p.sy - 14, '#ffd700');
+                sfx.good();
+            } else {
+                this.addSpark(target.p.sx, target.p.sy, '#ffffff', 5, 2.5);
+            }
+        }
+        for (let i = this.cpLasers.length - 1; i >= 0; i--) {
+            this.cpLasers[i].life -= dt;
+            if (this.cpLasers[i].life <= 0) this.cpLasers.splice(i, 1);
+        }
+
+        // 한 판 끝
+        if (this.cpWaveBreak <= 0 && this.cpToSpawn === 0 && !this.cpEnemies.length && !this.cpShots.length) {
+            this.wave += 1;
+            this.setStat('wave', this.wave);
+            this.cpWaveBreak = 1.4;
+            this.addPopupText(`WAVE ${this.wave}`, this.W / 2, this.cpHorizonY() - 30, '#00f3ff');
+        }
+    }
+
+    cpDraw() {
+        const ctx = this.ctx;
+        const W = this.W, H = this.H;
+        const hy = this.cpHorizonY();
+        const dashY = this.cpDashY();
+        ctx.clearRect(0, 0, W, H);
+        this.beginFrame(ctx);
+
+        // 우주 배경
+        if (!this._cpSky) {
+            const sky = ctx.createRadialGradient(W / 2, hy, 0, W / 2, hy, Math.max(W, H) * 0.8);
+            sky.addColorStop(0, '#141b3d');
+            sky.addColorStop(0.5, '#070a1c');
+            sky.addColorStop(1, '#03040c');
+            this._cpSky = sky;
+        }
+        ctx.fillStyle = this._cpSky;
+        ctx.fillRect(0, 0, W, H);
+
+        // 별: 이전 위치에서 지금 위치까지 짧은 선(앞으로 나아가는 느낌)
+        ctx.strokeStyle = 'rgba(220, 235, 255, 0.75)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        for (const st of this.cpStars) {
+            const a = this.cpProject(st.x, st.y, st.pz || st.z);
+            const b = this.cpProject(st.x, st.y, st.z);
+            if (b.sx < -10 || b.sx > W + 10 || b.sy < -10 || b.sy > H + 10) continue;
+            ctx.moveTo(a.sx, a.sy);
+            ctx.lineTo(b.sx + 0.6, b.sy + 0.6);
+        }
+        ctx.stroke();
+
+        // 먼 것부터 그린다
+        const things = [
+            ...this.cpEnemies.map((o) => ({ o, kind: 'enemy' })),
+            ...this.cpShots.map((o) => ({ o, kind: 'shot' }))
+        ].sort((a, b) => b.o.z - a.o.z);
+        for (const { o, kind } of things) {
+            const p = this.cpProject(o.x, o.y, o.z);
+            const r = o.r * p.scale;
+            if (r < 0.6) continue;
+            ctx.save();
+            ctx.globalAlpha = Math.min(1, (1 - o.z) * 3 + 0.25);
+            if (kind === 'shot') {
+                ctx.fillStyle = o.color;
+                ctx.beginPath();
+                ctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+                ctx.beginPath();
+                ctx.arc(p.sx, p.sy, r * 0.45, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // 적 비행체: 날개 달린 다이아몬드 + 밝은 조종석
+                ctx.translate(p.sx, p.sy);
+                if (!this.cpReduced()) ctx.rotate(Math.sin(o.spin) * 0.25);
+                ctx.fillStyle = o.color;
+                ctx.beginPath();
+                ctx.moveTo(0, -r);
+                ctx.lineTo(r * 0.55, 0);
+                ctx.lineTo(0, r * 0.7);
+                ctx.lineTo(-r * 0.55, 0);
+                ctx.closePath();
+                ctx.fill();
+                ctx.globalAlpha *= 0.85;
+                ctx.beginPath();
+                ctx.moveTo(-r * 1.25, r * 0.05);
+                ctx.lineTo(-r * 0.4, -r * 0.2);
+                ctx.lineTo(-r * 0.4, r * 0.3);
+                ctx.closePath();
+                ctx.moveTo(r * 1.25, r * 0.05);
+                ctx.lineTo(r * 0.4, -r * 0.2);
+                ctx.lineTo(r * 0.4, r * 0.3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(0, -r * 0.15, r * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                if (o.hp > 1) {
+                    ctx.strokeStyle = '#ffd700';
+                    ctx.lineWidth = Math.max(1, r * 0.08);
+                    ctx.beginPath();
+                    ctx.arc(0, 0, r * 0.95, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
+        // 레이저: 조종석 양쪽 포에서 조준점으로
+        if (this.cpLasers.length) {
+            ctx.save();
+            for (const l of this.cpLasers) {
+                ctx.globalAlpha = Math.max(0, l.life / 0.09);
+                ctx.strokeStyle = '#7df9ff';
+                ctx.lineWidth = 2.5;
+                ctx.beginPath();
+                ctx.moveTo(W * 0.16, dashY + 4);
+                ctx.lineTo(l.x, l.y);
+                ctx.moveTo(W * 0.84, dashY + 4);
+                ctx.lineTo(l.x, l.y);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        // 조종석 계기판(아래)과 창틀
+        ctx.save();
+        ctx.fillStyle = '#0b1020';
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+        ctx.lineTo(0, dashY + 18);
+        ctx.lineTo(W * 0.22, dashY);
+        ctx.lineTo(W * 0.78, dashY);
+        ctx.lineTo(W, dashY + 18);
+        ctx.lineTo(W, H);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0, 243, 255, 0.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, dashY + 18);
+        ctx.lineTo(W * 0.22, dashY);
+        ctx.lineTo(W * 0.78, dashY);
+        ctx.lineTo(W, dashY + 18);
+        ctx.stroke();
+        // 창틀 기둥
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(W * 0.22, dashY);
+        ctx.lineTo(W * 0.02, 0);
+        ctx.moveTo(W * 0.78, dashY);
+        ctx.lineTo(W * 0.98, 0);
+        ctx.stroke();
+        // 포 두 개(쏠 때 밝아진다)
+        ctx.fillStyle = this.cpGun > 0 ? '#7df9ff' : '#334155';
+        ctx.beginPath();
+        ctx.arc(W * 0.16, dashY + 6, 6, 0, Math.PI * 2);
+        ctx.arc(W * 0.84, dashY + 6, 6, 0, Math.PI * 2);
+        ctx.fill();
+        // 계기판 글자: 목숨·남은 적
+        ctx.fillStyle = 'rgba(203, 213, 225, 0.9)';
+        ctx.font = '700 12px ' + UI_FONT;
+        ctx.textAlign = 'center';
+        const left = this.cpToSpawn + this.cpEnemies.length;
+        ctx.fillText(`SHIELD ${'■'.repeat(Math.max(0, this.lives))}${'□'.repeat(Math.max(0, 3 - this.lives))}   ENEMY ${left}`, W / 2, dashY + 30);
+        ctx.restore();
+
+        // 조준점
+        ctx.save();
+        const lock = this.cpLocked;
+        ctx.strokeStyle = lock ? '#ff4d6d' : '#7df9ff';
+        ctx.shadowColor = ctx.strokeStyle;
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 2;
+        const ax = this.aim.x, ay = this.aim.y, ar = lock ? 13 : 16;
+        ctx.beginPath();
+        ctx.arc(ax, ay, ar, 0, Math.PI * 2);
+        ctx.moveTo(ax - ar - 7, ay); ctx.lineTo(ax - ar + 4, ay);
+        ctx.moveTo(ax + ar - 4, ay); ctx.lineTo(ax + ar + 7, ay);
+        ctx.moveTo(ax, ay - ar - 7); ctx.lineTo(ax, ay - ar + 4);
+        ctx.moveTo(ax, ay + ar - 4); ctx.lineTo(ax, ay + ar + 7);
+        ctx.stroke();
+        ctx.restore();
+
+        // 맞았을 때 붉은 번쩍임
+        if (this.cpHurt > 0) {
+            ctx.save();
+            ctx.fillStyle = `rgba(255, 30, 60, ${Math.min(this.cpReduced() ? 0.12 : 0.35, this.cpHurt)})`;
+            ctx.fillRect(0, 0, W, H);
+            ctx.restore();
+        }
+
+        // 첫 안내
+        if (this.running && this.wave === 1 && this.score === 0) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(248, 250, 252, 0.85)';
+            ctx.font = '700 13px ' + UI_FONT;
+            ctx.textAlign = 'center';
+            ctx.fillText('조준점을 적에 맞추세요 · Aim at enemies', W / 2, H * 0.12);
+            ctx.restore();
+        }
+
+        this.endFrame(ctx);
     }
 
     spawnWave() {
@@ -10995,29 +11458,70 @@ class SpaceShooter extends Game {
     }
 
     bindInput() {
+        // 기본 모드는 손가락의 가로 위치로 비행기를, 조종석 모드는 손가락 위치로 조준점을 옮긴다.
+        // 조종석 모드에서 조준점이 손가락에 가려지지 않게 손가락보다 조금 위에 둔다.
+        // 조종석 모드의 터치는 「끄는 만큼」 조준점이 움직인다(트랙패드처럼).
+        // 손가락을 어디에 대도 조준점이 튀지 않고, 손가락이 조준점과 적을 가리지 않는다.
+        const clampAim = () => {
+            this.aim.x = Math.max(10, Math.min(this.W - 10, this.aim.x));
+            this.aim.y = Math.max(10, Math.min(this.cpDashY() - 10, this.aim.y));
+        };
+        let drag = null;
         const moveTo = (clientX) => {
             const rect = this.canvas.getBoundingClientRect();
             this.ship.x = Math.max(16, Math.min(this.W - 16, clientX - rect.left));
         };
         this.on(this.canvas, 'touchstart', (e) => {
             e.preventDefault(); sfx.init();
-            moveTo(e.touches[0].clientX);
+            const t = e.touches[0];
+            if (this.mode === 'cockpit') {
+                drag = { fx: t.clientX, fy: t.clientY, ax: this.aim.x, ay: this.aim.y };
+                return;
+            }
+            moveTo(t.clientX);
         }, { passive: false });
         this.on(this.canvas, 'touchmove', (e) => {
             e.preventDefault();
-            moveTo(e.touches[0].clientX);
+            const t = e.touches[0];
+            if (this.mode === 'cockpit') {
+                if (!drag) drag = { fx: t.clientX, fy: t.clientY, ax: this.aim.x, ay: this.aim.y };
+                const gain = 1.25; // 폰 화면이 작아 손가락보다 조금 더 움직인다
+                this.aim.x = drag.ax + (t.clientX - drag.fx) * gain;
+                this.aim.y = drag.ay + (t.clientY - drag.fy) * gain;
+                clampAim();
+                return;
+            }
+            moveTo(t.clientX);
         }, { passive: false });
+        this.on(this.canvas, 'touchend', () => { drag = null; });
         this.on(this.canvas, 'mousemove', (e) => {
+            if (this.mode === 'cockpit') {
+                // 마우스는 커서가 가리지 않으니 커서 자리가 곧 조준점이다
+                const rect = this.canvas.getBoundingClientRect();
+                this.aim.x = e.clientX - rect.left;
+                this.aim.y = e.clientY - rect.top;
+                clampAim();
+                return;
+            }
             if (e.buttons) moveTo(e.clientX);
         });
         this.on(window, 'keydown', (e) => {
             if (!this.running) return;
+            if (this.mode === 'cockpit') {
+                const step = 22;
+                if (e.key === 'ArrowLeft') this.aim.x = Math.max(10, this.aim.x - step);
+                if (e.key === 'ArrowRight') this.aim.x = Math.min(this.W - 10, this.aim.x + step);
+                if (e.key === 'ArrowUp') this.aim.y = Math.max(10, this.aim.y - step);
+                if (e.key === 'ArrowDown') this.aim.y = Math.min(this.cpDashY() - 10, this.aim.y + step);
+                return;
+            }
             if (e.key === 'ArrowLeft') this.ship.x = Math.max(16, this.ship.x - 24);
             if (e.key === 'ArrowRight') this.ship.x = Math.min(this.W - 16, this.ship.x + 24);
         });
     }
 
     update(dt) {
+        if (this.mode === 'cockpit') { this.cpUpdate(dt); return; }
         // 배경 별
         this.stars.forEach(s => {
             s.y += s.v * dt;
@@ -11254,6 +11758,7 @@ class SpaceShooter extends Game {
     }
 
     draw() {
+        if (this.mode === 'cockpit') { this.cpDraw(); return; }
         const ctx = this.ctx;
         ctx.clearRect(0, 0, this.W, this.H);
         this.beginFrame(ctx);

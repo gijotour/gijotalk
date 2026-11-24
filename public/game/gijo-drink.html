@@ -5813,6 +5813,58 @@ body.hot .hot-toggle-btn {
     background: linear-gradient(to top, rgba(170, 245, 230, 0.85), rgba(210, 255, 245, 0.7));
 }
 
+/* ── 타이타닉 2.5D: 평평한 잔을 둥근 원기둥처럼 (2026-11-24) ──
+   CSS 만 바꾼다. 잔 크기·술 높이·소주잔 위치를 정하는 코드는 그대로다.
+   · 잔 입구와 술 표면을 타원으로 그려 위에서 살짝 내려다본 것처럼
+   · 잔 양옆을 어둡게, 왼쪽 가운데를 밝게 칠해 둥근 유리처럼
+   · 잔 바닥을 타원으로 둥글게 */
+#screen-titanic .beer-glass {
+    border-radius: 6px 6px 50% 50% / 6px 6px 22px 22px;
+    background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0%, rgba(255, 255, 255, 0.2) 16%, rgba(255, 255, 255, 0.04) 34%, rgba(255, 255, 255, 0) 62%, rgba(0, 0, 0, 0.22) 100%);
+}
+#screen-titanic .beer-glass::before {
+    /* 잔 입구: 위에서 본 타원 테두리. 잔은 넘치는 부분을 잘라 내므로 테두리 안쪽 맨 위에 둔다. */
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 16px;
+    border: 3px solid rgba(220, 250, 255, 0.9);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    /* 바깥 광채는 잔 테두리에서 잘려 일자로 보이므로 안쪽 빛만 둔다 */
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.25);
+    /* 술보다는 위, 소주잔보다는 아래(소주잔이 입구 근처까지 떠올라도 테두리가 소주잔을 가로지르지 않게) */
+    z-index: 1;
+}
+#screen-titanic .beer-liquid {
+    /* 술도 원기둥: 양옆을 어둡게 */
+    box-shadow: inset 16px 0 18px rgba(255, 255, 255, 0.14), inset -16px 0 20px rgba(110, 50, 0, 0.35);
+}
+#screen-titanic .beer-liquid::after {
+    /* 거품 윗면을 타원으로 — 위에서 내려다본 술 표면 */
+    border-radius: 50% 50% 6px 6px / 12px 12px 6px 6px;
+}
+#screen-titanic .soju-cup {
+    z-index: 2;
+    /* 소주잔도 둥글게: 입구 타원과 양옆 그늘 */
+    border-radius: 4px 4px 50% 50% / 4px 4px 10px 10px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0%, rgba(255, 255, 255, 0.32) 18%, rgba(255, 255, 255, 0.06) 45%, rgba(0, 0, 0, 0.16) 100%);
+}
+#screen-titanic .soju-cup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 11px;
+    border: 2px solid rgba(230, 252, 255, 0.95);
+    border-radius: 50%;
+    pointer-events: none;
+    /* 소주가 입구까지 차도 테두리가 술에 덮이지 않게 */
+    z-index: 1;
+}
+
 /* ── 러브 드링크: 빈 화면 안내를 두 말로 ── */
 #screen-bridge .bridge-area:empty::before {
     content: '💖\A 손가락을 올려 주세요\A Place your fingers here';

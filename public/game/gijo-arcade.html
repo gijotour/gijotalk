@@ -11899,6 +11899,21 @@ class BrickBreaker extends Game {
         for (let gy = 0.5; gy < this.H; gy += 28) { ctx.moveTo(0, gy); ctx.lineTo(this.W, gy); }
         ctx.stroke();
 
+        // 2.5D: 판을 앞으로 기울여 본 것처럼, 벽돌·받침대 아래에 두께(앞면)를 그린다.
+        // 판 전체를 CSS 로 기울이면 손가락과 받침대 위치가 어긋나 폰에서 조작이 나빠진다. 그래서 그림으로만 한다.
+        // 판정(벽돌·받침대 사각형)은 그대로다. 위 줄부터 그려 아래 줄이 위 줄의 두께를 자연스럽게 덮는다.
+        // 두께는 얇게(판정선 아래로 많이 내려오면 공이 어두운 부분을 지나서야 부딪히는 것처럼 보인다).
+        const firstBrick = this.bricks.length ? this.bricks[0] : null;
+        const thick = Math.max(2, Math.round((firstBrick ? firstBrick.h : 14) * 0.22));
+        ctx.save();
+        this.bricks.forEach(k => {
+            ctx.fillStyle = k.color;
+            ctx.fillRect(k.x + 1.5, k.y + k.h - 2, k.w - 3, thick + 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.fillRect(k.x + 1.5, k.y + k.h - 2, k.w - 3, thick + 2);
+        });
+        ctx.restore();
+
         // 💎 크리스털 보석 벽돌 렌더링
         this.bricks.forEach(k => {
             ctx.save();
@@ -11928,6 +11943,9 @@ class BrickBreaker extends Game {
         ctx.save();
         const px = this.pad.x - this.padW / 2;
         const py = this.pad.y;
+        // 받침대 두께(앞면) — 빛 번짐 없이 먼저 깐다
+        ctx.fillStyle = '#7a4a00';
+        ctx.fillRect(px + 3, py + this.padH * 0.5, this.padW - 6, this.padH * 0.5 + 5);
         ctx.shadowColor = '#ffaa00';
         ctx.shadowBlur = 16;
         neonRect(ctx, px, py, this.padW, this.padH, '#ffaa00', 6, 16);
@@ -14092,8 +14110,46 @@ class NeonTower extends Game {
         }
     }
 
+    /**
+     * 2.5D 블록: 앞면(원래 네온 사각형) + 오른쪽 위로 비스듬한 윗면(밝게) + 옆면(어둡게).
+     * 판정은 앞면 x·폭 그대로라 게임은 바뀌지 않는다. 윗면·옆면에는 빛 번짐(shadowBlur)을 쓰지 않아
+     * 폰에서 블록 하나에 채우기 두 번만 늘어난다.
+     */
     drawBlock(ctx, x, y, w, h, color, glow = 10) {
-        neonRect(ctx, x, y, w, h, color, 4, glow);
+        // 2.5D 깊이: 블록 높이에서 바로 구한다(화면 크기가 바뀌면 블록 높이도 다시 정해진다). 판정에는 쓰지 않는다.
+        const d = Math.round((this.blockH || 0) * 0.45);
+        if (d > 0 && w > 0) {
+            // 옆면이 판정(앞면) 밖으로 많이 나가면 「걸쳐 보이는데 떨어지는」 착시가 생긴다.
+            // 깊이를 얕게 두고, 좁아진 블록에서는 블록 폭의 30% 를 넘지 않게 한다.
+            const dx = Math.min(d * 0.8, w * 0.3);
+            const dy = d * 0.55;
+            ctx.save();
+            // 옆면
+            ctx.beginPath();
+            ctx.moveTo(x + w, y);
+            ctx.lineTo(x + w + dx, y - dy);
+            ctx.lineTo(x + w + dx, y + h - dy);
+            ctx.lineTo(x + w, y + h);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
+            ctx.fill();
+            // 윗면
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + w, y);
+            ctx.lineTo(x + w + dx, y - dy);
+            ctx.lineTo(x + dx, y - dy);
+            ctx.closePath();
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.32)';
+            ctx.fill();
+            ctx.restore();
+        }
+        // 앞면: 모서리를 조금만 둥글려 윗면·옆면과 틈 없이 붙게 한다
+        neonRect(ctx, x, y, w, h, color, d > 0 ? 1.5 : 4, glow);
         // 상단 하이라이트 라인으로 층 구분을 또렷하게
         ctx.save();
         ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
